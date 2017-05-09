@@ -1,20 +1,20 @@
 from django.shortcuts import render
-
-from django.utils import timezone
-
-from apps.administration.models import Menus, Users, Alerts
+from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse_lazy
+from django.views.generic import CreateView, ListView
+from apps.administration.models import Menus, Alerts
 
 
 # Create your views here.
-def signin(request):
-    return render(request, 'layout/signin.html')
 
-
-def home_wiew(request):
-      menus = Menus.objects.all()
-      user = Users.objects.filter(id_use=1)
+def home_view(request):
+      menus = Menus.objects.filter(menus_id=None)
+      submenus = Menus.objects.all()
+      user = User.objects.filter(id=1)
       alertNot = Alerts.objects.filter(category='Notification')
       alertAlt = Alerts.objects.filter(category='Alert')
       alertUrg = Alerts.objects.filter(category='Urgent')
-      contexto = {'menus' : menus,'user': user,'notif' : alertNot.count(),'alert' : alertAlt.count(),'urgent' : alertUrg.count()}
+      contexto = {'menus' : menus,'submenus': submenus, 'user': user,'notif' : alertNot.count(),'alert' : alertAlt.count(),'urgent' : alertUrg.count()}
       return render(request, 'administration/complement/panel.html', {'menus' : menus,'user': user,'notif' : alertNot,'alert' : alertAlt,'urgent' : alertUrg})
+
+

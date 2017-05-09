@@ -1,5 +1,7 @@
 from django.db import models
 
+from  django.contrib.auth.models import User
+
 # Create your models here.
 
 # Model Table menus
@@ -43,7 +45,7 @@ class Profilers(models.Model):
     def __str__(self):
         return '{}'.format(self.name)
 
-# Model Table users
+"""# Model Table users
 class Users(models.Model):
     id_use = models.AutoField(primary_key=True)
     profilers = models.ForeignKey(Profilers, on_delete=models.CASCADE)  # Field name made lowercase.
@@ -58,13 +60,13 @@ class Users(models.Model):
 
     def __str__(self):
         return '{}'.format(self.name)
-
+"""
 
 
 # Model Tables relation profiler-alerts
 class Alerts(models.Model):
     id_alt = models.AutoField(primary_key=True)
-    users = models.ForeignKey(Users, on_delete=models.CASCADE)  # Field name made lowercase.
+    users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
     category = models.CharField(max_length=20)
     drescription = models.CharField(max_length=255)
     create_date = models.DateField(auto_now_add=True)
@@ -79,7 +81,7 @@ class Alerts(models.Model):
 # Model Table histories
 class Histories(models.Model):
     id_hst = models.AutoField(primary_key=True)
-    users = models.ForeignKey(Users, on_delete=models.CASCADE)  # Field name made lowercase.
+    users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
     date= models.DateTimeField(auto_now_add=True)
     acction = models.CharField(max_length=20)
 
@@ -104,7 +106,7 @@ class Folders(models.Model):
 # Model Table files
 class Files(models.Model):
     id_fil = models.AutoField(primary_key=True)
-    users = models.ForeignKey(Users, on_delete=models.CASCADE)  # Field name made lowercase.
+    users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
     folders = models.ForeignKey(Folders, on_delete=models.CASCADE)  # Field name made lowercase.
     name = models.CharField(max_length=45, blank=True, null=True)
     drescription = models.CharField(max_length=255, blank=True, null=True)
@@ -116,7 +118,7 @@ class Files(models.Model):
 
 class Calendar(models.Model):
     id_cld = models.AutoField(primary_key=True)
-    users = models.ForeignKey('Users', on_delete=models.CASCADE)  # Field name made lowercase.
+    users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
     title = models.CharField(max_length=20, blank=True, null=True)
     description = models.CharField(max_length=255, blank=True, null=True)
     date = models.DateField(blank=True, null=True, auto_now_add=True)
@@ -126,14 +128,14 @@ class Calendar(models.Model):
 
 class Chat(models.Model):
     id_cht = models.AutoField(primary_key=True)
-    users = models.ForeignKey('Users', on_delete=models.CASCADE)  # Field name made lowercase.
+    users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
     date = models.DateTimeField(auto_now_add=True)
     messager = models.CharField(max_length=255)
 
 
 class Directory(models.Model):
     id_dir = models.AutoField(primary_key=True)
-    users = models.ForeignKey('Users', on_delete=models.CASCADE)  # Field name made lowercase.
+    users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
     name = models.CharField(max_length=45, blank=True, null=True)
     phone = models.CharField(max_length=20, blank=True, null=True)
     email = models.CharField(max_length=255, blank=True, null=True)

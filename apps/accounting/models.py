@@ -1,6 +1,6 @@
 from django.db import models
 
-from apps.administration.models import Users
+from  django.contrib.auth.models import User
 
 from apps.administration.models import Folders
 
@@ -12,7 +12,7 @@ from apps.administration.models import Business
 # Model Table accounts
 class Accounts(models.Model):
     id_acn = models.AutoField(primary_key=True)
-    users = models.ForeignKey(Users, on_delete=models.CASCADE)  # Field name made lowercase.
+    users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
     accounts_id = models.ForeignKey('self', on_delete=models.CASCADE)  # Field name made lowercase.
     name = models.CharField(max_length=20)
     description = models.CharField(max_length=255, blank=True, null=True)
@@ -25,7 +25,7 @@ class Accounts(models.Model):
 class Customers(models.Model):
     id_cut = models.AutoField(primary_key=True)
     business = models.ForeignKey(Business, on_delete=models.CASCADE)  # Field name made lowercase.
-    users = models.ForeignKey(Users,  on_delete=models.CASCADE)  # Field name made lowercase.
+    users = models.ForeignKey(User,  on_delete=models.CASCADE)  # Field name made lowercase.
     folders = models.ForeignKey(Folders,  on_delete=models.CASCADE)  # Field name made lowercase.
     name = models.CharField(max_length=20, blank=True, null=True)
     lastname = models.CharField(max_length=45, blank=True, null=True)
@@ -59,7 +59,7 @@ class Invoices(models.Model):
     accounts = models.ForeignKey(Accounts,  on_delete=models.CASCADE)  # Field name made lowercase.
     customers = models.ForeignKey(Customers,  on_delete=models.CASCADE)  # Field name made lowercase.
     business = models.ForeignKey(Business,  on_delete=models.CASCADE)  # Field name made lowercase.
-    users = models.ForeignKey(Users,  on_delete=models.CASCADE)  # Field name made lowercase.
+    users = models.ForeignKey(User,  on_delete=models.CASCADE)  # Field name made lowercase.
     serial = models.IntegerField()
     date_start = models.DateField(blank=True, null=True)
     subtotal = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
@@ -88,7 +88,7 @@ class Receipts(models.Model):
     id_rec = models.AutoField(primary_key=True)
     accounts = models.ForeignKey(Accounts,  on_delete=models.CASCADE)  # Field name made lowercase.
     business = models.ForeignKey(Business,  on_delete=models.CASCADE)  # Field name made lowercase.
-    users = models.ForeignKey(Users, on_delete=models.CASCADE)  # Field name made lowercase.
+    users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
     serial = models.CharField(max_length=20)
     start_date = models.DateField()
     end_date = models.DateField(blank=True, null=True)
@@ -104,7 +104,7 @@ class Receipts(models.Model):
 class Salary(models.Model):
     id_sal = models.AutoField(primary_key=True)
     accounts = models.ForeignKey(Accounts, on_delete=models.CASCADE)  # Field name made lowercase.
-    users = models.ForeignKey(Users, on_delete=models.CASCADE)  # Field name made lowercase.
+    users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
     employees = models.ForeignKey(Employees,  on_delete=models.CASCADE)  # Field name made lowercase.
     start_date_sal = models.DateField(blank=True, null=True)
     end_date_sal = models.DateField(blank=True, null=True)
@@ -127,7 +127,7 @@ class Fee(models.Model):
 
 class AccountDescrip(models.Model):
     id_acd = models.AutoField(primary_key=True)
-    users = models.ForeignKey(Users,  on_delete=models.CASCADE)  # Field name made lowercase.
+    users = models.ForeignKey(User,  on_delete=models.CASCADE)  # Field name made lowercase.
     accounts = models.ForeignKey(Accounts,  on_delete=models.CASCADE)  # Field name made lowercase.
     date = models.DateField()
     value = models.DecimalField(max_digits=10, decimal_places=0)

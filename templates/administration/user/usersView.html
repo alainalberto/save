@@ -30,64 +30,34 @@
     <table id="listUsers" class="ui inverted blue table">
       <thead>
         <tr>
-          <th>
-            <a href="" class="ui icon right" ng-click="orderByColum(name_use)">
-              <i class="sort alphabet ascending icon"></i>
-            </a>
-              Name
-          </th>
-          <th>
-            <a href="" class="ui icon right" ng-click="orderByColum(lastname_use)">
-              <i class="sort alphabet ascending icon"></i>
-            </a>
-            LastName
-          </th>
-          <th>
-            <a href="" class="ui icon right" ng-click="orderByColum(email_use)">
-              <i class="sort alphabet ascending icon"></i>
-            </a>
-            Email
-          </th>
-          <th>
-            <a href="" class="ui icon right" ng-click="orderByColum(PROFILERS_id_prf_use)">
-              <i class="sort alphabet ascending icon"></i>
-            </a>
-            Profiler
-          </th>
-          <th>
-            <a href="" class="ui icon right" ng-click="orderByColum(active_use.data)">
-              <i class="checkmark box icon"></i>
-            </a>
-            Active
-          </th>
-          <th>
-            <a href="" class="ui icon right" ng-click="orderByColum(date_deactivated_use)">
-              <i class="calendar outline icon"></i>
-            </a>
-            Deactivated Date
-          </th>
+          <th>Name</th>
+          <th>LastName</th>
+          <th>Email</th>
+          <th>Username</th>
+          <th>Active</th>
+          <th>Profiler</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="user in users | filter:searchInput as results">
-          <td ng-bind="user.name_use"></td>
-          <td ng-bind="user.lastname_use"></td>
-          <td ng-bind="user.email_use"></td>
-          <td ng-bind="user.profiler_name"></td>
-          <td>
-            <i ng-show="user.active_use == 1" class="glyphicon glyphicon-ok" aria-hidden="true"/>
-          </td>
-          <td ng-bind="user.date_deactivated_use">{{}}</td>
+         {% if objects_list %}
+         {% for user in objects_list %}
+        <tr>
+          <td>{{ user.first_name }}</td>
+          <td>{{ user.last_name }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.is_active }}</td>
+          <td>{{}}</td>
           <td>
           <toolbar class="md-accent">
-            <a data-type="info" data-trigger="focus" title="Edit User" data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="#!/users/{{user.id_use}}/edit">
+            <a data-type="info" data-trigger="focus" title="Edit User" data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'administration:users_edit' user.id %}">
               <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
               <tooltip md-direction="left"></tooltip>
             </a>
           </toolbar>
           <toolbar class="md-accent">
-            <a data-type="info" data-animation="am-flip-x" data-trigger="focus" title="Delete User" type="button" class="btn btn-primary test-tooltip" ng-click="delete(user);">
+            <a data-type="info" data-animation="am-flip-x" data-trigger="focus" title="Delete User" type="button" class="btn btn-primary test-tooltip" href="{% url 'administration:users_delete' user.id">
               <i class="fa fa-trash" aria-hidden="true"></i>
               <tooltip md-direction="left"></tooltip>
             </a>
@@ -97,12 +67,11 @@
             <strong>No results found...</strong>
           </td>
         </tr>
+      {% endfor %}
+      {% else %}
+         <strong>No results found...</strong><a href="/users/create">add one</a>
+      {% endif %}
       </tbody>
-      <tfoot>
-        <div ng-hide="!users || users.length">
-          <strong>No results found...</strong><a href="/#!/users/create">add one</a>
-        </div>
-      </tfoot>
     </table>
   </div>
   </div>

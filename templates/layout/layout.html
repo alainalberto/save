@@ -10,7 +10,7 @@
       <meta name="description" content="">
       <meta name="author" content="alainalberto03@gmail.com">
 
-      <title>{% block title %} First Call {%endblock%}}</title>
+      <title>{% block title %} First Call {%endblock%}</title>
       <link rel="icon" type="image/ico" href="{% static '/img/icon/Icon.ico'%}">
       <!-- Bootstrap Core CSS -->
       <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css", rel="stylesheet">
@@ -39,7 +39,7 @@
   </head>
 
   <body>
-    {% if user %} -->
+    {% if user %}
       <div id="wrapper">
           <!-- Navigation -->
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -56,13 +56,14 @@
                 </a>
             </div>
             <!-- Top Menu Items -->
+            {% block topNav %}
             <ul class="nav navbar-right top-nav">
               <li>
                 <a tabindex="0" class="dropdown-toggle" role="button" data-toggle="dropdown" data-trigger="focus" title="Chat online">
                   <i class="fa fa-comments"></i>
                   Chat
                 </a>
-                <div class="dropdown-menu alert-dropdown panel panel-primary" ng-app="BasicChat">
+                <div class="dropdown-menu alert-dropdown panel panel-primary">
                   <div class="panel-heading">
                     <div class="row">
                         <div class="col-xs-3">
@@ -132,24 +133,23 @@
                     </ul>
                 </li>
             </ul>
+            {% endblock %}
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+            {% block navbar %}
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav nav-pills nav-stacked">
                   <!--  <div class=" nav navbar-nav side-nav"> -->
                         {% if menus %}
                               {% for menu in menus %}
                                   <li class="active ">
-                                    {% if (menu.menus_id = null) %}
                                       <a class="item header active blue">{{menu.name}}</a>
-                                    {% endif %}
-                                    {% for submenu in menus %}
-                                      <li class="menu">
-                                        {% if (submenu.menus_id = menu.id_men) %}
-                                        <a class="item" href="{{submenu.url_men}}">
-                                          {{submenu.name}}
-                                        </a>
-                                        {% endif %}
-                                      </li>
+                                    {% for submenu in submenus %}
+                                            <li class="menu">
+                                             <a class="item" href="{{submenu.url_men}}">
+                                                {{submenu.name}}
+                                             </a>
+                                            </li>
+
                                     {% endfor %}
                                     </li>
                               {% endfor %}
@@ -160,13 +160,14 @@
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
+            {% endblock %}
         </nav>
         <!-- /#page-wrapper -->
         <div id="page-wrapper">
             <div class="container-fluid">
             {% block content %}
 
-            {% endblok %}
+            {% endblock %}
             </div>
             <!-- /.container-fluid -->
         </div>
@@ -179,10 +180,6 @@
       </div>
     {% endif %}
 
-
-    <script type="text/javascript">
-      window.user ={% user || 'null'%};
-    </script>
 
     <!-- Angular JS JavaScript -->
   <!--  <script type="text/javascript", src="/lib/angular/angular.min.js"></script>

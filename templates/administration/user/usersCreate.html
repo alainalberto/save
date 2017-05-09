@@ -13,45 +13,16 @@
     </div>
   </div>
   <div class="panel-body">
-    <form name="form_create_use" ng-submit="create()" class="form" role="form" id="form_create_user" novalidate>
-      <fieldset>
-      <!-- Form Name -->
-      <!-- Text input-->
-      <div class="form-group col-md-4 col-md-offset-4" >
-        <label class="control-label" for="Name">Name</label>
-        <input id="name" name="Name" ng-model="name" type="text" placeholder="Name" class="form-control input-md" required>
-      </div>
-      <!-- Text input-->
-       <div class="form-group col-md-4 col-md-offset-4">
-        <label class="control-label" for="Lastname">Lastname</label>
-        <input id="lastname" name="Lastname" ng-model="lastname" type="text" placeholder="Lastname" class="form-control input-md" required>
-      </div>
-      <!-- Text input-->
-       <div class="form-group col-md-5 col-md-offset-4">
-        <label class="" for="Email">Email</label>
-        <input id="email" name="Email" ng-model="email" type="email" placeholder="Email" class="form-control input-md" required>
-       </div>
-      <!-- Password input-->
-      <div class="form-group col-md-4 col-md-offset-4">
-        <label class="control-label" for="Password">Password</label>
-        <input id="password" name="Password" ng-model="password" type="password" placeholder="Password" class="form-control input-md" required>
-      </div>
-      <!-- Password input-->
-       <div class="form-group col-md-4 col-md-offset-4">
-        <label class="control-label" for="Reppassword">Repeat Password</label>
-        <input id="reppassword" name="Reppassword" type="password" placeholder="Repeat Password" class="form-control input-md" required>
-       </div>
-
-       <div class="form-group col-md-2 col-md-offset-4">
-         <label class="col-md-4 control-label" for="active">Active</label>
-         <input type="checkbox" ng-model="active" name="active" id="active" value="1" checked="checked">
-       </div>
+    <form name="form_create_use" method="post" class="form" role="form" id="form_create_user" >
+      {% csrf_token %}
+        <fieldset>
+      {{form.as_div}}
     <!-- Select Basic -->
       <div class="form-group col-md-5 col-md-offset-4">
-        <label class=" control-label" for="profiler">Profiler</label>
+        <label class=" control-label"/>
        <div class="dropdown">
-        <select aria-label="ngSelected demo" ng-model="prf">
-            <option id="prf" ng-repeat="profiler in profilers" ng-value="{{profiler.id_prf}}" ng-selected="profiler">{{profiler.name_prf}}</option>
+        <select>
+            <option id="prf" >{{profiler.name_prf}}</option>
         </select>
         </div>
       </div>

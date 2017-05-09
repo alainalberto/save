@@ -1,6 +1,6 @@
 from django.db import models
 
-from apps.administration.models import Users
+from  django.contrib.auth.models import User
 
 from apps.accounting.models import Accounts
 
@@ -16,7 +16,7 @@ from apps.accounting.models import Fee
 
 class Loads(models.Model):
     id_lod = models.AutoField(primary_key=True)
-    users = models.ForeignKey(Users, blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
+    users = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
     broker = models.CharField(max_length=45, blank=True, null=True)
     place_loading = models.CharField(max_length=45, blank=True, null=True)
     loading_date = models.DateField(blank=True, null=True)
@@ -34,7 +34,7 @@ class Loads(models.Model):
 
 class TrucksLogt(models.Model):
     id_tuk = models.AutoField(primary_key=True)
-    users = models.ForeignKey(Users, blank=True, null=True, on_delete=models.CASCADE)
+    users = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
     type = models.CharField(max_length=45, blank=True, null=True)
     year = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
     model = models.CharField(max_length=45, blank=True, null=True)
@@ -52,7 +52,7 @@ class TrucksLogt(models.Model):
 
 class DriversLogt(models.Model):
     id_dr = models.AutoField(primary_key=True)
-    users = models.ForeignKey(Users, blank=True, null=True, on_delete=models.CASCADE)
+    users = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=45, blank=True, null=True)
     license_numb = models.CharField(max_length=45, blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
@@ -74,7 +74,7 @@ class DriversLogt(models.Model):
 
 class PermissionsLogt(models.Model):
     id_prm = models.AutoField(primary_key=True)
-    users = models.ForeignKey(Users, blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
+    users = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
     date = models.DateField(blank=True, null=True)
     usdot = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
     usdot_pin = models.CharField(max_length=20, blank=True, null=True)
@@ -93,7 +93,7 @@ class PermissionsLogt(models.Model):
 
 class InsuranceLogt(models.Model):
     id_inr = models.AutoField(primary_key=True)
-    users = models.ForeignKey(Users, blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
+    users = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
     accounts = models.ForeignKey(Accounts, blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
     down_payment = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
     pilicy_efective_date = models.DateField(blank=True, null=True)
@@ -114,7 +114,7 @@ class InsuranceLogt(models.Model):
 class IftaLogt(models.Model):
     id_ift = models.AutoField(primary_key=True)
     trucks = models.ForeignKey(TrucksLogt, on_delete=models.CASCADE)  # Field name made lowercase.
-    users = models.ForeignKey(Users, blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
+    users = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
     customers = models.ForeignKey(Customers, on_delete=models.CASCADE)  # Field name made lowercase.
     date = models.DateField(blank=True, null=True)
     state = models.CharField(max_length=45, blank=True, null=True)
@@ -125,7 +125,7 @@ class IftaLogt(models.Model):
 class TravelExpenses(models.Model):
     id_tre = models.AutoField(primary_key=True)
     accounts = models.ForeignKey(Accounts, on_delete=models.CASCADE)  # Field name made lowercase.
-    users = models.ForeignKey(Users, blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
+    users = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
     employees = models.ForeignKey(Employees, on_delete=models.CASCADE)  # Field name made lowercase.
     description = models.CharField(max_length=255, blank=True, null=True)
     date = models.DateField(blank=True, null=True)
