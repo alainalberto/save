@@ -2,9 +2,9 @@ from django.db import models
 
 from  django.contrib.auth.models import User
 
-from apps.administration.models import Folders
+from apps.tools.models import Folders
 
-from apps.administration.models import Business
+from apps.tools.models import Business
 
 
 # Create your models here.

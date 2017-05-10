@@ -17,12 +17,15 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.auth.views import login
 
+from apps.tools.views import home_view
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', include('apps.administration.urls')),
+    url(r'^home/$', home_view, name='home'),
+    url(r'^tools/', include('apps.tools.urls')),
     url(r'^accounting/', include('apps.accounting.urls')),
     url(r'^services/', include('apps.services.urls')),
     url(r'^logistic/', include('apps.logistic.urls')),
-    #url(r'^$', login, {'template_name':'index.html'}, name='login'),
+    url(r'^$', login, {'template_name':'signin.html'}, name='login'),
 
 ]

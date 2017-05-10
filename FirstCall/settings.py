@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'apps.administration',
+    'apps.tools',
     'apps.accounting',
     'apps.logistic',
     'apps.services',
@@ -130,7 +130,7 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
-LOGIN_REDIRECT_URL = reverse_lazy('administration:home')
+LOGIN_REDIRECT_URL = 'http://localhost:8000/home/'
 
 
 EMAIL_USE_TLS = True

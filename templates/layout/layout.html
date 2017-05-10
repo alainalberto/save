@@ -18,10 +18,10 @@
       <link href="{% static 'css/bootstrap.min.css'%}" rel="stylesheet">
 
       <!-- Custom CSS -->
-      <link href="{% static 'css/sb-admin.css'%}" rel="stylesheet">
+      <link href="{% static '/css/sb-admin.css'%}" rel="stylesheet">
 
       <!-- Morris Charts CSS -->
-      <link href="{% static 'css/plugins/morris.css'%}" rel="stylesheet">
+      <link href="{% static '/css/plugins/morris.css'%}" rel="stylesheet">
 
       <link href="{% static '/css/style.css'%}", rel="stylesheet">
 
@@ -115,7 +115,7 @@
                     </ul>
                 </li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{user.name}} {{user.lastname}} <b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{user.first_name}} {{user.last_name}} <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li>
                             <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
@@ -138,25 +138,26 @@
             {% block navbar %}
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav nav-pills nav-stacked">
-                  <!--  <div class=" nav navbar-nav side-nav"> -->
+                    <div class=" nav navbar-nav side-nav">
                         {% if menus %}
                               {% for menu in menus %}
-                                  <li class="active ">
+                                   <li class="active ">
                                       <a class="item header active blue">{{menu.name}}</a>
                                     {% for submenu in submenus %}
+                                        {% if submenu.menus_id_id == menu.id_men %}
                                             <li class="menu">
-                                             <a class="item" href="{{submenu.url_men}}">
+                                             <a class="item" href="{{submenu.url}}">
                                                 {{submenu.name}}
                                              </a>
                                             </li>
-
+                                        {% endif %}
                                     {% endfor %}
                                     </li>
                               {% endfor %}
 
                         {% endif %}
 
-                    <!--  </div>-->
+                    </div>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -176,7 +177,7 @@
 
     {% else %}
       <div class="message">
-        <h3>Non-registered user enter <a class="ui text" href='http://localhost:9898/saignin'>here</a></h3>
+        <h3>Non-registered user enter <a class="ui text" href='http://localhost:8000/'>here</a></h3>
       </div>
     {% endif %}
 
