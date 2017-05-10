@@ -104,6 +104,7 @@ class Migration(migrations.Migration):
                 ('description', models.CharField(blank=True, max_length=255, null=True)),
                 ('active', models.IntegerField(blank=True, null=True)),
                 ('url', models.CharField(blank=True, max_length=45, null=True)),
+                ('icon', models.CharField(max_length=20)),
                 ('menus_id', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='tools.Menus')),
             ],
         ),

@@ -3,8 +3,7 @@
 <html lang="en">
 
   <head>
-
-      <meta charset="utf-8">
+  <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <meta name="description" content="">
@@ -35,11 +34,8 @@
           <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
           <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
       <![endif]-->
-
   </head>
 
-  <body>
-    {% if user %}
       <div id="wrapper">
           <!-- Navigation -->
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -51,7 +47,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="http://localhost:9898/#!/">
+                <a class="navbar-brand" href="http://localhost:8000/">
                   <img src="{% static 'img/logoFCI.png'%}" width="100px" height="50px">
                 </a>
             </div>
@@ -115,7 +111,7 @@
                     </ul>
                 </li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{user.first_name}} {{user.last_name}} <b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{user.first_name}} <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li>
                             <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
@@ -141,8 +137,8 @@
                     <div class=" nav navbar-nav side-nav">
                         {% if menus %}
                               {% for menu in menus %}
-                                   <li class="active ">
-                                      <a class="item header active blue">{{menu.name}}</a>
+                                   <li class="active">
+                                      <a class="item header active blue" href="{{menu.url}}"><i class="{{menu.icon}}"></i> {{menu.name}}</a>
                                     {% for submenu in submenus %}
                                         {% if submenu.menus_id_id == menu.id_men %}
                                             <li class="menu">
@@ -174,24 +170,8 @@
         </div>
 
       </div>
-
-    {% else %}
-      <div class="message">
-        <h3>Non-registered user enter <a class="ui text" href='http://localhost:8000/'>here</a></h3>
-      </div>
-    {% endif %}
-
-
-    <!-- Angular JS JavaScript -->
-  <!--  <script type="text/javascript", src="/lib/angular/angular.min.js"></script>
-    <script type="text/javascript", src="/lib/angular-route/angular-route.min.js"></script>
-    <script type="text/javascript", src="/lib/angular-resource/angular-resource.min.js"></script>
-    <script type="text/javascript", src="/lib/rltm/web/rltm.js"></script>
-    <script type="text/javascript", src="/lib/angular-chat/angular-chat.js"></script> -->
-
-    <!-- jQuery -->
-    <script type="text/javascript", src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
-        <script src="{% static 'js/jquery.min.js'%}"></script>
+     <script type="text/javascript", src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
+     <script src="{% static 'js/jquery.min.js'%}"></script>
 
     <!-- Bootstrap Core JavaScript -->
     <script type="text/javascript", src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -203,5 +183,4 @@
     <script src="{% static 'js/plugins/morris/morris-data.js'%}"></script>
 
   </body>
-
 </html>

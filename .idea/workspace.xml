@@ -1,8 +1,120 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="825987c8-28de-45b5-9e1d-608079deebe1" name="Default" comment="">
+    <list default="true" id="825987c8-28de-45b5-9e1d-608079deebe1" name="Default" comment="Personalizacion del Panel de Administracion y creacion de los Menus principales">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/fonts/Roboto-Bold-webfont.woff" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/fonts/Roboto-Light-webfont.woff" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/fonts/Roboto-Regular-webfont.woff" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/FirstCall/views.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/css/base.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/css/changelists.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/css/dashboard.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/css/fonts.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/css/forms.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/css/login.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/css/rtl.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/css/widgets.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/fonts/LICENSE.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/fonts/README.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/README.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/calendar-icons.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/gis/move_vertex_off.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/gis/move_vertex_on.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/icon-addlink.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/icon-alert.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/icon-calendar.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/icon-changelink.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/icon-clock.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/icon-deletelink.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/icon-no.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/icon-unknown-alt.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/icon-unknown.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/icon-yes.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/inline-delete.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/search.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/selector-icons.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/sorting-icons.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/tooltag-add.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/img/tooltag-arrowright.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/SelectBox.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/SelectFilter2.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/actions.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/actions.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/admin/DateTimeShortcuts.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/admin/RelatedObjectLookups.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/calendar.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/cancel.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/change_form.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/collapse.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/collapse.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/core.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/inlines.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/inlines.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/jquery.init.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/popup_response.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/prepopulate.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/prepopulate.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/prepopulate_init.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/timeparse.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/urlify.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/vendor/jquery/LICENSE-JQUERY.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/vendor/jquery/jquery.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/vendor/jquery/jquery.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/vendor/xregexp/LICENSE-XREGEXP.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/vendor/xregexp/xregexp.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/admin/js/vendor/xregexp/xregexp.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/accounting/accuontsViews.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/accounting/panel_account.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/404.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/500.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/actions.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/app_index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/auth/user/add_form.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/auth/user/change_password.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/base.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/base_site.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/change_form.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/change_list.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/change_list_results.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/date_hierarchy.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/delete_confirmation.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/delete_selected_confirmation.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/edit_inline/stacked.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/edit_inline/tabular.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/filter.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/includes/fieldset.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/includes/object_delete_summary.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/invalid_setup.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/login.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/object_history.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/pagination.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/popup_response.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/prepopulated_fields_js.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/related_widget_wrapper.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/search_form.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/submit_line.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/widgets/clearable_file_input.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/widgets/foreign_key_raw_id.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/widgets/many_to_many_raw_id.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/widgets/radio.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/widgets/related_widget_wrapper.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/widgets/split_datetime.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/admin/widgets/url.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/logistic/panel_logist.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/services/panel_services.html" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/home/busines/businessCreate.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/home/busines/businessEdit.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/home/busines/businessView.html" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/templates/home/complement/alerts.html" afterPath="$PROJECT_DIR$/templates/home/alert/alerts.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/FirstCall/urls.py" afterPath="$PROJECT_DIR$/FirstCall/urls.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/tools/migrations/0001_initial.py" afterPath="$PROJECT_DIR$/apps/tools/migrations/0001_initial.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/tools/models.py" afterPath="$PROJECT_DIR$/apps/tools/models.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/tools/views.py" afterPath="$PROJECT_DIR$/apps/tools/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/index.html" afterPath="$PROJECT_DIR$/templates/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/layout/layout.html" afterPath="$PROJECT_DIR$/templates/layout/layout.html" />
     </list>
     <ignored path="C:\proyectos\FirstCall\.idea\shelf/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -8577,11 +8689,11 @@
       <recent name="C:\proyectos\FirstCall\apps\logistic" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\proyectos\FirstCall\templates\home\alert" />
       <recent name="C:\proyectos\FirstCall\static" />
       <recent name="C:\proyectos\FirstCall\apps" />
       <recent name="C:\proyectos\FirstCall\templates" />
       <recent name="C:\proyectos\FirstCall\apps\administration\ctrols" />
-      <recent name="C:\proyectos\FirstCall" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -8729,20 +8841,29 @@
       <option name="project" value="LOCAL" />
       <updated>1494453820830</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Personalizacion del Panel de Administracion y creacion de los Menus principales">
+      <created>1494454008142</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1494454008142</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="1" y="1" width="1598" height="858" extended-state="6" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2187105" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="15" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32898173" sideWeight="0.5" order="16" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="17" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="18" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2187105" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection Results" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.328877" sideWeight="0.5" order="19" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -8752,8 +8873,6 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Inspection Results" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32898173" sideWeight="0.5" order="19" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>

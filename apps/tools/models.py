@@ -12,6 +12,8 @@ class Menus(models.Model):
     description = models.CharField(max_length=255, blank=True, null=True)
     active = models.IntegerField(blank=True, null=True)
     url = models.CharField(max_length=45, blank=True, null=True)
+    icon = models.CharField(max_length=20)
+
 
     def __str__(self):
         return '{}'.format(self.name)
