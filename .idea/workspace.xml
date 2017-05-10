@@ -8927,7 +8927,14 @@
       <option name="project" value="LOCAL" />
       <updated>1494396231935</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Personalizacion del Panel de Administracion y creacion de los Menus principales">
+      <created>1494453795028</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1494453795028</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -9010,7 +9017,8 @@
     <MESSAGE value="cambio en user edit" />
     <MESSAGE value="Trabajo en la pagina principal (Menu)" />
     <MESSAGE value="Trabajo en el login y Panel de administracion version nuena de la base" />
-    <option name="LAST_COMMIT_MESSAGE" value="Trabajo en el login y Panel de administracion version nuena de la base" />
+    <MESSAGE value="Personalizacion del Panel de Administracion y creacion de los Menus principales" />
+    <option name="LAST_COMMIT_MESSAGE" value="Personalizacion del Panel de Administracion y creacion de los Menus principales" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
