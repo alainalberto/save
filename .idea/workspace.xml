@@ -2,64 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="825987c8-28de-45b5-9e1d-608079deebe1" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/apps/tools/components/form_user.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/apps/tools/components/menu_pinc.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/apps/tools/urls.py" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/accounting/migrations/0001_initial.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/accounting/migrations/0002_auto_20170505_1807.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/accounting/migrations/0003_auto_20170507_0121.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/administration/__init__.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/administration/admin.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/administration/apps.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/administration/components/__init__.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/administration/components/form_user.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/administration/components/menu_pinc.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/administration/migrations/0001_initial.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/administration/migrations/0002_auto_20170505_1807.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/administration/migrations/0003_auto_20170506_2359.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/administration/migrations/0004_auto_20170507_0121.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/administration/migrations/__init__.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/administration/models.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/administration/tests.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/administration/urls.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/administration/views.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/administration/views_user.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/logistic/migrations/0001_initial.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/logistic/migrations/0002_auto_20170505_1807.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/logistic/migrations/0003_auto_20170507_0121.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/services/admin.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/services/apps.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/services/migrations/0001_initial.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/services/migrations/0002_auto_20170505_1807.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/services/migrations/0003_auto_20170507_0121.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/services/migrations/__init__.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/services/models.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/services/tests.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/services/urls.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/apps/services/views.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/administration/busines/businessCreate.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/administration/busines/businessEdit.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/administration/busines/businessView.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/administration/complement/alerts.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/administration/complement/help.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/administration/complement/panel.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/administration/profiler/profilerCreate.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/administration/profiler/profilerEdit.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/administration/profiler/profilerView.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/administration/user/prueba" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/administration/user/usersCreate.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/administration/user/usersEdit.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/administration/user/usersView.html" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/apps/services/__init__.py" afterPath="$PROJECT_DIR$/apps/tools/components/__init__.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/FirstCall/settings.py" afterPath="$PROJECT_DIR$/FirstCall/settings.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/FirstCall/urls.py" afterPath="$PROJECT_DIR$/FirstCall/urls.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/accounting/models.py" afterPath="$PROJECT_DIR$/apps/accounting/models.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apps/logistic/models.py" afterPath="$PROJECT_DIR$/apps/logistic/models.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/css/style.css" afterPath="$PROJECT_DIR$/static/css/style.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/layout/layout.html" afterPath="$PROJECT_DIR$/templates/layout/layout.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/signin.html" afterPath="$PROJECT_DIR$/templates/signin.html" />
     </list>
     <ignored path="C:\proyectos\FirstCall\.idea\shelf/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -8491,52 +8434,7 @@
     </favorites_list>
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/FirstCall/urls.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="527">
-              <caret line="31" column="0" lean-forward="true" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
-              <folding>
-                <element signature="e#643#684#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="layout.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/layout/layout.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="181" column="15" lean-forward="true" selection-start-line="181" selection-start-column="15" selection-end-line="181" selection-end-column="15" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="signin.html" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/templates/signin.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="493">
-              <caret line="29" column="0" lean-forward="true" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/FirstCall/settings.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="486">
-              <caret line="132" column="49" lean-forward="false" selection-start-line="132" selection-start-column="49" selection-end-line="132" selection-end-column="49" />
-              <folding>
-                <element signature="e#311#320#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -8673,11 +8571,25 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="templates" />
+              <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FirstCall" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FirstCall" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="layout" />
+              <option name="myItemId" value="apps" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tools" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -8822,14 +8734,20 @@
       <option name="project" value="LOCAL" />
       <updated>1494309113127</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Trabajo en el login y Panel de administracion version nuena de la base">
+      <created>1494396052950</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1494396052950</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21625" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21625" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="15" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32898173" sideWeight="0.5" order="16" side_tool="false" content_ui="tabs" />
@@ -8904,7 +8822,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="cambio en user edit" />
     <MESSAGE value="Trabajo en la pagina principal (Menu)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Trabajo en la pagina principal (Menu)" />
+    <MESSAGE value="Trabajo en el login y Panel de administracion version nuena de la base" />
+    <option name="LAST_COMMIT_MESSAGE" value="Trabajo en el login y Panel de administracion version nuena de la base" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -9148,7 +9067,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#0#43#0" expanded="true" />
+            <element signature="e#0#43#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -9182,7 +9101,7 @@
         <state relative-caret-position="622">
           <caret line="105" column="62" lean-forward="false" selection-start-line="105" selection-start-column="62" selection-end-line="105" selection-end-column="62" />
           <folding>
-            <element signature="e#0#28#0" expanded="true" />
+            <element signature="e#0#28#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -9248,7 +9167,7 @@
         <state relative-caret-position="204">
           <caret line="12" column="25" lean-forward="false" selection-start-line="12" selection-start-column="25" selection-end-line="12" selection-end-column="25" />
           <folding>
-            <element signature="e#0#32#0" expanded="true" />
+            <element signature="e#0#32#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -9269,16 +9188,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/FirstCall/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="527">
-          <caret line="31" column="0" lean-forward="true" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
-          <folding>
-            <element signature="e#643#684#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/apps/tools/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
@@ -9292,16 +9201,8 @@
         <state relative-caret-position="289">
           <caret line="17" column="56" lean-forward="true" selection-start-line="17" selection-start-column="30" selection-end-line="17" selection-end-column="56" />
           <folding>
-            <element signature="e#0#35#0" expanded="true" />
+            <element signature="e#0#35#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/layout/layout.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="181" column="15" lean-forward="true" selection-start-line="181" selection-start-column="15" selection-end-line="181" selection-end-column="15" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -9320,6 +9221,24 @@
         <state relative-caret-position="493">
           <caret line="29" column="0" lean-forward="true" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/layout/layout.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="181" column="15" lean-forward="true" selection-start-line="181" selection-start-column="15" selection-end-line="181" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FirstCall/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="527">
+          <caret line="31" column="0" lean-forward="true" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+          <folding>
+            <element signature="e#643#684#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

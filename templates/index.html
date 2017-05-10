@@ -1,0 +1,29 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <title>First Call</title>
+
+    <link rel="icon" type="image/ico" href="{% static '/img/icon/Icon.ico'%}" />
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css", rel="stylesheet">
+    <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css', rel='stylesheet'>
+     <link href="{% static 'css/style.css'%}", rel="stylesheet">
+  </head>
+  <body class="bodylogin">
+    <div class="container">
+      <form class="form-signin" name="form_singin" method="post">
+        <h2 class="form-signin-heading">Sign in</h2>
+        <label for="inputEmail" class="sr-only">Email address</label>
+        <input type="email" id="inputEmail" name="username" class="form-control" placeholder="Email address" required autofocus>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      </form>
+
+    </div>
+
+    <script type="text/javascript", src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
+    <script type="text/javascript", src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  </body>
+</html>
