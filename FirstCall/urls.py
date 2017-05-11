@@ -27,6 +27,6 @@ urlpatterns = [
     url(r'^accounting/', include('apps.accounting.urls')),
     url(r'^services/', include('apps.services.urls')),
     url(r'^logistic/', include('apps.logistic.urls')),
-    url(r'^accounts/login', login, {'template_name':'signin.html'}, name='login'),
+    url(r'^accounts/login/', login, {'template_name':'Login/login.html'}, name='login'),
 
 ]

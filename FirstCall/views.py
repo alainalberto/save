@@ -17,4 +17,3 @@ def home_view(requiret):
                 'alert': alertAlt.count(), 'urgent': alertUrg.count()}
     return render(requiret, 'home/complement/panel.html', contexto)
 
-
