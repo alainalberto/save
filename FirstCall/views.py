@@ -8,7 +8,7 @@ from apps.tools.models import Menus, Alerts
 
 def home_view(requiret):
     menus = Menus.objects.filter(menus_id=None)
-    submenus = Menus.objects.filter()
+    submenus = Menus.objects.filter(menus_id=menus.id_men)
     user = User.objects.filter(id=1)
     alertNot = Alerts.objects.filter(category='Notification')
     alertAlt = Alerts.objects.filter(category='Alert')
