@@ -13,14 +13,20 @@
       <link rel="icon" type="image/ico" href="{% static '/img/icon/Icon.ico'%}">
       <!-- Bootstrap Core CSS -->
       <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css", rel="stylesheet">
-      <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css', rel='stylesheet'>
-      <link href="{% static 'css/bootstrap.min.css'%}" rel="stylesheet">
+     <!-- <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css', rel='stylesheet'> -->
+      <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+     <!-- <link href="{% static 'css/bootstrap.min.css'%}" rel="stylesheet"> -->
 
       <!-- Custom CSS -->
       <link href="{% static '/css/sb-admin.css'%}" rel="stylesheet">
+      <link href="{% static '/css/sb-admin-rtl.css'%}" rel="stylesheet">
 
       <!-- Morris Charts CSS -->
       <link href="{% static '/css/plugins/morris.css'%}" rel="stylesheet">
+
+      <!-- Semantic CSS -->
+      <link href="{% static '/semantic/semantic.min.css'%}" rel="stylesheet">
 
       <link href="{% static '/css/style.css'%}", rel="stylesheet">
 
@@ -31,8 +37,8 @@
       <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
       <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
       <!--[if lt IE 9]>
-          <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-          <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <!--    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+          <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script> -->
       <![endif]-->
   </head>
 
@@ -47,7 +53,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="http://localhost:8000/">
+                <a class="navbar-brand" href="#/panel/">
                   <img src="{% static 'img/logoFCI.png'%}" width="100px" height="50px">
                 </a>
             </div>
@@ -93,8 +99,8 @@
                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-trigger="focus" title="System Help"><i class="fa fa-question-circle"></i></a>
                 </li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-trigger="focus" title="Alerts and Notificatio"><i class="fa fa-bell"></i> {{allalert}} <b class="caret"></b></a>
-                    <ul class="dropdown-menu alert-dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" data-trigger="focus" title="Alerts and Notificatio"><i class="fa fa-bell"></i> {{allalert}} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
                         <li>
                             <a href="#">Notification <span class="label label-success"> {{notif}} </span></a>
                         </li>
@@ -111,7 +117,7 @@
                     </ul>
                 </li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{user.first_name}} <b class="caret"></b></a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user"></i> {{user.first_name}} <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li>
                             <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
@@ -133,28 +139,27 @@
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             {% block navbar %}
             <div class="collapse navbar-collapse navbar-ex1-collapse">
-                <ul class="nav navbar-nav side-nav nav-pills nav-stacked">
-                    <div class=" nav navbar-nav side-nav">
-                        {% if menus %}
+                <div id="nav_menu" class="side-nav ui inverted vertical menu nav-pills nav-stacked">
+                         {% if menus %}
                               {% for menu in menus %}
-                                   <li class="active">
+                                   <div class="active">
                                       <a class="item header active blue" href="{{menu.url}}"><i class="{{menu.icon}}"></i> {{menu.name}}</a>
                                     {% for submenu in submenus %}
                                         {% if submenu.menus_id_id == menu.id_men %}
-                                            <li class="menu">
+                                            <div class="menu">
                                              <a class="item" href="{{submenu.url}}">
                                                 {{submenu.name}}
                                              </a>
-                                            </li>
+                                            </div>
                                         {% endif %}
                                     {% endfor %}
-                                    </li>
+                                   </div>
                               {% endfor %}
 
                         {% endif %}
 
-                    </div>
-                </ul>
+
+                </div>
             </div>
             <!-- /.navbar-collapse -->
             {% endblock %}
@@ -171,7 +176,10 @@
 
       </div>
      <script type="text/javascript", src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
+     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
      <script src="{% static 'js/jquery.min.js'%}"></script>
+     <script src="{% static 'semantic/semantic.min.js'%}"></script>
+
 
     <!-- Bootstrap Core JavaScript -->
     <script type="text/javascript", src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>

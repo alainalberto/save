@@ -13,7 +13,7 @@ from apps.tools.models import Business
 class Accounts(models.Model):
     id_acn = models.AutoField(primary_key=True)
     users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
-    accounts_id = models.ForeignKey('self', on_delete=models.CASCADE)  # Field name made lowercase.
+    accounts_id = models.ForeignKey('self', on_delete=models.CASCADE, null=True)  # Field name made lowercase.
     name = models.CharField(max_length=20)
     description = models.CharField(max_length=255, blank=True, null=True)
     primary = models.IntegerField(blank=True, null=True)

@@ -18,6 +18,7 @@ class Menus(models.Model):
     def __str__(self):
         return '{}'.format(self.name)
 
+
 # Model Table business
 class Business(models.Model):
     id_bus = models.AutoField(primary_key=True)

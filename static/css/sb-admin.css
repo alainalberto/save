@@ -144,25 +144,25 @@ ul.alert-dropdown {
 
     }
 
-    .side-nav li a:hover,
-    .side-nav li a:focus {
+    .side-nav div a:hover,
+    .side-nav div a:focus {
         outline: none;
         background-color: #000 !important;
     }
 }
 
-.side-nav>li>ul {
+.side-nav {
     padding: 0;
 }
 
-.side-nav>li>ul>li>a {
+.side-nav {
     display: block;
-    padding: 10px 15px 10px 38px;
+    padding: 10px 15px 10px 20px;
     text-decoration: none;
     color: #999;
 }
 
-.side-nav>li>ul>li>a:hover {
+.side-nav:hover {
     color: #fff;
 }
 

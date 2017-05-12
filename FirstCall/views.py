@@ -8,12 +8,13 @@ from apps.tools.models import Menus, Alerts
 
 def home_view(requiret):
     menus = Menus.objects.filter(menus_id=None)
-    submenus = Menus.objects.filter(menus_id=menus.id_men)
-    user = User.objects.filter(id=1)
+    submenus = Menus.objects.filter()
     alertNot = Alerts.objects.filter(category='Notification')
     alertAlt = Alerts.objects.filter(category='Alert')
     alertUrg = Alerts.objects.filter(category='Urgent')
-    contexto = {'menus': menus, 'submenus': submenus, 'user': user, 'notif': alertNot.count(),
+    contexto = {'menus': menus, 'submenus': submenus, 'notif': alertNot.count(),
                 'alert': alertAlt.count(), 'urgent': alertUrg.count()}
     return render(requiret, 'home/complement/panel.html', contexto)
 
+def panel_view(requiret):
+    return render(requiret, 'home/complement/panel.html')
