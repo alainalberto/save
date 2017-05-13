@@ -25,10 +25,10 @@ urlpatterns = [
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^$', login_required(home_view), name='home'),
     url(r'^panel/', login_required(panel_view), name='panel'),
-    url(r'^tools/', include('apps.tools.urls'), name='tools'),
-    url(r'^accounting/', include('apps.accounting.urls'), name='accounting'),
-    url(r'^services/', include('apps.services.urls'), name='services'),
-    url(r'^logistic/', include('apps.logistic.urls'), name='logistic'),
+    url(r'^tools/', include('apps.tools.urls', namespace='tools')),
+    url(r'^accounting/', include('apps.accounting.urls', namespace='accounting')),
+    url(r'^services/', include('apps.services.urls', namespace='services')),
+    url(r'^logistic/', include('apps.logistic.urls', namespace='logistic')),
     url(r'^accounts/login/', login, {'template_name':'Login/login.html'}, name='login'),
 
 ]

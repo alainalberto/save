@@ -8,4 +8,4 @@ from  apps.system.models import Menus
 def Menu_princ(request):
 
 
-    return render_to_response('layout/layout.html', {})
+    return render_to_response('layout/base.html', {})
