@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import *
 from django.contrib import admin, admindocs
-from django.contrib.auth.views import login
+from django.contrib.auth.views import login, logout
 from django.contrib.auth.decorators import login_required
 
 from FirstCall.views import home_view, panel_view
@@ -30,5 +30,6 @@ urlpatterns = [
     url(r'^services/', include('apps.services.urls', namespace='services')),
     url(r'^logistic/', include('apps.logistic.urls', namespace='logistic')),
     url(r'^accounts/login/', login, {'template_name':'Login/login.html'}, name='login'),
+    url(r'^accounts/logout/', logout, {'template_name':'Login/logged_out.html'}, name='logout'),
 
 ]

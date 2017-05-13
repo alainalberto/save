@@ -7,58 +7,58 @@ $(function() {
         element: 'morris-area-chart',
         data: [{
             period: '2010 Q1',
-            income: 2666,
-            expense: 1080,
-            earnings : (income - expense)
+            iphone: 2666,
+            ipad: null,
+            itouch: 2647
         }, {
             period: '2010 Q2',
-            income: 2778,
-            expense: 2294,
+            iphone: 2778,
+            ipad: 2294,
             itouch: 2441
         }, {
             period: '2010 Q3',
-            income: 4912,
-            expense: 1969,
-            earnings : (income - expense)
+            iphone: 4912,
+            ipad: 1969,
+            itouch: 2501
         }, {
             period: '2010 Q4',
-            income: 3767,
-            expense: 3597,
-            earnings : (income - expense)
+            iphone: 3767,
+            ipad: 3597,
+            itouch: 5689
         }, {
             period: '2011 Q1',
-            income: 6810,
-            expense: 1914,
-            earnings : (income - expense)
+            iphone: 6810,
+            ipad: 1914,
+            itouch: 2293
         }, {
             period: '2011 Q2',
-            income: 5670,
-            expense: 4293,
-            earnings : (income - expense)
+            iphone: 5670,
+            ipad: 4293,
+            itouch: 1881
         }, {
             period: '2011 Q3',
-            income: 4820,
-            expense: 3795,
-            earnings : (income - expense)
+            iphone: 4820,
+            ipad: 3795,
+            itouch: 1588
         }, {
             period: '2011 Q4',
-            income: 15073,
-            expense: 5967,
-            earnings : (income - expense)
+            iphone: 15073,
+            ipad: 5967,
+            itouch: 5175
         }, {
             period: '2012 Q1',
-            income: 10687,
-            expense: 4460,
-            earnings : (income - expense)
+            iphone: 10687,
+            ipad: 4460,
+            itouch: 2028
         }, {
             period: '2012 Q2',
-            income: 8432,
-            expense: 5713,
-            earnings : (income - expense)
+            iphone: 8432,
+            ipad: 5713,
+            itouch: 1791
         }],
         xkey: 'period',
-        ykeys: ['income', 'expense', 'earnings'],
-        labels: ['Income', 'Expense', 'Earnings'],
+        ykeys: ['iphone', 'ipad', 'itouch'],
+        labels: ['iPhone', 'iPad', 'iPod Touch'],
         pointSize: 2,
         hideHover: 'auto',
         resize: true
