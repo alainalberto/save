@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-
+{% block extrahead %}
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,6 +18,8 @@
     <!-- Custom CSS -->
     <link href="{% static 'css/sb-admin.css'%}" rel="stylesheet">
 
+    <link href="{% static 'css/app.css'%}" rel="stylesheet">
+
     <!-- Morris Charts CSS -->
     <link href="{% static 'css/plugins/morris.css'%}" rel="stylesheet">
 
@@ -31,7 +33,7 @@
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-
+{% endblock %}
 </head>
 
 <body>
@@ -121,13 +123,13 @@
                     <a href="javascript:;" data-toggle="collapse" data-target="#panel"><i class="fa fa-area-chart"></i> My Panel <i class="right fa fa-fw fa-caret-down"></i></a>
                     <ul id="panel" class="collapse">
                         <li>
-                            <a href="/panel/calendar"> Calendar</a>
+                            <a href="{% url 'panel:calendar' %}"> Calendar</a>
                         </li>
                         <li>
-                            <a href="/panel/password"> Change my password</a>
+                            <a href="{% url 'panel:password' %}"> Change my password</a>
                         </li>
                         <li>
-                            <a class="item" href="/panel/document"> My Documents</a>
+                            <a class="item" href="{% url 'panel:document' %}"> My Documents</a>
                         </li>
                     </ul>
                 </li>
@@ -135,22 +137,22 @@
                     <a href="javascript:;" data-toggle="collapse" data-target="#accon"><i class="fa fa-university"></i> Accounting<i class="right fa fa-fw fa-caret-down"></i></a>
                     <ul id="accon" class="collapse">
                         <li>
-                            <a class="item" href="/accounting/accounts"> Accounts</a>
+                            <a class="item" href="{% url 'accounting:accounts' %}"> Accounts</a>
                         </li>
                         <li>
-                            <a class="item" href="/accounting/customers"> Customers</a>
+                            <a class="item" href="{% url 'accounting:customers' %}"> Customers</a>
                         </li>
                         <li>
-                            <a class="item" href="/accounting/invoices"> Invoices</a>
+                            <a class="item" href="{% url 'accounting:invoices' %}"> Invoices</a>
                         </li>
                         <li>
-                            <a class="item" href="/accounting/receipts"> Receipts</a>
+                            <a class="item" href="{% url 'accounting:receipts' %}"> Receipts</a>
                         </li>
                         <li>
-                            <a class="item" href="/accounting/payments"> Payments</a>
+                            <a class="item" href="{% url 'accounting:payments' %}"> Payments</a>
                         </li>
                         <li>
-                            <a class="item" href="/accounting/employees"> Employees</a>
+                            <a class="item" href="{% url 'accounting:employees' %}"> Employees</a>
                         </li>
                     </ul>
                 </li>
@@ -158,31 +160,34 @@
                     <a href="javascript:;" data-toggle="collapse" data-target="#serv"><i class="fa fa-tasks"></i> Services <i class="right fa fa-fw fa-caret-down"></i></a>
                     <ul id="serv" class="collapse">
                         <li>
-                            <a class="item" href="/services/company"> Open Company</a>
+                            <a class="item" href="{% url 'services:company' %}"> Open Company</a>
                         </li>
                         <li>
-                            <a class="item" href="/services/title"> Title record</a>
+                            <a class="item" href="{% url 'services:title' %}"> Title record</a>
                         </li>
                         <li>
-                            <a class="item" href="/services/insurance"> Insurance</a>
+                            <a class="item" href="{% url 'services:insurance' %}"> Insurance</a>
                         </li>
                         <li>
-                            <a class="item" href="/services/dot"> DOT</a>
+                            <a class="item" href="{% url 'services:dot' %}"> DOT</a>
                         </li>
                         <li>
-                            <a class="item" href="/services/ifta"> IFTA</a>
+                            <a class="item" href="{% url 'services:ifta' %}"> IFTA</a>
                         </li>
                         <li>
-                            <a class="item" href="/services/audits"> Audits</a>
+                            <a class="item" href="{% url 'services:audits' %}"> Audits</a>
                         </li>
                         <li>
-                            <a class="item" href="/services/permits"> Permits</a>
+                            <a class="item" href="{% url 'services:permits' %}"> Permits</a>
                         </li>
                         <li>
-                            <a class="item" href="/services/plate"> Plate registration</a>
+                            <a class="item" href="{% url 'services:plate' %}"> Plate registration</a>
                         </li>
                         <li>
-                            <a class="item" href="/services/maintenance"> Maintenance</a>
+                            <a class="item" href="{% url 'services:maintenance' %}"> Maintenance</a>
+                        </li>
+                        <li>
+                            <a class="item" href="{% url 'services:maintenance' %}"> Forms</a>
                         </li>
                     </ul>
                 </li>
@@ -190,13 +195,19 @@
                     <a href="javascript:;" data-toggle="collapse" data-target="#logc"><i class="fa fa-truck"></i> Logistic <i class="right fa fa-fw fa-caret-down"></i></a>
                     <ul id="logc" class="collapse">
                         <li>
-                            <a class="item" href="/logistic/loads"> Loads</a>
+                            <a class="item" href="{% url 'logistic:loads' %}"> Loads</a>
                         </li>
                         <li>
-                            <a href="/panel/password"> Change my password</a>
+                            <a class="item" href="{% url 'logistic:drives' %}"> Drives</a>
                         </li>
                         <li>
-                            <a class="item" href="/panel/document"> My Documents</a>
+                            <a class="item" href="{% url 'logistic:trucks' %}"> Trucks</a>
+                        </li>
+                         <li>
+                            <a class="item" href="{% url 'logistic:travel' %}"> Travel Expenses</a>
+                        </li>
+                         <li>
+                            <a class="item" href="{% url 'logistic:infcompany' %}">Company Information</a>
                         </li>
                     </ul>
                 </li>
@@ -226,9 +237,12 @@
 
 </div>
 <script src="{% static 'js/jquery.js'%}"></script>
+<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
 
 <!-- Bootstrap Core JavaScript -->
 <script src="{% static 'js/bootstrap.min.js'%}"></script>
+<script type="text/javascript" src="{% static 'admin/js/cancel.js' %}"></script>
+
 
 <!-- Morris Charts JavaScript -->
 <script src="{% static 'js/plugins/morris/raphael.min.js'%}"></script>

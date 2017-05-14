@@ -14,7 +14,7 @@
     </div>
     <div class="panel-body">
       <div class="navbar-button">
-        <a id="btnAdd" class="btn-primary btn col-md-offset-11" role="button" data-trigger="focus" title="Add Accounts" href="/accounting/accounts/create">
+        <a id="btnAdd" class="btn-primary btn col-md-offset-11" role="button" data-trigger="focus" title="Add Accounts" href="{% url 'accounting:account_create' %}">
           <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
           <tooltip md-direction="left">New</tooltip>
         </a>
@@ -33,10 +33,10 @@
           <li>{{prim.name}}<ol>
             {% for acin in accounts %}
             {% if acin.accounts_id_id == prim.id_acn %}
-            <li><a href="#">{{acin.name}}</a><ol>
+            <li><a href="{% url 'accounting:account_descrip' %}">{{acin.name}}</a><ol>
               {% for sacin in accounts %}
               {% if sacin.accounts_id_id == acin.id_acn %}
-              <li><a href="#">{{acin.name}}</a></li>
+              <li><a href="{% url 'accounting:account_descrip' %}">{{sacin.name}}</a></li>
               {% endif %}
               {% endfor %}
             </ol>

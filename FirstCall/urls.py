@@ -17,15 +17,13 @@ from django.conf.urls import *
 from django.contrib import admin, admindocs
 from django.contrib.auth.views import login, logout
 from django.contrib.auth.decorators import login_required
-
-from FirstCall.views import home_view, panel_view
+from FirstCall.views import home_view
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^$', login_required(home_view), name='home'),
-    url(r'^panel/', login_required(panel_view), name='panel'),
-    url(r'^tools/', include('apps.tools.urls', namespace='tools')),
+    url(r'^tools/', include('apps.tools.urls', namespace='panel')),
     url(r'^accounting/', include('apps.accounting.urls', namespace='accounting')),
     url(r'^services/', include('apps.services.urls', namespace='services')),
     url(r'^logistic/', include('apps.logistic.urls', namespace='logistic')),

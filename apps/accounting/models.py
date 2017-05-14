@@ -120,7 +120,7 @@ class Fee(models.Model):
     accounts = models.ForeignKey(Accounts,  on_delete=models.CASCADE)  # Field name made lowercase.
     description = models.CharField(max_length=255, blank=True, null=True)
     type = models.CharField(max_length=20, blank=True, null=True)
-    value = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
+    value = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.description)
@@ -130,12 +130,13 @@ class AccountDescrip(models.Model):
     users = models.ForeignKey(User,  on_delete=models.CASCADE)  # Field name made lowercase.
     accounts = models.ForeignKey(Accounts,  on_delete=models.CASCADE)  # Field name made lowercase.
     date = models.DateField()
-    value = models.DecimalField(max_digits=10, decimal_places=0)
+    value = models.DecimalField(max_digits=10, decimal_places=2)
     type = models.TextField()  # This field type is a guess.
+
 
 class InvoicesHasItems(models.Model):
     id_ind = models.AutoField(primary_key=True)
     invoices = models.ForeignKey(Invoices, on_delete=models.CASCADE)  # Field name made lowercase.
     items = models.ForeignKey(Items, on_delete=models.CASCADE)  # Field name made lowercase.
     quantity_ind = models.IntegerField(blank=True, null=True)
-    value_ind = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
+    value_ind = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
