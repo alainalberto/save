@@ -19,14 +19,7 @@
           <tooltip md-direction="left">New</tooltip>
         </a>
       </div>
-      <div class="input-group col-md-3">
-        <span class="input-group-btn">
-          <input type="search" id="txtSearch" class="form-control" placeholder="Search for...">
-          <i class="glyphicon glyphicon-search"></i>
-        </span>
-      </div>
       <br/>
-      <div style="overflow-x:auto;">
         <ol class="ui list">
           {% if primary %}
          {% for prim in primary %}
@@ -49,7 +42,6 @@
           {% endif %}
         </ol>
       </div>
-    </div>
   </div>
 </section>
 {% endblock %}

@@ -1,5 +1,5 @@
 from django import forms
-from apps.accounting.models import Accounts, Customers, Employees, Invoices, InvoicesHasItems
+from apps.accounting.models import *
 
 
 class AccountForm(forms.ModelForm):
@@ -10,16 +10,19 @@ class AccountForm(forms.ModelForm):
             'name',
             'description',
             'accounts_id',
+            'users',
         ]
         labels = {
-            'name': 'Name',
-            'description': 'Description',
-            'accounts_id': 'Main Account',
+            'name': 'Name:',
+            'description': 'Description:',
+            'accounts_id': 'Main Account:',
+            'users': 'User:',
         }
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Name', 'class': 'form-control input-md'}),
             'description': forms.TextInput(attrs={'placeholder': 'Description', 'class': 'form-control input-md'}),
             'accounts_id': forms.Select(attrs={'class': 'form-control input-md'}),
+            'users': forms.Select(attrs={'class': 'form-control input-md'}),
         }
 
 
@@ -39,15 +42,15 @@ class CustomerForm(forms.ModelForm):
             'users',
         ]
         labels = {
-            'name' : 'Name:',
-            'lastname' : 'Last Name:',
-            'no_social' : 'SSN:',
-            'address' : 'Address:',
-            'phone' : 'Phone:',
-            'email' : 'Email:',
-            'business' : 'Busines:',
-            'folders' : 'Folders:',
-            'users' : 'User:',
+            'name': 'Name:',
+            'lastname': 'Last Name:',
+            'no_social': 'SSN:',
+            'address': 'Address:',
+            'phone': 'Phone:',
+            'email': 'Email:',
+            'business': 'Busines:',
+            'folders': 'Folders:',
+            'users': 'User:',
         }
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Name', 'class': 'form-control input-md'}),
@@ -79,17 +82,17 @@ class EmployeesForm(forms.ModelForm):
             'position',
         ]
         labels = {
-            'business': 'Business',
-            'name': 'Name',
-            'lastname': 'Last Name',
-            'adress': 'Address',
-            'social_no': 'Social Security',
-            'date_admis': 'Admission Date',
-            'phone': 'Phone',
-            'email': 'Email',
-            'type_salary': 'Salary Type',
-            'value': 'Value',
-            'position': 'Position',
+            'business': 'Business:',
+            'name': 'Name:',
+            'lastname': 'Last Name:',
+            'adress': 'Address:',
+            'social_no': 'Social Security:',
+            'date_admis': 'Admission Date:',
+            'phone': 'Phone:',
+            'email': 'Email:',
+            'type_salary': 'Salary Type:',
+            'value': 'Value:',
+            'position': 'Position:',
         }
         widgets = {
             'business': forms.Select(attrs={'class': 'form-control input-md'}),
@@ -125,19 +128,19 @@ class InvoicesForm(forms.ModelForm):
                 'end_date',
             ]
             labels = {
-                'accounts': 'Accounts',
-                'customers': 'Customers',
-                'business': 'Business',
-                'users': 'Users',
-                'serial': 'Serial',
-                'start_date': 'Start Date',
-                'subtotal': 'Subtotal',
-                'total': 'Total',
-                'waytopay': 'Way to Pay',
-                'discount': 'Discount',
-                'paid': 'Paid',
-                'prefix': 'Prefix',
-                'end_date': 'End Date',
+                'accounts': 'Accounts:',
+                'customers': 'Customers:',
+                'business': 'Business:',
+                'users': 'Users:',
+                'serial': 'Serial:',
+                'start_date': 'Start Date:',
+                'subtotal': 'Subtotal:',
+                'total': 'Total:',
+                'waytopay': 'Way to Pay:',
+                'discount': 'Discount:',
+                'paid': 'Paid:',
+                'prefix': 'Prefix:',
+                'end_date': 'End Date:',
             }
             widgets = {
                 'accounts': forms.Select(attrs={'class': 'form-control input-md'}),

@@ -15,6 +15,3 @@ def home_view(requiret):
     contexto = {'menus': menus, 'submenus': submenus, 'notif': alertNot.count(),
                 'alert': alertAlt.count(), 'urgent': alertUrg.count()}
     return render(requiret, 'home/complement/panel.html', contexto)
-
-def panel_view(requiret):
-    return render(requiret, 'home/complement/panel.html')

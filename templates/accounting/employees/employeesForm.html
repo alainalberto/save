@@ -21,52 +21,52 @@
       <!-- Text input-->
           <div style="width:50%; float:left;">
        <div class="form-group col-md-8 col-md-offset-3">
-         <label class="label-control">Name: </label>
+         <label class="label-control">{{ form.name.label }} </label>
         {{ form.name }}
       </div>
     <!-- Select Basic -->
       <div class="form-group col-md-8 col-md-offset-3">
-        <label class="label-control">Last Name: </label>
+        <label class="label-control">{{ form.lastname.label }} </label>
         {{ form.lastname }}
       </div>
         <div class="form-group col-md-8 col-md-offset-3">
-        <label class="label-control">Address: </label>
+        <label class="label-control">{{ form.adress.label }} </label>
         {{ form.adress }}
       </div>
 
         <div class="form-group col-md-8 col-md-offset-3">
-        <label class="label-control">Phone: </label>
+        <label class="label-control">{{ form.phone.label }}</label>
         {{ form.phone }}
       </div>
          <div class="form-group col-md-8 col-md-offset-3">
-        <label class="label-control">Email: </label>
+        <label class="label-control">{{ form.email.label }}</label>
         {{ form.email }}
       </div>
         <div class="form-group col-md-8 col-md-offset-3">
-        <label class="label-control">Social Security: </label>
+        <label class="label-control">{{ form.social_no.label }} </label>
         {{ form.social_no }}
       </div>
         </div>
           <div style="width:50%; float:left;">
         <div class="form-group col-md-8 col-md-offset-1">
-        <label class="label-control">Admission Date: </label>
+        <label class="label-control">{{ form.date_admis.label }}</label>
         {{ form.date_admis }}
         </div>
 
         <div class="form-group col-md-8 col-md-offset-1">
-        <label class="label-control">Salary Type: </label>
+        <label class="label-control">{{ form.type_salary.label }}</label>
         {{ form.type_salary }}
       </div>
           <div class="form-group col-md-8 col-md-offset-1">
-        <label class="label-control">Value: </label>
+        <label class="label-control">{{ form.value.label }}</label>
         {{ form.value }}
       </div>
           <div class="form-group col-md-8 col-md-offset-1">
-        <label class="label-control">Position: </label>
+        <label class="label-control">{{ form.position.label }} </label>
         {{ form.position }}
       </div>
           <div class="form-group col-md-8 col-md-offset-1" >
-        <label class="label-control">Business: </label>
+        <label class="label-control">{{form.business.label}} </label>
         {{form.business}}
       </div>
               </div>

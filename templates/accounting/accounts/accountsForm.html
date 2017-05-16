@@ -18,21 +18,25 @@
       <!-- Form Name -->
       <!-- Text input-->
       <div class="form-group col-md-4 col-md-offset-4" >
-        <label class="label-control">Name: </label>
+        <label class="label-control">{{form.name.label}} </label>
         {{form.name}}
       </div>
       <!-- Text input-->
        <div class="form-group col-md-4 col-md-offset-4">
-         <label class="label-control">Description: </label>
+         <label class="label-control">{{ form.description.label }} </label>
         {{ form.description }}
       </div>
     <!-- Select Basic -->
-      <div class="form-group col-md-5 col-md-offset-4">
-        <label class="label-control">Main Account: </label>
+      <div class="form-group col-md-4 col-md-offset-4">
+        <label class="label-control">{{ form.accounts_id.label }} </label>
         {{ form.accounts_id }}
       </div>
+          <div class="form-group col-md-4 col-md-offset-4">
+        <label class="label-control">{{ form.users.label }} </label>
+        {{ form.users}}
+      </div>
        <!-- Button (Double) -->
-      <div class="form-group col-md-5 col-md-offset-4">
+      <div class="form-group col-md-4 col-md-offset-4">
         <input type="submit" class="btn btn-success" value="Save">
         <a type="button" href="/accounting/accounts" class="btn btn-danger">Cancel </a>
       </div>

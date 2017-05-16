@@ -1,10 +1,13 @@
-$( function() {
-    $( "#service_forms" ).accordion();
-  } );
+$(document).ready( function () {
 
-$( function() {
+//Data tables
+   $(".table").dataTable();
 
-     $( "#newCompany:visible");
+  // Acordion View Customar_Service
+   $( "#service_forms" ).accordion();
+
+
+   $( "#newCompany" ).visible = false;
 
     // run the currently selected effect
     function runEffect() {
@@ -31,6 +34,4 @@ $( function() {
     $( "#button" ).on( "click", function() {
       runEffect();
     });
-
-  } );
-
+ });

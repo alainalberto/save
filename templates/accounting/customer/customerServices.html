@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-<section xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
-         xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
-         xmlns="http://www.w3.org/1999/html">
+<section>
     <form name="form_customer" method="post" class="form" role="form" id="form_customer" validate>{% csrf_token %}
         <div class="panel panel-primary">
             <div class="panel-heading">
@@ -152,7 +150,7 @@
                 <div class=" col-md-5 col-md-offset-4">
                     <input type="submit" class="btn btn-success" value="Save">
                     <a type="button" href="{% url 'accounting:customers' %}" class="btn btn-danger">Cancel </a>
-                    <input type="button" class="btn btn-primary" value="Save and Check in">
+                    <input type="button" class="btn btn-primary" value="Save and Proces">
                 </div>
             </div>
         </div>
