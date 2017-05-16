@@ -1,10 +1,161 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block content %}
+<section xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
+         xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
+         xmlns="http://www.w3.org/1999/html">
+    <form name="form_customer" method="post" class="form" role="form" id="form_customer" validate>{% csrf_token %}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-clipboard fa-4x"></i>
+                    </div>
+                    <div class="col-xs-9 text-left">
+                        <div><h3>Customer - Services</h3></div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
 
-</body>
-</html>
+                <fieldset>
+                    <!-- Form Name -->
+                    <!-- Text input-->
+                    <div class="form-group col-md-3 col-md-offset-1" >
+                        <label class="label-control">{{form.name.label}}</label>
+                        {{form.name}}
+                    </div>
+                    <!-- Text input-->
+                    <div class="form-group col-md-4 col-md-offset-1">
+                        <label class="label-control">{{ form.lastname.label }}</label>
+                        {{ form.lastname }}
+                    </div>
+                    <!-- Select Basic -->
+                    <div class="form-group col-md-3 col-md-offset-1">
+                        <label class="label-control">{{ form.no_social.label }}</label>
+                        {{ form.no_social }}
+                    </div>
+                    <div class="form-group col-md-5 col-md-offset-1">
+                        <label class="label-control">{{ form.address.label }}</label>
+                        {{ form.address }}
+                    </div>
+                    <div class="form-group col-md-3 col-md-offset-1">
+                        <label class="label-control">{{ form.phone.label }}</label>
+                        {{ form.phone }}
+                    </div>
+                    <div class="form-group col-md-5 col-md-offset-1">
+                        <label class="label-control">{{ form.email.label }}</label>
+                        {{ form.email }}
+                    </div>
+                    <div class="form-group col-md-3 col-md-offset-1">
+                        <label class="label-control">{{ form.business.label }}</label>
+                        {{ form.business }}
+                    </div>
+                    <div class="form-group col-md-3 col-md-offset-1">
+                        <label class="label-control">{{ form.folders.label }}</label>
+                        {{ form.folders }}
+                    </div>
+                    <div class="form-group col-md-3 col-md-offset-1">
+                        <label class="label-control">{{ form.users.label }}</label>
+                        {{ form.users }}
+                    </div>
+                </fieldset>
+                <!-- Button (Double) -->
+                <div class="form-group col-md-3 col-md-offset-1">
+                    <fieldset>
+                        <div id="listServi" class="list-group">
+                            <legend class="list-group-item active">Services:</legend>
+                            <div class="list-group-item">
+                                <input  type="checkbox" name="btnCompany" id="btnCompany" onselect="#newCompany.show()" >
+                                <label for="btnCompany">Open Company</label>
+                                </input>
+                            </div>
+                            <div class="list-group-item">
+                                <input type="checkbox" name="btnPermit" id="btnPermit">
+                                <label for="btnPermit">Permits</label>
+                                </input>
+                            </div>
+                            <div class="list-group-item">
+                                <input type="checkbox" name="btnTitle" id="btnTitle">
+                                <label for="btnTitle">Title Record</label>
+                                </input>
+                            </div>
+                            <div class="list-group-item">
+                                <input type="checkbox" name="btnPlate" id="btnPlate">
+                                <label for="btnPlate">Plate Registration</label>
+                                </input>
+                            </div>
+                            <div class="list-group-item">
+                                <input type="checkbox" name="btnInsurence" id="btnInsurence">
+                                <label for="btnInsurence">Insurance</label>
+                                </input>
+                            </div>
+                            <div class="list-group-item">
+                                <input type="checkbox" name="btnDot" id="btnDot">
+                                <label for="btnDot">DOT</label>
+                                </input>
+                            </div>
+                            <div class="list-group-item">
+                                <input type="checkbox" name="btnIfta" id="btnIfta">
+                                <label for="btnIfta">IFTA</label>
+                                </input>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="form-group col-md-8">
+                    <div  id="service_forms">
+                        <h3>New Company</h3>
+                        <div id="newCompany" visible="false">
+                            <fieldset>
+                                {{ form_company.as_p }}
+                                <p>Estee s el contenido</p>
+                            </fieldset>
+                        </div>
+                        <h3>Permits</h3>
+                        <div id="permit">
+                            <fieldset>
+                                {{ form_permit.as_p }}
+                            </fieldset>
+                        </div>
+                        <h3>Title Record</h3>
+                        <div id="title">
+                            <fieldset>
+                                {{ form_permit.as_p }}
+                            </fieldset>
+                        </div>
+                        <h3>Plate Registration</h3>
+                        <div id="plate">
+                            <fieldset>
+                                {{ form_plate.as_p }}
+                            </fieldset>
+                        </div>
+                        <h3>Insurance</h3>
+                        <div id="insurance">
+                            <fieldset>
+                                {{ form_insurance.as_p }}
+                            </fieldset>
+                        </div>
+                        <h3>DOT</h3>
+                        <div id="dot">
+                            <fieldset>
+                                {{ form_dot.as_p }}
+                            </fieldset>
+                        </div>
+                        <h3>IFTA</h3>
+                        <div id="ifta">
+                            <fieldset>
+                                {{ form_ifta.as_p }}
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+                <div class=" col-md-5 col-md-offset-4">
+                    <input type="submit" class="btn btn-success" value="Save">
+                    <a type="button" href="{% url 'accounting:customers' %}" class="btn btn-danger">Cancel </a>
+                    <input type="button" class="btn btn-primary" value="Save and Check in">
+                </div>
+            </div>
+        </div>
+    </form>
+</section>
+{% endblock %}

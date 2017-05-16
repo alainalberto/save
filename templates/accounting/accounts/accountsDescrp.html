@@ -33,7 +33,7 @@
                 {% for account in object_list %}
                 <tr>
                     <td>{{ account.date}}</td>
-                    <td>{{ account.accounts_id }}</td>
+                    <td>{{ account.accounts.name }}</td>
                     <td>{{ account.type}}</td>
                     <td>$ {{ account.value}}</td>
                 </tr>

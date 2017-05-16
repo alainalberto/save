@@ -39,15 +39,15 @@ class CustomerForm(forms.ModelForm):
             'users',
         ]
         labels = {
-            'name' : 'Name',
-            'lastname' : 'Last Name',
-            'no_social' : 'SSN',
-            'address' : 'Address',
-            'phone' : 'Phone',
-            'email' : 'Email',
-            'business' : 'Busines',
-            'folders' : 'Folders',
-            'users' : 'User',
+            'name' : 'Name:',
+            'lastname' : 'Last Name:',
+            'no_social' : 'SSN:',
+            'address' : 'Address:',
+            'phone' : 'Phone:',
+            'email' : 'Email:',
+            'business' : 'Busines:',
+            'folders' : 'Folders:',
+            'users' : 'User:',
         }
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Name', 'class': 'form-control input-md'}),

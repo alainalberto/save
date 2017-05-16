@@ -40,10 +40,9 @@
                     </tr>
                     </thead>
                     {% if object_list %}
-                    {% for c in object_list %}
                     <tbody>
+                    {% for c in object_list %}
                     <tr>
-
                         <td>{{c.name}}</td>
                         <td>{{c.lastname}}</td>
                         <td>{{c.no_social}}</td>
@@ -64,10 +63,10 @@
                                 </a>
                             </toolbar>
                         </td>
-
+                        {% endfor %}
                     </tr>
+                    {% endfor %}
                     </tbody>
-                      {% endfor %}
                     {% else %}
                     <tfoot>
                     <div>

@@ -3,9 +3,8 @@ from django.core.urlresolvers import reverse_lazy
 from django.template import RequestContext
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.models import User
-from apps.accounting.models import Accounts, AccountDescrip, Customers, Employees, Invoices, InvoicesHasItems
-from apps.accounting.components.AccountingForm import AccountForm, CustomerForm, EmployeesForm, InvoicesForm, InvoicesHasItemsForm
-
+from apps.accounting.models import *
+from apps.accounting.components.AccountingForm import *
 
 
 # Create your views here.
@@ -24,6 +23,30 @@ class CustomersCreate(CreateView):
      form_class = CustomerForm
      template_name = 'accounting/customer/customerForm.html'
      success_url = reverse_lazy('accounting:customers')
+     """def post(self, request, *args, **kwargs):
+         if Folders.objects.get(name__contains='Customer'):
+             id_father = Folders.objects.filter(name='Customer')
+             folder = Folders.objects.crate(name=self.request.POST("name")+"_"+self.request.POST("lastname"),
+                                            description="Folder to Customer"+self.request.POST("name")+" "+self.request.POST("lastname"),
+                                            folders_id_id=id_father.id_fld)
+             customer = Customers.objectes.crate(name=self.request.POST("name"), lastname=self.request.POST("lastname"),
+                                                 no_social=self.request.POST("no_social"),
+                                                 address=self.request.POST("address"), phone=self.request.POST("phone"),
+                                                 email=self.request.POST("email"),
+                                                 business_id=self.request.POST("business"), folders_id=folder.id_fld,
+                                                 users_id=self.request.POST("users"))
+         else:
+             id_father = Folders.objects.create(name='Customer', description="Folder to Customer", folders_id_id=None)
+             folder = Folders.objects.crate(name=self.request.POST("name") + "_" + self.request.POST("lastname"),
+                                            description="Folder to Customer" + self.request.POST("name") + " " + self.request.POST("lastname"),
+                                            folders_id_id=id_father.id_fld)
+             customer = Customers.objectes.crate(name=self.request.POST("name"), lastname=self.request.POST("lastname"),
+                                                 no_social=self.request.POST("no_social"),
+                                                 address=self.request.POST("address"), phone=self.request.POST("phone"),
+                                                 email=self.request.POST("email"),
+                                                 business_id=self.request.POST("business"), folders_id=folder.id_fld,
+                                                 users_id=self.request.POST("users"))
+     """
 
 class CustomersEdit(UpdateView):
     model = Customers
@@ -34,6 +57,13 @@ class CustomersEdit(UpdateView):
 class CustomersDelete(DeleteView):
     model = Customers
     template_name = 'confirm_delete.html'
+    success_url = reverse_lazy('accounting:customers')
+
+
+class CustomersService(CreateView):
+    model = Customers
+    form_class = CustomerForm
+    template_name = 'accounting/customer/customerServices.html'
     success_url = reverse_lazy('accounting:customers')
 
 class AccountCreate(CreateView):

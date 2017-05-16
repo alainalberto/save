@@ -12,5 +12,7 @@ urlpatterns = [
     url(r'^permits/$', login_required(), name='permits'),
     url(r'^plate/$', login_required(), name='plate'),
     url(r'^maintenance/$', login_required(), name='maintenance'),
+    url(r'^forms/$', login_required(), name='forms'),
+    url(r'^folder/$', login_required(), name='folder'),
 
 ]
