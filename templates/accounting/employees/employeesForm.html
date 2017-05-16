@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block content %}
+<section>
+    <div class="panel panel-primary">
+  <div class="panel-heading">
+    <div class="row">
+      <div class="col-xs-3">
+          <i class="fa fa-indent fa-4x"></i>
+      </div>
+      <div class="col-xs-9 text-left">
+          <div><h3>{{ title }}</h3></div>
+      </div>
+    </div>
+  </div>
+  <div class="panel-body">
+      <form name="form_employees" method="post" class="form" role="form" id="form_employees" validate>{% csrf_token %}
+      <div>
+      <!-- Form Name -->
+      <!-- Text input-->
+
+      <!-- Text input-->
+          <div style="width:50%; float:left;">
+       <div class="form-group col-md-8 col-md-offset-3">
+         <label class="label-control">Name: </label>
+        {{ form.name }}
+      </div>
+    <!-- Select Basic -->
+      <div class="form-group col-md-8 col-md-offset-3">
+        <label class="label-control">Last Name: </label>
+        {{ form.lastname }}
+      </div>
+        <div class="form-group col-md-8 col-md-offset-3">
+        <label class="label-control">Address: </label>
+        {{ form.adress }}
+      </div>
+
+        <div class="form-group col-md-8 col-md-offset-3">
+        <label class="label-control">Phone: </label>
+        {{ form.phone }}
+      </div>
+         <div class="form-group col-md-8 col-md-offset-3">
+        <label class="label-control">Email: </label>
+        {{ form.email }}
+      </div>
+        <div class="form-group col-md-8 col-md-offset-3">
+        <label class="label-control">Social Security: </label>
+        {{ form.social_no }}
+      </div>
+        </div>
+          <div style="width:50%; float:left;">
+        <div class="form-group col-md-8 col-md-offset-1">
+        <label class="label-control">Admission Date: </label>
+        {{ form.date_admis }}
+        </div>
+
+        <div class="form-group col-md-8 col-md-offset-1">
+        <label class="label-control">Salary Type: </label>
+        {{ form.type_salary }}
+      </div>
+          <div class="form-group col-md-8 col-md-offset-1">
+        <label class="label-control">Value: </label>
+        {{ form.value }}
+      </div>
+          <div class="form-group col-md-8 col-md-offset-1">
+        <label class="label-control">Position: </label>
+        {{ form.position }}
+      </div>
+          <div class="form-group col-md-8 col-md-offset-1" >
+        <label class="label-control">Business: </label>
+        {{form.business}}
+      </div>
+              </div>
+       <!-- Button (Double) -->
+      <div class="form-group col-md-5 col-md-offset-7">
+        <input type="submit" class="btn btn-success" value="Save">
+        <a type="button" href="{% url 'accounting:employees' %}" class="btn btn-danger">Cancel </a>
+      </div>
+
+    </fieldset>
+    </form>
+  </div>
+</div>
+
+</section>
+{% endblock %}
+

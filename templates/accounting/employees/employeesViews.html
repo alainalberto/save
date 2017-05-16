@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block content %}
+<section>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-xs-3">
+                    <i class="fa fa-list fa-4x"></i>
+                </div>
+                <div class="col-xs-9 text-left">
+                    <div><h3>{{title}}</h3></div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="navbar-button">
+                <a id="btnAdd" class="btn-primary btn col-md-offset-11" role="button" data-trigger="focus" title="Add User" href="{% url 'accounting:employees_create' %}">
+                    <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
+                    <tooltip md-direction="left">New</tooltip>
+                </a>
+            </div>
+            <div class="input-group col-md-3">
+                <span class="input-group-btn">
+                    <input type="search" id="txtSearch" class="form-control" placeholder="Search for...">
+                    <i class="glyphicon glyphicon-search"></i>
+                </span>
+            </div>
+            <br/>
+            <div style="overflow-x:auto;">
+                <table id="listEmployees" class="ui inverted blue table">
+                    <thead>
+                    <tr>
+                        <th>Business</th>
+                        <th>Name</th>
+                        <th>Last Name</th>
+                        <th>Address</th>
+                        <th>Social Security</th>
+                        <th>Admission Date</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Salary Type</th>
+                        <th>Value</th>
+                        <th>Position</th>
+                    </tr>
+                    </thead>
+                    {% if object_list %}
+                    {% for c in object_list %}
+                    <tbody>
+                    <tr>
+
+                        <td>{{c.business}}</td>
+                        <td>{{c.name}}</td>
+                        <td>{{c.lastname}}</td>
+                        <td>{{c.adress}}</td>
+                        <td>{{c.social_no}}</td>
+                        <td>{{c.date_admis}}</td>
+                        <td>{{c.phone}}</td>
+                        <td>{{c.email}}</td>
+                        <td>{{c.type_salary}}</td>
+                        <td>{{c.value}}</td>
+                        <td>{{c.position}}</td>
+
+                        <td>
+                            <toolbar class="md-accent">
+                                <a data-type="info" data-trigger="focus" title="Edit Employees" data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'accounting:employees_edit' c.id_emp %}">
+                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                    <tooltip md-direction="left"></tooltip>
+                                </a>
+                            </toolbar>
+                            <toolbar class="md-accent">
+                                <a data-type="info" data-animation="am-flip-x" data-trigger="focus" title="Delete Employees" type="button" class="btn btn-primary test-tooltip" href="{% url 'accounting:employees_delete' c.id_emp %}">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                    <tooltip md-direction="left"></tooltip>
+                                </a>
+                            </toolbar>
+                        </td>
+
+                    </tr>
+                    </tbody>
+                     {% endfor %}
+                    {% else %}
+                    <tfoot>
+                    <div>
+                        <strong>No results found...</strong><a href="{% url 'accounting:employees_create' %}">add one</a>
+                    </div>
+                    </tfoot>
+                    {% endif %}
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
