@@ -3,8 +3,9 @@ from django.core.urlresolvers import reverse_lazy
 from django.template import RequestContext
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.models import User
-from apps.accounting.models import Accounts, AccountDescrip, Customers
-from apps.accounting.components.AccountingForm import AccountForm, CustomerForm
+from apps.accounting.models import Accounts, AccountDescrip, Customers, Employees, Invoices, InvoicesHasItems
+from apps.accounting.components.AccountingForm import AccountForm, CustomerForm, EmployeesForm, InvoicesForm, InvoicesHasItemsForm
+
 
 
 # Create your views here.
@@ -32,7 +33,7 @@ class CustomersEdit(UpdateView):
 
 class CustomersDelete(DeleteView):
     model = Customers
-    template_name = 'accounting/customer/customers_confirm_delete.html'
+    template_name = 'confirm_delete.html'
     success_url = reverse_lazy('accounting:customers')
 
 class AccountCreate(CreateView):
@@ -56,6 +57,47 @@ def AccountsViews(requiret):
     contexto = {'accounts': lisexp, 'primary': primary}
     return render(requiret, 'accounting/accounts/accountsViews.html', contexto)
 
+#Employees
+class EmployeesView(ListView):
+    model = Employees
+    template_name = 'accounting/employees/employeesViews.html'
 
+class EmployeesCreate(CreateView):
+     model = Employees
+     form_class = EmployeesForm
+     template_name = 'accounting/employees/employeesForm.html'
+     success_url = reverse_lazy('accounting:employees')
 
+class EmployeesEdit(UpdateView):
+    model = Employees
+    form_class = EmployeesForm
+    template_name = 'accounting/employees/employeesForm.html'
+    success_url = reverse_lazy('accounting:employees')
+
+class EmployeesDelete(DeleteView):
+    model = Employees
+    template_name = 'confirm_delete.html'
+    success_url = reverse_lazy('accounting:employees')
+
+#Invoices
+class InvoicesView(ListView):
+    model = Invoices
+    template_name = 'accounting/invoices/invoicesViews.html'
+
+class InvoicesCreate(CreateView):
+     model = Invoices
+     form_class = InvoicesForm
+     template_name = 'accounting/invoices/invoicesForm.html'
+     success_url = reverse_lazy('accounting:invoices')
+
+class InvoicesEdit(UpdateView):
+    model = Invoices
+    form_class = InvoicesForm
+    template_name = 'accounting/invoices/invoicesForm.html'
+    success_url = reverse_lazy('accounting:invoices')
+
+class InvoicesDelete(DeleteView):
+    model = Invoices
+    template_name = 'confirm_delete.html'
+    success_url = reverse_lazy('accounting:invoices')
 

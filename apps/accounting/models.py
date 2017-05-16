@@ -61,9 +61,9 @@ class Invoices(models.Model):
     business = models.ForeignKey(Business,  on_delete=models.CASCADE)  # Field name made lowercase.
     users = models.ForeignKey(User,  on_delete=models.CASCADE)  # Field name made lowercase.
     serial = models.IntegerField()
-    date_start = models.DateField(blank=True, null=True)
+    start_date = models.DateField(blank=True, null=True)
     subtotal = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
-    start_date = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
+    total = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
     waytopay = models.CharField(max_length=20, blank=True, null=True)
     discount = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
     paid = models.IntegerField(blank=True, null=True)
