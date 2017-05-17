@@ -100,7 +100,7 @@ class EmployeesForm(forms.ModelForm):
             'lastname': forms.TextInput(attrs={'placeholder': 'Last Name', 'class': 'form-control input-md'}),
             'adress': forms.TextInput(attrs={'placeholder': 'Address', 'class': 'form-control input-md'}),
             'social_no': forms.NumberInput(attrs={'placeholder': 'Social Security', 'class': 'form-control input-md'}),
-            'date_admis': forms.TextInput(attrs={'placeholder': 'Admission Date', 'class': 'form-control input-md'}),
+            'date_admis': forms.DateTimeInput(attrs={'placeholder': 'Admission Date', 'class': 'form-control input-md'}),
             'phone': forms.NumberInput(attrs={'placeholder': 'Phone', 'class': 'form-control input-md'}),
             'email': forms.EmailInput(attrs={'placeholder': 'Email', 'class': 'form-control input-md'}),
             'type_salary': forms.TextInput(attrs={'placeholder': 'Salary Type', 'class': 'form-control input-md'}),
@@ -148,14 +148,14 @@ class InvoicesForm(forms.ModelForm):
                 'business': forms.Select(attrs={'class': 'form-control input-md'}),
                 'users': forms.Select(attrs={'class': 'form-control input-md'}),
                 'serial': forms.NumberInput(attrs={'placeholder': 'Serial', 'class': 'form-control input-md'}),
-                'start_date': forms.TextInput(attrs={'placeholder': 'Start Date', 'class': 'form-control input-md'}),
+                'start_date': forms.DateInput(attrs={'placeholder': 'Start Date', 'class': 'form-control input-md'}),
                 'subtotal': forms.NumberInput(attrs={'placeholder': 'Subtotal', 'class': 'form-control input-md'}),
                 'total': forms.NumberInput(attrs={'placeholder': 'Total', 'class': 'form-control input-md'}),
                 'waytopay': forms.TextInput(attrs={'placeholder': 'Way to Pay', 'class': 'form-control input-md'}),
                 'discount': forms.NumberInput(attrs={'placeholder': 'Discount', 'class': 'form-control input-md'}),
                 'paid': forms.NumberInput(attrs={'placeholder': 'Paid', 'class': 'form-control input-md'}),
                 'prefix': forms.TextInput(attrs={'placeholder': 'Prefix', 'class': 'form-control input-md'}),
-                'end_date': forms.TextInput(attrs={'placeholder': 'End Date', 'class': 'form-control input-md'}),
+                'end_date': forms.DateInput(attrs={'placeholder': 'End Date', 'class': 'form-control input-md'}),
             }
 
 
