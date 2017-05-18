@@ -40,6 +40,7 @@ class CustomerForm(forms.ModelForm):
             'business',
             'folders',
             'users',
+            'deactivated',
         ]
         labels = {
             'name': 'Name:',
@@ -51,6 +52,7 @@ class CustomerForm(forms.ModelForm):
             'business': 'Busines:',
             'folders': 'Folders:',
             'users': 'User:',
+            'deactivated': 'Deactivated:',
         }
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Name', 'class': 'form-control input-md'}),
@@ -62,6 +64,7 @@ class CustomerForm(forms.ModelForm):
             'business': forms.Select(attrs={'class': 'form-control input-md'}),
             'folders': forms.Select(attrs={'class': 'form-control input-md'}),
             'users': forms.Select(attrs={'class': 'form-control input-md'}),
+            'deactivated': forms.CheckboxInput(attrs={'class': 'checkbox'}),
         }
 
 class EmployeesForm(forms.ModelForm):
@@ -72,6 +75,7 @@ class EmployeesForm(forms.ModelForm):
             'business',
             'name',
             'lastname',
+            'comercial_name',
             'adress',
             'social_no',
             'date_admis',
@@ -80,11 +84,13 @@ class EmployeesForm(forms.ModelForm):
             'type_salary',
             'value',
             'position',
+            'deactivated',
         ]
         labels = {
             'business': 'Business:',
             'name': 'Name:',
             'lastname': 'Last Name:',
+            'comercial_name': 'Comercial Name:',
             'adress': 'Address:',
             'social_no': 'Social Security:',
             'date_admis': 'Admission Date:',
@@ -93,11 +99,13 @@ class EmployeesForm(forms.ModelForm):
             'type_salary': 'Salary Type:',
             'value': 'Value:',
             'position': 'Position:',
+            'deactivated': 'Deactivated:',
         }
         widgets = {
             'business': forms.Select(attrs={'class': 'form-control input-md'}),
             'name': forms.TextInput(attrs={'placeholder': 'Name', 'class': 'form-control input-md'}),
             'lastname': forms.TextInput(attrs={'placeholder': 'Last Name', 'class': 'form-control input-md'}),
+            'comercial_name': forms.TextInput(attrs={'placeholder': 'Comercial Name', 'class': 'form-control input-md'}),
             'adress': forms.TextInput(attrs={'placeholder': 'Address', 'class': 'form-control input-md'}),
             'social_no': forms.NumberInput(attrs={'placeholder': 'Social Security', 'class': 'form-control input-md'}),
             'date_admis': forms.DateTimeInput(attrs={'placeholder': 'Admission Date', 'class': 'form-control input-md'}),
@@ -106,6 +114,7 @@ class EmployeesForm(forms.ModelForm):
             'type_salary': forms.TextInput(attrs={'placeholder': 'Salary Type', 'class': 'form-control input-md'}),
             'value': forms.NumberInput(attrs={'placeholder': 'Value', 'class': 'form-control input-md'}),
             'position': forms.TextInput(attrs={'placeholder': 'Position', 'class': 'form-control input-md'}),
+            'deactivated': forms.CheckboxInput(attrs={'class': 'checkbox'}),
         }
 
 class InvoicesForm(forms.ModelForm):
@@ -148,9 +157,9 @@ class InvoicesForm(forms.ModelForm):
                 'start_date': forms.DateInput(attrs={'placeholder': 'Start Date', 'class': 'form-control input-md'}),
                 'subtotal': forms.NumberInput(attrs={'placeholder': 'Subtotal', 'class': 'form-control input-md'}),
                 'total': forms.NumberInput(attrs={'placeholder': 'Total', 'class': 'form-control input-md'}),
-                'waytopay': forms.TextInput(attrs={'placeholder': 'Way to Pay', 'class': 'form-control input-md'}),
+                 'waytopay': forms.Select(attrs={'class': 'form-control input-md'},choices=(('Cash','Cash'),('Check','Check'),('Credit Card','Credit Card'))),
                 'discount': forms.NumberInput(attrs={'placeholder': 'Discount', 'class': 'form-control input-md'}),
-                'paid': forms.CheckboxInput(attrs={'placeholder': 'Paid', 'class': 'form-control input-md'}),
+                'paid': forms.CheckboxInput(attrs={'class': 'checkbox'}),
                 'prefix': forms.TextInput(attrs={'placeholder': 'Prefix', 'class': 'form-control input-md'}),
                 'end_date': forms.DateInput(attrs={'placeholder': 'End Date', 'class': 'form-control input-md'}),
             }
