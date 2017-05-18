@@ -1,16 +1,16 @@
 from django.contrib import admin
 
-from apps.accounting.models import Accounts, Customers, Invoices, Employees, Fee, Items, Receipts, Salary, AccountDescrip, InvoicesHasItems
+from apps.accounting.models import *
 
 # Register your models here.
 
-admin.site.register(Accounts)
-admin.site.register(Customers)
-admin.site.register(Employees)
-admin.site.register(Invoices)
-admin.site.register(Items)
-admin.site.register(Receipts)
+admin.site.register(Account)
+admin.site.register(Customer)
+admin.site.register(Employee)
+admin.site.register(Invoice)
+admin.site.register(Item)
+admin.site.register(Receipt)
 admin.site.register(Salary)
 admin.site.register(Fee)
 admin.site.register(AccountDescrip)
-admin.site.register(InvoicesHasItems)
+admin.site.register(InvoicesHasItem)

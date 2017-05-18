@@ -1,13 +1,13 @@
 from django.contrib import admin
-from apps.tools.models import Business, Menus, Alerts, Calendar, Chat, Directory, Folders, Files
+from apps.tools.models import *
 # Register your models here.
 
 
-admin.site.register(Business)
-admin.site.register(Menus)
-admin.site.register(Alerts)
+admin.site.register(Busines)
+admin.site.register(Menu)
+admin.site.register(Alert)
 admin.site.register(Calendar)
 admin.site.register(Chat)
 admin.site.register(Directory)
-admin.site.register(Folders)
-admin.site.register(Files)
+admin.site.register(Folder)
+admin.site.register(File)

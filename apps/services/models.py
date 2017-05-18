@@ -2,42 +2,42 @@ from django.db import models
 
 from  django.contrib.auth.models import User
 
-from apps.tools.models import Folders
+from apps.tools.models import Folder
 
-from apps.tools.models import Files
+from apps.tools.models import File
 
-from apps.accounting.models import Customers
+from apps.accounting.models import Customer
 
-from apps.accounting.models import Accounts
+from apps.accounting.models import Account
 
 # Create your models here.
 
 
-class Companies(models.Model):
+class Companie(models.Model):
     id_com = models.AutoField(primary_key=True)
-    folders = models.ForeignKey(Folders, on_delete=models.CASCADE)  # Field name made lowercase.
+    folders = models.ForeignKey(Folder, on_delete=models.CASCADE)  # Field name made lowercase.
     users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
-    customers = models.ForeignKey(Customers, on_delete=models.CASCADE)  # Field name made lowercase.
+    customers = models.ForeignKey(Customer, on_delete=models.CASCADE)  # Field name made lowercase.
     name = models.CharField(max_length=45, blank=True, null=True)
     attorney = models.CharField(max_length=45, blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
-    phone = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
-    fax = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
-    ein = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
-    logo = models.CharField(max_length=255, blank=True, null=True)
+    phone = models.IntegerField(blank=True, null=True)
+    fax = models.IntegerField(blank=True, null=True)
+    ein = models.IntegerField(blank=True, null=True)
+    logo = models.ImageField(blank=True, null=True)
     created_date = models.DateField(blank=True, null=True)
-    unity = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
-    deactivate = models.IntegerField(blank=True, null=True)
+    unity = models.IntegerField(blank=True, null=True)
+    deactivate = models.BooleanField(default=False)
     deactivate_date = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.name)
 
-class Contracts(models.Model):
+class Contract(models.Model):
     id_con = models.AutoField(primary_key=True)
-    customer = models.ForeignKey(Customers, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
-    files = models.ForeignKey(Files, on_delete=models.CASCADE)  # Field name made lowercase.
+    files = models.ForeignKey(File, on_delete=models.CASCADE)  # Field name made lowercase.
     description = models.CharField(max_length=255, blank=True, null=True)
     serial = models.CharField(max_length=20, blank=True, null=True)
     start_date = models.DateField(blank=True, null=True)
@@ -47,17 +47,17 @@ class Contracts(models.Model):
 
 class Audit(models.Model):
     id_aud = models.AutoField(primary_key=True)
-    folders = models.ForeignKey(Folders, on_delete=models.CASCADE)  # Field name made lowercase.
-    contracts = models.ForeignKey(Contracts, on_delete=models.CASCADE)  # Field name made lowercase.
-    companies = models.ForeignKey(Companies, on_delete=models.CASCADE)  # Field name made lowercase.
+    folders = models.ForeignKey(Folder, on_delete=models.CASCADE)  # Field name made lowercase.
+    contracts = models.ForeignKey(Contract, on_delete=models.CASCADE)  # Field name made lowercase.
+    companies = models.ForeignKey(Companie, on_delete=models.CASCADE)  # Field name made lowercase.
     users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
     type = models.CharField(max_length=20, blank=True, null=True)
     date = models.DateField(blank=True, null=True)
     results = models.CharField(max_length=255, blank=True, null=True)
 
-class Drivers(models.Model):
+class Driver(models.Model):
     id_drv = models.AutoField(primary_key=True)
-    companies = models.ForeignKey(Companies, on_delete=models.CASCADE)  # Field name made lowercase.
+    companies = models.ForeignKey(Companie, on_delete=models.CASCADE)  # Field name made lowercase.
     name = models.CharField(max_length=45, blank=True, null=True)
     license_numb = models.CharField(max_length=45, blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
@@ -69,7 +69,7 @@ class Drivers(models.Model):
     mbr_date = models.DateField(blank=True, null=True)
     mbr_date_exp = models.DateField(blank=True, null=True)
     begining_date = models.DateField(blank=True, null=True)
-    deactivate = models.IntegerField(blank=True, null=True)
+    deactivate = models.BooleanField(default=False)
     deactivate_date = models.DateField(blank=True, null=True)
 
     def __str__(self):
@@ -78,8 +78,8 @@ class Drivers(models.Model):
 class Insurance(models.Model):
     id_ins = models.AutoField(primary_key=True)
     users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
-    accounts = models.ForeignKey(Accounts, on_delete=models.CASCADE)  # Field name made lowercase.
-    companies = models.ForeignKey(Companies, on_delete=models.CASCADE)  # Field name made lowercase.
+    accounts = models.ForeignKey(Account, on_delete=models.CASCADE)  # Field name made lowercase.
+    companies = models.ForeignKey(Companie, on_delete=models.CASCADE)  # Field name made lowercase.
     down_payment = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
     pilicy_efective_date = models.DateField(blank=True, null=True)
     pilicy_date_exp = models.DateField(blank=True, null=True)
@@ -93,20 +93,20 @@ class Insurance(models.Model):
     sale_date_fee = models.DateField(blank=True, null=True)
     total = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
     comision = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
-    paid = models.IntegerField(blank=True, null=True)
+    paid = models.BooleanField(default=False)
 
 class Maintenance(models.Model):
     id_mnt = models.AutoField(primary_key=True)
-    contracts = models.ForeignKey(Contracts,  on_delete=models.CASCADE)  # Field name made lowercase.
-    companies = models.ForeignKey(Companies,  on_delete=models.CASCADE)  # Field name made lowercase.
+    contracts = models.ForeignKey(Contract,  on_delete=models.CASCADE)  # Field name made lowercase.
+    companies = models.ForeignKey(Companie,  on_delete=models.CASCADE)  # Field name made lowercase.
     users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
     nota = models.CharField(max_length=255, blank=True, null=True)
 
 
-class Permissions(models.Model):
+class Permission(models.Model):
     id_per = models.AutoField(primary_key=True)
     users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
-    companies = models.ForeignKey(Companies, on_delete=models.CASCADE)  # Field name made lowercase.
+    companies = models.ForeignKey(Companie, on_delete=models.CASCADE)  # Field name made lowercase.
     date = models.DateField(blank=True, null=True)
     usdot = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
     usdot_pin = models.CharField(max_length=20, blank=True, null=True)
@@ -124,15 +124,15 @@ class Permissions(models.Model):
 
 class Trucks(models.Model):
     id_tru = models.AutoField(primary_key=True)
-    companies = models.ForeignKey(Companies, on_delete=models.CASCADE)  # Field name made lowercase.
+    companies = models.ForeignKey(Companie, on_delete=models.CASCADE)  # Field name made lowercase.
     type = models.CharField(max_length=45, blank=True, null=True)
-    year = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
+    year = models.IntegerField(blank=True, null=True)
     model = models.CharField(max_length=45, blank=True, null=True)
     serial = models.CharField(max_length=20, blank=True, null=True)
-    number = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
+    number = models.IntegerField(blank=True, null=True)
     insp_date_exp = models.DateField(blank=True, null=True)
     regit_date_exp = models.DateField(blank=True, null=True)
-    deactivate = models.IntegerField(blank=True, null=True)
+    deactivate = models.BooleanField(default=False)
     deactivate_date = models.DateField(blank=True, null=True)
 
     def __str__(self):
@@ -142,7 +142,7 @@ class Ifta(models.Model):
     id_ift = models.AutoField(primary_key=True)
     trucks = models.ForeignKey(Trucks, on_delete=models.CASCADE)  # Field name made lowercase.
     users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
-    customers = models.ForeignKey(Customers, on_delete=models.CASCADE)  # Field name made lowercase.
+    customers = models.ForeignKey(Customer, on_delete=models.CASCADE)  # Field name made lowercase.
     date = models.DateField(blank=True, null=True)
     state = models.CharField(max_length=45, blank=True, null=True)
     milles = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)

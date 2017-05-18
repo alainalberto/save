@@ -11,5 +11,6 @@ def panel_view(requiret):
     return render(requiret, 'home/complement/panel.html')
 
 def Calendar_Panel(requiret):
+    events = Calendar.objects.filter()
     return render(requiret, 'home/calendar/calendar_panel.html')
 

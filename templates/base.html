@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-{% block extrahead %}
+    {% block extrahead %}
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,23 +14,22 @@
 
     <!-- Bootstrap Core CSS -->
     <link href="{% static 'css/bootstrap.min.css'%}" rel="stylesheet">
-    <link href="{% static 'css/dateTables.bootstrap.min.css'%}" rel="stylesheet">
+    <link href="{% static 'css/dataTables.min.css'%}" rel="stylesheet">
     <link href="{% static 'css/datetimepicker.min.css'%}" rel="stylesheet">
 
     <!-- JQuery UI Core CSS -->
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <link href="{% static 'lib/calendar/fullcalendar.min.css'%}" rel="stylesheet">
+    <link href="{% static 'lib/calendar/fullcalendar.print.min.css'%}" rel="stylesheet" media="print">
 
     <!-- Custom CSS -->
     <link href="{% static 'css/sb-admin.css'%}" rel="stylesheet">
 
     <link href="{% static 'css/app.css'%}" rel="stylesheet">
 
-     <link href="{% static '//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.css'%}" rel="stylesheet">
-     <link href="{% static '//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.print.css'%}" rel="stylesheet">
-
-
     <!-- Morris Charts CSS -->
-    <link href="{% static 'css/plugins/morris.css'%}" rel="stylesheet">
+    <link href="{% static 'lib/morris/morris.css'%}" rel="stylesheet">
 
     <!-- Custom Fonts -->
     <link href="{% static 'css/font-awesome/css/font-awesome.min.css'%}" rel="stylesheet" type="text/css">
@@ -39,13 +38,29 @@
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
     {% block script %}
+    <script src="{% static 'js/jquery.js'%}"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="{% static 'js/dataTables.min.js'%}"></script>
+    <script src="{% static 'js/jq_app.js'%}"></script>
 
+    <!-- Bootstrap Core JavaScript -->
+
+    <script src="{% static 'js/bootstrap.min.js'%}"></script>
+    <script src="{% static 'js/datetimepicker.min.js'%}"></script>
+    <script src="{% static 'js/datetimepicker.ee.js'%}"></script>
+
+    <script src="{% static 'lib/calendar/moment.min.js' %}"></script>
+    <script src="{% static 'lib/calendar/fullcalendar.min.js' %}"></script>
+
+    <!-- Morris Charts JavaScript -->
+    <script src="{% static 'lib/morris/raphael.min.js'%}"></script>
+    <script src="{% static 'lib/morris/morris.min.js'%}"></script>
+    <script src="{% static 'lib/morris/morris-data.js'%}"></script>
     {% endblock %}
-{% endblock %}
+    {% endblock %}
 
 </head>
 
@@ -219,10 +234,10 @@
                         <li>
                             <a class="item" href="{% url 'logistic:trucks' %}"> Trucks</a>
                         </li>
-                         <li>
+                        <li>
                             <a class="item" href="{% url 'logistic:travel' %}"> Travel Expenses</a>
                         </li>
-                         <li>
+                        <li>
                             <a class="item" href="{% url 'logistic:infcompany' %}">Company Information</a>
                         </li>
                     </ul>
@@ -252,24 +267,6 @@
     </div>
 
 </div>
-<script src="{% static 'js/jquery.js'%}"></script>
-<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script src="{% static 'js/dataTables.bootstrap.min.js'%}"></script>
-<script src="{% static 'js/jq_app.js'%}"></script>
-<!-- Bootstrap Core JavaScript -->
-
-<script src="{% static 'js/bootstrap.min.js'%}"></script>
-<script type="text/javascript" src="{% static 'admin/js/cancel.js' %}"></script>
-<script src="{% static 'js/datetimepicker.min.js'%}"></script>
-<script src="{% static 'js/datetimepicker.ee.js'%}"></script>
-
-<script type="text/javascript" src="{% static '//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js' %}"></script>
-
-<!-- Morris Charts JavaScript -->
-<script src="{% static 'js/plugins/morris/raphael.min.js'%}"></script>
-<script src="{% static 'js/plugins/morris/morris.min.js'%}"></script>
-<script src="{% static 'js/plugins/morris/morris-data.js'%}"></script>
 
 </body>
 </html>

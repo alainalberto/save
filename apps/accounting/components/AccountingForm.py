@@ -4,7 +4,7 @@ from apps.accounting.models import *
 
 class AccountForm(forms.ModelForm):
     class Meta:
-        model = Accounts
+        model = Account
 
         fields = [
             'name',
@@ -28,7 +28,7 @@ class AccountForm(forms.ModelForm):
 
 class CustomerForm(forms.ModelForm):
     class Meta:
-        model = Customers
+        model = Customer
 
         fields = [
             'name',
@@ -66,7 +66,7 @@ class CustomerForm(forms.ModelForm):
 
 class EmployeesForm(forms.ModelForm):
     class Meta:
-        model = Employees
+        model = Employee
 
         fields = [
             'business',
@@ -110,10 +110,9 @@ class EmployeesForm(forms.ModelForm):
 
 class InvoicesForm(forms.ModelForm):
         class Meta:
-            model = Invoices
+            model = Invoice
 
             fields = [
-                'accounts',
                 'customers',
                 'business',
                 'users',
@@ -128,7 +127,6 @@ class InvoicesForm(forms.ModelForm):
                 'end_date',
             ]
             labels = {
-                'accounts': 'Accounts:',
                 'customers': 'Customers:',
                 'business': 'Business:',
                 'users': 'Users:',
@@ -143,7 +141,6 @@ class InvoicesForm(forms.ModelForm):
                 'end_date': 'End Date:',
             }
             widgets = {
-                'accounts': forms.Select(attrs={'class': 'form-control input-md'}),
                 'customers': forms.Select(attrs={'class': 'form-control input-md'}),
                 'business': forms.Select(attrs={'class': 'form-control input-md'}),
                 'users': forms.Select(attrs={'class': 'form-control input-md'}),
@@ -153,7 +150,7 @@ class InvoicesForm(forms.ModelForm):
                 'total': forms.NumberInput(attrs={'placeholder': 'Total', 'class': 'form-control input-md'}),
                 'waytopay': forms.TextInput(attrs={'placeholder': 'Way to Pay', 'class': 'form-control input-md'}),
                 'discount': forms.NumberInput(attrs={'placeholder': 'Discount', 'class': 'form-control input-md'}),
-                'paid': forms.NumberInput(attrs={'placeholder': 'Paid', 'class': 'form-control input-md'}),
+                'paid': forms.CheckboxInput(attrs={'placeholder': 'Paid', 'class': 'form-control input-md'}),
                 'prefix': forms.TextInput(attrs={'placeholder': 'Prefix', 'class': 'form-control input-md'}),
                 'end_date': forms.DateInput(attrs={'placeholder': 'End Date', 'class': 'form-control input-md'}),
             }
@@ -161,7 +158,7 @@ class InvoicesForm(forms.ModelForm):
 
 class InvoicesHasItemsForm(forms.ModelForm):
     class Meta:
-        model = InvoicesHasItems
+        model = InvoicesHasItem
 
         fields = [
             'quantity_ind',
