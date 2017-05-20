@@ -6,7 +6,7 @@ urlpatterns = [
 
 url(r'^$', login_required(panel_view), name='panel'),
 url(r'^calendar/$', login_required(Calendar_Panel), name='calendar'),
-url(r'^calendar/create$', login_required(Calendar_Panel), name='calendar_create'),
+url(r'^calendar/create$', login_required(PostCalendar.as_view()), name='calendar_create'),
 url(r'^password/$', login_required(panel_view), name='password'),
 url(r'^document/$', login_required(panel_view), name='document'),
 

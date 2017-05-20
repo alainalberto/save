@@ -2,40 +2,21 @@ from django import forms
 from apps.services.models import *
 
 
-class CompanyForm(forms.ModelForm):
+class CompanyForm(forms.Form):
+    name = forms.CharField(label='Name:'),
+    attorney = forms.CharField(label='Attoney:'),
+    address = forms.CharField(label='Address:'),
+    phone = forms.IntegerField(label='Phone:'),
+    fax = forms.IntegerField(label='Fax:'),
+    ein = forms.IntegerField(label='EIN:'),
+    logo = forms.FileField(label='Logo:'),
+    unity = forms.IntegerField(label='Unity:'),
+    deactivate = forms.BooleanField(label='Deactivated:'),
+
+
+class PermissionForm(forms.ModelForm):
     class Meta:
-        model = Companies
-
-        fields = [
-            'name',
-            'attorney',
-            'address',
-            'phone',
-            'fax',
-            'ein',
-            'logo',
-            'unity',
-            'deactivate',
-            'customers',
-            'folders',
-            'users',
-
-        ]
-        labels = {
-            'name': 'Name',
-            'description': 'Description',
-            'accounts_id': 'Main Account',
-        }
-        widgets = {
-            'name': forms.TextInput(attrs={'placeholder': 'Name', 'class': 'form-control input-md'}),
-            'description': forms.TextInput(attrs={'placeholder': 'Description', 'class': 'form-control input-md'}),
-            'accounts_id': forms.Select(attrs={'class': 'form-control input-md'}),
-        }
-
-
-class CustomerForm(forms.ModelForm):
-    class Meta:
-        model = Customers
+        model = Customer
 
         fields = [
             'name',

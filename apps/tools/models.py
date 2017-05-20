@@ -78,9 +78,9 @@ class Calendar(models.Model):
     title = models.CharField(max_length=100, blank=True, null=True)
     color = models.CharField(max_length=10, blank=True, null=True)
     allDay = models.BooleanField(default=True)
-    start = models.DateField(blank=True, null=True, auto_now_add=True)
+    start = models.DateField(blank=True, null=True)
     startTimer = models.TimeField(blank=True, null=True)
-    end = models.DateField(blank=True, null=True, auto_now_add=True)
+    end = models.DateField(blank=True, null=True)
     endTimer = models.TimeField(blank=True, null=True, default='23:00:00')
 
     def __str__(self):

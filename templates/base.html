@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="author" content="alainalberto03@gmail.com">
 
     <title>First Call </title>
 
@@ -81,9 +81,44 @@
             <a class="navbar-brand" href="{% url 'panel:panel' %}">
                 <img src="{% static 'img/logoFCI.png'%}" width="25%" height="180%">
             </a>
+
         </div>
         <!-- Top Menu Items -->
         <ul class="nav navbar-right top-nav">
+            <li>
+                <a tabindex="0" class="dropdown-toggle" role="button" data-toggle="dropdown" data-trigger="focus" title="Chat online">
+                    <i class="fa fa-comments"></i>
+                    Chat
+                </a>
+                <div class="dropdown-menu alert-dropdown panel panel-primary" ng-app="BasicChat">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-comments-o fa-4x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <h4>Chat on-line</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <span>Today</span>
+                        <div>
+                            <strong class="col-lg-2 col-md-4">:</strong>
+                            <div class="alert alert-success col-lg-9 col-md-6">
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <form>
+                            <input>
+                            <input type="submit" class="button">
+                        </form>
+                    </div>
+                </div>
+            </li>
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-envelope"></i> <b class="caret"></b></a>
                 <ul class="dropdown-menu message-dropdown">
@@ -161,95 +196,141 @@
                         </li>
                     </ul>
                 </li>
+                {% if perms.accounting %}
                 <li class="active">
                     <a href="javascript:;" data-toggle="collapse" data-target="#accon"><i class="fa fa-university"></i> Accounting<i class="right fa fa-fw fa-caret-down"></i></a>
                     <ul id="accon" class="collapse">
+                        {% if perms.accounting.add_account %}
                         <li>
                             <a class="item" href="{% url 'accounting:accounts' %}"> Accounts</a>
                         </li>
+                        {% endif %}
+                        {% if perms.accounting.add_customer %}
                         <li>
                             <a class="item" href="{% url 'accounting:customers' %}"> Customers</a>
                         </li>
+                        {% endif %}
+                        {% if perms.accounting.add_invoice %}
                         <li>
                             <a class="item" href="{% url 'accounting:invoices' %}"> Invoices</a>
                         </li>
+                        {% endif %}
+                        {% if perms.accounting.add_receipt %}
                         <li>
                             <a class="item" href="{% url 'accounting:receipts' %}"> Receipts</a>
                         </li>
+                        {% endif %}
+                        {% if perms.accounting.add_payment %}
                         <li>
                             <a class="item" href="{% url 'accounting:payments' %}"> Payments</a>
                         </li>
+                        {% endif %}
+                        {% if perms.accounting.add_employee %}
                         <li>
                             <a class="item" href="{% url 'accounting:employees' %}"> Employees</a>
                         </li>
+                        {% endif %}
                     </ul>
                 </li>
+                {% endif %}
+                {% if perms.services %}
                 <li class="active">
                     <a href="javascript:;" data-toggle="collapse" data-target="#serv"><i class="fa fa-tasks"></i> Services <i class="right fa fa-fw fa-caret-down"></i></a>
                     <ul id="serv" class="collapse">
+                        {% if perms.services.add_companie %}
                         <li>
                             <a class="item" href="{% url 'services:company' %}"> Open Company</a>
                         </li>
+                        {% endif %}
                         <li>
                             <a class="item" href="{% url 'services:title' %}"> Title record</a>
                         </li>
+                        {% if perms.services.add_insurance %}
                         <li>
                             <a class="item" href="{% url 'services:insurance' %}"> Insurance</a>
                         </li>
+                        {% endif %}
                         <li>
                             <a class="item" href="{% url 'services:dot' %}"> DOT</a>
                         </li>
+                        {% if perms.services.add_ifta %}
                         <li>
                             <a class="item" href="{% url 'services:ifta' %}"> IFTA</a>
                         </li>
+                        {% endif %}
+                        {% if perms.services.add_audit %}
                         <li>
                             <a class="item" href="{% url 'services:audits' %}"> Audits</a>
                         </li>
+                        {% endif %}
+                        {% if perms.services.add_permission %}
                         <li>
-                            <a class="item" href="{% url 'services:permits' %}"> Permits</a>
+                            <a class="item" href="{% url 'services:permits' %}"> Permission</a>
                         </li>
+                        {% endif %}
                         <li>
                             <a class="item" href="{% url 'services:plate' %}"> Plate registration</a>
                         </li>
+                        {% if perms.services.add_maintenance %}
                         <li>
                             <a class="item" href="{% url 'services:maintenance' %}"> Maintenance</a>
                         </li>
+                        {% endif %}
+                        {% if perms.tools.file %}
                         <li>
                             <a class="item" href="{% url 'services:forms' %}"> Forms</a>
                         </li>
+                        {% endif %}
+                        {% if perms.tools.add_folder %}
                         <li>
                             <a class="item" href="{% url 'services:folder' %}"> Folder</a>
                         </li>
+                        {% endif %}
                     </ul>
                 </li>
+                {% endif %}
+                {% if perms.logistic %}
                 <li class="active">
                     <a href="javascript:;" data-toggle="collapse" data-target="#logc"><i class="fa fa-truck"></i> Logistic <i class="right fa fa-fw fa-caret-down"></i></a>
                     <ul id="logc" class="collapse">
+                        {% if perms.logistic.add_load %}
                         <li>
                             <a class="item" href="{% url 'logistic:loads' %}"> Loads</a>
                         </li>
+                        {% endif %}
+                        {% if perms.logistic.add_drivers %}
                         <li>
-                            <a class="item" href="{% url 'logistic:drives' %}"> Drives</a>
+                            <a class="item" href="{% url 'logistic:drives' %}"> Drivers</a>
                         </li>
+                        {% endif %}
+                        {% if perms.logistic.add_truckslogt %}
                         <li>
                             <a class="item" href="{% url 'logistic:trucks' %}"> Trucks</a>
                         </li>
+                        {% endif %}
+                        {% if perms.logistic.add_travelexpense %}
                         <li>
                             <a class="item" href="{% url 'logistic:travel' %}"> Travel Expenses</a>
                         </li>
+                        {% endif %}
+                        {% if perms.logistic.add_insurancelogt %}
                         <li>
                             <a class="item" href="{% url 'logistic:infcompany' %}">Company Information</a>
                         </li>
+                        {% endif %}
                     </ul>
                 </li>
+                {% endif %}
+                {% if user.is_staff %}
                 <li class="active">
-                    <a href="javascript:;" data-toggle="collapse" data-target="#admin"><i class="fa fa-cog"></i> Administration <i class="right fa fa-fw fa-caret-down"></i></a>
+                    <a href="javascript:;" data-toggle="collapse" data-target="#admin"><i class="fa fa-cog fa-spin"></i> Administration <i class="right fa fa-fw fa-caret-down"></i></a>
                     <ul id="admin" class="collapse">
                         <li>
                             <a class="ui item" href="/admin"> Administration Panel</a>
                         </li>
                     </ul>
                 </li>
+                {% endif %}
             </ul>
         </div>
         <!-- /.navbar-collapse -->

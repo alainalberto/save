@@ -105,7 +105,7 @@ class Receipt(models.Model):
     def __str__(self):
         return '{}'.format(self.name)
 
-class Salary(models.Model):
+class Payment(models.Model):
     id_sal = models.AutoField(primary_key=True)
     accounts = models.ForeignKey(Account, on_delete=models.CASCADE)  # Field name made lowercase.
     users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
@@ -142,7 +142,7 @@ class AccountDescrip(models.Model):
     document = models.ForeignKey(InvoicesHasItem, on_delete=models.CASCADE)
     users = models.ForeignKey(User,  on_delete=models.CASCADE)  # Field name made lowercase.
     accounts = models.ForeignKey(Account,  on_delete=models.CASCADE)  # Field name made lowercase.
-    date = models.DateField()
+    date = models.DateField(auto_now_add=True)
     value = models.DecimalField(max_digits=10, decimal_places=2)
 
 

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 {% block content %}
 <section>
     <form name="form_customer" method="post" class="form" role="form" id="form_customer" validate>{% csrf_token %}
@@ -18,21 +19,21 @@
                 <fieldset>
                     <!-- Form Name -->
                     <!-- Text input-->
-                    <div class="form-group col-md-3 col-md-offset-1" >
+                   <div class="form-group col-md-3 col-md-offset-1" >
                         <label class="label-control">{{form.name.label}}</label>
                         {{form.name}}
                     </div>
-                    <!-- Text input-->
+
                     <div class="form-group col-md-4 col-md-offset-1">
                         <label class="label-control">{{ form.lastname.label }}</label>
                         {{ form.lastname }}
                     </div>
-                    <!-- Select Basic -->
+
                     <div class="form-group col-md-3 col-md-offset-1">
                         <label class="label-control">{{ form.no_social.label }}</label>
                         {{ form.no_social }}
                     </div>
-                    <div class="form-group col-md-5 col-md-offset-1">
+                    <div class="form-group col-md-4 col-md-offset-1">
                         <label class="label-control">{{ form.address.label }}</label>
                         {{ form.address }}
                     </div>
@@ -40,7 +41,7 @@
                         <label class="label-control">{{ form.phone.label }}</label>
                         {{ form.phone }}
                     </div>
-                    <div class="form-group col-md-5 col-md-offset-1">
+                    <div class="form-group col-md-4 col-md-offset-1">
                         <label class="label-control">{{ form.email.label }}</label>
                         {{ form.email }}
                     </div>
@@ -63,13 +64,13 @@
                         <div id="listServi" class="list-group">
                             <legend class="list-group-item active">Services:</legend>
                             <div class="list-group-item">
-                                <input  type="checkbox" name="btnCompany" id="btnCompany" onselect="#newCompany.show()" >
+                                <input  type="checkbox" name="btnCompany" id="btnCompany">
                                 <label for="btnCompany">Open Company</label>
                                 </input>
                             </div>
                             <div class="list-group-item">
                                 <input type="checkbox" name="btnPermit" id="btnPermit">
-                                <label for="btnPermit">Permits</label>
+                                <label for="btnPermit">Permission</label>
                                 </input>
                             </div>
                             <div class="list-group-item">
@@ -101,49 +102,72 @@
                     </fieldset>
                 </div>
                 <div class="form-group col-md-8">
-                    <div  id="service_forms">
-                        <h3>New Company</h3>
-                        <div id="newCompany" visible="false">
-                            <fieldset>
-                                {{ form_company.as_p }}
-                                <p>Estee s el contenido</p>
-                            </fieldset>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <ul class="nav nav-tabs " role="tablist">
+                                <li id="tabCompany" role="presentation" style="display: none;"><a href="#newCompany" aria-controls="newCompany" role="tab" data-toggle="tab">New Company</a></li>
+                                <li id="tabPermit" role="presentation" style="display: none;"><a href="#permit" aria-controls="permite" role="tab" data-toggle="tab">Permits</a></li>
+                                <li id="tabTitle" role="presentation" style="display: none;"><a href="#title" aria-controls="title" role="tab" data-toggle="tab">Title Record</a></li>
+                                <li id="tabPlate" role="presentation" style="display: none;"><a href="#plate" aria-controls="plate" role="tab" data-toggle="tab">Plate Registration</a></li>
+                                <li id="tabInsurance" role="presentation" style="display: none;"><a href="#insurance" aria-controls="insurance" role="tab" data-toggle="tab">Insurance</a></li>
+                                <li id="tabDot" role="presentation" style="display: none;"><a href="#dot" aria-controls="dot" role="tab" data-toggle="tab">DOT</a></li>
+                                <li id="tabIfta" role="presentation" style="display: none;"><a href="#ifta" aria-controls="ifta" role="tab" data-toggle="tab">IFTA</a></li>
+                            </ul>
                         </div>
-                        <h3>Permits</h3>
-                        <div id="permit">
-                            <fieldset>
-                                {{ form_permit.as_p }}
-                            </fieldset>
-                        </div>
-                        <h3>Title Record</h3>
-                        <div id="title">
-                            <fieldset>
-                                {{ form_permit.as_p }}
-                            </fieldset>
-                        </div>
-                        <h3>Plate Registration</h3>
-                        <div id="plate">
-                            <fieldset>
-                                {{ form_plate.as_p }}
-                            </fieldset>
-                        </div>
-                        <h3>Insurance</h3>
-                        <div id="insurance">
-                            <fieldset>
-                                {{ form_insurance.as_p }}
-                            </fieldset>
-                        </div>
-                        <h3>DOT</h3>
-                        <div id="dot">
-                            <fieldset>
-                                {{ form_dot.as_p }}
-                            </fieldset>
-                        </div>
-                        <h3>IFTA</h3>
-                        <div id="ifta">
-                            <fieldset>
-                                {{ form_ifta.as_p }}
-                            </fieldset>
+                        <div class="panel-body">
+                            <div  class="tab-content">
+                                <div role="tabpanel" class="tab-pane" id="newCompany">
+                                    <div id="idcompany" style="display: none;">
+                                        <fieldset>
+                                            {{ form_company.as_ul }}
+                                            <p>Estee s el contenido</p>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="permit">
+                                    <div id="idpermit" style="display: none;">
+                                        <fieldset>
+                                            {{ form_permit.as_p }}
+                                            <p>Estee s el </p>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="title">
+                                    <div id="idtitle" style="display: none;">
+                                        <fieldset>
+                                            {{ form_permit.as_p }}
+                                        </fieldset>
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="plate">
+                                    <div id="idplate" style="display: none;">
+                                        <fieldset>
+                                            {{ form_plate.as_p }}
+                                        </fieldset>
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="insurance">
+                                    <div id="idinsurance" style="display: none;">
+                                        <fieldset>
+                                            {{ form_insurance.as_p }}
+                                        </fieldset>
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="dot">
+                                    <div id="iddot" style="display: none;">
+                                        <fieldset>
+                                            {{ form_dot.as_p }}
+                                        </fieldset>
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="ifta">
+                                    <div id="idifta" style="display: none;">
+                                        <fieldset>
+                                            {{ form_ifta.as_p }}
+                                        </fieldset>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -53,7 +53,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(primary_key=True, serialize=False)),
                 ('title', models.CharField(blank=True, max_length=100, null=True)),
                 ('color', models.CharField(blank=True, max_length=10, null=True)),
-                ('allDay', models.BooleanField(default=True)),
+                ('allDay', models.BooleanField(default=True, null=True)),
                 ('start', models.DateField(auto_now_add=True, null=True)),
                 ('startTimer', models.TimeField(blank=True, null=True)),
                 ('end', models.DateField(auto_now_add=True, null=True)),

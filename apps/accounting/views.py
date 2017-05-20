@@ -4,7 +4,9 @@ from django.template import RequestContext
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.models import User
 from apps.accounting.models import *
+from apps.services.models import *
 from apps.accounting.components.AccountingForm import *
+from apps.services.components.ServicesForm import *
 
 
 # Create your views here.
@@ -64,7 +66,33 @@ class CustomersService(CreateView):
     model = Customer
     form_class = CustomerForm
     template_name = 'accounting/customer/customerServices.html'
+    form_company_class = CompanyForm
+    form_permission_class = PermissionForm
     success_url = reverse_lazy('accounting:customers')
+
+    def get_context_data(self, **kwargs):
+        contexto = super(CustomersService, self).get_context_data(**kwargs)
+        if 'form' not in contexto:
+            contexto['form'] = self.form_class(self.request.GET)
+        if 'from_company' not in contexto:
+            contexto['form_company']= self.form_company_class(self.request.GET)
+        return contexto
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.form_class(request.POST)
+        fotm_company = self.form_company_class(request.POST)
+        user = request.user
+        if form.is_valid() and fotm_company.is_valid():
+            folder = Folder.create(name="Customer_"+form.name+"_"+form.lastname,  )
+            customer = form.save(commit=False)
+            customer.users = user
+            company = fotm_company.save(commit=False)
+            company.customers = customer.save()
+            company.folders
+
+
+
 
 class AccountCreate(CreateView):
     model = Account
