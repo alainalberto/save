@@ -1,8 +1,9 @@
-from django.shortcuts import render, redirect, render_to_response
+from django.shortcuts import render, HttpResponseRedirect
 from django.core.urlresolvers import reverse_lazy
 from django.template import RequestContext
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.models import User
+from django.contrib.admin.models import LogEntryManager
 from apps.accounting.models import *
 from apps.services.models import *
 from apps.accounting.components.AccountingForm import *
@@ -98,11 +99,15 @@ class AccountCreate(CreateView):
     model = Account
     form_class = AccountForm
     template_name = 'accounting/accounts/accountsForm.html'
-    success_url = reverse_lazy('accounting:accounts')
 
-    def get_queryset(self, *args, **kwargs):
-        user = self.request.user
-        return Account.objects.create(name = self.request.POST["name"], description = self.request.POST["description"], accounts_id_id = self.request.POST["accounts_id"], users_id = user.id, primary = False)
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        form = self.form_class(request.POST)
+        if form.is_valid():
+         account = form.save(commit=False)
+         account.users_id = user.id
+         account.save()
+         return HttpResponseRedirect(reverse_lazy('accounting:accounts'))
 
 class AccountsDescViews(ListView):
     model = AccountDescrip
