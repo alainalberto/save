@@ -5,9 +5,12 @@ from django.core.urlresolvers import reverse_lazy
 from django.views.generic import CreateView
 from apps.tools.models import *
 from apps.tools.components import CalendarForm
+from django.contrib.auth import authenticate, logout, login
 import simplejson
 
 
+from apps.tools.components.chatForm import *
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 # Create your views here.
 
 class PostCalendar(CreateView):
@@ -17,7 +20,8 @@ class PostCalendar(CreateView):
     success_url = reverse_lazy('panel:calendar')
 
 def panel_view(requiret):
-    return render(requiret, 'home/complement/panel.html')
+    form = chatForm
+    return render(requiret, 'home/complement/panel.html', {'panel': 'active'})
 
 def Calendar_Panel(requiret):
     return render(requiret, 'home/calendar/calendar_panel.html')
@@ -35,5 +39,4 @@ def GetCalendar(requiret):
         event_json.append(events_user)
     response_data = simplejson.dumps(event_json)
     return JsonResponse(response_data)
-
 

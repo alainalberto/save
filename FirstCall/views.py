@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import CreateView, ListView
 from django.views.generic import TemplateView
-from apps.tools.models import Menu, Alert
+from apps.tools.models import Menu, Alert, Chat
 
 
 def home_view(requiret):
@@ -15,3 +15,21 @@ def home_view(requiret):
     contexto = {'menus': menus, 'submenus': submenus, 'notif': alertNot.count(),
                 'alert': alertAlt.count(), 'urgent': alertUrg.count()}
     return render(requiret, 'home/complement/panel.html', contexto)
+
+def Chats(request):
+    c = Chat.objects.all()
+    return render(request, "home/complement/chat.html", {'chat': 'active', 'chat': c})
+
+def Post(request):
+    if request.method == "POST":
+        msg = request.POST.get('msgbox', None)
+        c = Chat(users=request.user, message=msg)
+        if msg != '':
+            c.save()
+        return JsonResponse({'msg': msg, 'user': c.user.username})
+    else:
+        return HttpResponse('Request must be POST.')
+
+def Messages(request):
+    c = Chat.objects.all()
+    return render(request, 'home/complement/messages.html', {'chat': c})

@@ -1,0 +1,68 @@
+{% load staticfiles %}
+
+<html>
+
+<head>
+    <title>Chat Panel</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <style>
+
+    #chat-bottom {
+    position: fixed;
+    bottom: 10px;
+    }
+
+   .panel-body {
+    overflow-x: hidden;
+    height: 85%;
+    }
+
+    </style>
+</head>
+
+<body>
+    <div id="chat-body" class="panel panel-default">
+
+        <div id="msg-list-div" class="panel-body">
+            <ul id="msg-list" class="list-group">
+                {% for obj in chat %}
+                    {% if obj.users == request.user %}
+                        {{obj.users}}>>><div class="text-right alert alert-info col-lg-9 col-md-6"><p>{{ obj.message }}</p></div>
+                    {% else %}
+                       {{obj.users}}>>> <div class="text-left alert alert-success col-lg-9 col-md-6"><p>{{ obj.message }}</p></div>
+                    {% endif %}
+                {% empty %}
+                    <li class="text-right list-group-item">No messages yet!</li>
+                {% endfor %}
+                <script>
+                    var chatlist = document.getElementById('msg-list-div');
+                    chatlist.scrollTop = chatlist.scrollHeight;
+                </script>
+            </ul>
+        </div>
+    </div>
+
+    <form id="chat-form" method="post" action="/post/">
+        <div id="chat-bottom" class="input-group">
+            <input type="text" id="chat-msg" name="chat-msg" class="form-control"/>
+            <span class="input-group-btn">
+                <input class="btn btn-primary" id="send" type="submit" value="Send"/>
+            </span>
+        </div>
+    </form>
+</body>
+
+<script src="{% static 'js/chat.js' %}"></script>
+
+<script>
+
+
+</script>
+</html>

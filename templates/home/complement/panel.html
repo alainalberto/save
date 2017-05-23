@@ -23,103 +23,94 @@
     <!-- /.row -->
 
     <div class="row">
-        {% if perms.accounting.add_customer %}
-        <div class=" animated col-lg-3 col-md-6">
-            <a href="{% url 'accounting:customer_service' %}">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-xs-3">
-                                <i class="fa fa-user fa-5x"></i>
-                            </div>
-                            <div class="col-xs-9 text-right">
-                                <h3>Customers</h3>
-                                <div>New Customers!</div>
-                            </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-user fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <h3>Customers</h3>
+                            <div>New Customers!</div>
                         </div>
                     </div>
+                </div>
+                <a href="{% url 'accounting:customer_service' %}">
                     <div class="panel-footer">
                         <span class="pull-left">Go to</span>
                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                         <div class="clearfix"></div>
                     </div>
-                </div>
-            </a>
+                </a>
+            </div>
         </div>
-        {% endif %}
-        {% if perms.accounting.add_customer %}
         <div class="col-lg-3 col-md-6">
-            <a href="{% url 'accounting:customers' %}">
-                <div class="panel panel-green">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-xs-3">
-                                <i class="fa fa-search fa-5x"></i>
-                            </div>
-                            <div class="col-xs-9 text-right">
-                                <h3>Search</h3>
-                                <div>Search Customers!</div>
-                            </div>
+            <div class="panel panel-green">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-search fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <h3>Search</h3>
+                            <div>Search Customers!</div>
                         </div>
                     </div>
+                </div>
+                <a href="{% url 'accounting:customers' %}">
                     <div class="panel-footer">
                         <span class="pull-left">Go to</span>
                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                         <div class="clearfix"></div>
                     </div>
-                </div>
-            </a>
+                </a>
+            </div>
         </div>
-        {% endif %}
-        {% if perms.accounting.add_invoice %}
         <div class="col-lg-3 col-md-6">
-            <a href="{% url 'accounting:invoices' %}">
-                <div class="panel panel-yellow">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-xs-3">
-                                <i class="fa fa-shopping-cart fa-5x"></i>
-                            </div>
-                            <div class="col-xs-9 text-right">
-                                <h3>Invoice</h3>
-                                <div>View Invoices!</div>
-                            </div>
+            <div class="panel panel-yellow">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-shopping-cart fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <h3>Invoice</h3>
+                            <div>View Invoices!</div>
                         </div>
                     </div>
+                </div>
+                <a href="{% url 'accounting:invoices' %}">
                     <div class="panel-footer">
                         <span class="pull-left">Go to</span>
                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                         <div class="clearfix"></div>
                     </div>
-                </div>
-            </a>
+                </a>
+            </div>
         </div>
-        {% endif %}
-        {% if perms.tools.add_file %}
         <div class="col-lg-3 col-md-6">
-            <a href="{% url 'services:forms' %}">
-                <div class="panel panel-red">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-xs-3">
-                                <i class="fa fa-newspaper-o fa-5x "></i>
-                            </div>
-                            <div class="col-xs-9 text-right">
-                                <h3>Forms</h3>
-                                <div>View Forms!</div>
-                            </div>
+            <div class="panel panel-red">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-newspaper-o fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <h3>Forms</h3>
+                            <div>View Forms!</div>
                         </div>
                     </div>
+                </div>
+                <a href="{% url 'services:forms' %}">
                     <div class="panel-footer">
                         <span class="pull-left">Go to</span>
-                        <span class="pull-right"><i class="fa fa-arrow-circle-right "></i></span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                         <div class="clearfix"></div>
                     </div>
-
-                </div>
-            </a>
+                </a>
+            </div>
         </div>
-        {% endif %}
     </div>
     <!-- /.row -->
 
@@ -138,13 +129,13 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4">
+         <div class="col-lg-4">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title"><i class="fa fa-comments-o"></i>Chat</h3>
                 </div>
                 <div class="panel-body">
-
+                 <iframe style="height:495px;" src="http://localhost:8000/chat" scrolling="no"></iframe>
                 </div>
             </div>
         </div>
@@ -152,7 +143,6 @@
     <!-- /.row -->
 
     <div class="row">
-        {% if perms.accounting.add_account %}
         <div class="col-lg-3">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -166,7 +156,6 @@
                 </div>
             </div>
         </div>
-        {% endif %}
         <div class="col-lg-3">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -213,7 +202,6 @@
                 </div>
             </div>
         </div>
-        {% if perms.accounting.add_account %}
         <div class="col-lg-6">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -288,7 +276,6 @@
                 </div>
             </div>
         </div>
-        {% endif %}
     </div>
     <!-- /.row -->
 

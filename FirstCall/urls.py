@@ -17,7 +17,7 @@ from django.conf.urls import *
 from django.contrib import admin, admindocs
 from django.contrib.auth.views import login, logout_then_login
 from django.contrib.auth.decorators import login_required
-from FirstCall.views import home_view
+from FirstCall.views import home_view, Chats, Post, Messages
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -29,5 +29,7 @@ urlpatterns = [
     url(r'^logistic/', include('apps.logistic.urls', namespace='logistic')),
     url(r'^accounts/login/', login, {'template_name':'Login/login.html'}, name='login'),
     url(r'^logout/', logout_then_login, name='logout'),
-
+    url(r'^chat/$', login_required(Chats), name='chat'),
+    url(r'^post/$', login_required(Post), name='post'),
+    url(r'^messages/$', login_required(Messages), name='messages'),
 ]

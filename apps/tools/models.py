@@ -90,8 +90,10 @@ class Chat(models.Model):
     id_cht = models.AutoField(primary_key=True)
     users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
     date = models.DateTimeField(auto_now_add=True)
-    messager = models.CharField(max_length=255)
+    message = models.CharField(max_length=255)
 
+    def __str__(self):
+        return '{}'.format(self.message)
 
 class Directory(models.Model):
     id_dir = models.AutoField(primary_key=True)
