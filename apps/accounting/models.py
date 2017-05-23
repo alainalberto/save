@@ -30,7 +30,7 @@ class Customer(models.Model):
     name = models.CharField(max_length=20, blank=True, null=True)
     lastname = models.CharField(max_length=45, blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
-    phone = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    phone = models.CharField(max_length=10, blank=True, null=True)
     no_social = models.CharField(max_length=20, blank=True, null=True)
     email = models.CharField(max_length=255, blank=True, null=True)
     deactivated = models.BooleanField(default=False)
@@ -48,7 +48,7 @@ class Employee(models.Model):
     adress = models.CharField(max_length=255, blank=True, null=True)
     social_no = models.CharField(max_length=20, blank=True, null=True)
     date_admis = models.DateField(blank=True, null=True)
-    phone = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    phone = models.CharField(max_length=10, blank=True, null=True)
     email = models.CharField(max_length=255, blank=True, null=True)
     type_salary = models.CharField(max_length=20, blank=True, null=True)
     value = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
@@ -99,7 +99,7 @@ class Receipt(models.Model):
     description = models.CharField(max_length=45)
     subtotal = models.DecimalField(max_digits=10, decimal_places=2)
     total = models.DecimalField(max_digits=10, decimal_places=2)
-    weytopay = models.CharField(max_length=20)
+    waytopay = models.CharField(max_length=20)
     paid = models.BooleanField(default=True)
 
     def __str__(self):

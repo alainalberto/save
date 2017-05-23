@@ -8,13 +8,13 @@
                     <i class="fa fa-list fa-4x"></i>
                 </div>
                 <div class="col-xs-9 text-left">
-                    <div><h3>List Invoices</h3></div>
+                    <div><h3>List Receipts</h3></div>
                 </div>
             </div>
         </div>
         <div class="panel-body">
             <div class="navbar-button">
-                <a id="btnAdd" class="btn-primary btn col-md-offset-11" role="button" data-trigger="focus" title="Add User" href="{% url 'accounting:invoices_create' %}">
+                <a id="btnAdd" class="btn-primary btn col-md-offset-11" role="button" data-trigger="focus" title="Add User" href="{% url 'accounting:receipts_create' %}">
                     <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
                     <tooltip md-direction="left">New</tooltip>
                 </a>
@@ -24,10 +24,8 @@
                 <table id="listInvoices" class="table data-table table-striped table-bordered table-hover" cellspacing="0" width="100%">
                     <thead>
                     <tr>
-                        <th>Prefix</th>
                         <th>Serial</th>
                         <th>Accounts</th>
-                        <th>Customers</th>
                         <th>Business</th>
                         <th>Start Date</th>
                         <th>Way to Pay</th>
@@ -35,26 +33,24 @@
                         <th>Action</th>
                     </tr>
                     </thead>
-                    {% for c in object_list %}
+                    {% for r in object_list %}
                     <tbody>
                     <tr>
-                        <td>{{c.prefix}}</td>
-                        <td>{{c.serial}}</td>
-                        <td>{{c.accounts}}</td>
-                        <td>{{c.customers}}</td>
-                        <td>{{c.business}}</td>
-                        <td>{{c.start_date}}</td>
-                        <td>{{c.waytopay}}</td>
-                        <td>{{c.paid}}</td>
+                        <td>{{r.serial}}</td>
+                        <td>{{r.accounts}}</td>
+                        <td>{{r.business}}</td>
+                        <td>{{r.start_date}}</td>
+                        <td>{{r.waytopay}}</td>
+                        <td>{{r.paid}}</td>
                         <td>
                             <toolbar class="md-accent">
-                                <a data-type="info" data-trigger="focus" title="Edit Invoices" data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'accounting:invoices_edit' c.id_inv %}">
+                                <a data-type="info" data-trigger="focus" title="Edit Invoices" data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'accounting:receipts_edit' c.id_inv %}">
                                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                     <tooltip md-direction="left"></tooltip>
                                 </a>
                             </toolbar>
                             <toolbar class="md-accent">
-                                <a data-type="info" data-animation="am-flip-x" data-trigger="focus" title="Delete Invoices" type="button" class="btn btn-primary test-tooltip" href="{% url 'accounting:invoices_delete' c.id_inv %}">
+                                <a data-type="info" data-animation="am-flip-x" data-trigger="focus" title="Delete Invoices" type="button" class="btn btn-primary test-tooltip" href="{% url 'accounting:receipts_delete' c.id_inv %}">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                     <tooltip md-direction="left"></tooltip>
                                 </a>

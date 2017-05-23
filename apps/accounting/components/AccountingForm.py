@@ -35,8 +35,6 @@ class CustomerForm(forms.ModelForm):
             'phone',
             'email',
             'business',
-            'folders',
-            'users',
             'deactivated',
         ]
         labels = {
@@ -47,8 +45,6 @@ class CustomerForm(forms.ModelForm):
             'phone': 'Phone:',
             'email': 'Email:',
             'business': 'Busines:',
-            'folders': 'Folders:',
-            'users': 'User:',
             'deactivated': 'Deactivated:',
         }
         widgets = {
@@ -59,8 +55,6 @@ class CustomerForm(forms.ModelForm):
             'phone': forms.NumberInput(attrs={'placeholder': 'Telepone Number', 'class': 'form-control input-md'}),
             'email': forms.EmailInput(attrs={'placeholder': 'Email', 'class': 'form-control input-md'}),
             'business': forms.Select(attrs={'class': 'form-control input-md'}),
-            'folders': forms.Select(attrs={'class': 'form-control input-md'}),
-            'users': forms.Select(attrs={'class': 'form-control input-md'}),
             'deactivated': forms.CheckboxInput(attrs={'class': 'checkbox'}),
         }
 
@@ -121,11 +115,7 @@ class InvoicesForm(forms.ModelForm):
             fields = [
                 'customers',
                 'business',
-                'users',
-                'serial',
                 'start_date',
-                'subtotal',
-                'total',
                 'waytopay',
                 'discount',
                 'paid',
@@ -135,12 +125,8 @@ class InvoicesForm(forms.ModelForm):
             labels = {
                 'customers': 'Customers:',
                 'business': 'Business:',
-                'users': 'Users:',
-                'serial': 'Serial:',
                 'start_date': 'Start Date:',
-                'subtotal': 'Subtotal:',
-                'total': 'Total:',
-                'waytopay': 'Way to Pay:',
+                'waytopay': 'Payment Method:',
                 'discount': 'Discount:',
                 'paid': 'Paid:',
                 'prefix': 'Prefix:',
@@ -149,11 +135,7 @@ class InvoicesForm(forms.ModelForm):
             widgets = {
                 'customers': forms.Select(attrs={'class': 'form-control input-md'}),
                 'business': forms.Select(attrs={'class': 'form-control input-md'}),
-                'users': forms.Select(attrs={'class': 'form-control input-md'}),
-                'serial': forms.NumberInput(attrs={'placeholder': 'Serial', 'class': 'form-control input-md'}),
                 'start_date': forms.DateInput(attrs={'placeholder': 'Start Date', 'class': 'form-control input-md'}),
-                'subtotal': forms.NumberInput(attrs={'placeholder': 'Subtotal', 'class': 'form-control input-md'}),
-                'total': forms.NumberInput(attrs={'placeholder': 'Total', 'class': 'form-control input-md'}),
                  'waytopay': forms.Select(attrs={'class': 'form-control input-md'},choices=(('Cash','Cash'),('Check','Check'),('Credit Card','Credit Card'))),
                 'discount': forms.NumberInput(attrs={'placeholder': 'Discount', 'class': 'form-control input-md'}),
                 'paid': forms.CheckboxInput(attrs={'class': 'checkbox'}),
@@ -162,19 +144,32 @@ class InvoicesForm(forms.ModelForm):
             }
 
 
-class InvoicesHasItemsForm(forms.ModelForm):
+class ReceiptsForm(forms.ModelForm):
     class Meta:
-        model = InvoicesHasItem
+        model = Receipt
 
         fields = [
-            'quantity_ind',
-            'value_ind',
+            'business',
+            'start_date',
+            'waytopay',
+            'paid',
+            'end_date',
+            'description',
         ]
         labels = {
-            'quantity_ind': 'Quantity',
-            'value_ind': 'Value',
+            'business': 'Business:',
+            'start_date': 'Start Date:',
+            'waytopay': 'Payment Method:',
+            'paid': 'Paid:',
+            'end_date': 'End Date:',
+            'description': 'Description',
         }
         widgets = {
-            'quantity_ind': forms.NumberInput(attrs={'placeholder': 'Quantity', 'class': 'form-control input-md'}),
-            'value_ind': forms.TextInput(attrs={'placeholder': 'Value', 'class': 'form-control input-md'}),
+            'business': forms.Select(attrs={'class': 'form-control input-md'}),
+            'start_date': forms.DateInput(attrs={'placeholder': 'Start Date', 'class': 'form-control input-md'}),
+            'waytopay': forms.Select(attrs={'class': 'form-control input-md'},
+                                     choices=(('Cash', 'Cash'), ('Check', 'Check'), ('Credit Card', 'Credit Card'))),
+            'paid': forms.CheckboxInput(attrs={'class': 'checkbox'}),
+            'end_date': forms.DateInput(attrs={'placeholder': 'End Date', 'class': 'form-control input-md'}),
+            'description': forms.Textarea(attrs={'placeholder': 'Description', 'class': 'form-control input-md'}),
         }

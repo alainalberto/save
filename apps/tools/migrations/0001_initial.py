@@ -97,7 +97,7 @@ class Migration(migrations.Migration):
                 ('id_fld', models.AutoField(primary_key=True, serialize=False)),
                 ('name', models.CharField(max_length=45)),
                 ('description', models.CharField(blank=True, max_length=255, null=True)),
-                ('folders_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tools.Folder')),
+                ('folders_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tools.Folder', null=True)),
             ],
         ),
         migrations.CreateModel(

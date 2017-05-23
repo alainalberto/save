@@ -22,8 +22,8 @@ class Busines(models.Model):
     id_bus = models.AutoField(primary_key=True)
     name = models.CharField(max_length=45)
     address = models.CharField(max_length=255)
-    phone = models.IntegerField(blank=True, null=True )
-    fax = models.IntegerField(blank=True, null=True)
+    phone = models.CharField(max_length=10, blank=True, null=True )
+    fax = models.CharField(max_length=10, blank=True, null=True)
     website = models.CharField(max_length=255, blank=True, null=True)
     logo = models.CharField(max_length=255)
     date_created = models.DateField()
@@ -52,7 +52,7 @@ class Alert(models.Model):
 # Model Table folders
 class Folder(models.Model):
     id_fld = models.AutoField(primary_key=True)
-    folders_id = models.ForeignKey('self', on_delete=models.CASCADE)  # Field name made lowercase.
+    folders_id = models.ForeignKey('self',  blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
     name = models.CharField(max_length=45)
     description = models.CharField(max_length=255, blank=True, null=True)
 

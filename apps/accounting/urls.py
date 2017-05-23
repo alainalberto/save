@@ -4,15 +4,27 @@ from apps.accounting.views import *
 
 urlpatterns = [
     url(r'^$', login_required(AccountingPanel.as_view()), name='panel_account'),
+
+    #Account
     url(r'^accounts/$', login_required(AccountsViews), name='accounts'),
     url(r'^accounts/create/$', login_required(AccountCreate.as_view()), name='account_create'),
     url(r'^accounts/description/$', login_required(AccountsDescViews.as_view()), name='account_descrip'),
     url(r'^customers/$', login_required(CustomersView.as_view()), name='customers'),
+
+    #Customers
     url(r'^customers/create$', login_required(CustomersCreate.as_view()), name='customer_create'),
     url(r'^customers/edit/(?P<pk>\d+)/$', login_required(CustomersEdit.as_view()), name='customer_edit'),
     url(r'^customers/delete/(?P<pk>\d+)/$', login_required(CustomersDelete.as_view()), name='customer_delete'),
     url(r'^customers/service/$', login_required(CustomersService.as_view()), name='customer_service'),
-    url(r'^receipts/$', login_required(CustomersView.as_view()), name='receipts'),
+
+   #Receipts
+    url(r'^receipts/$', login_required(ReceiptsView.as_view()), name='receipts'),
+    url(r'^receipts/create$', login_required(ReceiptsCreate.as_view()), name='receipts_create'),
+    url(r'^receipts/edit/(?P<pk>\d+)/$', login_required(ReceiptsEdit.as_view()), name='receipts_edit'),
+    url(r'^receipts/delete/(?P<pk>\d+)/$', login_required(ReceiptsDelete.as_view()), name='receipts_delete'),
+
+
+    #Payments
     url(r'^payments/$', login_required(CustomersView.as_view()), name='payments'),
 
     #Employees

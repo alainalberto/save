@@ -1,7 +1,7 @@
 $(document).ready( function () {
 
 //Data tables
-   $(".table").dataTable();
+   $(".data-table").dataTable();
 
   // Acordion View Customar_Service
    $( "#service_forms" ).accordion();
@@ -157,6 +157,8 @@ $(document).ready( function () {
 
 		});
 
+  //Funcion for Acordion Services Customer
+
    $('#btnCompany').change(function(){
         if (this.checked) {
             $('#idcompany').attr("style", "display : initial;");
@@ -230,6 +232,33 @@ $(document).ready( function () {
             $('#idifta').attr("style", "display : none;");
         }
    });
+
+
+   $('#btnService').change(function(){
+        if (this.checked) {
+            $('#panelService').attr("style", "display : initial;");
+            $('#panelLoad').attr("style", "display : none;");
+        }
+        else {
+            $('#panelService').attr("style", "display : none;");
+            $('#panelLoad').attr("style", "display : initial;");
+        }
+   });
+
+   $('#btnLoad').change(function(){
+        if (this.checked) {
+            $('#panelService').attr("style", "display : none;");
+            $('#panelLoad').attr("style", "display : initial;");
+
+        }
+        else {
+            $('#panelService').attr("style", "display : initial;");
+            $('#panelLoad').attr("style", "display : none;");
+        }
+   });
+
+
+
  });
 
 /*function showContent() {
