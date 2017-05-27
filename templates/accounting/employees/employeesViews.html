@@ -32,23 +32,23 @@
                         <th>Action</th>
                     </tr>
                     </thead>
-                    {% for c in object_list %}
+                    {% for e in object_list %}
                     <tbody>
                     <tr>
-                        <td>{{c.business}}</td>
-                        <td>{{c.name}}</td>
-                        <td>{{c.lastname}}</td>
-                        <td>{{c.phone}}</td>
-                        <td>{{c.email}}</td>
+                        <td>{{e.business}}</td>
+                        <td>{{e.name}}</td>
+                        <td>{{e.lastname}}</td>
+                        <td>{{e.phone}}</td>
+                        <td>{{e.email}}</td>
                         <td>
                             <toolbar class="md-accent">
-                                <a data-type="info" data-trigger="focus" title="Edit Employees" data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'accounting:employees_edit' c.id_emp %}">
+                                <a data-type="info" data-trigger="focus" title="Edit Employees" data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'accounting:employees_edit' e.id_emp %}">
                                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                     <tooltip md-direction="left"></tooltip>
                                 </a>
                             </toolbar>
                             <toolbar class="md-accent">
-                                <a data-type="info" data-animation="am-flip-x" data-trigger="focus" title="Delete Employees" type="button" class="btn btn-primary test-tooltip" href="{% url 'accounting:employees_delete' c.id_emp %}">
+                                <a data-type="info" data-animation="am-flip-x" data-trigger="focus" title="Delete Employees" type="button" class="btn btn-danger test-tooltip" href="{% url 'accounting:employees_delete' e.id_emp %}">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                     <tooltip md-direction="left"></tooltip>
                                 </a>

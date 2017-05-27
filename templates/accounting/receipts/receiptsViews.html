@@ -33,8 +33,9 @@
                         <th>Action</th>
                     </tr>
                     </thead>
-                    {% for r in object_list %}
+
                     <tbody>
+                    {% for r in object_list %}
                     <tr>
                         <td>{{r.serial}}</td>
                         <td>{{r.accounts}}</td>
@@ -44,22 +45,28 @@
                         <td>{{r.paid}}</td>
                         <td>
                             <toolbar class="md-accent">
-                                <a data-type="info" data-trigger="focus" title="Edit Invoices" data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'accounting:receipts_edit' c.id_inv %}">
+                                <a data-type="info" data-trigger="focus" title="Edit Receipt" data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'accounting:receipts_edit' r.id_rec %}">
                                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                     <tooltip md-direction="left"></tooltip>
                                 </a>
                             </toolbar>
                             <toolbar class="md-accent">
-                                <a data-type="info" data-animation="am-flip-x" data-trigger="focus" title="Delete Invoices" type="button" class="btn btn-primary test-tooltip" href="{% url 'accounting:receipts_delete' c.id_inv %}">
+                                <a data-type="info" data-animation="am-flip-x" data-trigger="focus" title="Delete Receipt" type="button" class="btn btn-danger test-tooltip" href="{% url 'accounting:receipts_delete' r.id_rec %}">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                     <tooltip md-direction="left"></tooltip>
                                 </a>
                             </toolbar>
+                            <toolbar class="md-accent">
+                                <a data-type="info" data-animation="am-flip-x" data-trigger="focus" title="Delete Receipt" type="button" class="btn btn-primary test-tooltip" href="{% url 'accounting:receipts_pdf' %}">
+                                    <i class="fa fa-print" aria-hidden="true"></i>
+                                    <tooltip md-direction="left"></tooltip>
+                                </a>
+                            </toolbar>
                         </td>
-
                     </tr>
+                    {% endfor %}
                     </tbody>
-                     {% endfor %}
+
                 </table>
             </div>
             </div>

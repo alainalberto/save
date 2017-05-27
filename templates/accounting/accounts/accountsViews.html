@@ -26,10 +26,10 @@
           <li>{{prim.name}}<ol>
             {% for acin in accounts %}
             {% if acin.accounts_id_id == prim.id_acn %}
-            <li><a href="{% url 'accounting:account_descrip' %}">{{acin.name}}</a><ol>
+            <li><a href="{% url 'accounting:account_descrip' acin.id_acn %}">{{acin.name}}</a><ol>
               {% for sacin in accounts %}
               {% if sacin.accounts_id_id == acin.id_acn %}
-              <li><a href="{% url 'accounting:account_descrip' %}">{{sacin.name}}</a></li>
+              <li><a href="{% url 'accounting:account_descrip' sacin.id_acn%}">{{sacin.name}}</a></li>
               {% endif %}
               {% endfor %}
             </ol>

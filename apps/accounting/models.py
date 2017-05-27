@@ -97,13 +97,12 @@ class Receipt(models.Model):
     start_date = models.DateField()
     end_date = models.DateField(blank=True, null=True)
     description = models.CharField(max_length=45)
-    subtotal = models.DecimalField(max_digits=10, decimal_places=2)
     total = models.DecimalField(max_digits=10, decimal_places=2)
     waytopay = models.CharField(max_length=20)
     paid = models.BooleanField(default=True)
 
     def __str__(self):
-        return '{}'.format(self.name)
+        return '{}'.format(self.serial)
 
 class Payment(models.Model):
     id_sal = models.AutoField(primary_key=True)
@@ -139,9 +138,9 @@ class InvoicesHasItem(models.Model):
 
 class AccountDescrip(models.Model):
     id_acd = models.AutoField(primary_key=True)
-    document = models.ForeignKey(InvoicesHasItem, on_delete=models.CASCADE)
     users = models.ForeignKey(User,  on_delete=models.CASCADE)  # Field name made lowercase.
     accounts = models.ForeignKey(Account,  on_delete=models.CASCADE)  # Field name made lowercase.
+    document = models.IntegerField()
     date = models.DateField(auto_now_add=True)
     value = models.DecimalField(max_digits=10, decimal_places=2)
 

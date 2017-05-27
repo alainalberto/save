@@ -114,7 +114,6 @@ class Migration(migrations.Migration):
                 ('start_date', models.DateField()),
                 ('end_date', models.DateField(blank=True, null=True)),
                 ('description', models.CharField(max_length=45)),
-                ('subtotal', models.DecimalField(decimal_places=2, max_digits=10)),
                 ('total', models.DecimalField(decimal_places=2, max_digits=10)),
                 ('weytopay', models.CharField(max_length=20)),
                 ('paid', models.BooleanField(default=True)),

@@ -257,8 +257,7 @@ $(document).ready( function () {
         }
    });
 
-
-
+  $("#confDelete").modal("show");
  });
 
 /*function showContent() {

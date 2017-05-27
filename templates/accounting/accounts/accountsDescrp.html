@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-<section>
+<section xmlns="http://www.w3.org/1999/html">
     <script>
     $(document).ready(function() {
     $('table.display').DataTable();
@@ -28,24 +28,23 @@
                     <th>Value</th>
                 </tr>
                 </thead>
-                {% if object_list %}
                 <tbody>
-                {% for account in object_list %}
+                {% for account in accounts %}
                 <tr>
                     <td>{{ account.date}}</td>
                     <td>{{ account.accounts.name }}</td>
-                    <td>{{ account.type}}</td>
-                    <td>$ {{ account.value}}</td>
+                    <td>{{ account.document}}</td>
+                    <td>${{ account.value}}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
-                {% else %}
-               <tr>
-                    <strong>No results found...</strong>
-                </tr>
-                {% endif %}
             </table>
 
+        </div>
+        <div class="panel-footer">
+            <a type="button" onclick="history.back(-1)">
+            <i class="fa fa-arrow-circle-left fa-3x"></i>
+            </a>
         </div>
     </div>
 </section>

@@ -1,14 +1,16 @@
-from django.shortcuts import render, HttpResponseRedirect
+from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.core.urlresolvers import reverse_lazy
-from django.template import RequestContext
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.admin.models import LogEntryManager
+from apps.logistic.models import Load
+from apps.accounting.components.AccountingForm import *
+from apps.services.components.ServicesForm import *
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
 from apps.accounting.models import *
 from apps.services.models import *
 from apps.tools.models import Folder, Busines
-from apps.accounting.components.AccountingForm import *
-from apps.services.components.ServicesForm import *
+
 
 
 # Create your views here.
@@ -23,6 +25,10 @@ class AccountCreate(CreateView):
     form_class = AccountForm
     template_name = 'accounting/accounts/accountsForm.html'
 
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(initial=self.initial)
+        return render(request, self.template_name, {'form': form, 'title': 'Create new Account'})
+
     def post(self, request, *args, **kwargs):
         user = request.user
         form = self.form_class(request.POST)
@@ -32,18 +38,20 @@ class AccountCreate(CreateView):
          account.save()
          return HttpResponseRedirect(reverse_lazy('accounting:accounts'))
 
-class AccountsDescViews(ListView):
-    model = AccountDescrip
-    template_name = 'accounting/accounts/accountsDescrp.html'
 
-
-def AccountsViews(requiret):
+def AccountsViews(request):
     primary = Account.objects.filter(primary=True)
     lisexp = Account.objects.filter(primary=False)
     contexto = {'accounts': lisexp, 'primary': primary}
-    return render(requiret, 'accounting/accounts/accountsViews.html', contexto)
+    return render(request, 'accounting/accounts/accountsViews.html', contexto)
 
 
+def AccountsDescViews(request, pk):
+    contexto = {}
+    accounts = AccountDescrip.objects.filter(accounts_id=pk)
+    if accounts:
+        contexto = {'accounts': accounts}
+    return render(request, 'accounting/accounts/accountsDescrp.html', contexto)
 
 # Customers
 class CustomersView(ListView):
@@ -54,6 +62,10 @@ class CustomersCreate(CreateView):
      model = Customer
      form_class = CustomerForm
      template_name = 'accounting/customer/customerForm.html'
+
+     def get(self, request, *args, **kwargs):
+         form = self.form_class(initial=self.initial)
+         return render(request, self.template_name, {'form': form, 'title': 'Create new Customer'})
 
      def post(self, request, *args, **kwargs):
          user = request.user
@@ -72,6 +84,7 @@ class CustomersEdit(UpdateView):
     form_class = CustomerForm
     template_name = 'accounting/customer/customerForm.html'
     success_url = reverse_lazy('accounting:customers')
+
 
 class CustomersDelete(DeleteView):
     model = Customer
@@ -141,6 +154,13 @@ class InvoicesCreate(CreateView):
      template_name = 'accounting/invoices/invoicesForm.html'
      success_url = reverse_lazy('accounting:invoices')
 
+     def get(self, request, *args, **kwargs):
+         items = Item.objects.all()
+         loads = Load.objects.all().order_by('number')
+         form = self.form_class(initial=self.initial)
+         return render(request, self.template_name, {'form': form, 'items': items, 'loads': loads, 'title': 'Create new Invoice'})
+
+
 class InvoicesEdit(UpdateView):
     model = Invoice
     form_class = InvoicesForm
@@ -174,18 +194,30 @@ class ReceiptsCreate(CreateView):
              if exp_accont != None:
                  for ac in exp_accont:
                     accounts.append(ac)
-         return render(request, self.template_name, {'accounts': accounts, 'form': form})
+         return render(request, self.template_name, {'accounts': accounts, 'form': form, 'title': 'Create new Receipt'})
 
      def post(self, request, *args, **kwargs):
          user = request.user
          form = self.form_class(request.POST)
-         folder_father = Folder.objects.get(name = 'Customers')
+         recs = Receipt.objects.filter(business_id=form.data['business'])
+         serial = 1
+         serials = []
+         for s in recs:
+             serials.append(s.serial)
          if form.is_valid():
-             folder = Folder.objects.create(name=form.data['name']+"_Customer", description=form.data['name']+"_Customer", folder = folder_father.id_fld)
-             customer = form.save(commit=False)
-             customer.folders_id = folder.id_fld
-             customer.users_id = user.id
-             customer.save()
+             if serials:
+               serial = int(max(serials))+1
+             receipt = form.save(commit=False)
+             receipt.serial = serial
+             receipt.users_id = user.id
+             receipt.accounts_id = request.POST['account']
+             receipt.save()
+             acountDescp = AccountDescrip.objects.create(date=form.data['start_date'],
+                                                         value=form.data['total'],
+                                                         accounts_id=request.POST['account'],
+                                                         document=receipt.id_rec,
+                                                         users_id=user.id,
+                                                         )
              return HttpResponseRedirect(reverse_lazy('accounting:receipts'))
 
 class ReceiptsEdit(UpdateView):
@@ -194,8 +226,22 @@ class ReceiptsEdit(UpdateView):
     template_name = 'accounting/receipts/receiptsForm.html'
     success_url = reverse_lazy('accounting:receipts')
 
+
+
 class ReceiptsDelete(DeleteView):
-    model = Invoice
+    model = Receipt
     template_name = 'confirm_delete.html'
-    success_url = reverse_lazy('accounting:invoices')
+    success_url = reverse_lazy('accounting:receipts')
+
+
+class ReceiptsPDF(View):
+    def get(self, request, *args, **kwargs):
+        receipt = Receipt.objects.get(id_rec=7)
+        data = {
+            'date': '27/5/2017',
+            'description': 'Prueba de recibo',
+            'total': '50,00',
+        }
+        pdf = render('accounting/receipts/receiptsPrint.html', data)
+        return HttpResponse(pdf, content_type='application/pdf')
 

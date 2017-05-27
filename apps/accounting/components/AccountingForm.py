@@ -155,6 +155,7 @@ class ReceiptsForm(forms.ModelForm):
             'paid',
             'end_date',
             'description',
+            'total',
         ]
         labels = {
             'business': 'Business:',
@@ -163,6 +164,7 @@ class ReceiptsForm(forms.ModelForm):
             'paid': 'Paid:',
             'end_date': 'End Date:',
             'description': 'Description',
+            'total': 'Total:',
         }
         widgets = {
             'business': forms.Select(attrs={'class': 'form-control input-md'}),
@@ -172,4 +174,5 @@ class ReceiptsForm(forms.ModelForm):
             'paid': forms.CheckboxInput(attrs={'class': 'checkbox'}),
             'end_date': forms.DateInput(attrs={'placeholder': 'End Date', 'class': 'form-control input-md'}),
             'description': forms.Textarea(attrs={'placeholder': 'Description', 'class': 'form-control input-md'}),
+            'total': forms.NumberInput(attrs={'placeholder': 'Total', 'class': 'form-control input-md'}),
         }

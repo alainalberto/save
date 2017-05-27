@@ -48,6 +48,7 @@ INSTALLED_APPS = [
 
     # Install Apps
     'crispy_forms',
+    'xhtml2pdf',
 ]
 
 MIDDLEWARE = [
@@ -61,6 +62,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'FirstCall.urls'
+
 
 TEMPLATES = [
     {
@@ -148,3 +150,4 @@ EMAIL_HOST_PASSWORD = ''
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackrend'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
+

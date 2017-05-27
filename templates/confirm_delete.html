@@ -1,26 +1,31 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="col-md-6 col-md-offset-4">
-<div class="panel panel-primary">
-    <div class="panel-heading">
-        <div class="row">
-            <div class="col-xs-3">
-                <i class="fa fa-exclamation-triangle fa-4x"></i>
-            </div>
-            <div class="col-xs-6 text-left">
-                <div><h3>Delete Confirm</h3></div>
-            </div>
+<section>
+    <div class="col-md-6 col-md-offset-4">
+
+        <div class="alert alert-danger alert-dismissible fade in" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+            <form method="post">{% csrf_token %}
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-exclamation-triangle fa-5x" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-xs-9">
+                        <h4>Delete Confirm!!</h4>
+                        <h3>Confirm that you want to delete</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-10 col-md-offset-4">
+                        <p>
+                            <input class="btm btn-danger" type="submit" value="Yes, I'm sure"/>
+                            <input class="btm btn-primary" type="button" value="No, take me back" onclick="history.back(-1)" />
+                        </p>
+                    </div>
+                </div>
+            </form>
         </div>
+
     </div>
-    <div class="panel-body">
-        <form method="post">{% csrf_token %}
-            <h3>Confirm that you want to delete {{customer.name}}</h3>
-            <div class="form-group col-md-10 col-md-offset-3">
-                <input class="btm btn-danger" type="submit" value="Yes, I'm sure"/>
-                <a href="{% url 'accounting:customers' %}" class="button cancel-link">No, take me back</a>
-            </div>
-        </form>
-    </div>
-</div>
-</div>
+</section>
 {% endblock %}
