@@ -10,8 +10,8 @@ def home_view(requiret):
     menus = Menu.objects.filter(menus_id=None)
     submenus = Menu.objects.filter()
     alertNot = Alert.objects.filter(category='Notification')
-    alertAlt = Alert.objects.filter(category='Alert')
-    alertUrg = Alert.objects.filter(category='Urgent')
+    alertAlt = Alert.objects.filter(category='Alerts')
+    alertUrg = Alert.objects.filter(category='Urgents')
     contexto = {'menus': menus, 'submenus': submenus, 'notif': alertNot.count(),
                 'alert': alertAlt.count(), 'urgent': alertUrg.count()}
     return render(requiret, 'home/complement/panel.html', contexto)

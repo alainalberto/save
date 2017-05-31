@@ -44,10 +44,10 @@ class Alert(models.Model):
     show_date = models.DateField()
     end_date = models.DateField()
     deactivated = models.BooleanField(default=False)
-    group = models.ForeignKey(Group, on_delete=models.CASCADE, blank=True)
+    group = models.ForeignKey(Group, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
-        return '{}'.format(self.drescription)
+        return '{}'.format(self.description)
 
 # Model Table folders
 class Folder(models.Model):

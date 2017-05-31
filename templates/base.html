@@ -148,13 +148,13 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> {{allalert}} <b class="caret"></b></a>
                 <ul class="dropdown-menu alert-dropdown">
                     <li>
-                        <a href="#">Notification <span class="label label-success"> {{notif}} </span></a>
+                        <a href="{% url 'panel:notification' %}">Notification <span class="label label-success"> {{notif}} </span></a>
                     </li>
                     <li>
-                        <a href="#">Alerts <span class="label label-warning"> {{alert}} </span></a>
+                        <a href="{% url 'panel:alert' %}">Alerts <span class="label label-warning"> {{alert}} </span></a>
                     </li>
                     <li>
-                        <a href="#">Urgents <span class="label label-danger"> {{urgent}} </span></a>
+                        <a href="{% url 'panel:urgent' %}">Urgents <span class="label label-danger"> {{urgent}} </span></a>
                     </li>
                     <li class="divider"></li>
                     <li>

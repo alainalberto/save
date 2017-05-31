@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block content %}
+<section>
+    <section>
+    <div class="panel panel-danger">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-xs-3">
+                    <i class="fa fa-list fa-4x"></i>
+                </div>
+                <div class="col-xs-9 text-left">
+                    <div><h3>List Urgents</h3></div>
+                </div>
+            </div>
+        </div>
+              <br>
+
+          <div class="panel-body">
+            <div class="navbar-button">
+                <a id="btnAdd" class="btn-primary btn col-md-offset-11" role="button" data-trigger="focus" title="Add Alert" href="{% url 'panel:alert_create' %}">
+                    <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
+                    <tooltip md-direction="left">New</tooltip>
+                </a>
+            </div>
+            <br/>
+            <div class="table-responsive">
+                <table id="listAlert" class="table data-table table-striped table-bordered table-hover" cellspacing="0" width="100%">
+                    <thead>
+                    <tr>
+                        <th>Description</th>
+
+                    </tr>
+                    </thead>
+                    {% for c in urgents %}
+                    <tbody>
+                    <tr>
+
+                        <td>
+                             <div class="form-group col-md-11 col-md-offset-0">
+                             <div class="alert alert-danger">
+                                 <strong>{{request.user}}:</strong> {{c.description}}
+                       </div></div>
+                          {% if request.user.id != c.users_id %}
+                            <toolbar class="md-accent">
+                                <a data-type="info" data-trigger="focus" disabled="true"  data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip">
+                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                    <tooltip md-direction="left"></tooltip>
+                                </a>
+                            </toolbar>
+                            <toolbar class="md-accent">
+                                <a data-type="info" data-animation="am-flip-x" data-trigger="focus" disabled="true"  type="button" class="btn btn-primary test-tooltip">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                    <tooltip md-direction="left"></tooltip>
+                                </a>
+                            </toolbar>
+                            {% else %}
+                             <toolbar class="md-accent">
+                                <a data-type="info" data-trigger="focus" title="Edit Notification" data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'panel:alert_edit' c.id_alt %}">
+                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                    <tooltip md-direction="left"></tooltip>
+                                </a>
+                            </toolbar>
+                            <toolbar class="md-accent">
+                                <a data-type="info" data-animation="am-flip-x" data-trigger="focus" title="Delete Notification" type="button" class="btn btn-primary test-tooltip" href="{% url 'panel:alert_delete' c.id_alt %}">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                    <tooltip md-direction="left"></tooltip>
+                                </a>
+                            </toolbar>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    </tbody>
+                     {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+</section>
+{% endblock %}
