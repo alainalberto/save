@@ -1,10 +1,9 @@
 from django.db import models
 
-from  django.contrib.auth.models import User
+from django.contrib.auth.models import User
 
-from apps.tools.models import Folder
+from apps.tools.models import Folder, Busines
 
-from apps.tools.models import Busines
 
 
 # Create your models here.
@@ -44,8 +43,7 @@ class Employee(models.Model):
     business = models.ForeignKey(Busines,  on_delete=models.CASCADE)  # Field name made lowercase.
     name = models.CharField(max_length=20, blank=True, null=True)
     lastname = models.CharField(max_length=45, blank=True, null=True)
-    comercial_name = models.CharField(max_length=45, blank=True, null=True)
-    adress = models.CharField(max_length=255, blank=True, null=True)
+    address = models.CharField(max_length=255, blank=True, null=True)
     social_no = models.CharField(max_length=20, blank=True, null=True)
     date_admis = models.DateField(blank=True, null=True)
     phone = models.CharField(max_length=10, blank=True, null=True)
@@ -108,7 +106,7 @@ class Payment(models.Model):
     id_sal = models.AutoField(primary_key=True)
     accounts = models.ForeignKey(Account, on_delete=models.CASCADE)  # Field name made lowercase.
     users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
-    employees = models.ForeignKey(Employee,  on_delete=models.CASCADE)  # Field name made lowercase.
+    business = models.ForeignKey(Busines, on_delete=models.CASCADE)
     start_date_sal = models.DateField(blank=True, null=True)
     end_date_sal = models.DateField(blank=True, null=True)
     serial_sal = models.CharField(max_length=20, blank=True, null=True)
@@ -128,7 +126,6 @@ class Fee(models.Model):
     def __str__(self):
         return '{}'.format(self.description)
 
-
 class InvoicesHasItem(models.Model):
     id_ind = models.AutoField(primary_key=True)
     invoices = models.ForeignKey(Invoice, on_delete=models.CASCADE)  # Field name made lowercase.
@@ -143,5 +140,10 @@ class AccountDescrip(models.Model):
     document = models.IntegerField()
     date = models.DateField(auto_now_add=True)
     value = models.DecimalField(max_digits=10, decimal_places=2)
+
+class EmployeeHasPayment(models.Model):
+    id_pym = models.AutoField(primary_key=True)
+    payments = models.ForeignKey(Payment, on_delete=models.CASCADE)  # Field name made lowercase.
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)  # Field name made lowercase.
 
 

@@ -6,6 +6,7 @@ from apps.logistic.models import *
 admin.site.register(Load)
 admin.site.register(TrucksLogt)
 admin.site.register(DriversLogt)
+admin.site.register(DispatchLogt)
 admin.site.register(PermissionsLogt)
 admin.site.register(InsuranceLogt)
 admin.site.register(IftaLogt)

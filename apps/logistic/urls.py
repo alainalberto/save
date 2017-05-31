@@ -13,6 +13,7 @@ urlpatterns = [
 
 
     url(r'^drives/$', login_required(), name='drives'),
+    url(r'^dispatch/$', login_required(), name='dispatch'),
     url(r'^trucks/$', login_required(), name='trucks'),
     url(r'^travel/$', login_required(), name='travel'),
     url(r'^infcompany/$', login_required(), name='infcompany'),

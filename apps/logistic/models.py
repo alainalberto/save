@@ -2,35 +2,10 @@ from django.db import models
 
 from django.contrib.auth.models import User
 
-from apps.accounting.models import Account
-
-from apps.accounting.models import Customer
-
-from apps.accounting.models import Invoice
-
-from apps.accounting.models import Employee
-
-from apps.accounting.models import Fee
+from apps.accounting.models import Account, Invoice, Fee, Payment
 
 # Create your models here.
 
-class Load(models.Model):
-    id_lod = models.AutoField(primary_key=True)
-    users = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
-    broker = models.CharField(max_length=45, blank=True, null=True)
-    place_loading = models.CharField(max_length=45, blank=True, null=True)
-    loading_date = models.DateField(blank=True, null=True)
-    place_dischande = models.CharField(max_length=45, blank=True, null=True)
-    driver = models.IntegerField(blank=True, null=True)
-    dispash = models.IntegerField(blank=True, null=True)
-    value = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
-    number = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
-    paid = models.BooleanField(default=True)
-    note = models.TextField(blank=True, null=True)
-    employees = models.ManyToManyField(Employee, blank=True)
-
-    def __str__(self):
-        return '{}'.format(self.number)
 
 class TrucksLogt(models.Model):
     id_tuk = models.AutoField(primary_key=True)
@@ -45,7 +20,6 @@ class TrucksLogt(models.Model):
     deactivate = models.BooleanField(default=False)
     deactivate_date = models.DateField(blank=True, null=True)
 
-
     def __str__(self):
         return '{}'.format(self.number)
 
@@ -53,6 +27,7 @@ class DriversLogt(models.Model):
     id_dr = models.AutoField(primary_key=True)
     users = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=45, blank=True, null=True)
+    comercial_name = models.CharField(max_length=45, blank=True, null=True)
     license_numb = models.CharField(max_length=45, blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
     dob = models.DateField(blank=True, null=True)
@@ -68,6 +43,35 @@ class DriversLogt(models.Model):
 
     def __str__(self):
         return '{}'.format(self.name)
+
+class DispatchLogt(models.Model):
+    id_dsp = models.AutoField(primary_key=True)
+    users = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
+    name = models.CharField(max_length=45, blank=True, null=True)
+    address = models.CharField(max_length=255, blank=True, null=True)
+    deactivate = models.BooleanField(default=False)
+    date_deactivated = models.DateTimeField(blank=True, null=True)
+
+    def __str__(self):
+        return '{}'.format(self.name)
+
+
+class Load(models.Model):
+    id_lod = models.AutoField(primary_key=True)
+    users = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
+    driver = models.ForeignKey(DriversLogt, blank=True, null=True, on_delete=models.CASCADE)
+    dispatch = models.ForeignKey(DispatchLogt, blank=True, null=True, on_delete=models.CASCADE)
+    broker = models.CharField(max_length=45, blank=True, null=True)
+    pickup_from = models.CharField(max_length=45, blank=True, null=True)
+    pickup_date = models.DateField(blank=True, null=True)
+    deliver = models.CharField(max_length=45, blank=True, null=True)
+    value = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
+    number = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
+    paid = models.BooleanField(default=True)
+    note = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return '{}'.format(self.number)
 
 class PermissionsLogt(models.Model):
     id_prm = models.AutoField(primary_key=True)
@@ -104,7 +108,7 @@ class InsuranceLogt(models.Model):
     sale_type = models.CharField(max_length=20, blank=True, null=True)
     sale_date_fee = models.DateField(blank=True, null=True)
     total = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
-    comision = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
+    fee_value = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
     paid = models.BooleanField(default=True)
 
 
@@ -112,7 +116,7 @@ class IftaLogt(models.Model):
     id_ift = models.AutoField(primary_key=True)
     trucks = models.ForeignKey(TrucksLogt, on_delete=models.CASCADE)  # Field name made lowercase.
     users = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
-    customers = models.ForeignKey(Customer, on_delete=models.CASCADE)  # Field name made lowercase.
+    driver = models.ForeignKey(DriversLogt, on_delete=models.CASCADE)  # Field name made lowercase.
     date = models.DateField(blank=True, null=True)
     state = models.CharField(max_length=45, blank=True, null=True)
     milles = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
@@ -123,7 +127,7 @@ class TravelExpense(models.Model):
     id_tre = models.AutoField(primary_key=True)
     accounts = models.ForeignKey(Account, on_delete=models.CASCADE)  # Field name made lowercase.
     users = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
-    employees = models.ForeignKey(Employee, on_delete=models.CASCADE)  # Field name made lowercase.
+    driver = models.ForeignKey(DriversLogt, on_delete=models.CASCADE)  # Field name made lowercase.
     description = models.CharField(max_length=255, blank=True, null=True)
     date = models.DateField(blank=True, null=True)
     value = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
@@ -139,3 +143,14 @@ class InvoicesHasLoad(models.Model):
     id_inl = models.AutoField(primary_key=True)
     invoices = models.ForeignKey(Invoice, on_delete=models.CASCADE)  # Field name made lowercase.
     loads = models.ForeignKey(Load, on_delete=models.CASCADE)  # Field name made lowercase.
+
+class DriversHasPayment(models.Model):
+    id_pym = models.AutoField(primary_key=True)
+    payments = models.ForeignKey(Payment, on_delete=models.CASCADE)  # Field name made lowercase.
+    driver = models.ForeignKey(DriversLogt, on_delete=models.CASCADE)  # Field name made lowercase.
+
+class DispatchHasPayment(models.Model):
+    id_pym = models.AutoField(primary_key=True)
+    payments = models.ForeignKey(Payment, on_delete=models.CASCADE)  # Field name made lowercase.
+    dispatch = models.ForeignKey(DispatchLogt, on_delete=models.CASCADE)  # Field name made lowercase.
+

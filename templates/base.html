@@ -300,12 +300,17 @@
                             <a class="item" href="{% url 'logistic:loads' %}"> Loads</a>
                         </li>
                         {% endif %}
-                       <!-- {% if perms.logistic.add_drivers %}
+                       {% if perms.logistic.add_driverslogt %}
                         <li>
                             <a class="item" href="{% url 'logistic:drives' %}"> Drivers</a>
                         </li>
                         {% endif %}
-                        {% if perms.logistic.add_truckslogt %}
+                         {% if perms.logistic.add_dispatchlogt %}
+                        <li>
+                            <a class="item" href="{% url 'logistic:dispatch' %}"> Dispatch</a>
+                        </li>
+                        {% endif %}
+                       <!-- {% if perms.logistic.add_truckslogt %}
                         <li>
                             <a class="item" href="{% url 'logistic:trucks' %}"> Trucks</a>
                         </li>

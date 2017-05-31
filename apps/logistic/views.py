@@ -20,8 +20,7 @@ class LoadsCreate(CreateView):
 
      def get(self, request, *args, **kwargs):
          form = self.form_class(initial=self.initial)
-         drivers = DriversLogt.objects.filter(deactivate=False)
-         return render(request, self.template_name, {'form': form, 'driver': drivers, 'title': 'Create new Load'})
+         return render(request, self.template_name, {'form': form, 'title': 'Create new Load'})
 
      def post(self, request, *args, **kwargs):
          user = request.user
@@ -29,9 +28,8 @@ class LoadsCreate(CreateView):
          if form.is_valid():
              load = form.save(commit=False)
              load.users_id = user.id
-             load.driver = request.POST['driver']
              load.save()
-             return HttpResponseRedirect(reverse_lazy('logistic:loads'))
+             return HttpResponse(reverse_lazy('logistic:loads'))
 
 class LoadsEdit(UpdateView):
     model = Load

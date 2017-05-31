@@ -22,7 +22,7 @@ class Busines(models.Model):
     id_bus = models.AutoField(primary_key=True)
     name = models.CharField(max_length=45)
     address = models.CharField(max_length=255)
-    phone = models.CharField(max_length=10, blank=True, null=True )
+    phone = models.CharField(max_length=10, blank=True, null=True)
     fax = models.CharField(max_length=10, blank=True, null=True)
     website = models.CharField(max_length=255, blank=True, null=True)
     logo = models.CharField(max_length=255)
@@ -39,12 +39,12 @@ class Alert(models.Model):
     id_alt = models.AutoField(primary_key=True)
     users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
     category = models.CharField(max_length=20)
-    drescription = models.CharField(max_length=255)
+    description = models.CharField(max_length=255)
     create_date = models.DateField(auto_now_add=True)
     show_date = models.DateField()
     end_date = models.DateField()
     deactivated = models.BooleanField(default=False)
-    group = models.ManyToManyField(Group, blank=True)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, blank=True)
 
     def __str__(self):
         return '{}'.format(self.drescription)
