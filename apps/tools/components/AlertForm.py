@@ -2,7 +2,7 @@ from django import forms
 from apps.tools.models import Alert
 
 
-class alertForm(forms.ModelForm):
+class AlertForm(forms.ModelForm):
     class Meta:
         model = Alert
 

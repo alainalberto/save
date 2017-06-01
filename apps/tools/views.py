@@ -4,7 +4,8 @@ from django.http import JsonResponse
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import CreateView
 from apps.tools.models import *
-from apps.tools.components import CalendarForm, alertForm
+from apps.tools.components import CalendarForm
+from apps.tools.components.AlertForm import AlertForm
 from django.contrib.auth import authenticate, logout, login
 import simplejson
 
@@ -44,29 +45,34 @@ def GetCalendar(requiret):
 def NotificationView(requiret):
     #grupos = requiret.user.groups.all
     #pepe = User.objects.filter(groups__name='Familia')
-    notification = Alert.objects.filter(category='Notification')
     #e = Group.objects.filter(user=requiret.user)
     grupos = Group.objects.get(id=requiret.user.id)
-    e = grupos.alert_set.filter(category='Notification')
-    contexto = {'notification': notification, 'e': e}
+    notifications = grupos.alert_set.filter(category='Notification')
+    contexto = {'notifications': notifications}
     return render(requiret, 'alert/notificationViews.html', contexto)
 
 def AlertView(requiret):
-    alert = Alert.objects.filter(category='Alerts')
-    contexto = {'alerts': alert}
+    grupos = Group.objects.get(id=requiret.user.id)
+    alertas = grupos.alert_set.filter(category='Alerts')
+    contexto = {'alertas': alertas}
     return render(requiret, 'alert/alertViews.html', contexto)
 
 def UrgentView(requiret):
-    urgent = Alert.objects.filter(category='Urgents')
-    contexto = {'urgents': urgent}
+    grupos = Group.objects.get(id=requiret.user.id)
+    urgents = grupos.alert_set.filter(category='Urgents')
+    contexto = {'urgents': urgents}
     return render(requiret, 'alert/urgentViews.html', contexto)
 
 class AlertsCreate(CreateView):
      model = Alert
-     form_class = alertForm
+     form_class = AlertForm
      template_name = 'alert/alertForm.html'
 
-     def post(self, request, args, *kwargs):
+     def get(self, request, *args, **kwargs):
+         form = self.form_class(initial=self.initial)
+         return render(request, self.template_name, {'form': form})
+
+     def post(self, request, *args, **kwargs):
          self.object = self.get_object()
          form = self.form_class(request.POST)
          user = request.user
@@ -74,16 +80,17 @@ class AlertsCreate(CreateView):
              alert = form.save(commit=False)
              alert.users = user
              alert.save()
-             return HttpResponseRedirect(reverse_lazy('panel'))
+         return HttpResponseRedirect(reverse_lazy('panel:notification'))
+
 
 class AlertstEdit(UpdateView):
     model = Alert
-    form_class = alertForm
+    form_class = AlertForm
     template_name = 'alert/alertForm.html'
-    success_url = reverse_lazy('panel')
+    success_url = reverse_lazy('panel:notification')
 
 class AlertsDelete(DeleteView):
     model = Alert
     template_name = 'confirm_delete.html'
-    success_url = reverse_lazy('panel')
+    success_url = reverse_lazy('panel:notification')
 

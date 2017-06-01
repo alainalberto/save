@@ -15,4 +15,5 @@ url(r'^urgent/$', login_required(UrgentView), name='urgent'),
 url(r'^alerts/create$', login_required(AlertsCreate.as_view()), name='alert_create'),
 url(r'^alerts/edit/(?P<pk>\d+)/$', login_required(AlertstEdit.as_view()), name='alert_edit'),
 url(r'^alerts/delete/(?P<pk>\d+)/$', login_required(AlertsDelete.as_view()), name='alert_delete'),
+
 ]

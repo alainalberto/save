@@ -7,13 +7,11 @@ from apps.tools.models import Menu, Alert, Chat
 
 
 def home_view(requiret):
-    menus = Menu.objects.filter(menus_id=None)
-    submenus = Menu.objects.filter()
     alertNot = Alert.objects.filter(category='Notification')
     alertAlt = Alert.objects.filter(category='Alerts')
     alertUrg = Alert.objects.filter(category='Urgents')
-    contexto = {'menus': menus, 'submenus': submenus, 'notif': alertNot.count(),
-                'alert': alertAlt.count(), 'urgent': alertUrg.count()}
+    allalert = alertNot.count() + alertAlt.count() + alertUrg.count()
+    contexto = {'notif': alertNot.count(),'alert': alertAlt.count(), 'urgent': alertUrg.count(), 'allalert': allalert}
     return render(requiret, 'home/complement/panel.html', contexto)
 
 def Chats(request):

@@ -31,14 +31,14 @@
 
                     </tr>
                     </thead>
-                    {% for c in alerts %}
+                    {% for c in alertas %}
                     <tbody>
                     <tr>
 
                         <td>
                              <div class="form-group col-md-11 col-md-offset-0">
                              <div class="alert alert-warning">
-                        <strong>{{request.user}}:</strong> {{c.description}}
+                        <strong>{{c.users}}:</strong> {{c.description}}
                        </div></div>
                             {% if request.user.id != c.users_id %}
                             <toolbar class="md-accent">
