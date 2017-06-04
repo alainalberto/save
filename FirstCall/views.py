@@ -1,3 +1,4 @@
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse_lazy
@@ -16,7 +17,7 @@ def home_view(requiret):
 
 def Chats(request):
     c = Chat.objects.all()
-    return render(request, "home/complement/chat.html", {'chat': 'active', 'chat': c})
+    return render(request, "home/complement/chat.html", {'chat': c})
 
 def Post(request):
     if request.method == "POST":

@@ -4,7 +4,6 @@ $(document).ready( function () {
    $(".data-table").dataTable();
 
   // Acordion View Customar_Service
-   $( "#service_forms" ).accordion();
 
 
    // Script Datapicker Input
@@ -21,75 +20,35 @@ $(document).ready( function () {
 
 
   // Script Calendar
-  	$('#calendar').fullCalendar({
+
+       var event = $.getJSON('http://localhost:8000/panel/calendar/list/', function(response){
+                return response;
+                });
+
+       $('#calendar').fullCalendar({
 			header: {
 				left: 'prev,next today',
 				center: 'title',
 				right: 'month,agendaWeek,agendaDay,listMonth'
 			},
+
 			defaultDate: new Date(),
 			navLinks: true, // can click day/week names to navigate views
 			businessHours: true, // display business hours
 			editable: true,
-			events: [
-				{
-					title: 'Business Lunch',
-					start: '2017-05-03T13:00:00',
-					constraint: 'businessHours',
-					color: '#E74C3C'
-				},
-				{
-					title: 'Meeting',
-					start: '2017-05-13T11:00:00',
-					constraint: 'availableForMeeting', // defined below
-					color: '#27AE60'
-				},
-				{
-					title: 'Conference',
-					start: '2017-05-18',
-					end: '2017-05-20',
-					color: '#E74C3C'
-				},
-				{
-					title: 'Party',
-					start: '2017-05-29',
-					allDay: true,
-					color: '#DC7633'
-				},
+			events: {
+                     url: 'http://localhost:8000/panel/calendar/list/',
+                     data: function() { // a function that returns an object
+                            return {
+                            dynamic_value: Math.random()
+                            };
+                     }
+            }
 
-				// areas where "Meeting" must be dropped
-				{
-					id: 'availableForMeeting',
-					start: '2017-05-11T10:00:00',
-					end: '2017-05-11T16:00:00',
-					rendering: 'background'
-				},
-				{
-					id: 'availableForMeeting',
-					start: '2017-05-13T10:00:00',
-					end: '2017-05-13T16:00:00',
-					rendering: 'background',
-					color: '#27AE60'
-				},
+	});
 
-				// red areas where no events can be dropped
-				{
-					start: '2017-05-24',
-					end: '2017-05-28',
-					overlap: false,
-					color: '#27AE60'
-				},
-				{
-					start: '2017-05-06',
-					end: '2017-05-08',
-					overlap: false,
-					color: '#27AE60'
-				}
-			],
 
-		});
-
-        $('#calendar_panel').fullCalendar({
+    $('#calendar_panel').fullCalendar({
 			header: {
 				left: 'prev,next',
 				center: 'title',
@@ -100,62 +59,17 @@ $(document).ready( function () {
 			navLinks: true, // can click day/week names to navigate views
 			businessHours: true, // display business hours
 			editable: true,
-			events: [
-				{
-					title: 'Business Lunch',
-					start: '2017-05-03T13:00:00',
-					constraint: 'businessHours'
-				},
-				{
-					title: 'Meeting',
-					start: '2017-05-13T11:00:00',
-					constraint: 'availableForMeeting', // defined below
-					color: '#05662D'
-				},
-				{
-					title: 'Conference',
-					start: '2017-05-18',
-					end: '2017-05-20'
-				},
-				{
-					title: 'Party',
-					start: '2017-05-29',
-					allDay: true,
-					color: '#8D1307'
-				},
-
-				// areas where "Meeting" must be dropped
-				{
-					id: 'availableForMeeting',
-					start: '2017-05-11T10:00:00',
-					end: '2017-05-11T16:00:00',
-					rendering: 'background'
-				},
-				{
-					id: 'availableForMeeting',
-					start: '2017-05-13T10:00:00',
-					end: '2017-05-13T16:00:00',
-					rendering: 'background'
-				},
-
-				// red areas where no events can be dropped
-				{
-					start: '2017-05-24',
-					end: '2017-05-28',
-					overlap: false,
-					rendering: 'background',
-					color: '#8D1307'
-				},
-				{
-					start: '2017-05-06',
-					end: '2017-05-08',
-					overlap: false,
-					rendering: 'background',
-					color: '#AEEEEC'
-				}
-			],
+			events: {
+                     url: 'http://localhost:8000/panel/calendar/list/',
+                     data: function() { // a function that returns an object
+                            return {
+                            dynamic_value: Math.random()
+                            };
+                     }
+            }
 
 		});
+
 
   //Funcion for Acordion Services Customer
 
@@ -234,7 +148,7 @@ $(document).ready( function () {
    });
 
 
-   $('#btnService').change(function(){
+  $('#btnService').change(function(){
         if (this.checked) {
             $('#panelService').attr("style", "display : initial;");
             $('#panelLoad').attr("style", "display : none;");
@@ -257,7 +171,29 @@ $(document).ready( function () {
         }
    });
 
-  $("#confDelete").modal("show");
+$("#addService").on("click", function(){
+    var total_item = parseInt($("#quantity").val()) * parseInt($('#item_unit').html()) || 0
+   $('#tbItem > tbody:last-child').append('<tr><td style="display : none" id="item_id">'+$("#selecItem").val()+'</td><td id="item_quant">'+$("#quantity").val()+'</td><td id="item_name">'+$("#selecItem").val()+'</td><td id="item_unit">'+$("#selecItem").val()+'</td><td id="item_total" class="item_total" >'+parseInt($("#quantity").val()) * parseInt($("#selecItem").val())+'</td><td> <toolbar class="md-accent"><button data-type="info" data-trigger="focus" title="Add new Item" data-animation="am-flip-x" type="button" class="btn btn-danger test-tooltip"><i class="fa fa-times" aria-hidden="true"></i><tooltip md-direction="left"></tooltip></button></toolbar></td></tr>');
+   var subtotal = 0;
+   var total = 0;
+   $(".item_total").each(function(){
+	   subtotal =subtotal + parseInt($(this).html()) || 0;
+    });
+    $('#servSutotal').val(subtotal);
+
+     total = subtotal - parseInt($('#discount').val() || 0)
+    alert('Subtotal: '+subtotal+' Total: '+total)
+});
+
+$(".zoom-mouse").mouseenter(function(evento){
+   $(this).animate({borderSpacing: "5px"}, "fast");
+   /*$(this).animate({width: '110%'}, "medium");*/
+});
+
+$(".zoom-mouse").mouseleave(function(evento){
+   $(this).animate({borderSpacing: "1px"},"fast");
+  /* $(this).animate({width: '100%'}, "medium");*/
+});
  });
 
 /*function showContent() {

@@ -8,8 +8,9 @@ urlpatterns = [
     #Account
     url(r'^accounts/$', login_required(AccountsViews), name='accounts'),
     url(r'^accounts/create/$', login_required(AccountCreate.as_view()), name='account_create'),
-    url(r'^accounts/description/(?P<pk>\d+)/$$', login_required(AccountsDescViews), name='account_descrip'),
+    url(r'^accounts/description/(?P<pk>\d+)/$', login_required(AccountsDescViews), name='account_descrip'),
     url(r'^customers/$', login_required(CustomersView.as_view()), name='customers'),
+    url(r'^accounts/document/(?P<pk>\d+)/$', login_required(AccountDocument), name='account_document'),
 
     #Customers
     url(r'^customers/create$', login_required(CustomersCreate.as_view()), name='customer_create'),

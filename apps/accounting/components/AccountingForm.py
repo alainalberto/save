@@ -134,7 +134,7 @@ class InvoicesForm(forms.ModelForm):
                 'business': forms.Select(attrs={'class': 'form-control input-md'}),
                 'start_date': forms.DateInput(attrs={'placeholder': 'Start Date', 'class': 'form-control input-md'}),
                  'waytopay': forms.Select(attrs={'class': 'form-control input-md'},choices=(('Cash','Cash'),('Check','Check'),('Credit Card','Credit Card'))),
-                'discount': forms.NumberInput(attrs={'placeholder': 'Discount', 'class': 'form-control input-md'}),
+                'discount': forms.NumberInput(attrs={'placeholder': 'Discount', 'class': 'form-control input-md', 'id': 'discount'}),
                 'paid': forms.CheckboxInput(attrs={'class': 'checkbox'}),
                 'prefix': forms.TextInput(attrs={'placeholder': 'Prefix', 'class': 'form-control input-md'}),
                 'end_date': forms.DateInput(attrs={'placeholder': 'End Date', 'class': 'form-control input-md'}),

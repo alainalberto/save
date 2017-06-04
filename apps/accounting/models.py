@@ -63,6 +63,7 @@ class Invoice(models.Model):
     business = models.ForeignKey(Busines,  on_delete=models.CASCADE)  # Field name made lowercase.
     users = models.ForeignKey(User,  on_delete=models.CASCADE)  # Field name made lowercase.
     serial = models.IntegerField()
+    type = models.CharField(max_length=20, blank=True, null=True)
     start_date = models.DateField(blank=True, null=True)
     subtotal = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     total = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
@@ -137,13 +138,23 @@ class AccountDescrip(models.Model):
     id_acd = models.AutoField(primary_key=True)
     users = models.ForeignKey(User,  on_delete=models.CASCADE)  # Field name made lowercase.
     accounts = models.ForeignKey(Account,  on_delete=models.CASCADE)  # Field name made lowercase.
+    type = models.CharField(max_length=20, blank=True, null=True)
     document = models.IntegerField()
     date = models.DateField(auto_now_add=True)
     value = models.DecimalField(max_digits=10, decimal_places=2)
 
+    def get_document(self):
+        if self.type == "Receipt":
+            return Receipt.objects.get(id_rec=self.document)
+        if self.type == "Item":
+            return Item.objects.get(id_itm=self.document)
+        if self.type == "Payment":
+            return Payment.objects.get(id_sal=self.document)
+
+
 class EmployeeHasPayment(models.Model):
     id_pym = models.AutoField(primary_key=True)
     payments = models.ForeignKey(Payment, on_delete=models.CASCADE)  # Field name made lowercase.
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)  # Field name made lowercase.
+    employ = models.ForeignKey(Employee, on_delete=models.CASCADE)  # Field name made lowercase.
 
 

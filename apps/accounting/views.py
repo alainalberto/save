@@ -16,7 +16,7 @@ from apps.tools.models import Folder, Busines
 # Create your views here.
 
 
-class AccountingPanel(ListView):
+class AccountingPanel(View):
     model = Account
     template_name = 'accounting/panel_account.html'
 #Account
@@ -53,6 +53,16 @@ def AccountsDescViews(request, pk):
         contexto = {'accounts': accounts}
     return render(request, 'accounting/accounts/accountsDescrp.html', contexto)
 
+def AccountDocument(request, pk):
+    accountDescrp = AccountDescrip.objects.get(id_acd=pk)
+    if accountDescrp:
+        if accountDescrp.type == 'Receipt':
+            return redirect('/accounting/receipts/edit/'+str(accountDescrp.document)+'/')
+        if accountDescrp.type == 'Item':
+            return redirect('/accounting/invoices/edit/'+str(accountDescrp.document)+'/')
+        if accountDescrp.type == 'Payment':
+            return redirect('/accounting/payment/edit/'+str(accountDescrp.document)+'/')
+    return redirect('accounting:accounts')
 # Customers
 class CustomersView(ListView):
     model = Customer
@@ -152,7 +162,6 @@ class InvoicesCreate(CreateView):
      model = Invoice
      form_class = InvoicesForm
      template_name = 'accounting/invoices/invoicesForm.html'
-     success_url = reverse_lazy('accounting:invoices')
 
      def get(self, request, *args, **kwargs):
          items = Item.objects.all()
@@ -217,6 +226,7 @@ class ReceiptsCreate(CreateView):
                                                          accounts_id=request.POST['account'],
                                                          document=receipt.id_rec,
                                                          users_id=user.id,
+                                                         type='Receipt'
                                                          )
              return HttpResponseRedirect(reverse_lazy('accounting:receipts'))
 
@@ -224,7 +234,46 @@ class ReceiptsEdit(UpdateView):
     model = Receipt
     form_class = ReceiptsForm
     template_name = 'accounting/receipts/receiptsForm.html'
-    success_url = reverse_lazy('accounting:receipts')
+
+    def get_context_data(self, **kwargs):
+        context = super(ReceiptsEdit, self).get_context_data(**kwargs)
+        pk = self.kwargs.get('pk',0)
+        receipt = self.model.objects.get(id_rec=pk)
+        account = Account.objects.filter(id_acn=receipt.accounts_id)
+        accounts = []
+        exp = Account.objects.get(primary=True, name='Expenses')
+        exp_acconts = Account.objects.filter(accounts_id_id=exp.id_acn)
+        for e in exp_acconts:
+            accounts.append(e)
+        for a in exp_acconts:
+            exp_accont = Account.objects.filter(accounts_id_id=a.id_acn)
+            if exp_accont != None:
+                for ac in exp_accont:
+                    accounts.append(ac)
+        if 'form' not in context:
+            context['form'] = self.form_class()
+        context['id'] = pk
+        context['accounts'] = account
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object
+        id_rec = kwargs['pk']
+        receipt = self.model.objects.get(id_rec=id_rec)
+        receipt.accounts_id = request.POST['account']
+        acountDescp = AccountDescrip.objects.get(accounts_id=receipt.accounts_id, docoments=receipt.id_rec)
+        form = self.form_class(request.POST, instance=receipt)
+        if form.is_valid():
+            form.save()
+            receipt.accounts_id = request.POST['account']
+            receipt.save()
+            AccountDescrip.objects.filter(id_acd=acountDescp.id_dac).update(
+                date=form.data['start_date'],
+                value=form.data['total'],
+            )
+            return HttpResponseRedirect(reverse_lazy('accounting:receipts'))
+        else:
+            return HttpResponseRedirect(reverse_lazy('accounting:receipts'))
 
 
 

@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
 {% block content %}
 <section>
     <form name="form_customer" method="post" class="form" role="form" id="form_customer" validate>{% csrf_token %}
@@ -18,7 +17,7 @@
                 <fieldset>
                     <!-- Form Name -->
                     <!-- Text input-->
-                   <div class="form-group col-md-3 col-md-offset-1" >
+                    <div class="form-group col-md-3 col-md-offset-1" >
                         <label class="label-control">{{form.name.label}}</label>
                         {{form.name}}
                     </div>

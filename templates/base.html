@@ -39,7 +39,7 @@
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
     <![endif]-->
-    {% block script %}
+
     <script src="{% static 'js/jquery.js'%}"></script>
     <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -59,9 +59,6 @@
     <script src="{% static 'lib/morris/raphael.min.js'%}"></script>
     <script src="{% static 'lib/morris/morris.min.js'%}"></script>
     <script src="{% static 'lib/morris/morris-data.js'%}"></script>
-
-
-    {% endblock %}
     {% endblock %}
 
 </head>
@@ -104,24 +101,13 @@
                         </div>
                     </div>
                     <div class="panel-body">
-                        <span>Today</span>
-                        <div>
-                            <strong class="col-lg-2 col-md-4">:</strong>
-                            <div class="alert alert-success col-lg-9 col-md-6">
-                                <span></span>
-                                <span></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="panel-footer">
-                        <form>
-                            <input>
-                            <input type="submit" class="button">
-                        </form>
+                        <iframe style="width=25% height=300%" src="http://localhost:8000/chat" scrolling="no">
+
+                        </iframe>
                     </div>
                 </div>
             </li>
-            <li class="dropdown">
+           <!-- <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-envelope"></i> <b class="caret"></b></a>
                 <ul class="dropdown-menu message-dropdown">
                     <li class="message-preview">
@@ -143,9 +129,9 @@
                         <a href="#">Read All New Messages</a>
                     </li>
                 </ul>
-            </li>
+            </li> -->
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> {{allalert}} <b class="caret"></b></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="label label-primary">{{allalert}}</span> <i class="fa fa-bell"></i> <b class="caret"></b></a>
                 <ul class="dropdown-menu alert-dropdown">
                     <li>
                         <a href="{% url 'panel:notification' %}">Notification <span class="label label-success"> {{notif}} </span></a>
@@ -166,17 +152,11 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{user.first_name}} <b class="caret"></b></a>
                 <ul class="dropdown-menu">
                     <li>
-                        <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-fw fa-envelope"></i> Inbox</a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-fw fa-gear"></i> Settings</a>
+                        <a href="{% url 'panel:panel' %}"><i class="fa fa-fw fa-user"></i>My Panel</a>
                     </li>
                     <li class="divider"></li>
                     <li>
-                        <a href="{% url 'logout' %}"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+                        <a href="/logout/"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
                     </li>
                 </ul>
             </li>
@@ -348,13 +328,15 @@
         <div class="container-fluid">
 
             {% block content %}
-
-            {% endblock %}
+               (% include {% url 'panel:panel' %} %}
+            {% endblock content %}
         </div>
         <!-- /.container-fluid -->
     </div>
 
 </div>
-
 </body>
+{% block script %}
+
+{% endblock script %}
 </html>

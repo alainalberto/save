@@ -7,6 +7,7 @@ class CalendarForm(forms.ModelForm):
         model = Calendar
 
         fields = [
+            'id',
             'title',
             'color',
             'allDay',

@@ -12,7 +12,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
     <!-- Latest compiled JavaScript -->
-    <style>
+   <style>
 
     #chat-bottom {
     position: fixed;
@@ -28,41 +28,49 @@
 </head>
 
 <body>
-    <div id="chat-body" class="panel panel-default">
+    <div id="chat-body" class="panel panel-default" data-spy="scroll" data-target="#msg-list-div">
 
-        <div id="msg-list-div" class="panel-body">
+        <div id="msg-list-div" class="panel-body" data-spy="scroll">
             <ul id="msg-list" class="list-group">
                 {% for obj in chat %}
                     {% if obj.users == request.user %}
-                        {{obj.users}}>>><div class="text-right alert alert-info col-lg-9 col-md-6"><p>{{ obj.message }}</p></div>
+                <div class="text-right alert alert-info col-lg-9 col-md-6">
+                       <span>
+                    <strong>
+                        {% if obj.name %}
+                          {{obj.name}}:
+                        {% else %}
+                        {{obj.users}}:
+                        {% endif %}
+                    </strong><br/>
+                           {{ obj.message }}</span>
+                </div>
                     {% else %}
-                       {{obj.users}}>>> <div class="text-left alert alert-success col-lg-9 col-md-6"><p>{{ obj.message }}</p></div>
+                <div class="text-left alert alert-success col-lg-9 col-md-6">
+                    <span>
+                    <strong>
+                        {% if obj.name %}
+                          {{obj.name}}:
+                        {% else %}
+                        {{obj.users}}:
+                        {% endif %}
+                    </strong><br/>{{ obj.message }}</span>
+                    </div>
                     {% endif %}
                 {% empty %}
                     <li class="text-right list-group-item">No messages yet!</li>
                 {% endfor %}
-                <script>
-                    var chatlist = document.getElementById('msg-list-div');
-                    chatlist.scrollTop = chatlist.scrollHeight;
-                </script>
             </ul>
         </div>
     </div>
-
-    <form id="chat-form" method="post" action="/post/">
-        <div id="chat-bottom" class="input-group">
+    <form id="chat-form" method="post" action="/post/">{% csrf_token %}
+            <div id="chat-bottom" class="input-group col-lg-9 col-md-5">
             <input type="text" id="chat-msg" name="chat-msg" class="form-control"/>
             <span class="input-group-btn">
                 <input class="btn btn-primary" id="send" type="submit" value="Send"/>
             </span>
-        </div>
+           </div>
     </form>
-</body>
-
 <script src="{% static 'js/chat.js' %}"></script>
-
-<script>
-
-
-</script>
+</body>
 </html>

@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% block content %}
-<section>
     <form name="form_invoices" method="post" class="form" role="form" id="form_invoices" validate>{% csrf_token %}
         <div class="panel panel-primary">
             <div class="panel-heading">
@@ -50,7 +49,7 @@
                         {{ form.waytopay }}
                     </div>
                     <div class="form-group col-md-3 col-md-offset-1">
-                        <div class="list-group">
+                        <div class="list-group" name="type">
                             <legend class="list-group-item active">Type of description:</legend>
                             <div class="radio active">
                                 <label>
@@ -72,25 +71,27 @@
                 <div id="panelService" style="...">
                     <div class="form-group">
                         <div class="col-md-1" >
-                            <input id="txtQuant" class="col-md-1 form-control" >
+                            <input id="quantity" class="col-md-1 form-control" name="quantity" type="number">
                         </div>
                         <div class="col-md-6" >
-                            <select id="selecItem" class="form-control">
+                            <select id="selecItem" name="selecItem" class="form-control">
                                 <option>Select one</option>
                                 {% for item in items %}
-                                <option>{{item.name}}</option>
+                                <option value="{{item.id_ite}}" onselect="data:{id:'{{item.id_ite}}', name:'{{item.name}}', value:'{{item.value}}'">{{item.name}}</option>
                                 {% endfor %}
                             </select>
                         </div>
-                        <a data-type="info" data-trigger="focus" title="Add new Item" data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="">
+                        <button id="addService" data-type="info" data-trigger="focus" title="Add new Item" data-animation="am-flip-x" type="button" class="btn btn-success test-tooltip">
                             <i class="fa fa-plus" aria-hidden="true"></i>
                             <tooltip md-direction="left"></tooltip>
-                        </a>
+                        </button>
                     </div>
+                    <br/>
                     <div class="form-group">
                         <table id="tbItem" class="table table-striped table-bordered ">
                             <thead>
                             <tr>
+                                <th style="display : none"></th>
                                 <th>Quantity</th>
                                 <th>Description</th>
                                 <th>Unit Price</th>
@@ -99,36 +100,14 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td class="col-md-1"></td>
-                                <td class="col-md-7">
-                                </td>
-                                <td class="col-md-2">
-                                    {% for value in items %}
-                                    {% if value.mane == item.name %}
-                                    {{value.value}}
-                                    {% endif %}
-                                    {% endfor %}
-                                </td>
-                                <td class="col-md-2"></td>
-                                <td class="col-md-1">
-                                    <toolbar class="md-accent">
-                                        <a data-type="info" data-trigger="focus" title="Add new Item" data-animation="am-flip-x" type="button" class="btn btn-danger test-tooltip" href="">
-                                            <i class="fa fa-times" aria-hidden="true"></i>
-                                            <tooltip md-direction="left"></tooltip>
-                                        </a>
-                                    </toolbar>
-                                </td>
-                            </tr>
                             </tbody>
                         </table>
                         <fieldset>
-
                             <div class="form-group col-xs-9 col-md-2 col-md-offset-1">
                                 <label class="label-control">Subtotal:</label>
-                                <div class="alert alert-warning col-lg-9 col-md-6">
+                                <div class="alert alert-info col-lg-9 col-md-6">
                                     <strong>$ </strong>
-                                    <span id="servSutotal">{{subtotal}}</span>
+                                    <span id="servSutotal"></span>
                                 </div>
                             </div>
                             <div class="form-group col-xs-9 col-md-2 col-md-offset-1">
@@ -138,11 +117,11 @@
                                     {{ form.discount }}
                                 </div>
                             </div>
-                            <div class="form-group col-xs-9 col-md-2 col-md-offset-1">
-                                <label class="label-control">Total:</label>
-                                <div class="alert alert-danger col-lg-9 col-md-6">
+                            <div class="form-group col-md-2 col-md-offset-1">
+                                <label class="label-control col-lg-9">Total:</label>
+                                <div class="alert alert-danger col-lg-9 col-md-3">
                                     <strong>$ </strong>
-                                    <span id="servTotal"> <strong>{{total}}</strong></span>
+                                    <span id="serviTotal"><strong></strong></span>
                                 </div>
                             </div>
                             <div class="form-group col-md-2 col-md-offset-1" >
@@ -151,7 +130,7 @@
                             </div>
                         </fieldset>
                     </div>
-               </div>
+                </div>
                 <div id="panelLoad" style="display : none">
                     <div class="form-group">
                         <div class="col-md-6" >
@@ -162,10 +141,10 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <a data-type="info" data-trigger="focus" title="Add new Item" data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="">
+                        <button data-type="info" data-trigger="focus" title="Add new Item" data-animation="am-flip-x" class="btn btn-primary test-tooltip">
                             <i class="fa fa-plus" aria-hidden="true"></i>
                             <tooltip md-direction="left"></tooltip>
-                        </a>
+                        </button>
                     </div>
                     <div class="form-group">
                         <table id="tbLoad" class="table table-striped table-bordered ">
@@ -193,10 +172,10 @@
                                 <td class="col-md-1"></td>
                                 <td class="col-md-1">
                                     <toolbar class="md-accent">
-                                        <a data-type="info" data-trigger="focus" title="Add new Item" data-animation="am-flip-x" type="button" class="btn btn-danger test-tooltip" href="">
+                                        <button data-type="info" data-trigger="focus" title="Add new Item" data-animation="am-flip-x" type="button" class="btn btn-danger test-tooltip" href="">
                                             <i class="fa fa-times" aria-hidden="true"></i>
                                             <tooltip md-direction="left"></tooltip>
-                                        </a>
+                                        </button>
                                     </toolbar>
                                 </td>
                             </tr>
@@ -208,7 +187,7 @@
                                 <label class="label-control">Sustotal:</label>
                                 <div class="alert alert-warning col-lg-9 col-md-6">
                                     <strong>$ </strong>
-                                    <span id="loadSutotal">{{subtotal}}</span>
+                                    <span id="loadSutotal">{{loadsubtotal}}</span>
                                 </div>
                             </div>
                             <div class="form-group col-xs-9 col-md-2 col-md-offset-1">
@@ -219,10 +198,10 @@
                                 </div>
                             </div>
                             <div class="form-group col-xs-9 col-md-2 col-md-offset-1">
-                                <label class="label-control">Total:</label>
+                                <label class="label-control col-lg-9">Total:</label>
                                 <div class="alert alert-danger col-lg-9 col-md-6">
                                     <strong>$ </strong>
-                                    <span id="loadTotal"> <strong>{{total}}</strong></span>
+                                    <span id="loadTotal"> <strong>{{loadtotal}}</strong></span>
                                 </div>
                             </div>
                             <div class="form-group col-md-2 col-md-offset-1" >
@@ -231,7 +210,7 @@
                             </div>
                         </fieldset>
                     </div>
-               </div>
+                </div>
                 <!-- Button (Double) -->
                 <div class="form-group col-md-5 col-md-offset-4">
                     <a type="button" href="{% url 'accounting:invoices' %}" class="btn btn-primary"><i class="fa fa-print" aria-hidden="true"></i> Save and Print</a>
@@ -241,6 +220,35 @@
             </div>
         </div>
     </form>
-</section>
-{% endblock %}
+{% block script %}
+<script>
+    $(document).ready( function () {
+        $('#btnService').change(function(){
+        if (this.checked) {
+            $('#panelService').attr("style", "display : initial;");
+            $('#panelLoad').attr("style", "display : none;");
+        }
+        else {
+            $('#panelService').attr("style", "display : none;");
+            $('#panelLoad').attr("style", "display : initial;");
+        }
+   });
+
+   $('#btnLoad').change(function(){
+        if (this.checked) {
+            $('#panelService').attr("style", "display : none;");
+            $('#panelLoad').attr("style", "display : initial;");
+
+        }
+        else {
+            $('#panelService').attr("style", "display : initial;");
+            $('#panelLoad').attr("style", "display : none;");
+        }
+   });
+     });
+</script>
+
+{% endblock script %}
+
+{% endblock content %}
 

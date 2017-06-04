@@ -5,8 +5,11 @@ from apps.tools.views import *
 urlpatterns = [
 
 url(r'^$', login_required(panel_view), name='panel'),
-url(r'^calendar/$', login_required(Calendar_Panel), name='calendar'),
+url(r'^calendar/list/$', login_required(GetCalendar), name='calendar_list'),
+url(r'^calendar/$', login_required(Calendar_Panel.as_view()), name='calendar'),
 url(r'^calendar/create$', login_required(PostCalendar.as_view()), name='calendar_create'),
+url(r'^calendar/edit/(?P<pk>\d+)/$', login_required(UpdateCalendar.as_view()), name='calendar_edit'),
+url(r'^calendar/delete/(?P<pk>\d+)/$', login_required(DeleteCalendar.as_view()), name='calendar_delete'),
 url(r'^password/$', login_required(panel_view), name='password'),
 url(r'^document/$', login_required(panel_view), name='document'),
 url(r'^notification/$', login_required(NotificationView), name='notification'),

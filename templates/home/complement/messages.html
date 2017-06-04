@@ -1,9 +1,23 @@
 {% for obj in chat %}
     {% if obj.users == request.user %}
-       <div>{{obj.users}}>>></div><div class="text-right alert alert-info col-lg-9 col-md-6"><p>{{ obj.message }}</p></div>
-    {% else %}
-        <div>{{obj.users}}>>> </div> <div class="text-left alert alert-success col-lg-9 col-md-6"><p>{{ obj.message }}</p></div>
-    {% endif %}
+                <div class="text-right alert alert-info col-lg-9 col-md-6"><span>
+                    <strong>
+                        {% if obj.name %}
+                          {{obj.name}}:
+                        {% else %}
+                        {{obj.users}}:
+                        {% endif %}
+                    </strong><br/>{{ obj.message }}</span></div>
+                    {% else %}
+                <div class="text-left alert alert-success col-lg-9 col-md-6"><span>
+                    <strong>
+                        {% if obj.name %}
+                          {{obj.name}}:
+                        {% else %}
+                        {{obj.users}}:
+                        {% endif %}
+                    </strong><br/>{{ obj.message }}</span></div>
+                    {% endif %}
 {% empty %}
     <li class="text-right list-group-item">No messages yet!</li>
 {% endfor %}
