@@ -22,6 +22,7 @@ $(document).ready( function () {
   // Script Calendar
 
 
+
        $('#calendar').fullCalendar({
 			header: {
 				left: 'prev,next today',
@@ -183,23 +184,10 @@ $("#addService").on("click", function(){
 });
 
 $(".zoom-mouse").mouseenter(function(evento){
-   $(this).animate({borderSpacing: "5px"}, "fast");
-   /*$(this).animate({width: '110%'}, "medium");*/
+   $(this).animate({borderSpacing: "2px"}, "fast");
 });
 
-$(".zoom-mouse").mouseleave(function(evento){
+  $(".zoom-mouse").mouseleave(function(evento){
    $(this).animate({borderSpacing: "1px"},"fast");
-  /* $(this).animate({width: '100%'}, "medium");*/
 });
  });
-
-/*function showContent() {
-        element = document.getElementById("#tabCompany");
-        check = document.getElementById("#btnCompany");
-        if (check.checked) {
-            element.style.display='block';
-        }
-        else {
-            element.style.display='none';
-        }
-    };*/

@@ -74,7 +74,7 @@ def GetCalendar(requiret):
         events_user['end'] = str(event.end) + "T" + str(event.endTimer)
         events_user['title'] = event.title
         events_user['color'] = event.color
-        events_user['url'] = "edit/"+str(event.id)
+        events_user['url'] = "/panel/calendar/edit/"+str(event.id)
         if event.allDay:
            events_user['allDay'] = 'true'
         else:

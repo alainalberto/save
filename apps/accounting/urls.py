@@ -1,6 +1,7 @@
 from django.conf.urls import *
 from django.contrib.auth.decorators import login_required
 from apps.accounting.views import *
+from apps.accounting.components.AccountingPDF import Receipt_pdf
 
 urlpatterns = [
     url(r'^$', login_required(AccountingPanel.as_view()), name='panel_account'),
@@ -23,7 +24,7 @@ urlpatterns = [
     url(r'^receipts/create$', login_required(ReceiptsCreate.as_view()), name='receipts_create'),
     url(r'^receipts/edit/(?P<pk>\d+)/$', login_required(ReceiptsEdit.as_view()), name='receipts_edit'),
     url(r'^receipts/(?P<pk>\d+)/$', login_required(ReceiptsDelete.as_view()), name='receipts_delete'),
-    url(r'^receipts/print/', login_required(ReceiptsPDF.as_view()), name='receipts_pdf'),
+    url(r'^receipts/print/(?P<pk>\d+)/$', login_required(Receipt_pdf), name='receipts_pdf'),
 
 
     #Payments
