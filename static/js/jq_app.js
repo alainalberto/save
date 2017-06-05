@@ -8,7 +8,7 @@ $(document).ready( function () {
 
    // Script Datapicker Input
    $('.form_date').datetimepicker({
-        language:  'ee',
+        language:  'en',
         weekStart: 1,
         todayBtn:  1,
 		autoclose: 1,
@@ -21,9 +21,6 @@ $(document).ready( function () {
 
   // Script Calendar
 
-       var event = $.getJSON('http://localhost:8000/panel/calendar/list/', function(response){
-                return response;
-                });
 
        $('#calendar').fullCalendar({
 			header: {

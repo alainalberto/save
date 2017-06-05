@@ -14,5 +14,6 @@
 		meridiem: 		[],
 		weekStart: 		1,
 		format: 		"dd.mm.yyyy hh:ii"
+		minDate:        "now"
 	};
 }(jQuery));

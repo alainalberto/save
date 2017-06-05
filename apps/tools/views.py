@@ -1,11 +1,17 @@
 from django.core.serializers.json import DjangoJSONEncoder
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
+from django.shortcuts import render, render_to_response, HttpResponseRedirect, HttpResponse
+from django.contrib.auth.models import User, Group
+from django.http import JsonResponse
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DeleteView, View, TemplateView
 from apps.tools.models import *
 from apps.tools.components import CalendarForm, AlertForm
 from apps.tools.components.AlertForm import AlertForm
+from django.contrib.auth import authenticate, logout, login
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib import messages
 
 
 
@@ -79,24 +85,21 @@ def GetCalendar(requiret):
 
 #Alert
 def NotificationView(requiret):
-    #grupos = requiret.user.groups.all
-    #pepe = User.objects.filter(groups__name='Familia')
-    #e = Group.objects.filter(user=requiret.user)
-    grupos = Group.objects.get(id=requiret.user.id)
-    notifications = grupos.alert_set.filter(category='Notification')
-    contexto = {'notifications': notifications}
+    grupos = Group.objects.get(user=requiret.user)
+    notifications = Alert.objects.all()
+    contexto = {'notifications': notifications, 'grupos': grupos}
     return render(requiret, 'alert/notificationViews.html', contexto)
 
 def AlertView(requiret):
-    grupos = Group.objects.get(id=requiret.user.id)
-    alertas = grupos.alert_set.filter(category='Alerts')
-    contexto = {'alertas': alertas}
+    grupos = Group.objects.get(user=requiret.user)
+    alertas = Alert.objects.all()
+    contexto = {'alertas': alertas, 'grupos': grupos}
     return render(requiret, 'alert/alertViews.html', contexto)
 
 def UrgentView(requiret):
-    grupos = Group.objects.get(id=requiret.user.id)
-    urgents = grupos.alert_set.filter(category='Urgents')
-    contexto = {'urgents': urgents}
+    grupos = Group.objects.get(user=requiret.user)
+    urgents = Alert.objects.all()
+    contexto = {'urgents': urgents, 'grupos': grupos}
     return render(requiret, 'alert/urgentViews.html', contexto)
 
 class AlertsCreate(CreateView):
@@ -109,24 +112,38 @@ class AlertsCreate(CreateView):
          return render(request, self.template_name, {'form': form})
 
      def post(self, request, *args, **kwargs):
-         self.object = self.get_object()
          form = self.form_class(request.POST)
          user = request.user
          if form.is_valid():
              alert = form.save(commit=False)
              alert.users = user
              alert.save()
-         return HttpResponseRedirect(reverse_lazy('panel:notification'))
+         return HttpResponseRedirect(reverse_lazy('panel:panel'))
 
 
 class AlertstEdit(UpdateView):
     model = Alert
     form_class = AlertForm
     template_name = 'alert/alertForm.html'
-    success_url = reverse_lazy('panel:notification')
+    success_url = reverse_lazy('panel:panel')
 
 class AlertsDelete(DeleteView):
     model = Alert
     template_name = 'confirm_delete.html'
-    success_url = reverse_lazy('panel:notification')
+    success_url = reverse_lazy('panel:panel')
 
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('accounts:change_password')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'Login/change_password.html', {
+        'form': form
+    })

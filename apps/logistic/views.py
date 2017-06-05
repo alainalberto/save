@@ -29,7 +29,7 @@ class LoadsCreate(CreateView):
              load = form.save(commit=False)
              load.users_id = user.id
              load.save()
-             return HttpResponse(reverse_lazy('logistic:loads'))
+             return HttpResponseRedirect(reverse_lazy('logistic:loads'))
 
 class LoadsEdit(UpdateView):
     model = Load
@@ -78,7 +78,7 @@ class DriversCreate(CreateView):
              load = form.save(commit=False)
              load.users_id = user.id
              load.save()
-             return HttpResponse(reverse_lazy('logistic:drivers'))
+             return HttpResponseRedirect(reverse_lazy('logistic:drivers'))
 
 class DriversEdit(UpdateView):
     model = DriversLogt
@@ -115,7 +115,7 @@ class DispatchCreate(CreateView):
              load = form.save(commit=False)
              load.users_id = user.id
              load.save()
-             return HttpResponse(reverse_lazy('logistic:dispatch'))
+             return HttpResponseRedirect(reverse_lazy('logistic:dispatch'))
 
 class DispatchEdit(UpdateView):
     model = DispatchLogt

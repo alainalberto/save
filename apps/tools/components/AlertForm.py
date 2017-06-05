@@ -1,5 +1,7 @@
 from django import forms
-from apps.tools.models import Alert
+from apps.tools.models import *
+from django.contrib.auth.models import User, Group
+from django.db.models.query_utils import DeferredAttribute
 
 
 class AlertForm(forms.ModelForm):
@@ -19,12 +21,12 @@ class AlertForm(forms.ModelForm):
             'description': 'Description:',
             'show_date': 'Show Date:',
             'end_date': 'End Date:',
-            'deactivated': 'Activated:',
+            'deactivated': 'Deactivated:',
             'group': 'Group:',
         }
         widgets = {
-            'category': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('#E74C3C','Notification'), ('#DC7633', 'Alerts'), ('#27AE60', 'Urgents'))),
-            'description': forms.TextInput(attrs={'placeholder': 'Title', 'class': 'form-control input-md'}),
+            'category': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('Notification','Notification'), ('Alerts', 'Alerts'), ('Urgents', 'Urgents'))),
+            'description': forms.TextInput(attrs={'placeholder': 'Description', 'class': 'form-control input-md'}),
             'show_date': forms.DateInput(attrs={'class': 'form-control input-md'}),
             'end_date': forms.DateInput(attrs={'class': 'form-control input-md'}),
             'deactivated': forms.CheckboxInput(attrs={'class': 'checkbox'}),

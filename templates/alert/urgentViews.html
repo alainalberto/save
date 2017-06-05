@@ -24,23 +24,34 @@
             </div>
             <br/>
             <div class="table-responsive">
-                <table id="listAlert" class="table data-table table-striped table-bordered table-hover" cellspacing="0" width="100%">
+                  <table id="listAlert" class="table data-table table-striped table-bordered table-hover" cellspacing="0" width="100%">
                     <thead>
                     <tr>
-                        <th>Description</th>
 
+                        <th>Description</th>
+                        <th>Group</th>
+                        <th>Action</th>
                     </tr>
                     </thead>
+
                     {% for c in urgents %}
+
+                    {% if request.user.id == c.users_id and c.category == 'Urgents' or grupos.id == c.group.id and c.category == 'Urgents' %}
+                    {% if c.deactivated == 0 %}
                     <tbody>
                     <tr>
-
                         <td>
                              <div class="form-group col-md-11 col-md-offset-0">
                              <div class="alert alert-danger">
-                                 <strong>{{c.users}}:</strong> {{c.description}}
-                       </div></div>
-                          {% if request.user.id != c.users_id %}
+                       <strong>{{c.users}}:</strong> {{c.description}}
+                       </div></div> </td>
+                         <td>
+
+                       <strong>{{c.group}}</strong>
+                        </td>
+
+                            <td>
+                             {% if request.user.id != c.users_id %}
                             <toolbar class="md-accent">
                                 <a data-type="info" data-trigger="focus" disabled="true"  data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip">
                                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
@@ -67,10 +78,48 @@
                                 </a>
                             </toolbar>
                             {% endif %}
+
                         </td>
+
                     </tr>
                     </tbody>
-                     {% endfor %}
+                     {% else %}
+                      {% if request.user.id == c.users_id %}
+                      <tbody>
+                    <tr>
+                        <td>
+                             <div class="form-group col-md-11 col-md-offset-0">
+                             <div class="alert alert-info">
+                       <strong>{{c.users}}:</strong> {{c.description}}
+                       </div></div> </td>
+                         <td>
+
+                       <strong>{{c.group}}</strong>
+                        </td>
+
+                            <td>
+                             <toolbar class="md-accent">
+                                <a data-type="info" data-trigger="focus" title="Edit Notification" data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'panel:alert_edit' c.id_alt %}">
+                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                    <tooltip md-direction="left"></tooltip>
+                                </a>
+                            </toolbar>
+                            <toolbar class="md-accent">
+                                <a data-type="info" data-animation="am-flip-x" data-trigger="focus" title="Delete Notification" type="button" class="btn btn-primary test-tooltip" href="{% url 'panel:alert_delete' c.id_alt %}">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                    <tooltip md-direction="left"></tooltip>
+                                </a>
+                            </toolbar>
+                        </td>
+
+                    </tr>
+                    </tbody>
+                     {% endif %}
+
+                    {% endif %}
+                    {% endif %}
+                       {% endfor %}
+
                 </table>
             </div>
         </div>
