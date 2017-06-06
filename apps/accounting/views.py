@@ -261,13 +261,11 @@ class ReceiptsEdit(UpdateView):
         id_rec = kwargs['pk']
         receipt = self.model.objects.get(id_rec=id_rec)
         receipt.accounts_id = request.POST['account']
-        acountDescp = AccountDescrip.objects.get(accounts_id=receipt.accounts_id, docoments=receipt.id_rec)
+        acountDescp = AccountDescrip.objects.get(accounts_id=request.POST['account'], document=int(receipt.id_rec))
         form = self.form_class(request.POST, instance=receipt)
         if form.is_valid():
             form.save()
-            receipt.accounts_id = request.POST['account']
-            receipt.save()
-            AccountDescrip.objects.filter(id_acd=acountDescp.id_dac).update(
+            AccountDescrip.objects.filter(id_acd=acountDescp.id_acd).update(
                 date=form.data['start_date'],
                 value=form.data['total'],
             )
@@ -281,16 +279,4 @@ class ReceiptsDelete(DeleteView):
     model = Receipt
     template_name = 'confirm_delete.html'
     success_url = reverse_lazy('accounting:receipts')
-
-
-class ReceiptsPDF(View):
-    def get(self, request, *args, **kwargs):
-        receipt = Receipt.objects.get(id_rec=7)
-        data = {
-            'date': '27/5/2017',
-            'description': 'Prueba de recibo',
-            'total': '50,00',
-        }
-        pdf = render('accounting/receipts/receiptsPrint.html', data)
-        return HttpResponse(pdf, content_type='application/pdf')
 
