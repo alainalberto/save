@@ -5,14 +5,15 @@ from django.core.urlresolvers import reverse_lazy
 from django.views.generic import CreateView, ListView
 from django.views.generic import TemplateView
 from apps.tools.models import Menu, Alert, Chat
-
+#{% if request.user.id == c.users_id and c.category == 'Notification' or grupos.id == c.group.id and c.category == 'Notification' %}
+        #            {% if c.deactivated == 0 %}
 
 def home_view(requiret):
-    alertNot = Alert.objects.filter(category='Notification')
+    alertNot = Alert.objects.filter(category='Notification', users=requiret.user.id)
     alertAlt = Alert.objects.filter(category='Alerts')
     alertUrg = Alert.objects.filter(category='Urgents')
     allalert = alertNot.count() + alertAlt.count() + alertUrg.count()
-    contexto = {'notif': alertNot.count(),'alert': alertAlt.count(), 'urgent': alertUrg.count(), 'allalert': allalert}
+    contexto = {'notif': alertNot.count(),'alert': alertAlt.count(), 'urgent': alertUrg.count(), 'allalerts': allalert}
     return render(requiret, 'home/complement/panel.html', contexto)
 
 def Chats(request):

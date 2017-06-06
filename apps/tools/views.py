@@ -102,6 +102,13 @@ def UrgentView(requiret):
     contexto = {'urgents': urgents, 'grupos': grupos}
     return render(requiret, 'alert/urgentViews.html', contexto)
 
+def AllalertView(requiret):
+    grupos = Group.objects.get(user=requiret.user)
+    #Reserved.objects.filter(client=client_id).order_by('-check_in')
+    allalert = Alert.objects.all().order_by('-category')
+    contexto = {'allalert': allalert, 'grupos': grupos}
+    return render(requiret, 'alert/allalertViews.html', contexto)
+
 class AlertsCreate(CreateView):
      model = Alert
      form_class = AlertForm
