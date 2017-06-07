@@ -204,11 +204,11 @@
                             <a class="item" href="{% url 'accounting:receipts' %}"> Receipts</a>
                         </li>
                         {% endif %}
-                        {% if perms.accounting.add_payment %}
+                        <!--{% if perms.accounting.add_payment %}
                         <li>
                             <a class="item" href="{% url 'accounting:payments' %}"> Payments</a>
                         </li>
-                        {% endif %}
+                        {% endif %} -->
                         {% if perms.accounting.add_employee %}
                         <li>
                             <a class="item" href="{% url 'accounting:employees' %}"> Employees</a>
@@ -260,7 +260,7 @@
                             <a class="item" href="{% url 'services:maintenance' %}"> Maintenance</a>
                         </li>
                         {% endif %}
-                        {% if perms.tools.file %}
+                        {% if perms.services.add_insurance %}
                         <li>
                             <a class="item" href="{% url 'services:forms' %}"> Forms</a>
                         </li>

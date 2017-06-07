@@ -8,7 +8,7 @@ $(document).ready( function () {
 
    // Script Datapicker Input
    $('.form_date').datetimepicker({
-        language:  'en',
+      language:  'en',
         weekStart: 1,
         todayBtn:  1,
 		autoclose: 1,
@@ -16,14 +16,31 @@ $(document).ready( function () {
 		startView: 2,
 		minView: 2,
 		forceParse: 0
+   });
+
+   $('.form_time').datetimepicker({
+        language:  'fr',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 1,
+		minView: 0,
+		maxView: 1,
+		forceParse: 0
     });
 
+   $(".zoom-mouse").mouseenter(function(evento){
+       $(this).animate({borderSpacing: "2px"}, "fast");
+    });
+
+   $(".zoom-mouse").mouseleave(function(evento){
+      $(this).animate({borderSpacing: "1px"},"fast");
+   });
 
   // Script Calendar
 
-
-
-       $('#calendar').fullCalendar({
+    $('#calendar').fullCalendar({
 			header: {
 				left: 'prev,next today',
 				center: 'title',
@@ -146,7 +163,10 @@ $(document).ready( function () {
    });
 
 
-  $('#btnService').change(function(){
+
+
+//Invoices
+    $('#btnService').change(function(){
         if (this.checked) {
             $('#panelService').attr("style", "display : initial;");
             $('#panelLoad').attr("style", "display : none;");
@@ -169,25 +189,51 @@ $(document).ready( function () {
         }
    });
 
-$("#addService").on("click", function(){
-    var total_item = parseInt($("#quantity").val()) * parseInt($('#item_unit').html()) || 0
-   $('#tbItem > tbody:last-child').append('<tr><td style="display : none" id="item_id">'+$("#selecItem").val()+'</td><td id="item_quant">'+$("#quantity").val()+'</td><td id="item_name">'+$("#selecItem").val()+'</td><td id="item_unit">'+$("#selecItem").val()+'</td><td id="item_total" class="item_total" >'+parseInt($("#quantity").val()) * parseInt($("#selecItem").val())+'</td><td> <toolbar class="md-accent"><button data-type="info" data-trigger="focus" title="Add new Item" data-animation="am-flip-x" type="button" class="btn btn-danger test-tooltip"><i class="fa fa-times" aria-hidden="true"></i><tooltip md-direction="left"></tooltip></button></toolbar></td></tr>');
-   var subtotal = 0;
-   var total = 0;
-   $(".item_total").each(function(){
-	   subtotal =subtotal + parseInt($(this).html()) || 0;
+   $(".btn_add").on("click", function() {
+      var column1 = $(this).closest('tr').children()[0].textContent;
+      var column2 = $(this).closest('tr').children()[1].textContent;
+      var column3 = $(this).closest('tr').children()[2].textContent;
+       if($("tbItem .copy_"+column1).length == 0) {
+       $("#tbItem").append('<tr class="copy_'+column1+'"><td style="display : none">' + column1 + '</td><td class="col-md-1"><input type="number" class="entrada form-control" min="0" value="0"></td><td class="col-md-6">' + column2 + '</td><td class="col-md-2">' + column3 + '</td><td class="subtotal col-md-2">0</td><td class="col-md-1"><toolbar class="md-accent"><a type="button" class="btn btn-danger btn_remove" data-type="info" data-trigger="focus" title="Add new Item" data-animation="am-flip-x"><i class="fa fa-times-circle" aria-hidden="true"></i><tooltip md-direction="left"></tooltip></a></toolbar></td>');
+       }
+
     });
-    $('#servSutotal').val(subtotal);
 
-     total = subtotal - parseInt($('#discount').val() || 0)
-    alert('Subtotal: '+subtotal+' Total: '+total)
-});
+    $("#tbItem").on("input", "input", function() {
+       var input = $(this);
+       var columns = input.closest("tr").children();
+       var price = columns.eq(3).text();
+       var calculated = input.val() * price;
+       columns.eq(4).text(calculated.toFixed(2));
+       sumar_columnas();
 
-$(".zoom-mouse").mouseenter(function(evento){
-   $(this).animate({borderSpacing: "2px"}, "fast");
-});
+    });
+    $("body").on("click",".btn_remove", function() {
+    $('body').parent().parent().remove();
+    });
 
-  $(".zoom-mouse").mouseleave(function(evento){
-   $(this).animate({borderSpacing: "1px"},"fast");
-});
+    function sumar_columnas(){
+     var sum=0;
+     var disc =0;
+    //itera cada input de clase .subtotal y la suma
+    $('.subtotal').each(function() {
+         sum += parseFloat($(this).text());
+    });
+    //cambia valor del total y lo redondea a la segunda decimal
+    $('#servSutotal').val(sum.toFixed(2));
+    var disc = parseFloat($('#discount').val());
+    var subtotal = parseFloat($('#servSutotal').val());
+    $('#serviTotal').val(subtotal - disc);
+    }
+
+    $('#discount').change(function(){
+       var disc = parseFloat($('#discount').val());
+       var subtotal = parseFloat($('#servSutotal').val());
+        $('#serviTotal').val(subtotal - disc);
+    });
+
  });
+function deleteitem(i){
+      document.getElementsByTagName("tbody")[0].setAttribute("id","tableid");
+      document.getElementById("tableid").deleteRow(i);
+    }

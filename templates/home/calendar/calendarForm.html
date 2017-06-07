@@ -46,16 +46,18 @@
                     </div>
                     <div class="form-group col-md-5 col-md-offset-1">
                         <label class="label-control">{{ form.startTimer.label }} </label>
-                        <div class="input-group form_timer col-md-5">
-                            {{ form.startTimer }}
-                            <span class="input-group-addon"><span class="fa fa-clock-o"></span></span>
+                        <div class="input-group date form_time col-md-5" data-date="" data-date-format="hh:ii" data-date-default="08:00"  data-link-field="dtp_input3" data-link-format="hh:ii">
+                             {{ form.startTimer}}
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+					       <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
                         </div>
                     </div>
                     <div class="form-group col-md-5 col-md-offset-1">
                         <label class="label-control">{{ form.endTimer.label }} </label>
-                        <div class="input-group col-md-5">
-                            {{ form.endTimer }}
-                            <span class="input-group-addon"><span class="fa fa-clock-o"></span></span>
+                       <div class="input-group date form_time col-md-5" data-date="" data-date-format="hh:ii" data-date-default="23:00"data-link-field="dtp_input3" data-link-format="hh:ii">
+                             {{ form.endTimer}}
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+					       <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
                         </div>
                     </div>
                     <div class="form-group col-md-4 col-md-offset-1">

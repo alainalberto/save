@@ -21,15 +21,21 @@
 
     .zoom-mouse1 {
         transition: 1.5s ease;
- 		-moz-transition: 1.5s ease;
- 		-webkit-transition: 1.5s ease;
- 		-o-transition: 1.5s ease;
+ 		moz-transition: 1.5s ease;
+ 		webkit-transition: 1.5s ease;
+ 		o-transition: 1.5s ease;
     }
 
     .zoom-mouse1:hover {
          transform : scale(2);
-		-moz-transform : scale(2);
-		-webkit-transform : scale(2);
-		-o-transform : scale(2);
-		-ms-transform : scale(2);
+		moz-transform : scale(2);
+		webkit-transform : scale(2);
+		o-transform : scale(2);
+		ms-transform : scale(2);
     }
+
+    .modal-content
+     {
+       height:40%;
+       overflow:auto;
+      }

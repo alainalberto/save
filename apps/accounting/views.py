@@ -38,7 +38,6 @@ class AccountCreate(CreateView):
          account.save()
          return HttpResponseRedirect(reverse_lazy('accounting:accounts'))
 
-
 def AccountsViews(request):
     primary = Account.objects.filter(primary=True)
     lisexp = Account.objects.filter(primary=False)
@@ -53,6 +52,13 @@ def AccountsDescViews(request, pk):
         contexto = {'accounts': accounts}
     return render(request, 'accounting/accounts/accountsDescrp.html', contexto)
 
+def AccountsDescAllViews(request):
+    contexto = {}
+    accounts = AccountDescrip.objects.all()
+    if accounts:
+        contexto = {'accounts': accounts}
+    return render(request, 'accounting/accounts/accountsDescrp.html', contexto)
+
 def AccountDocument(request, pk):
     accountDescrp = AccountDescrip.objects.get(id_acd=pk)
     if accountDescrp:
@@ -63,6 +69,7 @@ def AccountDocument(request, pk):
         if accountDescrp.type == 'Payment':
             return redirect('/accounting/payment/edit/'+str(accountDescrp.document)+'/')
     return redirect('accounting:accounts')
+
 # Customers
 class CustomersView(ListView):
     model = Customer

@@ -1,15 +1,16 @@
-from django.core.serializers.json import DjangoJSONEncoder
-from django.shortcuts import render
-from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
+from django.core.mail.backends import console
+from django.db.models import Sum
+from django.shortcuts import render, redirect
 from django.shortcuts import render, render_to_response, HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User, Group
 from django.http import JsonResponse
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DeleteView, View, TemplateView
+from apps.accounting.models import AccountDescrip, Account
 from apps.tools.models import *
 from apps.tools.components import CalendarForm, AlertForm
 from apps.tools.components.AlertForm import AlertForm
-from django.contrib.auth import authenticate, logout, login
+from django.contrib.auth import authenticate, logout, login, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
 
@@ -28,11 +29,68 @@ def home_view(requiret):
 
 
 def panel_view(requiret):
+
+    balance = []
+    income = []
+    valueInc = 0
+    valueExp = 0
+    inc = Account.objects.get(primary=True, name='Income')
+    inc_acconts = Account.objects.filter(accounts_id_id=inc.id_acn)
+    for i in inc_acconts:
+        income.append(i)
+    for a in inc_acconts:
+        inc_accont = Account.objects.filter(accounts_id_id=a.id_acn)
+        if inc_accont != None:
+            for ac in inc_accont:
+                income.append(ac)
+    expense = []
+    exp = Account.objects.get(primary=True, name='Expenses')
+    exp_acconts = Account.objects.filter(accounts_id_id=exp.id_acn)
+    for e in exp_acconts:
+        expense.append(e)
+    for a in exp_acconts:
+        exp_accont = Account.objects.filter(accounts_id_id=a.id_acn)
+        if exp_accont != None:
+            for ac in exp_accont:
+                expense.append(ac)
+    accounts = Account.objects.filter(primary=False)
+    for a in accounts:
+        if income.__contains__('a.name') and expense.__contains__('a.name'):
+            for e in expense:
+                if e.name == a.name:
+                    Exp = AccountDescrip.objects.filter(accounts_id=e.id_acn)
+                    for sum in Exp:
+                        valueExp = valueExp + int(sum.value)
+            for i in income:
+                if i.name == a.name:
+                    Inc = AccountDescrip.objects.filter(accounts_id=i.id_acn)
+                    for sum in Inc:
+                        valueInc = valueInc + int(sum.value)
+            valueEarn = valueInc - int(valueExp)
+            balance.append({'account': e.name, 'income': valueInc, 'expense': valueExp, 'earning': str(valueEarn)})
+        if income.__contains__('a.name') and not expense.__contains__('a.name'):
+            for i in income:
+                if i.name == a.name:
+                    Inc = AccountDescrip.objects.filter(accounts_id=i.id_acn)
+                    for sum in Inc:
+                        valueInc = valueInc + int(sum.value)
+            valueEarn = valueInc - int(valueExp)
+            balance.append({'account': e.name, 'income': valueInc, 'expense': valueExp, 'earning': str(valueEarn)})
+        if not income.__contains__('a.name') and expense.__contains__('a.name'):
+            for e in expense:
+                if e.name == a.name:
+                    Exp = AccountDescrip.objects.filter(accounts_id=e.id_acn)
+                    for sum in Exp:
+                        valueExp = valueExp + int(sum.value)
+            valueEarn = valueInc - int(valueExp)
+            balance.append({'account': e.name, 'income': valueInc, 'expense': valueExp, 'earning': str(valueEarn)})
+
+
     alertNot = Alert.objects.filter(category='Notification')
     alertAlt = Alert.objects.filter(category='Alerts')
     alertUrg = Alert.objects.filter(category='Urgents')
     allalert = alertNot.count() + alertAlt.count() + alertUrg.count()
-    contexto = {'notif': alertNot.count(), 'alert': alertAlt.count(), 'urgent': alertUrg.count(), 'allalert': allalert}
+    contexto = {'notif': alertNot.count(), 'alert': alertAlt.count(), 'urgent': alertUrg.count(), 'allalert': allalert, 'balance': balance}
     return render(requiret, 'home/complement/panel.html', contexto)
 
 class PostCalendar(CreateView):
@@ -75,10 +133,6 @@ def GetCalendar(requiret):
         events_user['title'] = event.title
         events_user['color'] = event.color
         events_user['url'] = "/panel/calendar/edit/"+str(event.id)
-        if event.allDay:
-           events_user['allDay'] = 'true'
-        else:
-           events_user['allDay'] = 'false'
         event_json.append(events_user)
     context = event_json
     return JsonResponse(context, safe=False)

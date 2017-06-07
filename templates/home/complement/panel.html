@@ -34,6 +34,7 @@
     <!-- /.row -->
 
     <div class="row">
+        {% if perms.accounting.add_customer %}
         <a class="" href="{% url 'accounting:customer_service' %}">
             <div class="col-lg-3 col-md-6">
                 <div class="panel panel-primary zoom-mouse">
@@ -57,6 +58,8 @@
                 </div>
             </div>
         </a>
+        {% endif %}
+        {% if perms.accounting.add_customer %}
         <a href="{% url 'accounting:customers' %}">
             <div class="col-lg-3 col-md-6">
                 <div class="panel panel-green zoom-mouse">
@@ -80,6 +83,8 @@
                 </div>
             </div>
         </a>
+        {% endif %}
+        {% if perms.accounting.add_invoice %}
         <a href="{% url 'accounting:invoices' %}">
             <div class="col-lg-3 col-md-6">
                 <div class="panel panel-yellow zoom-mouse">
@@ -104,6 +109,8 @@
                 </div>
             </div>
         </a>
+        {% endif %}
+        {% if perms.services.add_insurance %}
         <a href="{% url 'services:forms' %}">
             <div class="col-lg-3 col-md-6">
                 <div class="panel panel-red zoom-mouse">
@@ -128,7 +135,7 @@
                 </div>
             </div>
         </a>
-
+        {% endif %}
     </div>
     <!-- /.row -->
 
@@ -177,49 +184,38 @@
         <div class="col-lg-3">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title"><i class="fa fa-clock-o fa-fw"></i> Tasks Panel</h3>
+                    <h3 class="panel-title"><i class="fa fa-clock-o fa-fw"></i> Recent Actions panel</h3>
                 </div>
                 <div class="panel-body">
+                    {% load log %}
+                    {% get_admin_log 10 as admin_log for_user user %}
+                    {% if not admin_log %}
+                        <p>None available</p>
+                    {% else %}
                     <div class="list-group">
-                        <a href="#" class="list-group-item">
-                            <span class="badge">just now</span>
-                            <i class="fa fa-fw fa-calendar"></i> Calendar updated
+                        {% for entry in admin_log %}
+                        {% if entry.is_deletion or not entry.get_admin_url %}
+                            {{ entry.object_repr }}
+                        {% else %}
+                        <a href="{{ entry.get_admin_url }}" class="list-group-item">
+                            <strong class="text-primary">{{ entry.action_time }}</strong><br/>
+                            <i class="{% if entry.is_addition %}fa fa-plus-circle text-primary{% endif %}{% if entry.is_change %}fa fa-refresh text-success{% endif %}{% if entry.is_deletion %}fa fa-times-circle text-danger{% endif %}"></i>
+                            {% if entry.content_type %}
+                            <span class="mini quiet ">{% filter capfirst %}{{ entry.content_type }}{% endfilter %}</span>
+                            {% else %}
+                            <span class="mini quiet">Unknown content</span>
+                            {% endif %}
+                            <span class="label label-warning">{{ entry.object_repr }}</span>
                         </a>
-                        <a href="#" class="list-group-item">
-                            <span class="badge">4 minutes ago</span>
-                            <i class="fa fa-fw fa-comment"></i> Commented on a post
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <span class="badge">23 minutes ago</span>
-                            <i class="fa fa-fw fa-truck"></i> Order 392 shipped
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <span class="badge">46 minutes ago</span>
-                            <i class="fa fa-fw fa-money"></i> Invoice 653 has been paid
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <span class="badge">1 hour ago</span>
-                            <i class="fa fa-fw fa-user"></i> A new user has been added
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <span class="badge">2 hours ago</span>
-                            <i class="fa fa-fw fa-check"></i> Completed task: "pick up dry cleaning"
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <span class="badge">yesterday</span>
-                            <i class="fa fa-fw fa-globe"></i> Saved the world
-                        </a>
-                        <a href="#" class="list-group-item">
-                            <span class="badge">two days ago</span>
-                            <i class="fa fa-fw fa-check"></i> Completed task: "fix error on sales page"
-                        </a>
+                        {% endif %}
+                        {% endfor %}
+
                     </div>
-                    <div class="text-right">
-                        <a href="#">View All Activity <i class="fa fa-arrow-circle-right"></i></a>
-                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
+        {% if perms.accounting %}
         <div class="col-lg-6">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -231,69 +227,36 @@
                             <thead>
                             <tr>
                                 <th>Account</th>
-                                <th>I</th>
-                                <th>Order Time</th>
-                                <th>Amount (USD)</th>
+                                <th>Income</th>
+                                <th>Expenses</th>
+                                <th>Earnings</th>
                             </tr>
                             </thead>
                             <tbody>
+                            {% for b in balance %}
                             <tr>
-                                <td>3326</td>
-                                <td>10/21/2013</td>
-                                <td>3:29 PM</td>
-                                <td>$321.33</td>
+                                <td>{{b.account}}</td>
+                                <td>$ {{b.income}}</td>
+                                <td>$ {{b.expense}}</td>
+                                <td>$ {{b.earning}}</td>
                             </tr>
-                            <tr>
-                                <td>3325</td>
-                                <td>10/21/2013</td>
-                                <td>3:20 PM</td>
-                                <td>$234.34</td>
-                            </tr>
-                            <tr>
-                                <td>3324</td>
-                                <td>10/21/2013</td>
-                                <td>3:03 PM</td>
-                                <td>$724.17</td>
-                            </tr>
-                            <tr>
-                                <td>3323</td>
-                                <td>10/21/2013</td>
-                                <td>3:00 PM</td>
-                                <td>$23.71</td>
-                            </tr>
-                            <tr>
-                                <td>3322</td>
-                                <td>10/21/2013</td>
-                                <td>2:49 PM</td>
-                                <td>$8345.23</td>
-                            </tr>
-                            <tr>
-                                <td>3321</td>
-                                <td>10/21/2013</td>
-                                <td>2:23 PM</td>
-                                <td>$245.12</td>
-                            </tr>
-                            <tr>
-                                <td>3320</td>
-                                <td>10/21/2013</td>
-                                <td>2:15 PM</td>
-                                <td>$5663.54</td>
-                            </tr>
-                            <tr>
-                                <td>3319</td>
-                                <td>10/21/2013</td>
-                                <td>2:13 PM</td>
-                                <td>$943.45</td>
-                            </tr>
+                            {% endfor %}
                             </tbody>
+                            <tfoot>
+                                <td><strong> </strong></td>
+                                <td><strong>$ 0</strong></td>
+                                <td><strong>$ 0</strong></td>
+                                <td><strong>$ 0</strong></td>
+                            </tfoot>
                         </table>
                     </div>
                     <div class="text-right">
-                        <a href="#">View All Transactions <i class="fa fa-arrow-circle-right"></i></a>
+                      <a href="{% url 'accounting:account_descripall' %}">View All Transactions <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
             </div>
         </div>
+        {% endif %}
     </div>
     <!-- /.row -->
 
