@@ -24,24 +24,20 @@
             <table id="listCustomer" class="data-table table table-striped table-bordered table-hover" cellspacing="0" width="100%">
                 <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>LastName</th>
-                    <th>SSN</th>
-                    <th>Address</th>
-                    <th>Phone</th>
-                    <th>Email</th>
-                    <th>Action</th>
+                    <th class="col-md-3">Name</th>
+                    <th class="col-md-3">Company Name</th>
+                    <th class="col-md-3">Address</th>
+                    <th class="col-md-2">Phone</th>
+                    <th class="col-md-1">Action</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for c in object_list %}
                 <tr>
-                    <td>{{c.name}}</td>
-                    <td>{{c.lastname}}</td>
-                    <td>{{c.no_social}}</td>
+                    <td>{{c.fullname}}</td>
+                    <td>{{c.company_name}}</td>
                     <td>{{c.address}}</td>
                     <td>{{c.phone}}</td>
-                    <td>{{c.email}}</td>
                     <td>
                         <toolbar class="md-accent">
                             <a data-type="info" data-trigger="focus" title="Edit Customer" data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'accounting:customer_edit' c.id_cut %}">

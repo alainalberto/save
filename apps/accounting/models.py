@@ -66,7 +66,6 @@ class Invoice(models.Model):
     customers = models.ForeignKey(Customer,  on_delete=models.CASCADE)  # Field name made lowercase.
     business = models.ForeignKey(Busines,  on_delete=models.CASCADE)  # Field name made lowercase.
     users = models.ForeignKey(User,  on_delete=models.CASCADE)  # Field name made lowercase.
-    accounts = models.ForeignKey(Account, on_delete=models.CASCADE)
     serial = models.IntegerField()
     type = models.CharField(max_length=20, blank=True, null=True)
     start_date = models.DateField(blank=True, null=True)
@@ -84,6 +83,7 @@ class Invoice(models.Model):
 
 class Item(models.Model):
     id_ite = models.AutoField(primary_key=True)
+    accounts = models.ForeignKey(Account, on_delete=models.CASCADE)
     name = models.CharField(max_length=20, blank=True, null=True)
     description = models.CharField(max_length=255, blank=True, null=True)
     value = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)

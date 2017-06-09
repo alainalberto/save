@@ -62,12 +62,8 @@ def AccountsDescAllViews(request):
 def AccountDocument(request, pk):
     accountDescrp = AccountDescrip.objects.get(id_acd=pk)
     if accountDescrp:
-        if accountDescrp.type == 'Receipt':
-            return redirect('/accounting/receipts/edit/'+str(accountDescrp.document)+'/')
-        if accountDescrp.type == 'Item':
-            return redirect('/accounting/invoices/edit/'+str(accountDescrp.document)+'/')
-        if accountDescrp.type == 'Payment':
-            return redirect('/accounting/payment/edit/'+str(accountDescrp.document)+'/')
+        if accountDescrp.type:
+            return redirect('/accounting/'+accountDescrp.type+'/edit/'+str(accountDescrp.document)+'/')
     return redirect('accounting:accounts')
 
 # Customers
@@ -134,7 +130,6 @@ class CustomersService(CreateView):
             customer.users = user
             company = fotm_company.save(commit=False)
             company.customers = customer.save()
-            company.folders
 
 
 #Employees
@@ -173,7 +168,17 @@ class InvoicesCreate(CreateView):
          form = self.form_class(initial=self.initial)
          items = Item.objects.all()
          loads = Load.objects.all().order_by('number')
-         return render(request, self.template_name, {'form': form, 'items': items, 'loads': loads, 'title': 'Create new Invoice'})
+         accounts = []
+         inc = Account.objects.get(primary=True, name='Income')
+         inc_acconts = Account.objects.filter(accounts_id_id=inc.id_acn)
+         for i in inc_acconts:
+             accounts.append(i)
+         for a in inc_acconts:
+             exp_accont = Account.objects.filter(accounts_id_id=a.id_acn)
+             if exp_accont != None:
+                 for ac in exp_accont:
+                     accounts.append(ac)
+         return render(request, self.template_name, {'form': form, 'items': items, 'loads': loads, 'accounts': accounts, 'title': 'Create new Invoice'})
 
      def post(self, request, *args, **kwargs):
          user = request.user
@@ -188,31 +193,25 @@ class InvoicesCreate(CreateView):
                serial = int(serials[0])+1
              invoice = form.save(commit=False)
              invoice.serial = serial
+             invoice.accounts_id = request.POST['account']
              invoice.users_id = user.id
-             print(request.POST)
              if request.POST['btnService']:
                  invoice.type = request.POST['btnService']
              invoice.save()
-             if request.POST['btnService']:
-               itemtList = request.POST.get('#tbItem')
-               print(itemtList)
-               '''acountDescp = AccountDescrip.objects.create(date=form.data['start_date'],
-                                                         value=form.data['total'],
+             acountDescp = AccountDescrip.objects.create(date=invoice.start_date,
+                                                         value=invoice.total,
                                                          accounts_id=request.POST['account'],
                                                          document=invoice.id_inv,
                                                          users_id=user.id,
-                                                         type='Receipt'
-                                                         )'''
-               return HttpResponseRedirect(reverse_lazy('accounting:invoices'))
+                                                         type='invoices'
+                                                         )
+             if request.POST['btnService'] == 'service':
+                 itemtList = request.GET('tbItem')
+                 for item in itemtList:
+                     print(item)
+                 return HttpResponseRedirect(reverse_lazy('accounting:invoices'))
              else:
                  itemtList = request.data['tbItem'].rows()
-                 acountDescp = AccountDescrip.objects.create(date=form.data['start_date'],
-                                                             value=form.data['total'],
-                                                             accounts_id=request.POST['account'],
-                                                             document=invoice.id_inv,
-                                                             users_id=user.id,
-                                                             type='Receipt'
-                                                             )
                  return HttpResponseRedirect(reverse_lazy('accounting:invoices'))
 
 
@@ -223,10 +222,101 @@ class InvoicesEdit(UpdateView):
     template_name = 'accounting/invoices/invoicesForm.html'
     success_url = reverse_lazy('accounting:invoices')
 
+    def get_context_data(self, **kwargs):
+        context = super(InvoicesEdit, self).get_context_data(**kwargs)
+        pk = self.kwargs.get('pk',0)
+        invoice = self.model.objects.get(id_inv=pk)
+        account = Account.objects.filter(id_acn=invoice.accounts_id)
+        accounts = []
+        inv = Account.objects.get(primary=True, name='Income')
+        inv_acconts = Account.objects.filter(accounts_id_id=inv.id_acn)
+        for e in inv_acconts:
+            accounts.append(e)
+        for a in inv_acconts:
+            exp_accont = Account.objects.filter(accounts_id_id=a.id_acn)
+            if exp_accont != None:
+                for ac in exp_accont:
+                    accounts.append(ac)
+        if 'form' not in context:
+            context['form'] = self.form_class()
+        context['id'] = pk
+        context['accounts'] = account
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object
+        id_inv = kwargs['pk']
+        invoice = self.model.objects.get(id_inv=id_inv)
+        invoice.accounts_id = request.POST['account']
+        acountDescp = AccountDescrip.objects.get(accounts_id=request.POST['account'], document=int(invoice.id_inv))
+        form = self.form_class(request.POST, instance=invoice)
+        if form.is_valid():
+            form.save()
+            AccountDescrip.objects.filter(id_acd=acountDescp.id_acd).update(
+                date=form.data['start_date'],
+                value=form.data['total'],
+            )
+            if request.POST['btnService'] == 'service':
+                itemtList = request.GET('tbItem')
+                for item in itemtList:
+                    print(item)
+            else:
+                itemtList = request.data['tbItem'].rows()
+            return HttpResponseRedirect(reverse_lazy('accounting:invoices'))
+        else:
+            return HttpResponseRedirect(reverse_lazy('accounting:invoices'))
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object
+        user = request.user
+        form = self.form_class(request.POST)
+        invs = Invoice.objects.filter(business_id=form.data['business']).order_by('-serial')
+        serial = 1
+        serials = []
+        for s in invs:
+            serials.append(s.serial)
+        if form.is_valid():
+            if serials:
+                serial = int(serials[0]) + 1
+            invoice = form.save(commit=False)
+            invoice.serial = serial
+            invoice.accounts_id = request.POST['account']
+            invoice.users_id = user.id
+            if request.POST['btnService']:
+                invoice.type = request.POST['btnService']
+            invoice.save()
+            acountDescp = AccountDescrip.objects.create(date=invoice.start_date,
+                                                        value=invoice.total,
+                                                        accounts_id=request.POST['account'],
+                                                        document=invoice.id_inv,
+                                                        users_id=user.id,
+                                                        type='invoices'
+                                                        )
+            if request.POST['btnService'] == 'service':
+                itemtList = request.GET('tbItem')
+                for item in itemtList:
+                    print(item)
+                return HttpResponseRedirect(reverse_lazy('accounting:invoices'))
+            else:
+                itemtList = request.data['tbItem'].rows()
+                return HttpResponseRedirect(reverse_lazy('accounting:invoices'))
+
 class InvoicesDelete(DeleteView):
     model = Invoice
     template_name = 'confirm_delete.html'
     success_url = reverse_lazy('accounting:invoices')
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object
+        id_inv = kwargs['pk']
+        invoice = self.model.objects.get(id_inv=id_inv)
+        acountDescp = AccountDescrip.objects.get(accounts_id=invoice.accounts_id, document=int(invoice.id_inv))
+        items = InvoicesHasItem.objects.filter(invoices_id=invoice.id_inv)
+        acountDescp.delete()
+        invoice.delete()
+        for it in items:
+            item = Item.objects.get(id_ite=it.id_ite)
+            item.delete()
+        return HttpResponseRedirect(self.success_url)
 
 #Receipts
 class ReceiptsView(ListView):
@@ -273,7 +363,7 @@ class ReceiptsCreate(CreateView):
                                                          accounts_id=request.POST['account'],
                                                          document=receipt.id_rec,
                                                          users_id=user.id,
-                                                         type='Receipt'
+                                                         type='receipts'
                                                          )
              return HttpResponseRedirect(reverse_lazy('accounting:receipts'))
 

@@ -25,7 +25,7 @@
                             <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
                         </div>
                     </div>
-                    <div class="form-group col-md-2 col-md-offset-1">
+                     <div class="form-group col-md-1 col-md-offset-1">
                         <label class="label-control">{{ form.prefix.label }}</label>
                         {{ form.prefix }}
                     </div>
@@ -40,15 +40,24 @@
                         <label class="label-control">{{ form.business.label }} </label>
                         {{ form.business }}
                     </div>
-                    <!-- Select Basic -->
-                    <div class="form-group col-md-4 col-md-offset-1">
-                        <label class="label-control">{{ form.customers.label }} </label>
-                        {{ form.customers }}
+                    <div class="form-group col-md-3 col-md-offset-1">
+                       <label class="label-control">Account: </label>
+                        <select name="account" class="form-control" required>
+                            {% for account in accounts %}
+                            <option value="{{account.id_acn}}">{{ account }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
+                    <!-- Select Basic -->
                     <div class="form-group col-md-3 col-md-offset-1">
                         <label class="label-control">{{ form.waytopay.label }} </label>
                         {{ form.waytopay }}
                     </div>
+                    <div class="form-group col-md-3 col-md-offset-1">
+                        <label class="label-control">{{ form.customers.label }} </label>
+                        {{ form.customers }}
+                    </div>
+                    <br/>
                     <div class="form-group col-md-3 col-md-offset-1">
                         <div class="list-group" name="type">
                             <legend class="list-group-item active">Type of description:</legend>
@@ -82,19 +91,33 @@
                                     <tr>
                                         <th class="text-center" style="display : none"></th>
                                         <th class="text-center">Item</th>
-                                        <th class="text-center">Value</th>
                                         <th class="text-center">Account</th>
+                                        <th class="text-center">Value</th>
                                         <th class="text-center">Action</th>
                                     </tr>
                                     </thead>
                                     <tbody>
+                                    <tr>
+                                        <td style="display : none"></td>
+                                        <td class="col-md-7"><input type="text"></td>
+                                        <td class="col-md-2">
+                                            <select name="account" class="form-control" required>
+                                               {% for account in accounts %}
+                                                  <option value="{{account.id_acn}}">{{ account }}</option>
+                                               {% endfor %}
+                                             </select>
+                                        </td>
+                                        <td class="col-md-1">
+                                            <a type="button" href="#" class="btn btn-info btn_add">Add</a>
+                                        </td>
+                                    </tr>
                                     {% for item in items %}
                                     <tr>
                                         <td style="display : none">{{item.id_ite}}</td>
-                                        <td class="col-md-6">{{item.name}}</td>
+                                        <td class="col-md-7">{{item.name}}</td>
+                                        <td class="col-md-7">{{item.accounts}}</td>
                                         <td class="col-md-2">{{item.value}}</td>
-                                        <td class="col-md-6">{{item.accounts.name}}</td>
-                                        <td>
+                                        <td class="col-md-1">
                                             <a type="button" href="#" class="btn btn-info btn_add">Add</a>
                                         </td>
                                     </tr>
@@ -116,7 +139,7 @@
                     <br/>
 
                     <div class="form-group">
-                        <table id="tbItem" class="table table-striped table-bordered ">
+                        <table id="tbItem" name="tbItem"class="table table-striped table-bordered ">
                             <thead>
                             <tr>
                                 <th style="display : none"></th>

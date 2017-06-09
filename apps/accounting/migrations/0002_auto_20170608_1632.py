@@ -59,7 +59,7 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='accounting.Item'),
         ),
         migrations.AddField(
-            model_name='invoice',
+            model_name='item',
             name='accounts',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='accounting.Account'),
         ),
