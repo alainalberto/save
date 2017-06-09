@@ -3,12 +3,14 @@
 <html lang="{{ LANGUAGE_CODE|default:'en-us' }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
 <head>
 <title>{% block title %}{% endblock %}</title>
-<link rel="icon" type="image/ico" href="{% static '/img/icon/Icon.ico'%}">
-<link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static '/admin/css/base.css' %}{% endblock %}" />
-{% block extrastyle %}{% endblock %}
-{% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static '/admin/css/rtl.css' %}{% endblock %}" />{% endif %}
-{% block extrahead %}{% endblock %}
-{% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
+    <link rel="icon" type="image/ico" href="{% static '/img/icon/Icon.ico'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' %}" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
+    <link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static '/admin/css/base.css' %}{% endblock %}" />
+    {% block extrastyle %}
+    {% endblock %}
+    {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static '/admin/css/rtl.css' %}{% endblock %}" />{% endif %}
+    {% block extrahead %}{% endblock %}
+    {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
 </head>
 {% load i18n %}
 
@@ -63,7 +65,7 @@
     {% block messages %}
         {% if messages %}
         <ul class="messagelist">{% for message in messages %}
-          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}></li>
         {% endfor %}</ul>
         {% endif %}
     {% endblock messages %}

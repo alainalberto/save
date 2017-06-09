@@ -2,7 +2,7 @@ from django.db import models
 
 from django.contrib.auth.models import User
 
-from apps.tools.models import Folder, Busines
+from apps.tools.models import Folder, Busines, File
 
 
 
@@ -26,17 +26,21 @@ class Customer(models.Model):
     business = models.ForeignKey(Busines, on_delete=models.CASCADE)  # Field name made lowercase.
     users = models.ForeignKey(User,  on_delete=models.CASCADE)  # Field name made lowercase.
     folders = models.ForeignKey(Folder,  on_delete=models.CASCADE)  # Field name made lowercase.
-    name = models.CharField(max_length=20, blank=True, null=True)
-    lastname = models.CharField(max_length=45, blank=True, null=True)
+    fullname = models.CharField(max_length=20)
+    company_name = models.CharField(max_length=100, blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
     phone = models.CharField(max_length=10, blank=True, null=True)
     no_social = models.CharField(max_length=20, blank=True, null=True)
-    email = models.CharField(max_length=255, blank=True, null=True)
+    email = models.CharField(max_length=255)
     deactivated = models.BooleanField(default=False)
     date_deactivated = models.DateField(blank=True, null=True)
+    usdot = models.IntegerField(blank=True, null=True)
+    mc = models.IntegerField(blank=True, null=True)
+    txdmv = models.IntegerField(blank=True, null=True)
+    ein = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
-        return '{}'.format(self.name)
+        return '{}'.format(self.fullname)
 
 class Employee(models.Model):
     id_emp = models.AutoField(primary_key=True)
@@ -62,6 +66,7 @@ class Invoice(models.Model):
     customers = models.ForeignKey(Customer,  on_delete=models.CASCADE)  # Field name made lowercase.
     business = models.ForeignKey(Busines,  on_delete=models.CASCADE)  # Field name made lowercase.
     users = models.ForeignKey(User,  on_delete=models.CASCADE)  # Field name made lowercase.
+    accounts = models.ForeignKey(Account, on_delete=models.CASCADE)
     serial = models.IntegerField()
     type = models.CharField(max_length=20, blank=True, null=True)
     start_date = models.DateField(blank=True, null=True)
@@ -79,7 +84,6 @@ class Invoice(models.Model):
 
 class Item(models.Model):
     id_ite = models.AutoField(primary_key=True)
-    accounts = models.ForeignKey(Account,  on_delete=models.CASCADE)
     name = models.CharField(max_length=20, blank=True, null=True)
     description = models.CharField(max_length=255, blank=True, null=True)
     value = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
@@ -92,6 +96,7 @@ class Receipt(models.Model):
     accounts = models.ForeignKey(Account,  on_delete=models.CASCADE)  # Field name made lowercase.
     business = models.ForeignKey(Busines,  on_delete=models.CASCADE)  # Field name made lowercase.
     users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
+    files = models.ForeignKey(File, on_delete=models.CASCADE)
     serial = models.CharField(max_length=20)
     start_date = models.DateField()
     end_date = models.DateField(blank=True, null=True)
@@ -155,6 +160,6 @@ class AccountDescrip(models.Model):
 class EmployeeHasPayment(models.Model):
     id_pym = models.AutoField(primary_key=True)
     payments = models.ForeignKey(Payment, on_delete=models.CASCADE)  # Field name made lowercase.
-    employ = models.ForeignKey(Employee, on_delete=models.CASCADE)  # Field name made lowercase.
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)  # Field name made lowercase.
 
 

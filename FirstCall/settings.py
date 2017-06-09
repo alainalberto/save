@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import socket
+
 from django.core.urlresolvers import reverse_lazy
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -24,7 +26,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'o*&&#z_i@5cmck_-xh8n84wywwp%bmypco2^-#3(^z((69z)2v'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if socket.gethostname() == 'LAPTOP-RQJ5DVKQ':
+    DEBUG = TEMPLATE_DEBUG = True
+else:
+    DEBUG = TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -141,6 +146,11 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 LOGIN_REDIRECT_URL = reverse_lazy('home')
 LOGOUT_REDIRECT_URL = reverse_lazy('login')
 
+#Alert Error
+ADMINS = (
+('Alain Alberto', 'alainalberto03@gmail.com'),
+('Ransel Ramos ', 'ranselr@gmail.com'),
+)
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = ''
@@ -148,6 +158,7 @@ EMAIL_PORT = 25
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackrend'
+EMAIL_SUBJECT_PREFIX = 'ERROR-FIRSTCALL'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 

@@ -18,34 +18,50 @@
       <!-- Form Name -->
       <!-- Text input-->
       <div class="form-group col-md-3 col-md-offset-1" >
-        <label class="label-control">Name: </label>
-        {{form.name}}
+        <label class="label-control">{{form.fullname.label}} </label>
+        {{form.fullname}}
       </div>
       <!-- Text input-->
        <div class="form-group col-md-4 col-md-offset-1">
-         <label class="label-control">Last Name: </label>
-        {{ form.lastname }}
+         <label class="label-control">{{ form.company_name.label }}</label>
+        {{ form.company_name }}
       </div>
     <!-- Select Basic -->
       <div class="form-group col-md-3 col-md-offset-1">
-          <label class="label-control">SSN: </label>
+          <label class="label-control">{{ form.no_social.label }}</label>
           {{ form.no_social }}
       </div>
           <div class="form-group col-md-4 col-md-offset-1">
-              <label class="label-control">Address: </label>
+              <label class="label-control">{{ form.address.label }}</label>
               {{ form.address }}
           </div>
           <div class="form-group col-md-3 col-md-offset-1">
-              <label class="label-control">Phone: </label>
+              <label class="label-control">{{ form.phone.label }}</label>
               {{ form.phone }}
           </div>
           <div class="form-group col-md-4 col-md-offset-1">
-              <label class="label-control">Email: </label>
+              <label class="label-control">{{ form.email.label }}</label>
               {{ form.email }}
           </div>
           <div class="form-group col-md-3 col-md-offset-1">
-              <label class="label-control">Busines: </label>
+              <label class="label-control">{{ form.business.label }}</label>
               {{ form.business }}
+          </div>
+          <div class="form-group col-md-3 col-md-offset-1">
+              <label class="label-control">{{ form.usdot.label }}</label>
+              {{ form.usdot }}
+          </div>
+          <div class="form-group col-md-3 col-md-offset-1">
+              <label class="label-control">{{ form.mc.label }}</label>
+              {{ form.mc }}
+          </div>
+          <div class="form-group col-md-3 col-md-offset-1">
+              <label class="label-control">{{ form.txdmv.label }}</label>
+              {{ form.txdmv }}
+          </div>
+          <div class="form-group col-md-3 col-md-offset-1">
+              <label class="label-control">{{ form.ein.label }}</label>
+              {{ form.ein }}
           </div>
           <div class="form-group col-md-2 col-md-offset-1" >
               <label class="label-control">{{form.deactivated.label}} </label>

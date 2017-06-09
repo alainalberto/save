@@ -18,6 +18,7 @@ $(document).ready( function () {
 		forceParse: 0
    });
 
+
    $('.form_time').datetimepicker({
         language:  'fr',
         weekStart: 1,
@@ -194,7 +195,7 @@ $(document).ready( function () {
       var column2 = $(this).closest('tr').children()[1].textContent;
       var column3 = $(this).closest('tr').children()[2].textContent;
        if($("tbItem .copy_"+column1).length == 0) {
-       $("#tbItem").append('<tr class="copy_'+column1+'"><td style="display : none">' + column1 + '</td><td class="col-md-1"><input type="number" class="entrada form-control" min="0" value="0"></td><td class="col-md-6">' + column2 + '</td><td class="col-md-2">' + column3 + '</td><td class="subtotal col-md-2">0</td><td class="col-md-1"><toolbar class="md-accent"><a type="button" class="btn btn-danger btn_remove" data-type="info" data-trigger="focus" title="Add new Item" data-animation="am-flip-x"><i class="fa fa-times-circle" aria-hidden="true"></i><tooltip md-direction="left"></tooltip></a></toolbar></td>');
+       $("#tbItem").append('<tr class="copy_'+column1+'"><td style="display : none">' + column1 + '</td><td class="col-md-1"><input type="number" class="entrada form-control" min="0" value="0"></td><td class="col-md-6">' + column2 + '</td><td class="col-md-2">' + column3 + '</td><td class="subtotal col-md-2">0</td><td class="col-md-1"><toolbar class="md-accent"><a type="button" class="btn btn-danger btn_remove" data-type="info" data-trigger="focus" title="Add new Item" data-animation="am-flip-x" onclick="deleteitem(this.parentNode.parentNode.rowIndex)"><i class="fa fa-times-circle" aria-hidden="true"></i><tooltip md-direction="left"></tooltip></a></toolbar></td>');
        }
 
     });
@@ -208,32 +209,39 @@ $(document).ready( function () {
        sumar_columnas();
 
     });
-    $("body").on("click",".btn_remove", function() {
-    $('body').parent().parent().remove();
+    $(".btn_remove").click(function() {
+          $('.btn_remove').parent().parent().remove();
     });
 
     function sumar_columnas(){
      var sum=0;
-     var disc =0;
+     var disc=0;
+     if($('.discount').val() != 0){
+       var disc = parseFloat($('.discount').val());
+       }
     //itera cada input de clase .subtotal y la suma
     $('.subtotal').each(function() {
          sum += parseFloat($(this).text());
     });
     //cambia valor del total y lo redondea a la segunda decimal
-    $('#servSutotal').val(sum.toFixed(2));
-    var disc = parseFloat($('#discount').val());
-    var subtotal = parseFloat($('#servSutotal').val());
-    $('#serviTotal').val(subtotal - disc);
+    $('.servSutotal').val(sum.toFixed(2));
+    var subtotal = sum.toFixed(2);
+    var total = subtotal - disc
+    $('.serviTotal').val(total.toFixed(2));
     }
 
-    $('#discount').change(function(){
-       var disc = parseFloat($('#discount').val());
-       var subtotal = parseFloat($('#servSutotal').val());
-        $('#serviTotal').val(subtotal - disc);
+    $('.discount').click(function(){
+     if($('.discount').val() != 0){
+       var disc = parseFloat($('.discount').val());
+       var subtotal = parseFloat($('.servSutotal').val());
+       var total = subtotal - disc
+       $('.serviTotal').val(total.toFixed(2));
+       }
     });
 
+
  });
-function deleteitem(i){
-      document.getElementsByTagName("tbody")[0].setAttribute("id","tableid");
+  function deleteitem(i){
+      document.getElementsByTagName("table")[0].setAttribute("id","tableid");
       document.getElementById("tableid").deleteRow(i);
     }

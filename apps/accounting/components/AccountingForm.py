@@ -28,34 +28,46 @@ class CustomerForm(forms.ModelForm):
         model = Customer
 
         fields = [
-            'name',
-            'lastname',
+            'fullname',
+            'company_name',
             'no_social',
             'address',
             'phone',
             'email',
             'business',
             'deactivated',
+            'usdot',
+            'mc',
+            'txdmv',
+            'ein',
         ]
         labels = {
-            'name': 'Name:',
-            'lastname': 'Last Name:',
+            'fullname': 'First and Last Name:',
+            'company_name': 'Company Name:',
             'no_social': 'SSN:',
             'address': 'Address:',
             'phone': 'Phone:',
             'email': 'Email:',
             'business': 'Busines:',
             'deactivated': 'Deactivated:',
+            'usdot': 'USDOT:',
+            'mc': 'MC',
+            'txdmv': 'Texas DMV:',
+            'ein': 'EIN:',
         }
         widgets = {
-            'name': forms.TextInput(attrs={'placeholder': 'Name', 'class': 'form-control input-md'}),
-            'lastname': forms.TextInput(attrs={'placeholder': 'Last Name', 'class': 'form-control input-md'}),
+            'fullname': forms.TextInput(attrs={'placeholder': 'Full Name', 'class': 'form-control input-md'}),
+            'company_name': forms.TextInput(attrs={'placeholder': 'Company Name', 'class': 'form-control input-md'}),
             'no_social': forms.NumberInput(attrs={'placeholder': 'SSN', 'class': 'form-control input-md'}),
             'address': forms.TextInput(attrs={'placeholder': 'Address', 'class': 'form-control input-md'}),
             'phone': forms.NumberInput(attrs={'placeholder': 'Telepone Number', 'class': 'form-control input-md'}),
             'email': forms.EmailInput(attrs={'placeholder': 'Email', 'class': 'form-control input-md'}),
             'business': forms.Select(attrs={'class': 'form-control input-md'}),
             'deactivated': forms.CheckboxInput(attrs={'class': 'checkbox'}),
+            'usdot': forms.NumberInput(attrs={'placeholder': 'USDOT Number', 'class': 'form-control input-md'}),
+            'mc': forms.NumberInput(attrs={'placeholder': 'MC Number', 'class': 'form-control input-md'}),
+            'txdmv': forms.NumberInput(attrs={'placeholder': 'TXDMV Number', 'class': 'form-control input-md'}),
+            'ein': forms.NumberInput(attrs={'placeholder': 'EIN Number', 'class': 'form-control input-md'}),
         }
 
 class EmployeesForm(forms.ModelForm):
@@ -118,6 +130,8 @@ class InvoicesForm(forms.ModelForm):
                 'paid',
                 'prefix',
                 'end_date',
+                'subtotal',
+                'total',
             ]
             labels = {
                 'customers': 'Customers:',
@@ -128,16 +142,20 @@ class InvoicesForm(forms.ModelForm):
                 'paid': 'Paid:',
                 'prefix': 'Prefix:',
                 'end_date': 'End Date:',
+                'subtotal': 'Subtotal',
+                'total': 'Total',
             }
             widgets = {
                 'customers': forms.Select(attrs={'class': 'form-control input-md'}),
                 'business': forms.Select(attrs={'class': 'form-control input-md'}),
                 'start_date': forms.DateInput(attrs={'placeholder': 'Start Date', 'class': 'form-control input-md'}),
                  'waytopay': forms.Select(attrs={'class': 'form-control input-md'},choices=(('Cash','Cash'),('Check','Check'),('Credit Card','Credit Card'))),
-                'discount': forms.NumberInput(attrs={'placeholder': 'Discount', 'class': 'form-control input-md', 'id': 'discount', 'value': '0'}),
+                'discount': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control  discount'}),
                 'paid': forms.CheckboxInput(attrs={'class': 'checkbox'}),
                 'prefix': forms.TextInput(attrs={'placeholder': 'Prefix', 'class': 'form-control input-md'}),
                 'end_date': forms.DateInput(attrs={'placeholder': 'End Date', 'class': 'form-control input-md'}),
+                'subtotal': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control servSutotal col-lg-9 col-md-6', 'readonly':''}),
+                'total': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control serviTotal col-lg-9 col-md-6', 'readonly':''}),
             }
 
 
