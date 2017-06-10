@@ -1,10 +1,6 @@
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
-from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse_lazy
-from django.views.generic import CreateView, ListView
-from django.views.generic import TemplateView
-from apps.tools.models import Menu, Alert, Chat
+from apps.tools.models import Alert, Chat
 #{% if request.user.id == c.users_id and c.category == 'Notification' or grupos.id == c.group.id and c.category == 'Notification' %}
         #            {% if c.deactivated == 0 %}
 

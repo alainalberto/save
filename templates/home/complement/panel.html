@@ -34,7 +34,7 @@
     <!-- /.row -->
 
     <div class="row">
-        {% if perms.accounting.add_customer %}
+       <!--{% if perms.accounting.add_customer %}
         <a class="" href="{% url 'accounting:customer_service' %}">
             <div class="col-lg-3 col-md-6">
                 <div class="panel panel-primary zoom-mouse">
@@ -58,7 +58,7 @@
                 </div>
             </div>
         </a>
-        {% endif %}
+        {% endif %} -->
         {% if perms.accounting.add_customer %}
         <a href="{% url 'accounting:customers' %}">
             <div class="col-lg-3 col-md-6">
@@ -160,7 +160,7 @@
                     <h3 class="panel-title"><i class="fa fa-comments-o"></i> Chat </h3>
                 </div>
                 <div class="panel-body">
-                    <iframe style="height:495px;" src="http://localhost:8000/chat" scrolling="no"></iframe>
+                    <iframe style="height:495px;" src="{% url 'chat'%}" scrolling="no"></iframe>
                 </div>
             </div>
         </div>
