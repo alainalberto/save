@@ -1,5 +1,6 @@
 from django import forms
 from apps.accounting.models import *
+from django.core.exceptions import ValidationError
 
 
 class AccountForm(forms.ModelForm):
@@ -70,6 +71,7 @@ class CustomerForm(forms.ModelForm):
             'ein': forms.NumberInput(attrs={'placeholder': 'EIN Number', 'class': 'form-control input-md'}),
         }
 
+
 class EmployeesForm(forms.ModelForm):
     class Meta:
         model = Employee
@@ -116,6 +118,13 @@ class EmployeesForm(forms.ModelForm):
             'position': forms.TextInput(attrs={'placeholder': 'Position', 'class': 'form-control input-md'}),
             'deactivated': forms.CheckboxInput(attrs={'class': 'checkbox'}),
         }
+
+        def clean_name(self):
+            name = self.clean_data.get('name', '')
+            num_words = len(name.split())
+            if num_words < 4:
+                raise forms.ValidationError("Not enough words!")
+            return message
 
 class InvoicesForm(forms.ModelForm):
         class Meta:

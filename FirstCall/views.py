@@ -1,19 +1,23 @@
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import CreateView, ListView
 from django.views.generic import TemplateView
 from apps.tools.models import Menu, Alert, Chat
-#{% if request.user.id == c.users_id and c.category == 'Notification' or grupos.id == c.group.id and c.category == 'Notification' %}
-        #            {% if c.deactivated == 0 %}
+from django.db.models import Q
+from django.conf import settings
+from django.template import Context
+from django.template import RequestContext
 
 def home_view(requiret):
-    alertNot = Alert.objects.filter(category='Notification', users=requiret.user.id)
-    alertAlt = Alert.objects.filter(category='Alerts')
-    alertUrg = Alert.objects.filter(category='Urgents')
-    allalert = alertNot.count() + alertAlt.count() + alertUrg.count()
-    contexto = {'notif': alertNot.count(),'alert': alertAlt.count(), 'urgent': alertUrg.count(), 'allalerts': allalert}
+    grupos = Group.objects.get(user=requiret.user)
+    global notification1
+    notification1 = Alert.objects.filter(Q(users=requiret.user, category='Notification', deactivated=0) | Q(group=grupos.id, category='Notification', deactivated=0))
+    alertas1 = Alert.objects.filter(Q(users=requiret.user, category='Alerts', deactivated=0) | Q(group=grupos.id, category='Alerts', deactivated=0))
+    urgents1 = Alert.objects.filter(Q(users=requiret.user, category='Urgents', deactivated=0) | Q(group=grupos.id, category='Urgents', deactivated=0))
+    allalert1 = notification1.count() + alertas1.count() + urgents1.count()
+    contexto = {'notification1': notification1, 'alertas1': alertas1, 'urgents1': urgents1, 'allalert1': allalert1}
     return render(requiret, 'home/complement/panel.html', contexto)
 
 def Chats(request):
