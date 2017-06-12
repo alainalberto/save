@@ -12,7 +12,6 @@ from django.template import RequestContext
 
 def home_view(requiret):
     grupos = Group.objects.get(user=requiret.user)
-    global notification1
     notification1 = Alert.objects.filter(Q(users=requiret.user, category='Notification', deactivated=0) | Q(group=grupos.id, category='Notification', deactivated=0))
     alertas1 = Alert.objects.filter(Q(users=requiret.user, category='Alerts', deactivated=0) | Q(group=grupos.id, category='Alerts', deactivated=0))
     urgents1 = Alert.objects.filter(Q(users=requiret.user, category='Urgents', deactivated=0) | Q(group=grupos.id, category='Urgents', deactivated=0))
