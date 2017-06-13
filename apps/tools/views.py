@@ -189,12 +189,12 @@ class AlertstEdit(UpdateView):
     model = Alert
     form_class = AlertForm
     template_name = 'alert/alertForm.html'
-    success_url = reverse_lazy('panel:panel')
+    success_url = reverse_lazy('panel:allalert')
 
 class AlertsDelete(DeleteView):
     model = Alert
     template_name = 'confirm_delete.html'
-    success_url = reverse_lazy('panel:panel')
+    success_url = reverse_lazy('panel:allalert')
 
 def change_password(request):
     if request.method == 'POST':

@@ -26,7 +26,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'o*&&#z_i@5cmck_-xh8n84wywwp%bmypco2^-#3(^z((69z)2v'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if socket.gethostname() == 'LAPTOP-RQJ5DVKQ':
+if socket.gethostname() == 'MageRanse-PC':
     DEBUG = TEMPLATE_DEBUG = True
     ALLOWED_HOSTS = []
 else:
