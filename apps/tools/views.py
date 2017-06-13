@@ -6,6 +6,8 @@ from django.contrib.auth.models import User, Group
 from django.http import JsonResponse
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DeleteView, View, TemplateView
+from django.contrib.admin.models import ADDITION, CHANGE, DELETION
+from FirstCall.util import accion_user
 from apps.accounting.models import AccountDescrip, Account
 from apps.tools.models import *
 from apps.tools.components import CalendarForm, AlertForm
@@ -179,6 +181,7 @@ class AlertsCreate(CreateView):
              alert = form.save(commit=False)
              alert.users = user
              alert.save()
+             accion_user(alert, ADDITION, request.user)
          return HttpResponseRedirect(reverse_lazy('panel:panel'))
 
 

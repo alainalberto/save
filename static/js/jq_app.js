@@ -164,8 +164,6 @@ $(document).ready( function () {
    });
 
 
-
-
 //Invoices
     $('#btnService').change(function(){
         if (this.checked) {
@@ -194,11 +192,20 @@ $(document).ready( function () {
       var column1 = $(this).closest('tr').children()[0].textContent;
       var column2 = $(this).closest('tr').children()[1].textContent;
       var column3 = $(this).closest('tr').children()[2].textContent;
+      var column4 = $(this).closest('tr').children()[3].textContent;
        if($("tbItem .copy_"+column1).length == 0) {
-       $("#tbItem").append('<tr class="copy_'+column1+'"><td style="display : none">' + column1 + '</td><td class="col-md-1"><input type="number" class="entrada form-control" min="0" value="0"></td><td class="col-md-6">' + column2 + '</td><td class="col-md-2">' + column3 + '</td><td class="subtotal col-md-2">0</td><td class="col-md-1"><toolbar class="md-accent"><a type="button" class="btn btn-danger btn_remove" data-type="info" data-trigger="focus" title="Add new Item" data-animation="am-flip-x" onclick="deleteitem(this.parentNode.parentNode.rowIndex)"><i class="fa fa-times-circle" aria-hidden="true"></i><tooltip md-direction="left"></tooltip></a></toolbar></td>');
+       $("#tbItem").append('<tr class="copy_'+column1+'"><td style="display : none">' + column1 + '</td><td class="col-md-1"><input type="number" class="entrada form-control" min="0" value="0"></td><td class="col-md-6">' + column2 + '</td><td class="col-md-6">' + column3 + '</td><td class="col-md-2">' + column4 + '</td><td class="subtotal col-md-2">0</td><td class="col-md-1"><toolbar class="md-accent"><a type="button" class="btn btn-danger btn_remove" data-type="info" data-trigger="focus" title="Add new Item" data-animation="am-flip-x" onclick="deleteitem(this.parentNode.parentNode.rowIndex)"><i class="fa fa-times-circle" aria-hidden="true"></i><tooltip md-direction="left"></tooltip></a></toolbar></td>');
        }
 
     });
+
+   $("#btn_add_new").on("click", function() {
+      var column1 = $('item').val();
+      var column2 = $('account').val();
+      var column3 = $('value').val();
+      alert(column1, column2, column3);
+       $("#tbItem").append('<tr class="copy_'+column1+'"><td style="display : none">' + column1 + '</td><td class="col-md-1"><input type="number" class="entrada form-control" min="0" value="0"></td><td class="col-md-6">' + column1 + '</td><td class="col-md-6">' + column2 + '</td><td class="col-md-2">' + column3 + '</td><td class="subtotal col-md-2">0</td><td class="col-md-1"><toolbar class="md-accent"><a type="button" class="btn btn-danger btn_remove" data-type="info" data-trigger="focus" title="Add new Item" data-animation="am-flip-x" onclick="deleteitem(this.parentNode.parentNode.rowIndex)"><i class="fa fa-times-circle" aria-hidden="true"></i><tooltip md-direction="left"></tooltip></a></toolbar></td>');
+     });
 
     $("#tbItem").on("input", "input", function() {
        var input = $(this);

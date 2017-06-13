@@ -1,15 +1,16 @@
 from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.core.urlresolvers import reverse_lazy
-from django.http import HttpResponse
-from django.contrib.auth.models import User
-from django.contrib.admin.models import LogEntryManager
 from apps.logistic.models import Load
 from apps.accounting.components.AccountingForm import *
 from apps.services.components.ServicesForm import *
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
+from django.contrib.admin.models import ADDITION, CHANGE, DELETION
+from FirstCall.util import accion_user
 from apps.accounting.models import *
 from apps.services.models import *
 from apps.tools.models import Folder, Busines
+import time
+
 
 
 
@@ -36,6 +37,7 @@ class AccountCreate(CreateView):
          account = form.save(commit=False)
          account.users_id = user.id
          account.save()
+         accion_user(account, ADDITION, request.user)
          return HttpResponseRedirect(reverse_lazy('accounting:accounts'))
 
 def AccountsViews(request):
@@ -75,6 +77,7 @@ class CustomersCreate(CreateView):
      model = Customer
      form_class = CustomerForm
      template_name = 'accounting/customer/customerForm.html'
+     success_url = reverse_lazy('accounting:customers')
 
      def get(self, request, *args, **kwargs):
          form = self.form_class(initial=self.initial)
@@ -83,14 +86,18 @@ class CustomersCreate(CreateView):
      def post(self, request, *args, **kwargs):
          user = request.user
          form = self.form_class(request.POST)
-         folder_father = Folder.objects.get(name = 'Customers')
+         folders = Folder.objects.filter(name='Customers')
+         if not folders:
+             Folder.objects.create(name='Customers', description='Customers', folder='NULL')
+         folder_father = Folder.objects.get(name='Customers')
          if form.is_valid():
-             folder = Folder.objects.create(name=form.data['name']+"_Customer", description=form.data['name']+"_Customer", folder = folder_father.id_fld)
+             folder = Folder.objects.create(name=form.data['fullname']+"_Customer", description=form.data['fullname']+"_Customer", folder = folder_father.id_fld)
              customer = form.save(commit=False)
              customer.folders_id = folder.id_fld
              customer.users_id = user.id
              customer.save()
-             return HttpResponseRedirect(reverse_lazy('accounting:customers'))
+             accion_user(customer, ADDITION, request.user)
+             return HttpResponseRedirect(self.success_url)
 
 class CustomersEdit(UpdateView):
     model = Customer
@@ -98,11 +105,37 @@ class CustomersEdit(UpdateView):
     template_name = 'accounting/customer/customerForm.html'
     success_url = reverse_lazy('accounting:customers')
 
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object
+        id_cut = kwargs['pk']
+        customer = self.model.objects.get(id_cut=id_cut)
+        form = self.form_class(request.POST, instance=customer)
+        if form.is_valid():
+            customer = form.save()
+            accion_user(customer, CHANGE, request.user)
+            return HttpResponseRedirect(self.success_url)
+
 
 class CustomersDelete(DeleteView):
     model = Customer
     template_name = 'confirm_delete.html'
     success_url = reverse_lazy('accounting:customers')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object
+        id_cut = kwargs['pk']
+        customer = self.model.objects.get(id_cut=id_cut)
+        folder = Folder.objects.get(id_fld=customer.folders_id)
+        files = File.objects.filter(folders_id=folder.id_fld)
+        folder.delete()
+        accion_user(customer, DELETION, request.user)
+        customer.delete()
+        if files:
+          for fl in files:
+            file = File.objects.get(id_fil=fl.id_fil)
+            file.delete()
+        return HttpResponseRedirect(self.success_url)
+
 
 class CustomersService(CreateView):
     model = Customer
@@ -143,16 +176,48 @@ class EmployeesCreate(CreateView):
      template_name = 'accounting/employees/employeesForm.html'
      success_url = reverse_lazy('accounting:employees')
 
+     def get(self, request, *args, **kwargs):
+         form = self.form_class(initial=self.initial)
+         return render(request, self.template_name, {'form': form, 'title': 'Create new Employee'})
+
+     def post(self, request, *args, **kwargs):
+         user = request.user
+         form = self.form_class(request.POST)
+         if form.is_valid():
+             employee=form.save()
+             accion_user(employee, ADDITION, request.user)
+             return HttpResponseRedirect(self.success_url)
+
+
 class EmployeesEdit(UpdateView):
     model = Employee
     form_class = EmployeesForm
     template_name = 'accounting/employees/employeesForm.html'
     success_url = reverse_lazy('accounting:employees')
 
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object
+        id_ = kwargs['pk']
+        employee = self.model.objects.get(id_emp=id)
+        form = self.form_class(request.POST, instance=employee)
+        if form.is_valid():
+            employee =form.save()
+            accion_user(employee, CHANGE, request.user)
+            return HttpResponseRedirect(self.success_url)
+
 class EmployeesDelete(DeleteView):
     model = Employee
     template_name = 'confirm_delete.html'
     success_url = reverse_lazy('accounting:employees')
+
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object
+        id = kwargs['pk']
+        employee = self.model.objects.get(id_emp=id)
+        accion_user(employee, DELETION, request.user)
+        employee.delete()
+        return HttpResponseRedirect(self.success_url)
 
 #Invoices
 class InvoicesView(ListView):
@@ -193,11 +258,11 @@ class InvoicesCreate(CreateView):
                serial = int(serials[0])+1
              invoice = form.save(commit=False)
              invoice.serial = serial
-             invoice.accounts_id = request.POST['account']
              invoice.users_id = user.id
              if request.POST['btnService']:
                  invoice.type = request.POST['btnService']
              invoice.save()
+             accion_user(invoice, ADDITION, request.user)
              acountDescp = AccountDescrip.objects.create(date=invoice.start_date,
                                                          value=invoice.total,
                                                          accounts_id=request.POST['account'],
@@ -252,6 +317,7 @@ class InvoicesEdit(UpdateView):
         form = self.form_class(request.POST, instance=invoice)
         if form.is_valid():
             form.save()
+            accion_user(invoice, CHANGE, request.user)
             AccountDescrip.objects.filter(id_acd=acountDescp.id_acd).update(
                 date=form.data['start_date'],
                 value=form.data['total'],
@@ -266,45 +332,12 @@ class InvoicesEdit(UpdateView):
         else:
             return HttpResponseRedirect(reverse_lazy('accounting:invoices'))
 
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object
-        user = request.user
-        form = self.form_class(request.POST)
-        invs = Invoice.objects.filter(business_id=form.data['business']).order_by('-serial')
-        serial = 1
-        serials = []
-        for s in invs:
-            serials.append(s.serial)
-        if form.is_valid():
-            if serials:
-                serial = int(serials[0]) + 1
-            invoice = form.save(commit=False)
-            invoice.serial = serial
-            invoice.accounts_id = request.POST['account']
-            invoice.users_id = user.id
-            if request.POST['btnService']:
-                invoice.type = request.POST['btnService']
-            invoice.save()
-            acountDescp = AccountDescrip.objects.create(date=invoice.start_date,
-                                                        value=invoice.total,
-                                                        accounts_id=request.POST['account'],
-                                                        document=invoice.id_inv,
-                                                        users_id=user.id,
-                                                        type='invoices'
-                                                        )
-            if request.POST['btnService'] == 'service':
-                itemtList = request.GET('tbItem')
-                for item in itemtList:
-                    print(item)
-                return HttpResponseRedirect(reverse_lazy('accounting:invoices'))
-            else:
-                itemtList = request.data['tbItem'].rows()
-                return HttpResponseRedirect(reverse_lazy('accounting:invoices'))
 
 class InvoicesDelete(DeleteView):
     model = Invoice
     template_name = 'confirm_delete.html'
     success_url = reverse_lazy('accounting:invoices')
+
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object
         id_inv = kwargs['pk']
@@ -312,6 +345,7 @@ class InvoicesDelete(DeleteView):
         acountDescp = AccountDescrip.objects.get(accounts_id=invoice.accounts_id, document=int(invoice.id_inv))
         items = InvoicesHasItem.objects.filter(invoices_id=invoice.id_inv)
         acountDescp.delete()
+        accion_user(invoice, DELETION, request.user)
         invoice.delete()
         for it in items:
             item = Item.objects.get(id_ite=it.id_ite)
@@ -358,6 +392,7 @@ class ReceiptsCreate(CreateView):
              receipt.users_id = user.id
              receipt.accounts_id = request.POST['account']
              receipt.save()
+             accion_user(receipt, ADDITION, request.user)
              acountDescp = AccountDescrip.objects.create(date=form.data['start_date'],
                                                          value=form.data['total'],
                                                          accounts_id=request.POST['account'],
@@ -402,6 +437,7 @@ class ReceiptsEdit(UpdateView):
         form = self.form_class(request.POST, instance=receipt)
         if form.is_valid():
             form.save()
+            accion_user(receipt, CHANGE, request.user)
             AccountDescrip.objects.filter(id_acd=acountDescp.id_acd).update(
                 date=form.data['start_date'],
                 value=form.data['total'],
@@ -422,5 +458,7 @@ class ReceiptsDelete(DeleteView):
         receipt = self.model.objects.get(id_rec=id_rec)
         acountDescp = AccountDescrip.objects.get(accounts_id=receipt.accounts_id, document=int(receipt.id_rec))
         acountDescp.delete()
+        accion_user(receipt, DELETION, request.user)
         receipt.delete()
+
         return HttpResponseRedirect(self.success_url)

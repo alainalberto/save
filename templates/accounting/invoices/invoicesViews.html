@@ -14,7 +14,7 @@
         </div>
         <div class="panel-body">
             <div class="navbar-button">
-                <a id="btnAdd" class="btn-primary btn col-md-offset-11" role="button" data-trigger="focus" title="Add User" href="{% url 'accounting:invoices_create' %}">
+                <a id="btnAdd" class="btn-primary btn col-md-offset-11" role="button" data-trigger="focus" title="Add User" href="{% url 'accounting:invoices_create' %}" {% if not perms.accounting.add_invoice %} disabled {% endif %}>
                     <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
                     <tooltip md-direction="left">New</tooltip>
                 </a>
@@ -24,14 +24,14 @@
                 <table id="listInvoices" class="table data-table table-striped table-bordered table-hover" cellspacing="0" width="100%">
                     <thead>
                     <tr>
-                        <th>Prefix</th>
-                        <th>Serial</th>
-                        <th>Customers</th>
-                        <th>Business</th>
-                        <th>Start Date</th>
-                        <th>Way to Pay</th>
-                        <th>Paid</th>
-                        <th>Action</th>
+                        <th class="col-md-1">Prefix</th>
+                        <th class="col-md-1">Serial</th>
+                        <th class="col-md-2">Customers</th>
+                        <th class="col-md-2">Business</th>
+                        <th class="col-md-2">Start Date</th>
+                        <th class="col-md-2">Payment Method</th>
+                        <th class="col-md-1">Paid</th>
+                        <th class="col-md-2">Action</th>
                     </tr>
                     </thead>
                     {% for i in object_list %}
@@ -46,14 +46,20 @@
                         <td>{{i.paid}}</td>
                         <td>
                             <toolbar class="md-accent">
-                                <a data-type="info" data-trigger="focus" title="Edit Invoices" data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'accounting:invoices_edit' i.id_inv %}">
+                                <a data-type="info" data-trigger="focus" title="Edit Invoices" data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'accounting:invoices_edit' i.id_inv %}" {% if not perms.accounting.change_invoice %} disabled {% endif %}>
                                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                     <tooltip md-direction="left"></tooltip>
                                 </a>
                             </toolbar>
                             <toolbar class="md-accent">
-                                <a data-type="info" data-animation="am-flip-x" data-trigger="focus" title="Delete Invoices" type="button" class="btn btn-danger test-tooltip" href="{% url 'accounting:invoices_delete' i.id_inv %}">
+                                <a data-type="info" data-animation="am-flip-x" data-trigger="focus" title="Delete Invoices" type="button" class="btn btn-danger test-tooltip" href="{% url 'accounting:invoices_delete' i.id_inv %}" {% if not perms.accounting.delete_invoice %} disabled {% endif %}>
                                     <i class="fa fa-trash" aria-hidden="true"></i>
+                                    <tooltip md-direction="left"></tooltip>
+                                </a>
+                            </toolbar>
+                             <toolbar class="md-accent">
+                                <a data-type="info" data-animation="am-flip-x" data-trigger="focus" title="Print Invoice" type="button" class="btn btn-primary test-tooltip" href="{% url 'accounting:invoices_pdf' i.id_inv %}">
+                                    <i class="fa fa-print" aria-hidden="true"></i>
                                     <tooltip md-direction="left"></tooltip>
                                 </a>
                             </toolbar>

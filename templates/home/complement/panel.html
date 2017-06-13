@@ -194,10 +194,10 @@
                     {% else %}
                     <div class="list-group">
                         {% for entry in admin_log %}
-                        {% if entry.is_deletion or not entry.get_admin_url %}
+                        {% if not entry.get_admin_url %}
                             {{ entry.object_repr }}
                         {% else %}
-                        <a href="{{ entry.get_admin_url }}" class="list-group-item">
+                        <a  class="list-group-item">
                             <strong class="text-primary">{{ entry.action_time }}</strong><br/>
                             <i class="{% if entry.is_addition %}fa fa-plus-circle text-primary{% endif %}{% if entry.is_change %}fa fa-refresh text-success{% endif %}{% if entry.is_deletion %}fa fa-times-circle text-danger{% endif %}"></i>
                             {% if entry.content_type %}
@@ -215,7 +215,7 @@
                 </div>
             </div>
         </div>
-        {% if perms.accounting %}
+        {% if perms.accounting.account %}
         <div class="col-lg-6">
             <div class="panel panel-default">
                 <div class="panel-heading">

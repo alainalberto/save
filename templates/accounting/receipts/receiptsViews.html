@@ -14,7 +14,7 @@
         </div>
         <div class="panel-body">
             <div class="navbar-button">
-                <a id="btnAdd" class="btn-primary btn col-md-offset-11" role="button" data-trigger="focus" title="Add User" href="{% url 'accounting:receipts_create' %}">
+                <a id="btnAdd" class="btn-primary btn col-md-offset-11" role="button" data-trigger="focus" title="Add User" href="{% url 'accounting:receipts_create' %}" {% if not perms.accounting.add_receipt %} disabled {% endif %}>
                     <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
                     <tooltip md-direction="left">New</tooltip>
                 </a>
@@ -24,13 +24,13 @@
                 <table id="listInvoices" class="table data-table table-striped table-bordered table-hover" cellspacing="0" width="100%">
                     <thead>
                     <tr>
-                        <th>Serial</th>
-                        <th>Accounts</th>
-                        <th>Business</th>
-                        <th>Start Date</th>
-                        <th>Way to Pay</th>
-                        <th>Paid</th>
-                        <th>Action</th>
+                        <th class="col-md-1">Serial</th>
+                        <th class="col-md-2">Accounts</th>
+                        <th class="col-md-2">Business</th>
+                        <th class="col-md-2">Start Date</th>
+                        <th class="col-md-1">Payment Method</th>
+                        <th class="col-md-1">Paid</th>
+                        <th class="col-md-2">Action</th>
                     </tr>
                     </thead>
 
@@ -45,13 +45,13 @@
                         <td>{{r.paid}}</td>
                         <td>
                             <toolbar class="md-accent">
-                                <a data-type="info" data-trigger="focus" title="Edit Receipt" data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'accounting:receipts_edit' r.id_rec %}">
+                                <a data-type="info" data-trigger="focus" title="Edit Receipt" data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'accounting:receipts_edit' r.id_rec %}" {% if not perms.accounting.change_receipt %} disabled {% endif %}>
                                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                     <tooltip md-direction="left"></tooltip>
                                 </a>
                             </toolbar>
                             <toolbar class="md-accent">
-                                <a data-type="info" data-animation="am-flip-x" data-trigger="focus" title="Delete Receipt" type="button" class="btn btn-danger test-tooltip" href="{% url 'accounting:receipts_delete' r.id_rec %}">
+                                <a data-type="info" data-animation="am-flip-x" data-trigger="focus" title="Delete Receipt" type="button" class="btn btn-danger test-tooltip" href="{% url 'accounting:receipts_delete' r.id_rec %}" {% if not perms.accounting.delete_receipt %} disabled {% endif %}>
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                     <tooltip md-direction="left"></tooltip>
                                 </a>

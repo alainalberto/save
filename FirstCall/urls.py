@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import *
 from django.contrib import admin, admindocs
 from django.contrib.auth.views import login, logout_then_login
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from FirstCall.views import home_view, Chats, Post, Messages
 
 urlpatterns = [
