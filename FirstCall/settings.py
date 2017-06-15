@@ -26,12 +26,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'o*&&#z_i@5cmck_-xh8n84wywwp%bmypco2^-#3(^z((69z)2v'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if socket.gethostname() == 'MageRanse-PC':
+if socket.gethostname() == 'LAPTOP-RQJ5DVKQ':
     DEBUG = TEMPLATE_DEBUG = True
     ALLOWED_HOSTS = []
 else:
     DEBUG = TEMPLATE_DEBUG = False
-    ALLOWED_HOSTS = ['fcintermodal.com']
+    ALLOWED_HOSTS = ['www.fcintermodal.com']
 
 
 # Application definition
@@ -50,6 +50,9 @@ INSTALLED_APPS = [
     'apps.accounting',
     'apps.logistic',
     'apps.services',
+
+    #External
+    'django_tables2',
 
 ]
 
@@ -143,7 +146,8 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 LOGIN_REDIRECT_URL = reverse_lazy('home')
 LOGOUT_REDIRECT_URL = reverse_lazy('login')
 
-#Alert Error
+
+"""
 ADMINS = (
 ('Alain Alberto', 'alainalberto03@gmail.com'),
 ('Ransel Ramos ', 'ranselr@gmail.com'),
@@ -153,6 +157,7 @@ MANAGERS = (
 ('Alain Alberto', 'alainalberto03@gmail.com'),
 ('Ransel Ramos ', 'ranselr@gmail.com'),
 )
+"""
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = ''

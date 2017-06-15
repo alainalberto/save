@@ -1,17 +1,15 @@
-from django.shortcuts import render, redirect, HttpResponseRedirect
-from django.core.urlresolvers import reverse_lazy
-from apps.logistic.models import Load
-from apps.accounting.components.AccountingForm import *
-from apps.services.components.ServicesForm import *
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
 from django.contrib.admin.models import ADDITION, CHANGE, DELETION
+from django.core.urlresolvers import reverse_lazy, reverse
+from django.shortcuts import render, redirect, HttpResponseRedirect
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
+from django.forms import inlineformset_factory
 from FirstCall.util import accion_user
+from apps.accounting.components.AccountingForm import *
 from apps.accounting.models import *
+from apps.logistic.models import Load
+from apps.services.components.ServicesForm import *
 from apps.services.models import *
-from apps.tools.models import Folder, Busines
-import time
-
-
+from apps.tools.models import Folder
 
 
 # Create your views here.
@@ -224,61 +222,71 @@ class InvoicesView(ListView):
     model = Invoice
     template_name = 'accounting/invoices/invoicesViews.html'
 
-class InvoicesCreate(CreateView):
-     model = Invoice
-     form_class = InvoicesForm
-     template_name = 'accounting/invoices/invoicesForm.html'
+def InvoicesCreate(request):
+    ItemFormSet = inlineformset_factory(
+        Invoice,
+        InvoicesHasItem,
+        form=ItemHasInvoiceForm,
+        fields=('quantity_ind', 'items', 'value_ind'),
 
-     def get(self, request, *args, **kwargs):
-         form = self.form_class(initial=self.initial)
-         items = Item.objects.all()
-         loads = Load.objects.all().order_by('number')
-         accounts = []
-         inc = Account.objects.get(primary=True, name='Income')
-         inc_acconts = Account.objects.filter(accounts_id_id=inc.id_acn)
-         for i in inc_acconts:
-             accounts.append(i)
-         for a in inc_acconts:
-             exp_accont = Account.objects.filter(accounts_id_id=a.id_acn)
-             if exp_accont != None:
-                 for ac in exp_accont:
-                     accounts.append(ac)
-         return render(request, self.template_name, {'form': form, 'items': items, 'loads': loads, 'accounts': accounts, 'title': 'Create new Invoice'})
-
-     def post(self, request, *args, **kwargs):
-         user = request.user
-         form = self.form_class(request.POST)
-         invs = Invoice.objects.filter(business_id=form.data['business']).order_by('-serial')
-         serial = 1
-         serials = []
-         for s in invs:
-             serials.append(s.serial)
-         if form.is_valid():
-             if serials:
-               serial = int(serials[0])+1
-             invoice = form.save(commit=False)
-             invoice.serial = serial
-             invoice.users_id = user.id
-             if request.POST['btnService']:
-                 invoice.type = request.POST['btnService']
-             invoice.save()
-             accion_user(invoice, ADDITION, request.user)
-             acountDescp = AccountDescrip.objects.create(date=invoice.start_date,
-                                                         value=invoice.total,
-                                                         accounts_id=request.POST['account'],
-                                                         document=invoice.id_inv,
-                                                         users_id=user.id,
-                                                         type='invoices'
-                                                         )
-             if request.POST['btnService'] == 'service':
-                 itemtList = request.GET('tbItem')
-                 for item in itemtList:
-                     print(item)
-                 return HttpResponseRedirect(reverse_lazy('accounting:invoices'))
-             else:
-                 itemtList = request.data['tbItem'].rows()
-                 return HttpResponseRedirect(reverse_lazy('accounting:invoices'))
-
+    )
+    form = InvoicesForm()
+    formset = ItemFormSet()
+    items = Item.objects.all()
+    loads = Load.objects.all().order_by('number')
+    accounts = []
+    inc = Account.objects.get(primary=True, name='Income')
+    inc_acconts = Account.objects.filter(accounts_id_id=inc.id_acn)
+    for i in inc_acconts:
+        accounts.append(i)
+    for a in inc_acconts:
+        exp_accont = Account.objects.filter(accounts_id_id=a.id_acn)
+        if exp_accont != None:
+            for ac in exp_accont:
+                accounts.append(ac)
+    if request.method == 'POST':
+        form = InvoicesForm(request.POST)
+        formset = ItemFormSet(request.POST)
+        user = request.user
+        invs = Invoice.objects.filter(business_id=form.data['business']).order_by('-serial')
+        serial = 1
+        serials = []
+        for s in invs:
+            serials.append(s.serial)
+        if form.is_valid() and formset.is_valid():
+            if serials:
+                serial = int(serials[0]) + 1
+            invoice = form.save(commit=False)
+            invoice.serial = serial
+            invoice.users_id = user.id
+            if request.POST['btnService']:
+                invoice.type = request.POST['btnService']
+            invoice.save()
+            accion_user(invoice, ADDITION, request.user)
+            itemhasInv = formset.save(commit=False)
+            for itinv in itemhasInv:
+                    itinv.invoices = invoice
+                    itinv.save()
+            if request.POST['btnService'] == 'service':
+                for i in itemhasInv:
+                    print(i)
+                    item = Item.objects.get(id_ite=i.items_id)
+                    acountDescp = AccountDescrip.objects.create(date=invoice.start_date, value=invoice.total,
+                                                            accounts_id=item.id_ite,
+                                                            document=invoice.id_inv,
+                                                            users_id=user.id,
+                                                            type='invoices')
+            else:
+                itemtList = request.data['tbItem'].rows()
+            return HttpResponseRedirect(reverse_lazy('accounting:invoices'))
+    return render(request, 'accounting/invoices/invoicesForm.html', {
+        'form': form,
+        'formset': formset,
+        'items': items,
+        'loads': loads,
+        'accounts': accounts,
+        'title': 'Create new Invoice'
+    })
 
 
 class InvoicesEdit(UpdateView):
@@ -342,7 +350,7 @@ class InvoicesDelete(DeleteView):
         self.object = self.get_object
         id_inv = kwargs['pk']
         invoice = self.model.objects.get(id_inv=id_inv)
-        acountDescp = AccountDescrip.objects.get(accounts_id=invoice.accounts_id, document=int(invoice.id_inv))
+        acountDescp = AccountDescrip.objects.get(type='invoices', document=int(invoice.id_inv))
         items = InvoicesHasItem.objects.filter(invoices_id=invoice.id_inv)
         acountDescp.delete()
         accion_user(invoice, DELETION, request.user)

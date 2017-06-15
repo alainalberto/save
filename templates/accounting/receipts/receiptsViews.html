@@ -42,7 +42,7 @@
                         <td>{{r.business}}</td>
                         <td>{{r.start_date}}</td>
                         <td>{{r.waytopay}}</td>
-                        <td>{{r.paid}}</td>
+                        <td class="text-center">{% if r.paid %}<i class="fa fa-check text-success" aria-hidden="true"></i>{% endif %}</td>
                         <td>
                             <toolbar class="md-accent">
                                 <a data-type="info" data-trigger="focus" title="Edit Receipt" data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'accounting:receipts_edit' r.id_rec %}" {% if not perms.accounting.change_receipt %} disabled {% endif %}>

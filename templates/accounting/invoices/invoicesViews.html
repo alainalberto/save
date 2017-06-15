@@ -28,7 +28,7 @@
                         <th class="col-md-1">Serial</th>
                         <th class="col-md-2">Customers</th>
                         <th class="col-md-2">Business</th>
-                        <th class="col-md-2">Start Date</th>
+                        <th class="col-md-1">Start Date</th>
                         <th class="col-md-2">Payment Method</th>
                         <th class="col-md-1">Paid</th>
                         <th class="col-md-2">Action</th>
@@ -43,7 +43,7 @@
                         <td>{{i.business}}</td>
                         <td>{{i.start_date}}</td>
                         <td>{{i.waytopay}}</td>
-                        <td>{{i.paid}}</td>
+                        <td class="text-center">{% if i.paid %}<i class="fa fa-check text-success" aria-hidden="true"></i>{% endif %}</td>
                         <td>
                             <toolbar class="md-accent">
                                 <a data-type="info" data-trigger="focus" title="Edit Invoices" data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'accounting:invoices_edit' i.id_inv %}" {% if not perms.accounting.change_invoice %} disabled {% endif %}>

@@ -194,30 +194,30 @@ $(document).ready( function () {
       var column3 = $(this).closest('tr').children()[2].textContent;
       var column4 = $(this).closest('tr').children()[3].textContent;
        if($("tbItem .copy_"+column1).length == 0) {
-       $("#tbItem").append('<tr class="copy_'+column1+'"><td style="display : none">' + column1 + '</td><td class="col-md-1"><input type="number" class="entrada form-control" min="0" value="0"></td><td class="col-md-6">' + column2 + '</td><td class="col-md-6">' + column3 + '</td><td class="col-md-2">' + column4 + '</td><td class="subtotal col-md-2">0</td><td class="col-md-1"><toolbar class="md-accent"><a type="button" class="btn btn-danger btn_remove" data-type="info" data-trigger="focus" title="Add new Item" data-animation="am-flip-x" onclick="deleteitem(this.parentNode.parentNode.rowIndex)"><i class="fa fa-times-circle" aria-hidden="true"></i><tooltip md-direction="left"></tooltip></a></toolbar></td>');
+       $("#tbItem").append('<tr class="copy_'+column1+'"><td style="display : none">' + column1 + '</td><td><input type="number" class="entrada form-control" min="0" value="0"></td><td>' + column2 + '</td><td>' + column3 + '</td><td>' + column4 + '</td><td class="subtotal">0</td><td><toolbar class="md-accent"><a type="button" class="btn btn-danger btn_remove" data-type="info" data-trigger="focus" title="Add new Item" data-animation="am-flip-x" onclick="deleteitem(this.parentNode.parentNode.rowIndex)"><i class="fa fa-times-circle" aria-hidden="true"></i><tooltip md-direction="left"></tooltip></a></td>');
        }
 
     });
 
-   $("#btn_add_new").on("click", function() {
-      var column1 = $('item').val();
-      var column2 = $('account').val();
-      var column3 = $('value').val();
-      alert(column1, column2, column3);
-       $("#tbItem").append('<tr class="copy_'+column1+'"><td style="display : none">' + column1 + '</td><td class="col-md-1"><input type="number" class="entrada form-control" min="0" value="0"></td><td class="col-md-6">' + column1 + '</td><td class="col-md-6">' + column2 + '</td><td class="col-md-2">' + column3 + '</td><td class="subtotal col-md-2">0</td><td class="col-md-1"><toolbar class="md-accent"><a type="button" class="btn btn-danger btn_remove" data-type="info" data-trigger="focus" title="Add new Item" data-animation="am-flip-x" onclick="deleteitem(this.parentNode.parentNode.rowIndex)"><i class="fa fa-times-circle" aria-hidden="true"></i><tooltip md-direction="left"></tooltip></a></toolbar></td>');
-     });
+   $(".listitem").on("change", function() {
+      $('#valueunt').val($(this).val());
+      var column2 = $('#account').val();
+      var column3 = $('#value').val();
+      )};
+
+
 
     $("#tbItem").on("input", "input", function() {
        var input = $(this);
        var columns = input.closest("tr").children();
-       var price = columns.eq(3).text();
+       var price = columns.eq(2).text();
        var calculated = input.val() * price;
-       columns.eq(4).text(calculated.toFixed(2));
+       columns.eq(3).text(calculated.toFixed(2));
        sumar_columnas();
 
     });
     $(".btn_remove").click(function() {
-          $('.btn_remove').parent().parent().remove();
+        $('.btn_remove').parent().parent().remove();
     });
 
     function sumar_columnas(){
@@ -237,7 +237,7 @@ $(document).ready( function () {
     $('.serviTotal').val(total.toFixed(2));
     }
 
-    $('.discount').click(function(){
+    $('.discount').keyup(function(){
      if($('.discount').val() != 0){
        var disc = parseFloat($('.discount').val());
        var subtotal = parseFloat($('.servSutotal').val());

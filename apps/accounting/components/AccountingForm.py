@@ -124,7 +124,7 @@ class EmployeesForm(forms.ModelForm):
             num_words = len(name.split())
             if num_words < 4:
                 raise forms.ValidationError("Not enough words!")
-            return message
+                return message
 
 class InvoicesForm(forms.ModelForm):
         class Meta:
@@ -162,11 +162,24 @@ class InvoicesForm(forms.ModelForm):
                 'paid': forms.CheckboxInput(attrs={'class': 'checkbox'}),
                 'prefix': forms.TextInput(attrs={'placeholder': 'Prefix', 'class': 'form-control input-md'}),
                 'end_date': forms.DateInput(attrs={'placeholder': 'End Date', 'class': 'form-control input-md'}),
-                'discount': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control  discount col-lg-9 col-md-6'}),
+                'discount': forms.NumberInput(attrs={'class': 'form-control  discount col-lg-9 col-md-6'}),
                 'subtotal': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control servSutotal col-lg-9 col-md-6', 'readonly':''}),
                 'total': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control serviTotal col-lg-9 col-md-6', 'readonly':''}),
             }
 
+class ItemHasInvoiceForm(forms.ModelForm):
+    class Meta:
+        model = InvoicesHasItem
+        fields = {
+            'quantity_ind',
+            'items',
+            'value_ind',
+        }
+        widgets = {
+            'quantity_ind': forms.NumberInput(attrs={'placeholder': '0', 'class': 'form-control entrada'}),
+            'items': forms.Select(attrs={'class': 'form-control input-md listitem'}),
+            'value_ind': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control subtotal', 'readonly':''}),
+        }
 
 class ReceiptsForm(forms.ModelForm):
     class Meta:
