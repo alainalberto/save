@@ -200,11 +200,8 @@ $(document).ready( function () {
     });
 
    $(".listitem").on("change", function() {
-      $('#valueunt').val($(this).val());
-      var column2 = $('#account').val();
-      var column3 = $('#value').val();
-      )};
-
+      $('#valueunt').val();
+      });
 
 
     $("#tbItem").on("input", "input", function() {
