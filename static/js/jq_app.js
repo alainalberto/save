@@ -20,7 +20,7 @@ $(document).ready( function () {
 
 
    $('.form_time').datetimepicker({
-        language:  'fr',
+        language:  'en',
         weekStart: 1,
         todayBtn:  1,
 		autoclose: 1,
@@ -193,10 +193,6 @@ $(document).ready( function () {
       var column2 = $(this).closest('tr').children()[1].textContent;
       var column3 = $(this).closest('tr').children()[2].textContent;
       var column4 = $(this).closest('tr').children()[3].textContent;
-       if($("tbItem .copy_"+column1).length == 0) {
-       $("#tbItem").append('<tr class="copy_'+column1+'"><td style="display : none">' + column1 + '</td><td><input type="number" class="entrada form-control" min="0" value="0"></td><td>' + column2 + '</td><td>' + column3 + '</td><td>' + column4 + '</td><td class="subtotal">0</td><td><toolbar class="md-accent"><a type="button" class="btn btn-danger btn_remove" data-type="info" data-trigger="focus" title="Add new Item" data-animation="am-flip-x" onclick="deleteitem(this.parentNode.parentNode.rowIndex)"><i class="fa fa-times-circle" aria-hidden="true"></i><tooltip md-direction="left"></tooltip></a></td>');
-       }
-
     });
 
    $(".listitem").on("change", function() {
@@ -205,13 +201,12 @@ $(document).ready( function () {
 
 
     $("#tbItem").on("input", "input", function() {
-       var input = $(this);
-       var columns = input.closest("tr").children();
-       var price = columns.eq(2).text();
-       var calculated = input.val() * price;
-       columns.eq(3).text(calculated.toFixed(2));
+       var input = $(this).parents("tr").find('.entrada').val();
+       var price = $(this).parents("tr").find('.precie').val();
+       var tax = $(this).parents("tr").find('.tax').val();
+       var calculated = input * price - tax;
+       $(this).parents("tr").find('.subtotal').val(calculated.toFixed(2));
        sumar_columnas();
-
     });
     $(".btn_remove").click(function() {
         $('.btn_remove').parent().parent().remove();
@@ -225,7 +220,8 @@ $(document).ready( function () {
        }
     //itera cada input de clase .subtotal y la suma
     $('.subtotal').each(function() {
-         sum += parseFloat($(this).text());
+          v = parseFloat($(this).val());
+         sum += v
     });
     //cambia valor del total y lo redondea a la segunda decimal
     $('.servSutotal').val(sum.toFixed(2));

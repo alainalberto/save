@@ -171,14 +171,20 @@ class ItemHasInvoiceForm(forms.ModelForm):
     class Meta:
         model = InvoicesHasItem
         fields = {
-            'quantity_ind',
-            'items',
-            'value_ind',
+            'quantity',
+            'description',
+            'accounts',
+            'value',
+            'tax',
+            'subtotal',
         }
         widgets = {
-            'quantity_ind': forms.NumberInput(attrs={'placeholder': '0', 'class': 'form-control entrada'}),
-            'items': forms.Select(attrs={'class': 'form-control input-md listitem'}),
-            'value_ind': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control subtotal', 'readonly':''}),
+            'quantity': forms.NumberInput(attrs={'placeholder': '0', 'class': 'form-control entrada'}),
+            'description': forms.TextInput(attrs={'placeholder': 'Description ', 'class': 'form-control input-md descript'}),
+            'accounts': forms.Select(attrs={'class': 'form-control input-md'}),
+            'value': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control precie'}),
+            'tax': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control tax'}),
+            'subtotal': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control subtotal', 'readonly':''}),
         }
 
 class ReceiptsForm(forms.ModelForm):

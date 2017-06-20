@@ -83,11 +83,9 @@ class Invoice(models.Model):
 
 class Item(models.Model):
     id_ite = models.AutoField(primary_key=True)
-    accounts = models.ForeignKey(Account, on_delete=models.CASCADE)
     name = models.CharField(max_length=20, blank=True, null=True)
-    description = models.CharField(max_length=255, blank=True, null=True)
+    accounts = models.ForeignKey(Account, on_delete=models.CASCADE)
     value = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    list_item = models.BooleanField(default=True)
 
     def __str__(self):
         return '{}'.format(self.name)
@@ -114,11 +112,11 @@ class Payment(models.Model):
     accounts = models.ForeignKey(Account, on_delete=models.CASCADE)  # Field name made lowercase.
     users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
     business = models.ForeignKey(Busines, on_delete=models.CASCADE)
-    start_date_sal = models.DateField(blank=True, null=True)
-    end_date_sal = models.DateField(blank=True, null=True)
-    serial_sal = models.CharField(max_length=20, blank=True, null=True)
-    discount_sal = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    value_sal = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
+    serial = models.CharField(max_length=20, blank=True, null=True)
+    discount  = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    value  = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.name)
@@ -136,9 +134,16 @@ class Fee(models.Model):
 class InvoicesHasItem(models.Model):
     id_ind = models.AutoField(primary_key=True)
     invoices = models.ForeignKey(Invoice, on_delete=models.CASCADE)  # Field name made lowercase.
-    items = models.ForeignKey(Item, on_delete=models.CASCADE)  # Field name made lowercase.
-    quantity_ind = models.IntegerField(blank=True, null=True)
-    value_ind = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    items = models.ForeignKey(Item, on_delete=models.CASCADE, blank=True, null=True)  # Field name made lowercase.
+    accounts = models.ForeignKey(Account, on_delete=models.CASCADE)
+    description = models.CharField(max_length=50, blank=True, null=True)
+    quantity = models.IntegerField(blank=True, null=True)
+    tax = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    value = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+
+    def __str__(self):
+        return '{}'.format(self.description)
 
 class AccountDescrip(models.Model):
     id_acd = models.AutoField(primary_key=True)

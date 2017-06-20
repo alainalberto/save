@@ -224,11 +224,16 @@ class InvoicesView(ListView):
 
 def InvoicesCreate(request):
     ItemFormSet = inlineformset_factory(
-        Invoice,
-        InvoicesHasItem,
-        form=ItemHasInvoiceForm,
-        fields=('quantity_ind', 'items', 'value_ind'),
-
+                          Invoice,
+                          InvoicesHasItem,
+                          form=ItemHasInvoiceForm,
+                          fields=['quantity',
+                                  'description',
+                                  'accounts',
+                                  'value',
+                                  'tax',
+                                  'subtotal'],
+                           extra=5
     )
     form = InvoicesForm()
     formset = ItemFormSet()
@@ -261,21 +266,33 @@ def InvoicesCreate(request):
             invoice.users_id = user.id
             if request.POST['btnService']:
                 invoice.type = request.POST['btnService']
-            invoice.save()
-            accion_user(invoice, ADDITION, request.user)
-            itemhasInv = formset.save(commit=False)
-            for itinv in itemhasInv:
-                    itinv.invoices = invoice
-                    itinv.save()
-            if request.POST['btnService'] == 'service':
-                for i in itemhasInv:
-                    print(i)
-                    item = Item.objects.get(id_ite=i.items_id)
-                    acountDescp = AccountDescrip.objects.create(date=invoice.start_date, value=invoice.total,
-                                                            accounts_id=item.id_ite,
-                                                            document=invoice.id_inv,
-                                                            users_id=user.id,
-                                                            type='invoices')
+                invoice.save()
+                accion_user(invoice, ADDITION, request.user)
+                itemhasInv = formset.save(commit=False)
+
+                for itinv in itemhasInv:
+                   if Item.objects.filter(name__contains=itinv.description):
+                      item = Item.objects.get(name=itinv.description)
+                      itinv.items_id = item.id_ite
+                      itinv.invoices = invoice
+                      itinv.save()
+                      acountDescp = AccountDescrip.objects.create(date=invoice.start_date,
+                                                                value=itinv.subtotal,
+                                                                accounts_id=itinv.accounts_id,
+                                                                document=invoice.id_inv,
+                                                                users_id=user.id,
+                                                                type='invoices')
+                   else:
+                       item = Item.objects.create(name=itinv.description, value=itinv.value, accounts_id=itinv.accounts_id)
+                       itinv.items_id = item.id_ite
+                       itinv.invoices = invoice
+                       itinv.save()
+                       acountDescp = AccountDescrip.objects.create(date=invoice.start_date,
+                                                                   value=itinv.subtotal,
+                                                                   accounts_id=itinv.accounts_id,
+                                                                   document=invoice.id_inv,
+                                                                   users_id=user.id,
+                                                                   type='invoices')
             else:
                 itemtList = request.data['tbItem'].rows()
             return HttpResponseRedirect(reverse_lazy('accounting:invoices'))
@@ -294,12 +311,11 @@ class InvoicesEdit(UpdateView):
     form_class = InvoicesForm
     template_name = 'accounting/invoices/invoicesForm.html'
     success_url = reverse_lazy('accounting:invoices')
-
     def get_context_data(self, **kwargs):
         context = super(InvoicesEdit, self).get_context_data(**kwargs)
         pk = self.kwargs.get('pk',0)
         invoice = self.model.objects.get(id_inv=pk)
-        account = Account.objects.filter(id_acn=invoice.accounts_id)
+        #account = Account.objects.filter(id_acn=invoice.accounts_id)
         accounts = []
         inv = Account.objects.get(primary=True, name='Income')
         inv_acconts = Account.objects.filter(accounts_id_id=inv.id_acn)
@@ -310,17 +326,16 @@ class InvoicesEdit(UpdateView):
             if exp_accont != None:
                 for ac in exp_accont:
                     accounts.append(ac)
-        if 'form' not in context:
+        if 'form' not in context and 'formset' not in context:
             context['form'] = self.form_class()
         context['id'] = pk
-        context['accounts'] = account
+        #context['accounts'] = account
         return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object
         id_inv = kwargs['pk']
         invoice = self.model.objects.get(id_inv=id_inv)
-        invoice.accounts_id = request.POST['account']
         acountDescp = AccountDescrip.objects.get(accounts_id=request.POST['account'], document=int(invoice.id_inv))
         form = self.form_class(request.POST, instance=invoice)
         if form.is_valid():
