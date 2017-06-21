@@ -193,6 +193,9 @@ $(document).ready( function () {
       var column2 = $(this).closest('tr').children()[1].textContent;
       var column3 = $(this).closest('tr').children()[2].textContent;
       var column4 = $(this).closest('tr').children()[3].textContent;
+      $('#tbItem').parents("tr").find('.descript').val(column2);
+      $('#tbItem').parents("tr").find('account')val(column3);
+      $('#tbItem').parents("tr").find('.precie').val(column4);
     });
 
    $(".listitem").on("change", function() {
@@ -203,13 +206,20 @@ $(document).ready( function () {
     $("#tbItem").on("input", "input", function() {
        var input = $(this).parents("tr").find('.entrada').val();
        var price = $(this).parents("tr").find('.precie').val();
-       var tax = $(this).parents("tr").find('.tax').val();
-       var calculated = input * price - tax;
+       var porc = $(this).parents("tr").find('.tax').val();
+       var total = input * price
+       var tax = (total*porc)/100
+       var calculated = total+tax;
        $(this).parents("tr").find('.subtotal').val(calculated.toFixed(2));
        sumar_columnas();
     });
     $(".btn_remove").click(function() {
-        $('.btn_remove').parent().parent().remove();
+        $(this).parents("tr").find('.entrada').val("");
+        $(this).parents("tr").find('.precie').val("");
+        $(this).parents("tr").find('.tax').val("");
+        $(this).parents("tr").find('.descript').val("");
+        $(this).parents("tr").find('account').val('');
+        $(this).parents("tr").find('.subtotal').val("")
     });
 
     function sumar_columnas(){
@@ -220,8 +230,11 @@ $(document).ready( function () {
        }
     //itera cada input de clase .subtotal y la suma
     $('.subtotal').each(function() {
-          v = parseFloat($(this).val());
-         sum += v
+          v = 0;
+          v = $(this).val();
+         if (v != 0){
+           sum += parseFloat(v);
+           }
     });
     //cambia valor del total y lo redondea a la segunda decimal
     $('.servSutotal').val(sum.toFixed(2));

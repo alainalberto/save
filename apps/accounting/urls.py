@@ -40,7 +40,7 @@ urlpatterns = [
     #Invoices
     url(r'^invoices/$', login_required(permission_required('accounting.add_invoice')(InvoicesView.as_view())), name='invoices'),
     url(r'^invoices/create$', login_required(permission_required('accounting.add_invoice')(InvoicesCreate)), name='invoices_create'),
-    url(r'^invoices/edit/(?P<pk>\d+)/$', login_required(permission_required('accounting.change_invoice')(InvoicesEdit.as_view())), name='invoices_edit'),
+    url(r'^invoices/edit/(?P<pk>\d+)/$', login_required(permission_required('accounting.change_invoice')(InvoicesEdit)), name='invoices_edit'),
     url(r'^invoices/(?P<pk>\d+)/$', login_required(permission_required('accounting.delete_invoice')(InvoicesDelete.as_view())), name='invoices_delete'),
     url(r'^invoices/print/(?P<pk>\d+)/$', login_required(permission_required('accounting.add_invoice')(Invoices_pdf)), name='invoices_pdf'),
 

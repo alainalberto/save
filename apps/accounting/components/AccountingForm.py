@@ -162,7 +162,7 @@ class InvoicesForm(forms.ModelForm):
                 'paid': forms.CheckboxInput(attrs={'class': 'checkbox'}),
                 'prefix': forms.TextInput(attrs={'placeholder': 'Prefix', 'class': 'form-control input-md'}),
                 'end_date': forms.DateInput(attrs={'placeholder': 'End Date', 'class': 'form-control input-md'}),
-                'discount': forms.NumberInput(attrs={'class': 'form-control  discount col-lg-9 col-md-6'}),
+                'discount': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control discount col-lg-9 col-md-6'}),
                 'subtotal': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control servSutotal col-lg-9 col-md-6', 'readonly':''}),
                 'total': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control serviTotal col-lg-9 col-md-6', 'readonly':''}),
             }
@@ -181,7 +181,7 @@ class ItemHasInvoiceForm(forms.ModelForm):
         widgets = {
             'quantity': forms.NumberInput(attrs={'placeholder': '0', 'class': 'form-control entrada'}),
             'description': forms.TextInput(attrs={'placeholder': 'Description ', 'class': 'form-control input-md descript'}),
-            'accounts': forms.Select(attrs={'class': 'form-control input-md'}),
+            'accounts': forms.Select(attrs={'class': 'form-control input-md', 'name': 'account'}),
             'value': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control precie'}),
             'tax': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control tax'}),
             'subtotal': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control subtotal', 'readonly':''}),

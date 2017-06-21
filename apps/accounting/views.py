@@ -233,7 +233,7 @@ def InvoicesCreate(request):
                                   'value',
                                   'tax',
                                   'subtotal'],
-                           extra=5
+                           extra=10
     )
     form = InvoicesForm()
     formset = ItemFormSet()
@@ -283,7 +283,7 @@ def InvoicesCreate(request):
                                                                 users_id=user.id,
                                                                 type='invoices')
                    else:
-                       item = Item.objects.create(name=itinv.description, value=itinv.value, accounts_id=itinv.accounts_id)
+                       item = Item.objects.create(name=itinv.description, value=itinv.value, accounts_id=itinv.accounts_id )
                        itinv.items_id = item.id_ite
                        itinv.invoices = invoice
                        itinv.save()
@@ -305,55 +305,75 @@ def InvoicesCreate(request):
         'title': 'Create new Invoice'
     })
 
-
-class InvoicesEdit(UpdateView):
-    model = Invoice
-    form_class = InvoicesForm
-    template_name = 'accounting/invoices/invoicesForm.html'
-    success_url = reverse_lazy('accounting:invoices')
-    def get_context_data(self, **kwargs):
-        context = super(InvoicesEdit, self).get_context_data(**kwargs)
-        pk = self.kwargs.get('pk',0)
-        invoice = self.model.objects.get(id_inv=pk)
-        #account = Account.objects.filter(id_acn=invoice.accounts_id)
-        accounts = []
-        inv = Account.objects.get(primary=True, name='Income')
-        inv_acconts = Account.objects.filter(accounts_id_id=inv.id_acn)
-        for e in inv_acconts:
-            accounts.append(e)
-        for a in inv_acconts:
-            exp_accont = Account.objects.filter(accounts_id_id=a.id_acn)
-            if exp_accont != None:
-                for ac in exp_accont:
-                    accounts.append(ac)
-        if 'form' not in context and 'formset' not in context:
-            context['form'] = self.form_class()
-        context['id'] = pk
-        #context['accounts'] = account
-        return context
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object
-        id_inv = kwargs['pk']
-        invoice = self.model.objects.get(id_inv=id_inv)
-        acountDescp = AccountDescrip.objects.get(accounts_id=request.POST['account'], document=int(invoice.id_inv))
-        form = self.form_class(request.POST, instance=invoice)
-        if form.is_valid():
+def InvoicesEdit(request, pk):
+    ItemFormSet = inlineformset_factory(
+        Invoice,
+        InvoicesHasItem,
+        form=ItemHasInvoiceForm,
+        fields=['quantity',
+                'description',
+                'accounts',
+                'value',
+                'tax',
+                'subtotal'],
+        extra=10
+    )
+    invoice = Invoice.objects.get(id_inv=pk)
+    invitem = InvoicesHasItem.objects.filter(invoices_id=invoice.id_inv)
+    items = Item.objects.all()
+    loads = Load.objects.all().order_by('number')
+    accounts = []
+    inv = Account.objects.get(primary=True, name='Income')
+    inv_acconts = Account.objects.filter(accounts_id_id=inv.id_acn)
+    for e in inv_acconts:
+        accounts.append(e)
+    for a in inv_acconts:
+        exp_accont = Account.objects.filter(accounts_id_id=a.id_acn)
+        if exp_accont != None:
+            for ac in exp_accont:
+                accounts.append(ac)
+    if request.method == 'GET':
+        formset = ItemFormSet()
+        form = InvoicesForm(instance=invoice)
+    else:
+        formset = ItemFormSet(request.POST, instance=invitem)
+        form = InvoicesForm(request.POST, instance=invoice)
+        if form.is_valid() and formset.is_valid():
             form.save()
-            accion_user(invoice, CHANGE, request.user)
-            AccountDescrip.objects.filter(id_acd=acountDescp.id_acd).update(
-                date=form.data['start_date'],
-                value=form.data['total'],
-            )
-            if request.POST['btnService'] == 'service':
-                itemtList = request.GET('tbItem')
-                for item in itemtList:
-                    print(item)
-            else:
-                itemtList = request.data['tbItem'].rows()
+            if request.POST['btnService']:
+                accion_user(invoice, CHANGE, request.user)
+                itemhasInv = formset.save(commit=False)
+
+                for itinv in itemhasInv:
+                    if Item.objects.filter(name__contains=itinv.description):
+                        item = Item.objects.get(name=itinv.description)
+                        itinv.items_id = item.id_ite
+                        itinv.invoices = invoice
+                        itinv.save()
+                        acountDescp = AccountDescrip.objects.get(date=invoice.start_date, accounts_id=itinv.accounts_id, document=invoice.id_inv, type='invoices').update(value=itinv.subtotal)
+
+                    else:
+                        item = Item.objects.create(name=itinv.description, value=itinv.value,
+                                                   accounts_id=itinv.accounts_id)
+                        itinv.items_id = item.id_ite
+                        itinv.invoices = invoice
+                        itinv.save()
+                        acountDescp = AccountDescrip.objects.create(date=invoice.start_date,
+                                                                    value=itinv.subtotal,
+                                                                    accounts_id=itinv.accounts_id,
+                                                                    document=invoice.id_inv,
+                                                                    users_id=request.user.id,
+                                                                    type='invoices')
             return HttpResponseRedirect(reverse_lazy('accounting:invoices'))
-        else:
-            return HttpResponseRedirect(reverse_lazy('accounting:invoices'))
+    return render(request, 'accounting/invoices/invoicesForm.html', {
+        'form': form,
+        'formset': formset,
+        'items': items,
+        'loads': loads,
+        'accounts': accounts,
+        'title': 'Edit new Invoice'
+    })
+
 
 
 class InvoicesDelete(DeleteView):
