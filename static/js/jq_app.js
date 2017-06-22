@@ -1,7 +1,7 @@
 $(document).ready( function () {
 
 //Data tables
-   $(".data-table").DataTable();
+   $(".data-table").dataTable();
 
   // Acordion View Customar_Service
 
@@ -194,7 +194,6 @@ $(document).ready( function () {
       var column3 = $(this).closest('tr').children()[2].textContent;
       var column4 = $(this).closest('tr').children()[3].textContent;
       $('#tbItem').parents("tr").find('.descript').val(column2);
-      $('#tbItem').parents("tr").find('account')val(column3);
       $('#tbItem').parents("tr").find('.precie').val(column4);
     });
 
