@@ -336,7 +336,16 @@
     <div id="page-wrapper">
 
         <div class="container-fluid">
-
+            {% if messager_success %}
+            {% for sms in messager_success %}
+             <div class="alert alert-success" role="alert">{{sms}}</div>
+            {% endfor %}
+            {% endif %}
+            {% if messager_error %}
+            {% for sms in messager_error %}
+             <div class="alert alert-danger" role="alert">{{sms}}</div>
+            {% endfor %}
+            {% endif %}
             {% block content %}
                (% include {% url 'panel:panel' %} %}
             {% endblock content %}

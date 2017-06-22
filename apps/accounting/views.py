@@ -3,6 +3,7 @@ from django.core.urlresolvers import reverse_lazy, reverse
 from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
 from django.forms import inlineformset_factory
+from django.contrib import messages
 from FirstCall.util import accion_user
 from apps.accounting.components.AccountingForm import *
 from apps.accounting.models import *
@@ -32,9 +33,12 @@ class AccountCreate(CreateView):
         user = request.user
         form = self.form_class(request.POST)
         if form.is_valid():
+
+
          account = form.save(commit=False)
          account.users_id = user.id
          account.save()
+         messages.success(request,"Account saved with an extension")
          accion_user(account, ADDITION, request.user)
          return HttpResponseRedirect(reverse_lazy('accounting:accounts'))
 
@@ -89,13 +93,17 @@ class CustomersCreate(CreateView):
              Folder.objects.create(name='Customers', description='Customers', folder='NULL')
          folder_father = Folder.objects.get(name='Customers')
          if form.is_valid():
-             folder = Folder.objects.create(name=form.data['fullname']+"_Customer", description=form.data['fullname']+"_Customer", folder = folder_father.id_fld)
-             customer = form.save(commit=False)
-             customer.folders_id = folder.id_fld
-             customer.users_id = user.id
-             customer.save()
-             accion_user(customer, ADDITION, request.user)
-             return HttpResponseRedirect(self.success_url)
+             if not Customer.objects.get(email__contains=form.data['email'], fullname__contains=form.data['fullname']):
+                 folder = Folder.objects.create(name=form.data['fullname']+"_Customer", description=form.data['fullname']+"_Customer", folder = folder_father.id_fld)
+                 customer = form.save(commit=False)
+                 customer.folders_id = folder.id_fld
+                 customer.users_id = user.id
+                 customer.save()
+                 accion_user(customer, ADDITION, request.user)
+                 return HttpResponseRedirect(self.success_url)
+             else:
+                 messages.error(request,"The customer matches")
+                 return HttpResponseRedirect(reverse_lazy('accounting:customer_create'))
 
 class CustomersEdit(UpdateView):
     model = Customer
@@ -386,12 +394,12 @@ class InvoicesDelete(DeleteView):
         id_inv = kwargs['pk']
         invoice = self.model.objects.get(id_inv=id_inv)
         acountDescp = AccountDescrip.objects.get(type='invoices', document=int(invoice.id_inv))
-        items = InvoicesHasItem.objects.filter(invoices_id=invoice.id_inv)
+        invitem = InvoicesHasItem.objects.filter(invoices_id=invoice.id_inv)
         acountDescp.delete()
         accion_user(invoice, DELETION, request.user)
         invoice.delete()
-        for it in items:
-            item = Item.objects.get(id_ite=it.id_ite)
+        for it in invitem:
+            item = InvoicesHasItem.objects.get(id_ind=it.id_ind)
             item.delete()
         return HttpResponseRedirect(self.success_url)
 
