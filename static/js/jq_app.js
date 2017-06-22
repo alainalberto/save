@@ -1,7 +1,7 @@
 $(document).ready( function () {
 
 //Data tables
-   $(".data-table").dataTable();
+   $(".data-table").DataTable();
 
   // Acordion View Customar_Service
 
