@@ -146,25 +146,24 @@ LOGIN_REDIRECT_URL = reverse_lazy('home')
 LOGOUT_REDIRECT_URL = reverse_lazy('login')
 
 
-"""
-ADMINS = (
-('Alain Alberto', 'alainalberto03@gmail.com'),
-('Ransel Ramos ', 'ranselr@gmail.com'),
-)
+#ADMINS = (
+#('Alain Alberto', 'alainalberto03@gmail.com'),
+#('Ransel Ramos ', 'ranselr@gmail.com'),
+#)
 
-MANAGERS = (
-('Alain Alberto', 'alainalberto03@gmail.com'),
-('Ransel Ramos ', 'ranselr@gmail.com'),
-)
-"""
+#MANAGERS = (
+#('Alain Alberto', 'alainalberto03@gmail.com'),
+#('Ransel Ramos ', 'ranselr@gmail.com'),
+#)
 
-EMAIL_USE_TLS = True
-EMAIL_HOST = ''
-EMAIL_PORT = 25
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackrend'
-EMAIL_SUBJECT_PREFIX = 'ERROR-FIRSTCALL'
+
+#EMAIL_USE_TLS = True
+#EMAIL_HOST = ''
+#EMAIL_PORT = 25
+#EMAIL_HOST_USER = ''
+#EMAIL_HOST_PASSWORD = ''
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackrend'
+#EMAIL_SUBJECT_PREFIX = 'ERROR-FIRSTCALL'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
