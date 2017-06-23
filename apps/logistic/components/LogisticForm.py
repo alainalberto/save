@@ -32,14 +32,14 @@ class LoadsForm(forms.ModelForm):
             'note': 'Note:',
         }
         widgets = {
-            'broker': forms.TextInput(attrs={'placeholder': 'Broker', 'class': 'form-control input-md'}),
+            'broker': forms.TextInput(attrs={'placeholder': 'Broker', 'class': 'form-control input-md', 'required': 'true'}),
             'pickup_from': forms.TextInput(attrs={'placeholder': 'Pick up From', 'class': 'form-control input-md'}),
             'pickup_date': forms.DateTimeInput(attrs={'class': 'form-control input-md'}),
             'deliver': forms.TextInput(attrs={'placeholder': 'Deliver to', 'class': 'form-control input-md'}),
             'dispatch': forms.Select(attrs={'class': 'form-control input-md'}),
             'driver': forms.Select(attrs={'class': 'form-control input-md'}),
             'value': forms.NumberInput(attrs={'placeholder': 'Value', 'class': 'form-control input-md'}),
-            'number': forms.TextInput(attrs={'placeholder': 'Number', 'class': 'form-control input-md'}),
+            'number': forms.TextInput(attrs={'placeholder': 'Number', 'class': 'form-control input-md', 'required': 'true'}),
             'paid': forms.CheckboxInput(attrs={'class': 'checkbox'}),
             'Note': forms.Textarea(attrs={'class': 'form-control input-md'}),
 
@@ -83,9 +83,9 @@ class DriversForm(forms.ModelForm):
             'date_deactivated': 'Deactivated Date:',
         }
         widgets = {
-            'name': forms.TextInput(attrs={'placeholder': 'Name', 'class': 'form-control input-md'}),
+            'name': forms.TextInput(attrs={'placeholder': 'Name', 'class': 'form-control input-md', 'required': 'true'}),
             'comercial_name': forms.TextInput(attrs={'placeholder': 'Commercial Name', 'class': 'form-control input-md'}),
-            'license_numb': forms.NumberInput(attrs={'placeholder': 'License Number', 'class': 'form-control input-md'}),
+            'license_numb': forms.NumberInput(attrs={'placeholder': 'License Number', 'class': 'form-control input-md', 'required': 'true'}),
             'address': forms.TextInput(attrs={'placeholder': 'Address', 'class': 'form-control input-md'}),
             'dob': forms.DateTimeInput(attrs={'class': 'form-control input-md'}),
             'lic_date_exp': forms.DateTimeInput(attrs={'class': 'form-control input-md'}),
@@ -118,7 +118,7 @@ class DispatchForm(forms.ModelForm):
             'date_deactivated': 'Deactivate Date:',
         }
         widgets = {
-            'name': forms.TextInput(attrs={'placeholder': 'Name', 'class': 'form-control input-md'}),
+            'name': forms.TextInput(attrs={'placeholder': 'Name', 'class': 'form-control input-md', 'required': 'true'}),
             'address': forms.TextInput(attrs={'placeholder': 'Address', 'class': 'form-control input-md'}),
             'deactivate': forms.CheckboxInput(attrs={'class': 'checkbox'}),
             'date_deactivated': forms.DateTimeInput(attrs={'class': 'form-control input-md'}),

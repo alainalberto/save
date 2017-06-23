@@ -336,14 +336,12 @@
     <div id="page-wrapper">
 
         <div class="container-fluid">
-            {% if messager_success %}
-            {% for sms in messager_success %}
-             <div class="alert alert-success" role="alert">{{sms}}</div>
-            {% endfor %}
-            {% endif %}
-            {% if messager_error %}
-            {% for sms in messager_error %}
-             <div class="alert alert-danger" role="alert">{{sms}}</div>
+            {% if messages %}
+            {% for sms in messages %}
+             <div class="alert alert-{{sms.tags}} alert-dismissible messager" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>{{sms.tags|upper}} </strong>{{sms}}
+             </div>
             {% endfor %}
             {% endif %}
             {% block content %}

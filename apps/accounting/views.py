@@ -33,14 +33,15 @@ class AccountCreate(CreateView):
         user = request.user
         form = self.form_class(request.POST)
         if form.is_valid():
-
-
-         account = form.save(commit=False)
-         account.users_id = user.id
-         account.save()
-         messages.success(request,"Account saved with an extension")
-         accion_user(account, ADDITION, request.user)
-         return HttpResponseRedirect(reverse_lazy('accounting:accounts'))
+           account = form.save(commit=False)
+           account.users_id = user.id
+           account.save()
+           messages.success(request,"Account saved with an extension")
+           accion_user(account, ADDITION, request.user)
+           return HttpResponseRedirect(reverse_lazy('accounting:accounts'))
+        else:
+            for er in form.errors:
+                messages.error(request, "ERROR: "+er)
 
 def AccountsViews(request):
     primary = Account.objects.filter(primary=True)
@@ -81,6 +82,7 @@ class CustomersCreate(CreateView):
      template_name = 'accounting/customer/customerForm.html'
      success_url = reverse_lazy('accounting:customers')
 
+
      def get(self, request, *args, **kwargs):
          form = self.form_class(initial=self.initial)
          return render(request, self.template_name, {'form': form, 'title': 'Create new Customer'})
@@ -93,17 +95,27 @@ class CustomersCreate(CreateView):
              Folder.objects.create(name='Customers', description='Customers', folder='NULL')
          folder_father = Folder.objects.get(name='Customers')
          if form.is_valid():
-             if not Customer.objects.get(email__contains=form.data['email'], fullname__contains=form.data['fullname']):
-                 folder = Folder.objects.create(name=form.data['fullname']+"_Customer", description=form.data['fullname']+"_Customer", folder = folder_father.id_fld)
+             customer_exist = Customer.objects.filter(email=form.data['email'], fullname=form.data['fullname'])
+             if customer_exist:
+                 messages.error(request,'The customer already exists')
+                 form = self.form_class(initial=self.initial)
+                 return render(request, self.template_name, {'form': form, 'title': 'Create new Customer'})
+             else:
+                 folder = Folder.objects.create(name=form.data['fullname'] + "_Customer",
+                                                description=form.data['fullname'] + "_Customer",
+                                                folder=folder_father.id_fld)
                  customer = form.save(commit=False)
                  customer.folders_id = folder.id_fld
                  customer.users_id = user.id
                  customer.save()
                  accion_user(customer, ADDITION, request.user)
+                 messages.success(request,'The customer was saved successfully')
                  return HttpResponseRedirect(self.success_url)
-             else:
-                 messages.error(request,"The customer matches")
-                 return HttpResponseRedirect(reverse_lazy('accounting:customer_create'))
+         else:
+            for er in form.errors:
+                messages.error(request, "ERROR: "+er)
+            return render(request, self.template_name, {'form': form, 'title': 'Create new Customer'})
+
 
 class CustomersEdit(UpdateView):
     model = Customer
@@ -119,7 +131,12 @@ class CustomersEdit(UpdateView):
         if form.is_valid():
             customer = form.save()
             accion_user(customer, CHANGE, request.user)
+            messages.success(request, 'The customer was update successfully')
             return HttpResponseRedirect(self.success_url)
+        else:
+            for er in form.errors:
+                messages.error(request, "ERROR: "+er)
+            return render(request, self.template_name, {'form': form, 'title': 'Edit Customer'})
 
 
 class CustomersDelete(DeleteView):
@@ -140,6 +157,7 @@ class CustomersDelete(DeleteView):
           for fl in files:
             file = File.objects.get(id_fil=fl.id_fil)
             file.delete()
+        messages.success(request, 'The customer was delete successfully')
         return HttpResponseRedirect(self.success_url)
 
 
@@ -170,6 +188,11 @@ class CustomersService(CreateView):
             company = fotm_company.save(commit=False)
             company.customers = customer.save()
 
+        else:
+            for er in form.errors:
+                messages.error(request, "ERROR: "+er)
+            return render(request, self.template_name, {'form': form, 'title': 'Create new Customer Services'})
+
 
 #Employees
 class EmployeesView(ListView):
@@ -190,9 +213,20 @@ class EmployeesCreate(CreateView):
          user = request.user
          form = self.form_class(request.POST)
          if form.is_valid():
-             employee=form.save()
-             accion_user(employee, ADDITION, request.user)
-             return HttpResponseRedirect(self.success_url)
+             employee_exist = Employee.objects.filter(email=form.data['email'], social_no=form.data['social_no'])
+             if employee_exist:
+                 messages.error(request, 'The employee already exists')
+                 form = self.form_class(initial=self.initial)
+                 return render(request, self.template_name, {'form': form, 'title': 'Create new Employee'})
+             else:
+               employee=form.save()
+               accion_user(employee, ADDITION, request.user)
+               messages.success(request, 'The employee was saved successfully')
+               return HttpResponseRedirect(self.success_url)
+         else:
+             for er in form.errors:
+                 messages.error(request, "ERROR: " + er)
+             return render(request, self.template_name, {'form': form, 'title': 'Create new Employee'})
 
 
 class EmployeesEdit(UpdateView):
@@ -203,13 +237,18 @@ class EmployeesEdit(UpdateView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object
-        id_ = kwargs['pk']
-        employee = self.model.objects.get(id_emp=id)
+        id_emp = kwargs['pk']
+        employee = self.model.objects.get(id_emp=id_emp)
         form = self.form_class(request.POST, instance=employee)
         if form.is_valid():
             employee =form.save()
             accion_user(employee, CHANGE, request.user)
+            messages.success(request, "Employee update with an extension")
             return HttpResponseRedirect(self.success_url)
+        else:
+            for er in form.errors:
+                messages.error(request, "ERROR: "+er)
+            return render(request, self.template_name, {'form': form, 'title': 'Edit new Employee'})
 
 class EmployeesDelete(DeleteView):
     model = Employee
@@ -219,10 +258,11 @@ class EmployeesDelete(DeleteView):
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object
-        id = kwargs['pk']
-        employee = self.model.objects.get(id_emp=id)
+        id_emp = kwargs['pk']
+        employee = self.model.objects.get(id_emp=id_emp)
         accion_user(employee, DELETION, request.user)
         employee.delete()
+        messages.success(request, "Employee delete with an extension")
         return HttpResponseRedirect(self.success_url)
 
 #Invoices
@@ -277,7 +317,6 @@ def InvoicesCreate(request):
                 invoice.save()
                 accion_user(invoice, ADDITION, request.user)
                 itemhasInv = formset.save(commit=False)
-
                 for itinv in itemhasInv:
                    if Item.objects.filter(name__contains=itinv.description):
                       item = Item.objects.get(name=itinv.description)
@@ -285,11 +324,11 @@ def InvoicesCreate(request):
                       itinv.invoices = invoice
                       itinv.save()
                       acountDescp = AccountDescrip.objects.create(date=invoice.start_date,
-                                                                value=itinv.subtotal,
-                                                                accounts_id=itinv.accounts_id,
-                                                                document=invoice.id_inv,
-                                                                users_id=user.id,
-                                                                type='invoices')
+                                                                  value=itinv.subtotal,
+                                                                  accounts_id=itinv.accounts_id,
+                                                                  document=invoice.id_inv,
+                                                                  users_id=user.id,
+                                                                  type='invoices')
                    else:
                        item = Item.objects.create(name=itinv.description, value=itinv.value, accounts_id=itinv.accounts_id )
                        itinv.items_id = item.id_ite
@@ -304,6 +343,12 @@ def InvoicesCreate(request):
             else:
                 itemtList = request.data['tbItem'].rows()
             return HttpResponseRedirect(reverse_lazy('accounting:invoices'))
+        else:
+            for er in form.errors:
+                messages.error(request, "ERROR: "+er)
+            for er in formset.errors:
+                messages.error(request, "ERROR: " + er)
+    messages.success(request, "Invoice saved with an extension")
     return render(request, 'accounting/invoices/invoicesForm.html', {
         'form': form,
         'formset': formset,
@@ -372,14 +417,20 @@ def InvoicesEdit(request, pk):
                                                                     document=invoice.id_inv,
                                                                     users_id=request.user.id,
                                                                     type='invoices')
+            messages.success(request, "Invoice update with an extension")
             return HttpResponseRedirect(reverse_lazy('accounting:invoices'))
-    return render(request, 'accounting/invoices/invoicesForm.html', {
-        'form': form,
-        'formset': formset,
-        'items': items,
-        'loads': loads,
-        'accounts': accounts,
-        'title': 'Edit new Invoice'
+        else:
+            for er in form.errors:
+                messages.error(request, "ERROR: "+er)
+            for er in formset.errors:
+                messages.error(request, "ERROR: " + er)
+        return render(request, 'accounting/invoices/invoicesForm.html', {
+               'form': form,
+               'formset': formset,
+               'items': items,
+               'loads': loads,
+               'accounts': accounts,
+               'title': 'Edit new Invoice'
     })
 
 
@@ -401,6 +452,7 @@ class InvoicesDelete(DeleteView):
         for it in invitem:
             item = InvoicesHasItem.objects.get(id_ind=it.id_ind)
             item.delete()
+        messages.success(request, "Invoice delete with an extension")
         return HttpResponseRedirect(self.success_url)
 
 #Receipts
@@ -451,7 +503,11 @@ class ReceiptsCreate(CreateView):
                                                          users_id=user.id,
                                                          type='receipts'
                                                          )
+             messages.success(request, "Receipt save with an extension")
              return HttpResponseRedirect(reverse_lazy('accounting:receipts'))
+         else:
+             for er in form.errors:
+                 messages.error(request, "ERROR: " + er)
 
 class ReceiptsEdit(UpdateView):
     model = Receipt
@@ -493,9 +549,23 @@ class ReceiptsEdit(UpdateView):
                 date=form.data['start_date'],
                 value=form.data['total'],
             )
+            messages.success(request, "Receipt update with an extension")
             return HttpResponseRedirect(reverse_lazy('accounting:receipts'))
         else:
-            return HttpResponseRedirect(reverse_lazy('accounting:receipts'))
+            for er in form.errors:
+                accounts = []
+                exp = Account.objects.get(primary=True, name='Expenses')
+                exp_acconts = Account.objects.filter(accounts_id_id=exp.id_acn)
+                for e in exp_acconts:
+                    accounts.append(e)
+                for a in exp_acconts:
+                    exp_accont = Account.objects.filter(accounts_id_id=a.id_acn)
+                    if exp_accont != None:
+                        for ac in exp_accont:
+                            accounts.append(ac)
+                messages.error(request, "ERROR: " + er)
+            return render(request, self.template_name, {'accounts': accounts, 'form': form, 'title': 'Create new Receipt'})
+
 
 
 class ReceiptsDelete(DeleteView):
@@ -511,5 +581,5 @@ class ReceiptsDelete(DeleteView):
         acountDescp.delete()
         accion_user(receipt, DELETION, request.user)
         receipt.delete()
-
+        messages.success(request, "Receipt delete with an extension")
         return HttpResponseRedirect(self.success_url)

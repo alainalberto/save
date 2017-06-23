@@ -33,6 +33,6 @@ def Post(request):
     else:
         return HttpResponse('Request must be POST.')
 
-def Messages(request):
+def Message(request):
     c = Chat.objects.all()
     return render(request, 'home/complement/messages.html', {'chat': c})

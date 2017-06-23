@@ -3,6 +3,13 @@ $(document).ready( function () {
 //Data tables
    $(".data-table").dataTable();
 
+// Messager
+     $( ".messager" ).show(500, callback );
+     function callback() {
+      setTimeout(function() {
+        $( ".messager:visible" ).removeAttr( "style" ).fadeOut();
+      }, 1000 );
+    };
   // Acordion View Customar_Service
 
 

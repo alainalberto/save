@@ -107,7 +107,13 @@ class PostCalendar(CreateView):
             calendar = form.save(commit=False)
             calendar.users_id = user.id
             calendar.save()
+            accion_user(calendar, ADDITION, request.user)
+            messages.success(request, 'Event saved with an extension')
             return HttpResponseRedirect(reverse_lazy('panel:calendar'))
+        else:
+            for er in form.errors:
+                messages.error(request, "ERROR: " + er)
+            return render(request, self.template_name, {'form': form, 'title': 'Create new Event'})
 
 class UpdateCalendar(UpdateView):
     model = Calendar
@@ -115,11 +121,35 @@ class UpdateCalendar(UpdateView):
     template_name = 'home/calendar/calendarForm.html'
     success_url = reverse_lazy('panel:calendar')
 
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object
+        id_cal = kwargs['pk']
+        calendar = self.model.objects.get(id=id_cal)
+        form = self.form_class(request.POST, instance=calendar)
+        if form.is_valid():
+            calendar =form.save()
+            accion_user(calendar, CHANGE, request.user)
+            messages.success(request, "Event update with an extension")
+            return HttpResponseRedirect(self.success_url)
+        else:
+            for er in form.errors:
+                messages.error(request, "ERROR: "+er)
+            return render(request, self.template_name, {'form': form, 'title': 'Edit new Event'})
+
 class DeleteCalendar(DeleteView):
     model = Calendar
     form_class = CalendarForm.CalendarForm
     template_name = 'confirm_delete.html'
     success_url = reverse_lazy('panel:calendar')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object
+        id_cal = kwargs['pk']
+        calendar = self.model.objects.get(id=id_cal)
+        accion_user(calendar, DELETION, request.user)
+        calendar.delete()
+        messages.success(request, "Enent delete with an extension")
+        return HttpResponseRedirect(self.success_url)
 
 class Calendar_Panel(TemplateView):
     template_name = 'home/calendar/calendar_panel.html'
@@ -172,7 +202,7 @@ class AlertsCreate(CreateView):
 
      def get(self, request, *args, **kwargs):
          form = self.form_class(initial=self.initial)
-         return render(request, self.template_name, {'form': form})
+         return render(request, self.template_name, {'form': form, 'title': 'Create new Alert'})
 
      def post(self, request, *args, **kwargs):
          form = self.form_class(request.POST)
@@ -182,6 +212,11 @@ class AlertsCreate(CreateView):
              alert.users = user
              alert.save()
              accion_user(alert, ADDITION, request.user)
+             messages.success(request, "Alert save with an extension")
+         else:
+             for er in form.errors:
+                 messages.error(request, "ERROR: " + er)
+             return render(request, self.template_name, {'form': form, 'title': 'Create new Alert'})
          return HttpResponseRedirect(reverse_lazy('panel:panel'))
 
 
@@ -191,10 +226,34 @@ class AlertstEdit(UpdateView):
     template_name = 'alert/alertForm.html'
     success_url = reverse_lazy('panel:allalert')
 
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object
+        id_alt = kwargs['pk']
+        alert = self.model.objects.get(id_alt=id_alt)
+        form = self.form_class(request.POST, instance=alert)
+        if form.is_valid():
+            alert =form.save()
+            accion_user(alert, CHANGE, request.user)
+            messages.success(request, "Alert update with an extension")
+            return HttpResponseRedirect(self.success_url)
+        else:
+            for er in form.errors:
+                messages.error(request, "ERROR: "+er)
+            return render(request, self.template_name, {'form': form, 'title': 'Edit Alert'})
+
 class AlertsDelete(DeleteView):
     model = Alert
     template_name = 'confirm_delete.html'
     success_url = reverse_lazy('panel:allalert')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object
+        id_alt = kwargs['pk']
+        alert = self.model.objects.get(id_alt=id_alt)
+        accion_user(alert, DELETION, request.user)
+        alert.delete()
+        messages.success(request, "Enent delete with an extension")
+        return HttpResponseRedirect(self.success_url)
 
 def change_password(request):
     if request.method == 'POST':

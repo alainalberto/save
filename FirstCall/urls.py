@@ -17,7 +17,7 @@ from django.conf.urls import *
 from django.contrib import admin, admindocs
 from django.contrib.auth.views import login, logout_then_login
 from django.contrib.auth.decorators import login_required, permission_required
-from FirstCall.views import home_view, Chats, Post, Messages
+from FirstCall.views import home_view, Chats, Post, Message
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -31,5 +31,5 @@ urlpatterns = [
     url(r'^logout/', logout_then_login, name='logout'),
     url(r'^chat/$', login_required(Chats), name='chat'),
     url(r'^post/$', login_required(Post), name='post'),
-    url(r'^messages/$', login_required(Messages), name='messages'),
+    url(r'^message/$', login_required(Message), name='message'),
 ]

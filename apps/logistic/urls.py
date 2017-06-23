@@ -1,5 +1,6 @@
 from django.conf.urls import *
 from django.contrib.auth.decorators import login_required, permission_required
+from apps.logistic.components.LogisticPDF import *
 from apps.logistic.views import *
 
 urlpatterns = [
@@ -9,7 +10,7 @@ urlpatterns = [
     url(r'^loads/create$', login_required(permission_required('logistic.add_load')(LoadsCreate.as_view())), name='load_create'),
     url(r'^loads/edit/(?P<pk>\d+)/$', login_required(permission_required('logistic.change_load')(LoadsEdit.as_view())), name='load_edit'),
     url(r'^loads/(?P<pk>\d+)/$', login_required(permission_required('logistic.delete_load')(LoadsDelete.as_view())), name='load_delete'),
-    url(r'^loads/print/(?P<pk>\d+)/$', login_required(permission_required('logistic.add_load')(LoadPDF.as_view())), name='load_pdf'),
+    url(r'^loads/print/(?P<pk>\d+)/$', login_required(permission_required('logistic.add_load')(LoadPDF)), name='load_pdf'),
 
 
     url(r'^drivers/$', login_required(permission_required('logistic.add_driverslogt')(DriversView.as_view())), name='drivers'),
