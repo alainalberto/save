@@ -18,7 +18,7 @@ urlpatterns = [
     url(r'^customers/create$', login_required(permission_required('accounting.add_customer')(CustomersCreate.as_view())), name='customer_create'),
     url(r'^customers/edit/(?P<pk>\d+)/$', login_required(permission_required('accounting.change_customer')(CustomersEdit.as_view())), name='customer_edit'),
     url(r'^customers/(?P<pk>\d+)/$', login_required(permission_required('accounting.delete_customer')(CustomersDelete.as_view())), name='customer_delete'),
-    url(r'^customers/service/$', login_required(permission_required('accounting.add_customer','service')(CustomersService.as_view())), name='customer_service'),
+    url(r'^customers/service/$', login_required(permission_required('accounting.add_customer','service')(CustomersService)), name='customer_service'),
 
    #Receipts
     url(r'^receipts/$', login_required(permission_required('accounting.add_receipt')(ReceiptsView.as_view())), name='receipts'),

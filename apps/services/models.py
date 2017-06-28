@@ -20,7 +20,7 @@ class Companie(models.Model):
     phone = models.IntegerField(blank=True, null=True)
     fax = models.IntegerField(blank=True, null=True)
     ein = models.IntegerField(blank=True, null=True)
-    logo = models.ImageField(blank=True, null=True)
+    logo = models.ImageField(upload_to='img/', blank=True, null=True)
     created_date = models.DateField(blank=True, null=True)
     unity = models.IntegerField(blank=True, null=True)
     deactivate = models.BooleanField(default=False)
@@ -79,17 +79,16 @@ class Driver(models.Model):
 class Insurance(models.Model):
     id_ins = models.AutoField(primary_key=True)
     users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
-    accounts = models.ForeignKey(Account, on_delete=models.CASCADE)  # Field name made lowercase.
-    companies = models.ForeignKey(Companie, on_delete=models.CASCADE)  # Field name made lowercase.
+    customers = models.ForeignKey(Customer, on_delete=models.CASCADE)  # Field name made lowercase.
     down_payment = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
-    pilicy_efective_date = models.DateField(blank=True, null=True)
-    pilicy_date_exp = models.DateField(blank=True, null=True)
+    policy_efective_date = models.DateField(blank=True, null=True)
+    policy_date_exp = models.DateField(blank=True, null=True)
     liability = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
-    pilicy_liability = models.CharField(max_length=45, blank=True, null=True)
+    policy_liability = models.CharField(max_length=45, blank=True, null=True)
     cargo = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
-    cargo_pilicy = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
+    cargo_policy = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
     physical_damage = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
-    physical_damg_pilicy = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
+    physical_damg_policy = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
     sale_type = models.CharField(max_length=20, blank=True, null=True)
     sale_date_fee = models.DateField(blank=True, null=True)
     total = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
@@ -113,7 +112,7 @@ class Maintenance(models.Model):
 class Permission(models.Model):
     id_per = models.AutoField(primary_key=True)
     users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
-    companies = models.ForeignKey(Companie, on_delete=models.CASCADE)  # Field name made lowercase.
+    customers = models.ForeignKey(Customer, on_delete=models.CASCADE)
     date = models.DateField(blank=True, null=True)
     usdot = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
     usdot_pin = models.CharField(max_length=20, blank=True, null=True)
@@ -159,4 +158,53 @@ class Ifta(models.Model):
     gallons = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
 
     def __str__(self):
-        return '{}'.format(self.customers)
+        return '{}'.format(self.trucks.number)
+
+class Plate(models.Model):
+    id_plt = models.AutoField(primary_key=True)
+    trucks = models.ForeignKey(Trucks, on_delete=models.CASCADE)  # Field name made lowercase.
+    users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
+    customers = models.ForeignKey(Customer, on_delete=models.CASCADE)  # Field name made lowercase.
+    date = models.DateField(blank=True, null=True)
+    date_exp = models.DateField(blank=True, null=True)
+    account_number = models.CharField(max_length=45, blank=True, null=True)
+    account_user = models.CharField(max_length=45, blank=True, null=True)
+    account_password = models.CharField(max_length=45, blank=True, null=True)
+
+    def __str__(self):
+        return '{}'.format(self.trucks.number)
+
+class Title(models.Model):
+    id_tle = models.AutoField(primary_key=True)
+    trucks = models.ForeignKey(Trucks, on_delete=models.CASCADE)  # Field name made lowercase.
+    users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
+    customers = models.ForeignKey(Customer, on_delete=models.CASCADE)  # Field name made lowercase.
+    date_reg = models.DateField(blank=True, null=True)
+    date_exp_reg = models.DateField(blank=True, null=True)
+    date_insp = models.DateField(blank=True, null=True)
+    date_exp_insp = models.DateField(blank=True, null=True)
+
+    def __str__(self):
+        return '{}'.format(self.trucks.number)
+
+class Application(models.Model):
+    id_apl = models.AutoField(primary_key=True)
+    date = models.DateTimeField(blank=True, null=True)
+    fullname = models.CharField(max_length=20)
+    company_name = models.CharField(max_length=100, blank=True, null=True)
+    address = models.CharField(max_length=255, blank=True, null=True)
+    phone = models.CharField(max_length=10, blank=True, null=True)
+    no_social = models.CharField(max_length=20, blank=True, null=True)
+    email = models.CharField(max_length=255)
+    license_numb = models.CharField(max_length=45, blank=True, null=True)
+    usdot = models.IntegerField(blank=True, null=True)
+    mc = models.IntegerField(blank=True, null=True)
+    txdmv = models.IntegerField(blank=True, null=True)
+    ein = models.IntegerField(blank=True, null=True)
+    service = models.CharField(max_length=255, blank=True, null=True)
+    note = models.CharField(max_length=255, blank=True, null=True)
+    date_view = models.DateTimeField(blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+
+    def __str__(self):
+        return '{}'.format(self.fullname)

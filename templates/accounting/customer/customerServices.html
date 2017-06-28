@@ -72,8 +72,8 @@
                 <!-- Button (Double) -->
                 <div class="form-group col-md-3 col-md-offset-1">
                     <fieldset>
-                        <div id="listServi" class="list-group">
-                            <legend class="list-group-item active">Services:</legend>
+                        <div id="listServi" class="list-group-success">
+                            <legend class="list-group-item active success ">Services:</legend>
                             <div class="list-group-item">
                                 <input  type="checkbox" name="btnCompany" id="btnCompany">
                                 <label for="btnCompany">Open Company</label>
@@ -81,7 +81,7 @@
                             </div>
                             <div class="list-group-item">
                                 <input type="checkbox" name="btnPermit" id="btnPermit">
-                                <label for="btnPermit">Permission</label>
+                                <label for="btnPermit">Permist</label>
                                 </input>
                             </div>
                             <div class="list-group-item">
@@ -101,7 +101,7 @@
                             </div>
                             <div class="list-group-item">
                                 <input type="checkbox" name="btnDot" id="btnDot">
-                                <label for="btnDot">DOT</label>
+                                <label for="btnDot">Maintenance</label>
                                 </input>
                             </div>
                             <div class="list-group-item">
@@ -113,7 +113,7 @@
                     </fieldset>
                 </div>
                 <div class="form-group col-md-8">
-                    <div class="panel panel-info">
+                    <div class="panel panel-success">
                         <div class="panel-heading">
                             <ul class="nav nav-tabs " role="tablist">
                                 <li id="tabCompany" role="presentation" style="display: none;"><a href="#newCompany" aria-controls="newCompany" role="tab" data-toggle="tab">New Company</a></li>
@@ -121,7 +121,7 @@
                                 <li id="tabTitle" role="presentation" style="display: none;"><a href="#title" aria-controls="title" role="tab" data-toggle="tab">Title Record</a></li>
                                 <li id="tabPlate" role="presentation" style="display: none;"><a href="#plate" aria-controls="plate" role="tab" data-toggle="tab">Plate Registration</a></li>
                                 <li id="tabInsurance" role="presentation" style="display: none;"><a href="#insurance" aria-controls="insurance" role="tab" data-toggle="tab">Insurance</a></li>
-                                <li id="tabDot" role="presentation" style="display: none;"><a href="#dot" aria-controls="dot" role="tab" data-toggle="tab">DOT</a></li>
+                                <li id="tabDot" role="presentation" style="display: none;"><a href="#dot" aria-controls="dot" role="tab" data-toggle="tab">Maintenance</a></li>
                                 <li id="tabIfta" role="presentation" style="display: none;"><a href="#ifta" aria-controls="ifta" role="tab" data-toggle="tab">IFTA</a></li>
                             </ul>
                         </div>
@@ -129,57 +129,65 @@
                             <div  class="tab-content">
                                 <div role="tabpanel" class="tab-pane" id="newCompany">
                                     <div id="idcompany" style="display: none;">
-                                        <fieldset>
-                                            {{ form_company.as_p }}
-                                            <p>Estee s el contenido</p>
-                                        </fieldset>
+                                        {% include 'services/company/companyForm.html'%}
                                     </div>
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="permit">
                                     <div id="idpermit" style="display: none;">
-                                        <fieldset>
-                                            {{ form_permit.as_p }}
-                                            <p>Estee s el </p>
-                                        </fieldset>
+                                            {% include 'services/permit/permitForm.html'%}
                                     </div>
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="title">
                                     <div id="idtitle" style="display: none;">
-                                        <fieldset>
-                                            {{ form_permit.as_p }}
-                                        </fieldset>
+
+                                            {% include 'services/title/titleForm.html'%}
+
                                     </div>
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="plate">
                                     <div id="idplate" style="display: none;">
-                                        <fieldset>
-                                            {{ form_plate.as_p }}
-                                        </fieldset>
+
+                                            {% include 'services/plate/plateForm.html'%}
+
                                     </div>
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="insurance">
                                     <div id="idinsurance" style="display: none;">
-                                        <fieldset>
-                                            {{ form_insurance.as_p }}
-                                        </fieldset>
+
+                                            {% include 'services/insurance/insuranceForm.html'%}
+
                                     </div>
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="dot">
                                     <div id="iddot" style="display: none;">
-                                        <fieldset>
-                                            {{ form_dot.as_p }}
-                                        </fieldset>
+
+                                            {% include 'services/maintenance/maintenanceForm.html'%}
+
                                     </div>
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="ifta">
                                     <div id="idifta" style="display: none;">
-                                        <fieldset>
-                                            {{ form_ifta.as_p }}
-                                        </fieldset>
+
+                                            {% include 'services/ifta/iftaForm.html'%}
+
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <table class="table table-striped">
+                            <thead>
+                            <th>Select Files</th>
+                            <th>File Name</th>
+                            </thead>
+                            <tbody>
+                        {% for f in form_file %}
+                            <tr>
+                                <td>{{f.url}}</td>
+                                <td>{{ f.name }}</td>
+                            </tr>
+                        {% endfor %}
+                         </tbody>
+                        </table>
                     </div>
                 </div>
                 <div class=" col-md-5 col-md-offset-4">

@@ -39,7 +39,7 @@
     <!-- /.row -->
 
     <div class="row">
-       <!--{% if perms.accounting.add_customer %}
+       {% if perms.accounting.add_customer %}
         <a class="" href="{% url 'accounting:customer_service' %}">
             <div class="col-lg-3 col-md-6">
                 <div class="panel panel-primary zoom-mouse">
@@ -49,7 +49,7 @@
                                 <i class="fa fa-user fa-5x"></i>
                             </div>
                             <div class="col-xs-9 text-right">
-                                <h3>Customers</h3>
+                                <h4>Customer Services</h4>
                                 <div>New Customers!</div>
                             </div>
                         </div>
@@ -63,7 +63,7 @@
                 </div>
             </div>
         </a>
-        {% endif %} -->
+        {% endif %}
         {% if perms.accounting.add_customer %}
         <a href="{% url 'accounting:customers' %}">
             <div class="col-lg-3 col-md-6">
@@ -74,7 +74,7 @@
                                 <i class="fa fa-search fa-5x"></i>
                             </div>
                             <div class="col-xs-9 text-right">
-                                <h3>Search</h3>
+                                <h3>Customers</h3>
                                 <div>Search Customers!</div>
                             </div>
                         </div>

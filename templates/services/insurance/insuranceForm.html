@@ -1,0 +1,88 @@
+<fieldset>
+    <div>
+        <strong>Select Coverage:</strong><br/>
+    <div class="btn-group" data-toggle="buttons">
+        <label class="btn btn-primary">
+            <input type="checkbox" id="btnliability" autocomplete="off"> Liability
+        </label>
+        <label class="btn btn-primary">
+            <input type="checkbox" id="btncargo" autocomplete="off"> Cargo
+        </label>
+        <label class="btn btn-primary">
+            <input type="checkbox" id="btnphysical" autocomplete="off"> Physical Damage
+        </label>
+    </div>
+     <br/>
+          <br/>
+    <div id="liability" style="display: none;">
+        <div class="form-group col-md-5 col-md-offset-1" >
+            <label class="label-control">{{form_insurance.liability.label}}</label>
+            {{form_insurance.liability}}
+        </div>
+        <div class="form-group col-md-5 col-md-offset-1" >
+            <label class="label-control">{{form_insurance.policy_liability.label}}</label>
+            {{form_insurance.policy_liability}}
+        </div>
+    </div>
+        <br/>
+    <div id="cargo" style="display: none;">
+        <div class="form-group col-md-5 col-md-offset-1" >
+            <label class="label-control">{{form_insurance.cargo.label}}</label>
+            {{form_insurance.cargo}}
+        </div>
+        <div class="form-group col-md-5 col-md-offset-1" >
+            <label class="label-control">{{form_insurance.cargo_policy.label}}</label>
+            {{form_insurance.cargo_policy}}
+        </div>
+    </div>
+        <br/>
+    <div id="physical" style="display: none;">
+        <div class="form-group col-md-5 col-md-offset-1" >
+            <label class="label-control">{{form_insurance.physical_damage.label}}</label>
+            {{form_insurance.physical_damage}}
+        </div>
+        <div class="form-group col-md-5 col-md-offset-1" >
+            <label class="label-control">{{form_insurance.physical_damg_policy.label}}</label>
+            {{form_insurance.physical_damg_policy}}
+        </div>
+    </div>
+        </div>
+    <div class="form-group col-md-5 col-md-offset-1">
+        <label class="label-control">{{form_insurance.policy_efective_date.label}}</label>
+        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+            {{form_insurance.policy_efective_date}}
+            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+        </div>
+    </div>
+    <div class="form-group col-md-5 col-md-offset-1">
+        <label class="label-control">{{form_insurance.policy_date_exp.label}}</label>
+        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+            {{form_insurance.policy_date_exp}}
+            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+        </div>
+    </div>
+    <div class="form-group col-md-3 col-md-offset-1" >
+        <label class="label-control">{{form_insurance.sale_type.label}}</label>
+        {{form_insurance.sale_type}}
+    </div>
+    <div class="form-group col-md-3 col-md-offset-1" >
+        <label class="label-control">{{form_insurance.sale_date_fee.label}}</label>
+        {{form_insurance.sale_date_fee}}
+    </div>
+    <div class="form-group col-md-3 col-md-offset-1" >
+        <label class="label-control">{{form_insurance.down_payment.label}}</label>
+        {{form_insurance.down_payment}}
+    </div>
+    <div class="form-group col-md-3 col-md-offset-1" >
+        <label class="label-control">{{form_insurance.comision.label}}</label>
+        {{form_insurance.comision}}
+    </div>
+    <div class="form-group col-md-3 col-md-offset-1" >
+        <label class="label-control">{{form_insurance.total.label}}</label>
+        {{form_insurance.total}}
+    </div>
+    <div class="form-group col-md-3 col-md-offset-1" >
+        <label class="label-control">{{form_insurance.paid.label}}</label>
+        {{form_insurance.paid}}
+    </div>
+</fieldset>

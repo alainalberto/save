@@ -1,7 +1,7 @@
 $(document).ready( function () {
 
 //Data tables
-   $(".data-table").dataTable();
+   $(".data-table").DataTable();
 
 // Messager
      $( ".messager" ).show(500, callback );
@@ -167,6 +167,33 @@ $(document).ready( function () {
         else {
             $('#tabIfta').attr("style", "display : none;");
             $('#idifta').attr("style", "display : none;");
+        }
+   });
+
+// Insurance
+
+$('#btnliability').change(function(){
+        if (this.checked) {
+            $('#liability').attr("style", "display : initial;");
+        }
+        else {
+            $('#liability').attr("style", "display : none;");
+        }
+   });
+$('#btncargo').change(function(){
+        if (this.checked) {
+            $('#cargo').attr("style", "display : initial;");
+        }
+        else {
+            $('#cargo').attr("style", "display : none;");
+        }
+   });
+$('#btnphysical').change(function(){
+        if (this.checked) {
+            $('#physical').attr("style", "display : initial;");
+        }
+        else {
+            $('#physical').attr("style", "display : none;");
         }
    });
 

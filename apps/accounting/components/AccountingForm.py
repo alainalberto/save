@@ -110,7 +110,7 @@ class EmployeesForm(forms.ModelForm):
             'lastname': forms.TextInput(attrs={'placeholder': 'Last Name', 'class': 'form-control input-md'}),
             'address': forms.TextInput(attrs={'placeholder': 'Address', 'class': 'form-control input-md'}),
             'social_no': forms.NumberInput(attrs={'placeholder': 'Social Security', 'class': 'form-control input-md', 'required': 'true'}),
-            'date_admis': forms.DateTimeInput(attrs={'placeholder': 'Admission Date', 'class': 'form-control input-md'}),
+            'date_admis': forms.DateInput(attrs={'placeholder': 'Admission Date', 'class': 'form-control input-md'}),
             'phone': forms.NumberInput(attrs={'placeholder': 'Phone', 'class': 'form-control input-md'}),
             'email': forms.EmailInput(attrs={'placeholder': 'Email', 'class': 'form-control input-md', 'required': 'true'}),
             'type_salary': forms.TextInput(attrs={'placeholder': 'Salary Type', 'class': 'form-control input-md'}),

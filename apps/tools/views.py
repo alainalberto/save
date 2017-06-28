@@ -31,7 +31,6 @@ def home_view(requiret):
 
 
 def panel_view(requiret):
-
     balance = []
     income = []
     valueInc = 0

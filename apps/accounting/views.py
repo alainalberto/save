@@ -11,7 +11,8 @@ from apps.logistic.models import Load
 from apps.services.components.ServicesForm import *
 from apps.services.models import *
 from apps.tools.models import Folder
-
+import time
+import datetime
 
 # Create your views here.
 
@@ -88,7 +89,11 @@ class CustomersCreate(CreateView):
          return render(request, self.template_name, {'form': form, 'title': 'Create new Customer'})
 
      def post(self, request, *args, **kwargs):
-         user = request.user
+         user_exist = User.objects.filter(username=request.POST['email'])
+         if user_exist:
+            user = User.objects.get(username=request.POST['email'])
+         else:
+             user = User.objects.create_user(username=request.POST['email'],email=request.POST['email'], password=request.POST['phone'],  is_staff=False, is_active=True)
          form = self.form_class(request.POST)
          folders = Folder.objects.filter(name='Customers')
          if not folders:
@@ -161,37 +166,120 @@ class CustomersDelete(DeleteView):
         return HttpResponseRedirect(self.success_url)
 
 
-class CustomersService(CreateView):
-    model = Customer
-    form_class = CustomerForm
-    template_name = 'accounting/customer/customerServices.html'
-    form_company_class = CompanyForm
-    success_url = reverse_lazy('accounting:customers')
-
-    def get_context_data(self, **kwargs):
-        contexto = super(CustomersService, self).get_context_data(**kwargs)
-        if 'form' not in contexto:
-            contexto['form'] = self.form_class(self.request.GET)
-        if 'from_company' not in contexto:
-            contexto['form_company']= self.form_company_class(self.request.GET)
-        return contexto
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        form = self.form_class(request.POST)
-        fotm_company = self.form_company_class(request.POST)
-        user = request.user
-        if form.is_valid() and fotm_company.is_valid():
-            folder = Folder.create(name="Customer_"+form.name+"_"+form.lastname)
-            customer = form.save(commit=False)
-            customer.users = user
-            company = fotm_company.save(commit=False)
-            company.customers = customer.save()
-
+def CustomersService(request):
+    FileFormSet = inlineformset_factory(
+        Folder,
+        File,
+        form=FileForm,
+        fields=['name',
+                'url',
+                ],
+        extra=10
+    )
+    IftaFormSet = inlineformset_factory(
+        Customer,
+        Ifta,
+        form=IftaForm,
+        fields=['date',
+                'state',
+                'milles',
+                'gallons',
+                'trucks',
+                ],
+        extra=10
+    )
+    form = CustomerForm()
+    form_permit = PermitForm()
+    form_company = CompanyForm()
+    form_file = FileFormSet()
+    form_insurance = InsuranceForm()
+    form_ifta = IftaFormSet()
+    form_mtt = MTTForm()
+    form_title = TitleForm()
+    form_plate = PlateForm()
+    form_contract = ContractForm()
+    if request.method == 'POST':
+        user_exist = User.objects.filter(username=request.POST['email'])
+        if user_exist:
+            user = User.objects.get(username=request.POST['email'])
         else:
-            for er in form.errors:
-                messages.error(request, "ERROR: "+er)
-            return render(request, self.template_name, {'form': form, 'title': 'Create new Customer Services'})
+            user = User.objects.create_user(username=request.POST['email'], email=request.POST['email'],
+                                            password=request.POST['phone'], is_staff=False, is_active=True)
+        date_now = time.strftime("yyyy/mm/dd")
+        user_create = request.user
+        form = CustomerForm(request.POST)
+        form_company = CompanyForm(request.POST, request.FILES['logo'])
+        form_permit = PermitForm(request.POST)
+        form_file = FileFormSet(request.POST, request.FILES['url'])
+        form_insurance = InsuranceForm(request.POST)
+        form_ifta = IftaFormSet(request.POST)
+        form_mtt = MTTForm(request.POST)
+        form_title = TitleForm(request.POST)
+        form_plate = PlateForm(request.POST)
+        form_contract = ContractForm(request.POST)
+        folders = Folder.objects.filter(name='Customers')
+        if not folders:
+            Folder.objects.create(name='Customers', description='Customers', folder='NULL')
+        folder_father = Folder.objects.get(name='Customers')
+        if form.is_valid():
+            customer_exist = Customer.objects.filter(email=form.data['email'], fullname=form.data['fullname'])
+            if customer_exist:
+                messages.error(request, 'The customer already exists')
+                form = CustomerForm(initial=request.initial)
+                return render(request, 'accounting/customer/customerServices.html', {
+                    'form': form,
+                    'form_company': form_company,
+                    'form_permit': form_permit,
+                    'form_ifta': form_ifta,
+                    'form_insurance': form_insurance,
+                    'form_mtt': form_mtt,
+                    'form_contract': form_contract,
+                    'form_title': form_title,
+                    'form_plate': form_plate,
+                    'form_file': form_file,
+                })
+            else:
+                folder = Folder.objects.create(name=form.data['fullname'] + "_Customer",
+                                               description=form.data['fullname'] + "_Customer",
+                                               folder=folder_father.id_fld)
+            customer = form.save(commit=False)
+            customer.folders_id = folder.id_fld
+            customer.users_id = user.id
+            customer.save()
+
+            company = form_company.save(commit=False)
+            company.customers_id = customer.id_cut
+
+
+            form_permit = PermitForm(request.POST)
+            form_file = FileFormSet(request.POST, request.FILES['url'])
+            form_insurance = InsuranceForm(request.POST)
+            form_ifta = IftaFormSet(request.POST)
+            form_mtt = MTTForm(request.POST)
+            form_title = TitleForm(request.POST)
+            form_plate = PlateForm(request.POST)
+            form_contract = ContractForm(request.POST)
+
+            accion_user(customer, ADDITION, request.user)
+            messages.success(request, "Customer saved with an extension")
+    else:
+        for er in form.errors:
+            messages.error(request, "ERROR: " + er)
+        for er in form_company.errors:
+            messages.error(request, "ERROR: " + er)
+
+    return render(request, 'accounting/customer/customerServices.html', {
+           'form': form,
+           'form_company': form_company,
+           'form_permit': form_permit,
+           'form_ifta': form_ifta,
+           'form_insurance': form_insurance,
+           'form_mtt': form_mtt,
+           'form_contract': form_contract,
+           'form_title': form_title,
+           'form_plate': form_plate,
+           'form_file': form_file,
+})
 
 
 #Employees

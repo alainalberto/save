@@ -28,11 +28,11 @@ SECRET_KEY = 'o*&&#z_i@5cmck_-xh8n84wywwp%bmypco2^-#3(^z((69z)2v'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 if socket.gethostname() == 'LAPTOP-RQJ5DVKQ':
-    DEBUG = TEMPLATE_DEBUG = True
+    DEBUG = True
     ALLOWED_HOSTS = []
 else:
-    DEBUG = TEMPLATE_DEBUG = True
-    ALLOWED_HOSTS = ['www.fcintermodal.com']
+    DEBUG = False
+    ALLOWED_HOSTS = ['www.fcintermodal.com', '138.68.17.117']
 
 
 # Application definition
@@ -150,6 +150,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = (os.path.join(BASE_DIR, 'static', 'media'),)
 
 LOGIN_REDIRECT_URL = reverse_lazy('home')
 LOGOUT_REDIRECT_URL = reverse_lazy('login')

@@ -26,7 +26,10 @@ class LoadsCreate(CreateView):
          return render(request, self.template_name, {'form': form, 'title': 'Create new Load'})
 
      def post(self, request, *args, **kwargs):
-         user = request.user
+         if User.objects.get(username=request.POST['license_numb']):
+            user = User.objects.get(username=request.POST['license_numb'])
+         else:
+             user = User.objects.create(username=request.POST['license_numb'], password=request.POST['license_numb'], email=request.POST['email'], is_staff=False, is_active=True)
          form = self.form_class(request.POST)
          if form.is_valid():
              load_exist = Load.objects.filter(broker=form.data['broker'], number=form.data['number'])
@@ -97,7 +100,6 @@ class DriversCreate(CreateView):
          return render(request, self.template_name, {'form': form, 'title': 'Create new Drivers'})
 
      def post(self, request, *args, **kwargs):
-         user = request.user
          form = self.form_class(request.POST)
          if form.is_valid():
              driver_exist = DriversLogt.objects.filter(license_numb=form.data['license_numb'], name=form.data['name'])
@@ -106,15 +108,20 @@ class DriversCreate(CreateView):
                  form = self.form_class(initial=self.initial)
                  return render(request, self.template_name, {'form': form, 'title': 'Create new Drivers'})
              else:
-                driver = form.save(commit=False)
-                driver.users_id = user.id
-                driver.save()
-                accion_user(driver, ADDITION, request.user)
-                messages.success(request, 'Driver save with an extension')
-                return HttpResponseRedirect(reverse_lazy('logistic:drivers'))
+                 user_exist = User.objects.filter(username=request.POST['email'])
+                 if user_exist:
+                     user = User.objects.get(username=request.POST['email'])
+                 else:
+                   user = User.objects.create_user(username=request.POST['email'],email=request.POST['email'], password=request.POST['license_numb'], is_staff=False, is_active=True)
+                 driver = form.save(commit=False)
+                 driver.users_id = user.id
+                 driver.save()
+                 accion_user(driver, ADDITION, request.user)
+                 messages.success(request, 'Driver save with an extension')
+                 return HttpResponseRedirect(reverse_lazy('logistic:drivers'))
          else:
             for er in form.errors:
-                messages.error(request, "ERROR: "+er)
+               messages.error(request, "ERROR: "+er)
 
 class DriversEdit(UpdateView):
     model = DriversLogt

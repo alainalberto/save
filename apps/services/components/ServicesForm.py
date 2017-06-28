@@ -1,5 +1,8 @@
 from django import forms
 from apps.services.models import *
+from apps.tools.models import File
+
+
 
 class CompanyForm(forms.ModelForm):
     class Meta:
@@ -13,6 +16,7 @@ class CompanyForm(forms.ModelForm):
                   'fax',
                   'ein',
                   'unity',
+                  'logo',
                   'deactivate',
         ]
         labels = {
@@ -23,6 +27,7 @@ class CompanyForm(forms.ModelForm):
                   'fax': 'Fax Number:',
                   'ein': 'EIN Number:',
                   'unity': 'Unity:',
+                  'logo': 'Up logo:',
                   'deactivate': 'Is Deactivate:',
         }
         widgets = {
@@ -32,9 +37,244 @@ class CompanyForm(forms.ModelForm):
             'phone': forms.NumberInput(attrs={'placeholder': 'Telepone Number', 'class': 'form-control input-md'}),
             'fax': forms.NumberInput(attrs={'placeholder': 'Fax Number', 'class': 'form-control input-md'}),
             'ein': forms.NumberInput(attrs={'placeholder': 'EIN', 'class': 'form-control input-md'}),
-            'unity': forms.NumberInput(attrs={'placeholder': 'SSN', 'class': 'form-control input-md'}),
+            'unity': forms.NumberInput(attrs={'placeholder': 'Unit', 'class': 'form-control input-md'}),
             'deactivate': forms.CheckboxInput(attrs={'class': 'checkbox'}),
+
         }
 
+class PermitForm(forms.ModelForm):
+    class Meta:
+        model = Permission
+
+        fields = [
+            'usdot',
+            'usdot_pin',
+            'txdmv',
+            'txdmv_user',
+            'txdmv_passd',
+            'txdmv_date',
+            'txdmv_date_exp',
+            'mc',
+            'mc_pin',
+            'boc3',
+            'boc3_date',
+            'ucr',
+        ]
+        labels = {
+            'usdot': 'USDOT Number:',
+            'usdot_pin': 'USDOT Pin:',
+            'txdmv': 'TEXA DMV Number:',
+            'txdmv_user': 'TEXA DMV User:' ,
+            'txdmv_passd': 'TEXA DMV Password:',
+            'txdmv_date': 'TEXA DMV Date:',
+            'txdmv_date_exp': 'TEXA DMV Expiration:',
+            'mc': 'MC Number: ',
+            'mc_pin': 'MC Pin:',
+            'boc3': 'BOC 3 Number:',
+            'boc3_date': 'BOC 3 Date:',
+            'ucr': 'URC:',
+        }
+        widgets = {
+            'usdot': forms.NumberInput(attrs={'placeholder': 'USDOT Number', 'class': 'form-control input-md'}),
+            'usdot_pin': forms.TextInput(attrs={'placeholder': 'USDOT PIN', 'class': 'form-control input-md'}),
+            'txdmv': forms.TextInput(attrs={'placeholder': 'TXDMV Number', 'class': 'form-control input-md'}),
+            'txdmv_user': forms.TextInput(attrs={'placeholder': 'TXDMV User', 'class': 'form-control input-md'}),
+            'txdmv_passd': forms.TextInput(attrs={'placeholder': 'TXDMV Password', 'class': 'form-control input-md'}),
+            'txdmv_date': forms.DateInput(attrs={'placeholder': 'TXDMV Date', 'class': 'form-control input-md'}),
+            'txdmv_date_exp': forms.DateInput(attrs={'placeholder': 'Exp Date', 'class': 'form-control input-md'}),
+            'mc': forms.TextInput(attrs={'placeholder': 'MC Number', 'class': 'form-control input-md'}),
+            'mc_pin': forms.TextInput(attrs={'placeholder': 'MC PIN', 'class': 'form-control input-md'}),
+            'boc3': forms.TextInput(attrs={'placeholder': 'BOC3 Number', 'class': 'form-control input-md'}),
+            'boc3_date': forms.DateInput(attrs={'placeholder': 'BOC3 Date', 'class': 'form-control input-md'}),
+            'ucr': forms.NumberInput(attrs={'placeholder': 'USDOT Number', 'class': 'form-control input-md'}),
+        }
+
+class InsuranceForm(forms.ModelForm):
+    class Meta:
+        model = Insurance
+
+        fields = [
+            'down_payment',
+            'policy_efective_date',
+            'policy_date_exp',
+            'liability',
+            'policy_liability',
+            'cargo',
+            'cargo_policy',
+            'physical_damage',
+            'physical_damg_policy',
+            'sale_type',
+            'sale_date_fee',
+            'total',
+            'comision',
+            'paid',
+        ]
+        labels = {
+            'down_payment': 'Down Payment:',
+            'policy_efective_date': 'Efective Date of Policy:',
+            'policy_date_exp': 'Expire Date Policy:',
+            'liability': 'Liability Value:',
+            'policy_liability': 'Liability Policy Number:',
+            'cargo': 'Cargo Value:',
+            'cargo_policy': 'Cargo Policy Number:',
+            'physical_damage': 'Physical Damage Value:',
+            'physical_damg_policy': 'Physical Policy Number:',
+            'sale_type': 'Sale Type:',
+            'sale_date_fee': 'Sale Date Fee:',
+            'total': 'Total:',
+            'comision': 'Comision:',
+            'paid': 'Is Paid:',
+        }
+        widgets = {
+            'down_payment': forms.NumberInput(attrs={'placeholder': 'value Down', 'class': 'form-control input-md'}),
+            'policy_efective_date': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'policy_date_exp': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'liability': forms.NumberInput(attrs={'placeholder': 'value', 'class': 'form-control input-md'}),
+            'policy_liability': forms.TextInput(attrs={'placeholder': 'policy number', 'class': 'form-control input-md'}),
+            'cargo': forms.NumberInput(attrs={'placeholder': 'value', 'class': 'form-control input-md'}),
+            'cargo_policy': forms.TextInput(attrs={'placeholder': 'policy number', 'class': 'form-control input-md'}),
+            'physical_damage': forms.NumberInput(attrs={'placeholder': 'value', 'class': 'form-control input-md'}),
+            'physical_damg_policy': forms.TextInput(attrs={'placeholder': 'policy number', 'class': 'form-control input-md'}),
+            'sale_type': forms.TextInput(attrs={'placeholder': 'type', 'class': 'form-control input-md'}),
+            'sale_date_fee': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'total': forms.NumberInput(attrs={'placeholder': 'value', 'class': 'form-control input-md'}),
+            'comision': forms.NumberInput(attrs={'placeholder': 'value', 'class': 'form-control input-md'}),
+            'paid': forms.CheckboxInput(attrs={'class': 'checkbox'}),
+        }
+
+class IftaForm(forms.ModelForm):
+    class Meta:
+        model = Ifta
+
+        fields = [
+            'date',
+            'state',
+            'milles',
+            'gallons',
+            'trucks',
+        ]
+        labels = {
+            'date': 'Date:',
+            'state': 'State:',
+            'milles': 'Quantity Milles:',
+            'gallons': 'Gallos',
+            'trucks': 'Truck',
+        }
+        widgets = {
+            'date': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'state': forms.TextInput(attrs={'placeholder': 'State', 'class': 'form-control input-md'}),
+            'milles': forms.NumberInput(attrs={'placeholder': 'value', 'class': 'form-control input-md'}),
+            'gallons': forms.NumberInput(attrs={'placeholder': 'value', 'class': 'form-control input-md'}),
+            'trucks': forms.Select(attrs={'class': 'form-control input-md'}),
+        }
+
+class ContractForm(forms.ModelForm):
+    class Meta:
+        model = Contract
+
+
+        fields = [
+            'description',
+            'serial',
+            'start_date',
+            'end_date',
+            'type',
+        ]
+        labels = {
+            'description': 'Description:',
+            'serial' : 'Serial',
+            'start_date': 'Start Date:',
+            'end_date': 'End Date:',
+            'type': 'Type',
+        }
+        widgets = {
+            'description': forms.TextInput(attrs={'placeholder': 'State', 'class': 'form-control input-md'}),
+            'serial': forms.TextInput(attrs={'placeholder': 'State', 'class': 'form-control input-md'}),
+            'start_date': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'end_date': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'type': forms.TextInput(attrs={'placeholder': 'State', 'class': 'form-control input-md'}),
+        }
+
+class MTTForm(forms.ModelForm):
+    class Meta:
+        model = Maintenance
+
+        fields = [
+            'nota',
+        ]
+        labels = {
+            'nota': 'Description of Maintenance:',
+        }
+        widgets = {
+            'nota': forms.Textarea(attrs={'placeholder': 'State', 'class': 'form-control input-md'}),
+        }
+
+class TitleForm(forms.ModelForm):
+    class Meta:
+        model = Title
+
+        fields = [
+            'date_reg',
+            'date_exp_reg',
+            'date_insp',
+            'date_exp_insp',
+            'trucks',
+        ]
+        labels = {
+            'date_reg': 'Register Date:',
+            'date_exp_reg': 'Register Expire Date:',
+            'date_insp': 'Inspection Date:',
+            'date_exp_insp': 'Inspection Expire Date: ',
+            'trucks': 'Trucks:',
+        }
+        widgets = {
+            'date_reg': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'date_exp_reg': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'date_insp': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'date_exp_insp': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'trucks': forms.Select(attrs={'class': 'form-control input-md'}),
+        }
+
+class PlateForm(forms.ModelForm):
+    class Meta:
+        model = Plate
+
+        fields = [
+            'date',
+            'date_exp',
+            'account_number',
+            'account_user',
+            'account_password',
+            'trucks',
+        ]
+        labels = {
+            'date': 'Date:',
+            'date_exp': 'Expire Date',
+            'account_number': 'Account Number:',
+            'account_user': 'Account User',
+            'account_password': 'Account Password:',
+            'trucks': 'Trucks:',
+        }
+        widgets = {
+            'date': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'date_exp': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'account_number': forms.TextInput(attrs={'placeholder': 'State', 'class': 'form-control input-md'}),
+            'account_user': forms.TextInput(attrs={'placeholder': 'State', 'class': 'form-control input-md'}),
+            'account_password': forms.TextInput(attrs={'placeholder': 'State', 'class': 'form-control input-md'}),
+            'trucks': forms.Select(attrs={'class': 'form-control input-md'}),
+        }
+
+class FileForm(forms.ModelForm):
+    class Meta:
+        model = File
+
+        fields = [
+            'url',
+            'name'
+        ]
+        widgets = {
+            'name': forms.TextInput(attrs={'placeholder': 'name', 'class': 'form-control input-md'}),
+            'url': forms.FileInput(),
+        }
 
 
