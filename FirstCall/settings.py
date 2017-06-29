@@ -32,7 +32,7 @@ if socket.gethostname() == 'LAPTOP-RQJ5DVKQ':
     DEBUG = True
     ALLOWED_HOSTS = []
 else:
-    DEBUG = False
+    DEBUG = True
     ALLOWED_HOSTS = ['www.fcintermodal.com']
 
 
@@ -157,7 +157,6 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_pro')
-
 
 
 MEDIA_URL = '/media/'
