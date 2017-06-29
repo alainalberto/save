@@ -16,6 +16,8 @@ Including another URLconf
 from django.conf.urls import *
 from django.contrib import admin, admindocs
 from django.contrib.auth.views import login, logout_then_login
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_required, permission_required
 from FirstCall.views import home_view, Chats, Post, Message
 
@@ -33,3 +35,9 @@ urlpatterns = [
     url(r'^post/$', login_required(Post), name='post'),
     url(r'^message/$', login_required(Message), name='message'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.MEDIA_ROOT)
+
+
