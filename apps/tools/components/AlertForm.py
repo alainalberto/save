@@ -30,5 +30,5 @@ class AlertForm(forms.ModelForm):
             'show_date': forms.DateInput(attrs={'class': 'form-control input-md'}),
             'end_date': forms.DateInput(attrs={'class': 'form-control input-md'}),
             'deactivated': forms.CheckboxInput(attrs={'class': 'checkbox'}),
-            'group': forms.Select(attrs={'class': 'form-control input-md'}),
+            'group': forms.SelectMultiple(attrs={'class': 'form-control input-md'}),
         }

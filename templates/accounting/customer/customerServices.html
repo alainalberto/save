@@ -1,19 +1,19 @@
 {% extends 'base.html' %}
 {% block content %}
 <section>
-    <form name="form_customer" method="post" class="form" role="form" id="form_customer" validate>{% csrf_token %}
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-3">
-                        <i class="fa fa-clipboard fa-4x"></i>
-                    </div>
-                    <div class="col-xs-9 text-left">
-                        <div><h3>Customer - Services</h3></div>
-                    </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-xs-3">
+                    <i class="fa fa-clipboard fa-4x"></i>
+                </div>
+                <div class="col-xs-9 text-left">
+                    <div><h3>Customer - Services</h3></div>
                 </div>
             </div>
-            <div class="panel-body">
+        </div>
+        <div class="panel-body">
+            <form name="form_customer" method="post" class="form" role="form" id="form_customer" validate>{% csrf_token %}
                 <fieldset>
                     <!-- Form Name -->
                     <!-- Text input-->
@@ -129,46 +129,46 @@
                             <div  class="tab-content">
                                 <div role="tabpanel" class="tab-pane" id="newCompany">
                                     <div id="idcompany" style="display: none;">
-                                        {% include 'services/company/companyForm.html'%}
+                                        {% include 'services/company/CompanyForm.html'%}
                                     </div>
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="permit">
                                     <div id="idpermit" style="display: none;">
-                                            {% include 'services/permit/permitForm.html'%}
+                                        {% include 'services/permit/permitForm.html'%}
                                     </div>
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="title">
                                     <div id="idtitle" style="display: none;">
 
-                                            {% include 'services/title/titleForm.html'%}
+                                        {% include 'services/title/titleForm.html'%}
 
                                     </div>
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="plate">
                                     <div id="idplate" style="display: none;">
 
-                                            {% include 'services/plate/plateForm.html'%}
+                                        {% include 'services/plate/plateForm.html'%}
 
                                     </div>
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="insurance">
                                     <div id="idinsurance" style="display: none;">
 
-                                            {% include 'services/insurance/insuranceForm.html'%}
+                                        {% include 'services/insurance/insuranceForm.html'%}
 
                                     </div>
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="dot">
                                     <div id="iddot" style="display: none;">
 
-                                            {% include 'services/maintenance/maintenanceForm.html'%}
+                                        {% include 'services/maintenance/maintenanceForm.html'%}
 
                                     </div>
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="ifta">
                                     <div id="idifta" style="display: none;">
 
-                                            {% include 'services/ifta/iftaForm.html'%}
+                                        {% include 'services/ifta/iftaForm.html'%}
 
                                     </div>
                                 </div>
@@ -180,14 +180,44 @@
                             <th>File Name</th>
                             </thead>
                             <tbody>
-                        {% for f in form_file %}
+                            {% for f in form_file %}
                             <tr>
                                 <td>{{f.url}}</td>
                                 <td>{{ f.name }}</td>
                             </tr>
-                        {% endfor %}
-                         </tbody>
+                            {% endfor %}
+                            </tbody>
                         </table>
+                    </div>
+                </div>
+                <div class="modal fade" id="police_alert" tabindex="-1" role="dialog" aria-labelledby="Police Expire">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Add Alert URGENT</h4>
+                            </div>
+                            <div class="modal-body">
+                                <fieldset>
+                                    <div class="form-group col-md-6">
+                                        <label class="label-control">Days to be for show alert:</label>
+                                        <select name="police_day">
+                                            <option value="5">5 day</option>
+                                            <option value="15">15 day</option>
+                                            <option value="30">30 day</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-8">
+                                        <label class="label-control">{{ form.group.label }}</label>
+                                        {{ form_alert.group }}
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class=" col-md-5 col-md-offset-4">
@@ -195,8 +225,9 @@
                     <a type="button" href="{% url 'accounting:customers' %}" class="btn btn-danger">Cancel </a>
                     <input type="button" class="btn btn-primary" value="Save and Proces">
                 </div>
-            </div>
+            </form>
         </div>
-    </form>
+    </div>
+
 </section>
 {% endblock %}

@@ -9,10 +9,10 @@ from apps.accounting.components.AccountingForm import *
 from apps.accounting.models import *
 from apps.logistic.models import Load
 from apps.services.components.ServicesForm import *
+from apps.tools.components.AlertForm import AlertForm
 from apps.services.models import *
 from apps.tools.models import Folder
-import time
-import datetime
+from datetime import datetime, date, time
 
 # Create your views here.
 
@@ -198,6 +198,7 @@ def CustomersService(request):
     form_title = TitleForm()
     form_plate = PlateForm()
     form_contract = ContractForm()
+    form_alert = AlertForm()
     if request.method == 'POST':
         user_exist = User.objects.filter(username=request.POST['email'])
         if user_exist:
@@ -205,7 +206,7 @@ def CustomersService(request):
         else:
             user = User.objects.create_user(username=request.POST['email'], email=request.POST['email'],
                                             password=request.POST['phone'], is_staff=False, is_active=True)
-        date_now = time.strftime("yyyy/mm/dd")
+        date_now = datetime.today().strftime("%Y/%m/%d")
         user_create = request.user
         form = CustomerForm(request.POST)
         form_company = CompanyForm(request.POST, request.FILES['logo'])
@@ -217,6 +218,7 @@ def CustomersService(request):
         form_title = TitleForm(request.POST)
         form_plate = PlateForm(request.POST)
         form_contract = ContractForm(request.POST)
+        form_alert = AlertForm(request.POST)
         folders = Folder.objects.filter(name='Customers')
         if not folders:
             Folder.objects.create(name='Customers', description='Customers', folder='NULL')
@@ -428,6 +430,7 @@ def InvoicesCreate(request):
                                                                    document=invoice.id_inv,
                                                                    users_id=user.id,
                                                                    type='invoices')
+                messages.success(request, "Invoice saved with an extension")
             else:
                 itemtList = request.data['tbItem'].rows()
             return HttpResponseRedirect(reverse_lazy('accounting:invoices'))
@@ -436,7 +439,7 @@ def InvoicesCreate(request):
                 messages.error(request, "ERROR: "+er)
             for er in formset.errors:
                 messages.error(request, "ERROR: " + er)
-    messages.success(request, "Invoice saved with an extension")
+
     return render(request, 'accounting/invoices/invoicesForm.html', {
         'form': form,
         'formset': formset,

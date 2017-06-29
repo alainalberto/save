@@ -44,7 +44,7 @@ class Alert(models.Model):
     show_date = models.DateField()
     end_date = models.DateField()
     deactivated = models.BooleanField(default=False)
-    group = models.ForeignKey(Group, blank=True, on_delete=models.CASCADE)
+    group = models.ManyToManyField(Group, blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.description)
