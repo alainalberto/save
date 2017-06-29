@@ -32,8 +32,8 @@ if socket.gethostname() == 'LAPTOP-RQJ5DVKQ':
     DEBUG = True
     ALLOWED_HOSTS = []
 else:
-    DEBUG = False
-    ALLOWED_HOSTS = ['www.fcintermodal.com', '138.68.17.117']
+    DEBUG = True
+    ALLOWED_HOSTS = ['www.fcintermodal.com']
 
 
 # Application definition
