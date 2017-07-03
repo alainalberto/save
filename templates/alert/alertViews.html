@@ -2,14 +2,14 @@
 {% block content %}
 <section>
     <section>
-    <div class="panel panel-warning">
+    <div class="panel panel-{{style}}">
         <div class="panel-heading">
             <div class="row">
                 <div class="col-xs-3">
                     <i class="fa fa-list fa-4x"></i>
                 </div>
                 <div class="col-xs-9 text-left">
-                    <div><h3>List Alerts</h3></div>
+                    <div><h3>{{title}}</h3></div>
                 </div>
             </div>
         </div>
@@ -24,88 +24,38 @@
             </div>
             <br/>
             <div class="table-responsive">
-              <table id="listAlert" class="table data-table table-striped table-bordered table-hover" cellspacing="0" width="100%">
+              <table id="listAlert" class="table data-table table-striped table-hover">
                     <thead>
                     <tr>
-
-                        <th>Description</th>
-                        <th>Group</th>
-                        <th>Action</th>
+                        <th class="col-md-6">Description</th>
+                        <th class="col-md-3">Group</th>
+                        <th class="col-md-1">Action</th>
                     </tr>
                     </thead>
 
-                    {% for c in alertas %}
+                    {% for a in alerts %}
 
-                    {% if request.user.id == c.users_id and c.category == 'Alerts' or grupos.id == c.group.id and c.category == 'Alerts' %}
-                    {% if c.deactivated == 0 %}
+                  {% if a.deactivated == 0 %}
                     <tbody>
                     <tr>
                         <td>
                              <div class="form-group col-md-11 col-md-offset-0">
 
-                       <strong>{{c.users}}:</strong> <font color="#8a6d3b">{{c.description}}</font>
+                                 <strong>{{a.users}}: </strong><samp class="{% if a.category == 'Notification'%} text-success {% endif %} {% if a.category == 'Alert'%} text-warning {% endif %} {% if a.category == 'Urgent'%} text-danger {% endif %}" >{{a.description}}</samp>
                        </div> </td>
                          <td>
-
-                       <strong>{{c.group}}</strong>
+                           <strong>{{a.group.name}}, </strong>
                         </td>
 
                             <td>
-                             {% if request.user.id != c.users_id %}
                             <toolbar class="md-accent">
-                                <a data-type="info" data-trigger="focus" disabled="true"  data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip">
+                                <a data-type="info" href="{% url 'panel:alert_edit' a.id_alt %}" data-trigger="focus" {% if not user == a.users %} disabled="true" {% endif %} data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip">
                                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                     <tooltip md-direction="left"></tooltip>
                                 </a>
                             </toolbar>
                             <toolbar class="md-accent">
-                                <a data-type="info" data-animation="am-flip-x" data-trigger="focus" disabled="true"  type="button" class="btn btn-primary test-tooltip">
-                                    <i class="fa fa-trash" aria-hidden="true"></i>
-                                    <tooltip md-direction="left"></tooltip>
-                                </a>
-                            </toolbar>
-                            {% else %}
-                             <toolbar class="md-accent">
-                                <a data-type="info" data-trigger="focus" title="Edit Notification" data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'panel:alert_edit' c.id_alt %}">
-                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                    <tooltip md-direction="left"></tooltip>
-                                </a>
-                            </toolbar>
-                            <toolbar class="md-accent">
-                                <a data-type="info" data-animation="am-flip-x" data-trigger="focus" title="Delete Notification" type="button" class="btn btn-primary test-tooltip" href="{% url 'panel:alert_delete' c.id_alt %}">
-                                    <i class="fa fa-trash" aria-hidden="true"></i>
-                                    <tooltip md-direction="left"></tooltip>
-                                </a>
-                            </toolbar>
-                            {% endif %}
-
-                        </td>
-
-                    </tr>
-                    </tbody>
-                     {% else %}
-                      {% if request.user.id == c.users_id %}
-                      <tbody>
-                    <tr>
-                        <td>
-                             <div class="form-group col-md-11 col-md-offset-0">
-
-                       <font color="gray"><strong>{{c.users}}:</strong> {{c.description}}</font>
-                       </div> </td>
-                         <td>
-
-                       <strong>{{c.group}}</strong>
-                        </td>
-
-                            <td>
-                             <toolbar class="md-accent">
-                                <a data-type="info" data-trigger="focus" title="Edit Notification" data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'panel:alert_edit' c.id_alt %}">
-                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                    <tooltip md-direction="left"></tooltip>
-                                </a>
-                            </toolbar>
-                            <toolbar class="md-accent">
-                                <a data-type="info" data-animation="am-flip-x" data-trigger="focus" title="Delete Notification" type="button" class="btn btn-primary test-tooltip" href="{% url 'panel:alert_delete' c.id_alt %}">
+                                <a data-type="info" href="{% url 'panel:alert_delete' a.id_alt %}" data-animation="am-flip-x" data-trigger="focus" {% if not user == a.users %} disabled="true" {% endif %}   type="button" class="btn btn-danger test-tooltip">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                     <tooltip md-direction="left"></tooltip>
                                 </a>
@@ -113,13 +63,8 @@
                         </td>
 
                     </tr>
-                    </tbody>
-                     {% endif %}
-
                     {% endif %}
-                    {% endif %}
-                       {% endfor %}
-
+                    {% endfor %}
                 </table>
             </div>
         </div>

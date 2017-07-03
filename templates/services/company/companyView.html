@@ -1,0 +1,44 @@
+<fieldset>
+    <div class="form-group col-md-8 col-md-offset-1" >
+        <label class="label-control">Company Name:</label>
+        <div>{{company.name}}</div>
+    </div>
+    <div class="form-group col-md-8 col-md-offset-1" >
+        <label class="label-control">Attorney`s Name:</label>
+        <div>{{company.attorney}}</div>
+    </div>
+    <div class="form-group col-md-8 col-md-offset-1" >
+        <label class="label-control">Address:</label>
+        <div>{{company.address}}</div>
+    </div>
+    <div class="form-group col-md-4 col-md-offset-1" >
+        <label class="label-control">Phone Number:</label>
+        <div>{{company.phone}}</div>
+    </div>
+    <div class="form-group col-md-4 col-md-offset-1" >
+        <label class="label-control">Fax Number:</label>
+        {{company.fax}}
+    </div>
+    <div class="form-group col-md-4 col-md-offset-1" >
+        <label class="label-control">EIN Number:</label>
+        <div>{{company.ein}}</div>
+    </div>
+    <div class="form-group col-md-2 col-md-offset-1" >
+        <label class="label-control">Unity:  </label>
+        {{company.unity}}
+    </div>
+    <div class="form-group col-md-6 col-md-offset-1" >
+        <label class="label-control">Logo:</label>
+        {{company.logo}}
+    </div>
+    {% if company.deactivated %}
+    <div class="form-group col-md-3 col-md-offset-1" >
+        <label class="label-control">Is Deactivate:</label>
+        {{company.deactivate}}
+    </div>
+    <div class="form-group col-md-3 col-md-offset-1" >
+        <label class="label-control">Deactivate Date:</label>
+        {{company.deactivate_date}}
+    </div>
+    {% endif %}
+</fieldset>

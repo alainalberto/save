@@ -34,7 +34,7 @@
                 <tbody>
                 {% for c in object_list %}
                 <tr>
-                    <td>{{c.fullname}}</td>
+                    <td><a href="{% url 'accounting:customer_view' c.id_cut %}">{{c.fullname}}</a></td>
                     <td>{{c.company_name}}</td>
                     <td>{{c.address}}</td>
                     <td>{{c.phone}}</td>

@@ -22,12 +22,7 @@ from django.contrib import messages
 # Create your views here.
 
 def home_view(requiret):
-    alertNot = Alert.objects.filter(category='Notification')
-    alertAlt = Alert.objects.filter(category='Alerts')
-    alertUrg = Alert.objects.filter(category='Urgents')
-    allalert = alertNot.count() + alertAlt.count() + alertUrg.count()
-    contexto = {'notif': alertNot.count(),'alert': alertAlt.count(), 'urgent': alertUrg.count(), 'allalert': allalert}
-    return render(requiret, 'home/complement/panel.html', contexto)
+    return render(requiret, 'home/complement/panel.html')
 
 
 def panel_view(requiret):
@@ -87,11 +82,7 @@ def panel_view(requiret):
             balance.append({'account': e.name, 'income': valueInc, 'expense': valueExp, 'earning': str(valueEarn)})
 
 
-    alertNot = Alert.objects.filter(category='Notification')
-    alertAlt = Alert.objects.filter(category='Alerts')
-    alertUrg = Alert.objects.filter(category='Urgents')
-    allalert = alertNot.count() + alertAlt.count() + alertUrg.count()
-    contexto = {'notif': alertNot.count(), 'alert': alertAlt.count(), 'urgent': alertUrg.count(), 'allalert': allalert, 'balance': balance}
+    contexto = {'balance': balance}
     return render(requiret, 'home/complement/panel.html', contexto)
 
 class PostCalendar(CreateView):
@@ -119,6 +110,16 @@ class UpdateCalendar(UpdateView):
     form_class = CalendarForm.CalendarForm
     template_name = 'home/calendar/calendarForm.html'
     success_url = reverse_lazy('panel:calendar')
+
+    def get_context_data(self, **kwargs):
+        context = super(UpdateCalendar, self).get_context_data(**kwargs)
+        pk = self.kwargs.get('pk', 0)
+        event = self.model.objects.get(id=pk)
+        if 'form' not in context:
+            context['form'] = self.form_class()
+        context['id'] = pk
+        context['event'] = event
+        return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object
@@ -170,29 +171,24 @@ def GetCalendar(requiret):
 
 #Alert
 def NotificationView(requiret):
-    grupos = Group.objects.get(user=requiret.user)
-    notifications = Alert.objects.all()
-    contexto = {'notifications': notifications, 'grupos': grupos}
-    return render(requiret, 'alert/notificationViews.html', contexto)
+    notifications = Alert.objects.filter(category='Notification')
+    contexto = {'alerts': notifications, 'title':'List Notification', 'style':'success'}
+    return render(requiret, 'alert/alertViews.html', contexto)
 
 def AlertView(requiret):
-    grupos = Group.objects.get(user=requiret.user)
-    alertas = Alert.objects.all()
-    contexto = {'alertas': alertas, 'grupos': grupos}
+    alertas = Alert.objects.filter(category='Alert')
+    contexto = {'alerts': alertas, 'title':'List Alert', 'style':'warning'}
     return render(requiret, 'alert/alertViews.html', contexto)
 
 def UrgentView(requiret):
-    grupos = Group.objects.get(user=requiret.user)
-    urgents = Alert.objects.all()
-    contexto = {'urgents': urgents, 'grupos': grupos}
-    return render(requiret, 'alert/urgentViews.html', contexto)
+    urgents = Alert.objects.filter(category='Urgent')
+    contexto = {'alerts': urgents, 'title':'List Urgent', 'style':'danger'}
+    return render(requiret, 'alert/alertViews.html', contexto)
 
 def AllalertView(requiret):
-    grupos = Group.objects.get(user=requiret.user)
-    #Reserved.objects.filter(client=client_id).order_by('-check_in')
     allalert = Alert.objects.all().order_by('-category')
-    contexto = {'allalert': allalert, 'grupos': grupos}
-    return render(requiret, 'alert/allalertViews.html', contexto)
+    contexto = {'alerts': allalert, 'title':'List All Alerts', 'style':'primary'}
+    return render(requiret, 'alert/alertViews.html', contexto)
 
 class AlertsCreate(CreateView):
      model = Alert

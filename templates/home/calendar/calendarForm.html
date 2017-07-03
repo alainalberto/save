@@ -10,7 +10,7 @@
       <div class="col-xs-9 text-left">
           <div><h3>{{ title }} Event</h3></div>
            <div class="col-xs-9 col-md-offset-10">
-              <a type="button" class="btn btn-danger"><span><i class="fa fa-calendar-minus-o"></i> Delete </span></a>
+           {% if event %} <a type="button" class="btn btn-danger" href="{% url 'panel:calendar_delete' event.id %}"><span><i class="fa fa-calendar-minus-o"></i> Delete </span></a>  {% endif %}
            </div>
       </div>
     </div>

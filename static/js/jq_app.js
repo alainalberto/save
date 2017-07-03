@@ -222,13 +222,20 @@ $('#btnphysical').change(function(){
         }
    });
 
-   $(".btn_add").on("click", function() {
+   $(".btn_add").click(function() {
       var column1 = $(this).closest('tr').children()[0].textContent;
       var column2 = $(this).closest('tr').children()[1].textContent;
       var column3 = $(this).closest('tr').children()[2].textContent;
       var column4 = $(this).closest('tr').children()[3].textContent;
-      $('#tbItem').parents("tr").find('.descript').val(column2);
-      $('#tbItem').parents("tr").find('.precie').val(column4);
+      $('#tbItem tr').each(function(index, element){
+          if($(element).find("td input").eq(1).val() == ""){
+            $(element).find("td input").eq(1).val(column2);
+            $(element).find(".account").val(column1);
+            $(element).find("td input").eq(2).val(column4);
+             return false;
+          }
+       });
+
     });
 
    $(".listitem").on("change", function() {
@@ -251,8 +258,9 @@ $('#btnphysical').change(function(){
         $(this).parents("tr").find('.precie').val("");
         $(this).parents("tr").find('.tax').val("");
         $(this).parents("tr").find('.descript').val("");
-        $(this).parents("tr").find('account').val('');
+        $(this).parents("tr").find('.account').val('');
         $(this).parents("tr").find('.subtotal').val("")
+        sumar_columnas();
     });
 
     function sumar_columnas(){

@@ -18,6 +18,7 @@ urlpatterns = [
     url(r'^customers/create$', login_required(permission_required('accounting.add_customer')(CustomersCreate.as_view())), name='customer_create'),
     url(r'^customers/edit/(?P<pk>\d+)/$', login_required(permission_required('accounting.change_customer')(CustomersEdit.as_view())), name='customer_edit'),
     url(r'^customers/(?P<pk>\d+)/$', login_required(permission_required('accounting.delete_customer')(CustomersDelete.as_view())), name='customer_delete'),
+    url(r'^customers/view/(?P<pk>\d+)/$', login_required(permission_required('accounting.change_customer')(CustomerView)), name='customer_view'),
     url(r'^customers/service/$', login_required(permission_required('accounting.add_customer','service')(CustomersService)), name='customer_service'),
 
    #Receipts
@@ -40,8 +41,9 @@ urlpatterns = [
     #Invoices
     url(r'^invoices/$', login_required(permission_required('accounting.add_invoice')(InvoicesView.as_view())), name='invoices'),
     url(r'^invoices/create$', login_required(permission_required('accounting.add_invoice')(InvoicesCreate)), name='invoices_create'),
-    url(r'^invoices/edit/(?P<pk>\d+)/$', login_required(permission_required('accounting.change_invoice')(InvoicesEdit)), name='invoices_edit'),
+    url(r'^invoices/edit/(?P<pk>\d+)/$', login_required(permission_required('accounting.change_invoice')(InvoicesEdit.as_view())), name='invoices_edit'),
     url(r'^invoices/(?P<pk>\d+)/$', login_required(permission_required('accounting.delete_invoice')(InvoicesDelete.as_view())), name='invoices_delete'),
     url(r'^invoices/print/(?P<pk>\d+)/$', login_required(permission_required('accounting.add_invoice')(Invoices_pdf)), name='invoices_pdf'),
+    url(r'^invoices/view/(?P<pk>\d+)/$', login_required(permission_required('accounting')(InvoiceView)), name='invoices_view'),
 
 ]

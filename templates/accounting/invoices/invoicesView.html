@@ -13,101 +13,62 @@
                 </div>
             </div>
             <div class="panel-body">
-                <form name="form_invoices" method="post" class="form" role="form" id="form_invoices" validate>{% csrf_token %}
                 <p class="bg-info"><strong>Invoice Header</strong></p>
-                <fieldset>
+
                     <!-- Form Name -->
                     <!-- Text input-->
-                     <div class="form-group col-md-1 col-md-offset-1">
-                        <label class="label-control">{{ form.prefix.label }}</label>
-                        {{ form.prefix }}
+                    <div class="form-group col-md-1 col-md-offset-1">
+                        <label class="label-control">Prefix: </label>
+                         <div>{{invoice.prefix}}</div>
+                    </div>
+                    <div class="form-group col-md-1 col-md-offset-1">
+                        <label class="label-control">Serial:</label>
+                         <div>{{invoice.serial}}</div>
                     </div>
                     <div class="form-group col-md-3 col-md-offset-1">
-                        <label class="label-control">{{ form.start_date.label }}</label>
-                        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                            {{ form.start_date }}
-                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
-                        </div>
+                        <label class="label-control">Start Date: </label>
+                        <div>{{invoice.start_date}}</div>
                     </div>
                     <div class="form-group col-md-3 col-md-offset-1">
-                        <label class="label-control">{{ form.end_date.label }}</label>
-                        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                            {{form.end_date}}
-                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
-                        </div>
+                        <label class="label-control">End Date: </label>
+                         <div>{{invoice.end_date}}</div>
                     </div>
                     <div class="form-group col-md-3 col-md-offset-1">
-                        <label class="label-control">{{ form.business.label }} </label>
-                        {{ form.business }}
+                        <label class="label-control">Business: </label>
+                        <div>{{invoice.business}}</div>
                     </div>
                     <!-- Select Basic -->
                     <div class="form-group col-md-3 col-md-offset-1">
-                        <label class="label-control">{{ form.waytopay.label }} </label>
-                        {{ form.waytopay }}
+                        <label class="label-control">Payment Method: </label>
+                         <div>{{invoice.waytopay}}</div>
                     </div>
                     <div class="form-group col-md-3 col-md-offset-1">
-                        <label class="label-control">{{ form.customers.label }} </label>
-                        {{ form.customers }}
+                        <label class="label-control">Customers: </label>
+                         <div>{{invoice.customers}}</div>
                     </div>
                     <br/>
-                    </fieldset>
-                    <fieldset>
-                    <div class="form-group col-md-3 col-md-offset-2">
+                    <div class="form-group col-md-3 col-md-offset-1">
                         <div class="list-group" name="type">
                             <legend class="list-group-item active">Type of description:</legend>
-                            <div class="radio active">
+                            {% if invoice.type == 'service' %}
+                            <div>
                                 <label>
-                                    <input type="radio" name="btnService" id="btnService" value="service" checked>
                                     Service
                                 </label>
                             </div>
-                            <div class="radio">
+                            {% else %}
+                            <div>
                                 <label>
-                                    <input type="radio" disabled name="btnService" id="btnLoad" value="load">
                                     Load
                                 </label>
                             </div>
+                            {% endif %}
                         </div>
                     </div>
                     <br/>
-                </fieldset>
-                    <fieldset>
-                        <p class="bg-info"><strong>Drescription to Invoice</strong></p>
-                        <div class="modal fade" id="itemList" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title text-center" id="myModalLabel"><strong>Items Services List</strong></h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <table id="first_table" class="table table-bordered">
-                                            <thead>
-                                            <tr>
-                                                <th class="text-center " style="display : none"></th>
-                                                <th class="text-center col-md-4">Item</th>
-                                                <th class="text-center col-md-4">Account</th>
-                                                <th class="text-center col-md-3">Value</th>
-                                                <th class="text-center col-md-1">Action</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            {% for item in items %}
-                                            <tr>
-                                                <td style="display : none">{{item.accounts.id_acn}}</td>
-                                                <td>{{item.name}}</td>
-                                                <td>{{item.accounts}}</td>
-                                                <td>{{item.value}}</td>
-                                                <td>
-                                                    <a type="button" class="btn btn-info btn_add">Add</a>
-                                                </td>
-                                            </tr>
-                                            {% endfor %}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <div class="form-group col-md-offset-1">
+                        <!-- <p class="bg-info"><strong>Drescription to Invoice</strong></p>-->
+                       {% if invoice.type == 'service' %}
                         <div id="panelService" style="...">
                             <div class="form-group col-md-offset-11">
                                 <a type="button" id="addService" class="btn btn-success test-tooltip" data-toggle="modal" data-target="#itemList"data-type="info" data-trigger="focus" title="Item List" data-animation="am-flip-x">
@@ -125,58 +86,48 @@
                                     <th class="col-md-1">Unit Price</th>
                                     <th class="col-md-1">Tax</th>
                                     <th class="col-md-1">SubTotal</th>
-                                    <th class="text-center col-md-1">Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {{ formset.management_form }}
-                                 {% for form in formset %}
-                                 {{ form.non_field_errors }}
+                                 {% for it in invitems %}
                                 <tr>
-                                    <td>{{ form.quantity }}</td>
-                                    <td>{{ form.description }}</td>
-                                    <td>{{ form.accounts }}</td>
-                                    <td>{{ form.value }}</td>
-                                    <td>{{ form.tax }}</td>
-                                    <td>{{ form.subtotal}}</td>
-                                    <td>
-                                        <a type="button" class="btn btn-danger btn_remove" data-type="info" data-trigger="focus" title="Clear Item" data-animation="am-flip-x">
-                                            <i class="fa fa-times-circle" aria-hidden="true"></i>
-                                            <tooltip md-direction="left"></tooltip>
-                                        </a>
-                                    </td>
+                                    <td>{{ it.quantity }}</td>
+                                    <td>{{ it.description }}</td>
+                                    <td>{{ it.accounts }}</td>
+                                    <td>{{ it.value }}</td>
+                                    <td>{{ it.tax }}</td>
+                                    <td>{{ it.subtotal}}</td>
                                 </tr>
                                 {% endfor %}
                                 </tbody>
                             </table>
                                 <div class="form-group col-xs-9 col-md-2 col-md-offset-1">
-                                    <label class="label-control">{{form.subtotal.label}}</label>
+                                    <label class="label-control">Subtotal: </label>
                                     <div class="input-group">
-                                        <span class="input-group-addon">$</span>
-                                        {{form.subtotal}}
+                                         <div><span>$</span>{{invoice.subtotal}}</div>
                                     </div>
                                 </div>
                                 <div class="form-group col-xs-9 col-md-2 col-md-offset-1">
-                                    <label class="label-control"> {{form.discount.label}} </label>
+                                    <label class="label-control">Discount: </label>
                                     <div class="input-group">
-                                        <span class="input-group-addon">$</span>
-                                        {{form.discount}}
+                                        <div><span>$</span>{{invoice.discount}}</div>
                                     </div>
                                 </div>
                                 <div class="form-group col-md-2 col-md-offset-1">
-                                    <label class="label-control col-lg-9">{{form.total.label}}</label>
+                                    <label class="label-control col-lg-9">Total: </label>
                                     <div class="input-group">
-                                        <span class="input-group-addon">$</span>
-                                        {{form.total}}
+                                        <div><span>$</span>{{invoice.total}}</div>
                                     </div>
                                 </div>
                                 <div class="form-group col-md-2 col-md-offset-1" >
-                                    <label class="label-control">{{form.paid.label}} </label>
-                                    {{form.paid}}
+                                    <label class="label-control">Is Paid:</label>
+                                    <div>{{invoice.paid}}</div>
                                 </div>
 
                             </div>
-                        <div id="panelLoad" style="display : none">
+                          {% endif %}
+                         {% if invoice.type == 'load' %}
+                        <div id="panelLoad">
                             <div class="form-group">
                                 <div class="col-md-6" >
                                     <select id="selecLoad" class="form-control">
@@ -256,13 +207,8 @@
 
                             </div>
                         </div>
-                    </fieldset>
-                    <!-- Button (Double) -->
-                    <div class="form-group col-md-5 col-md-offset-4">
-                        <input type="submit" class="btn btn-success" value="Save">
-                        <a type="button" href="{% url 'accounting:invoices' %}" class="btn btn-danger">Cancel </a>
-                    </div>
-                </form>
+                {% endif %}
+            </div>
             </div>
          </div>
 

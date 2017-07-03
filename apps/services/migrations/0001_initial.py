@@ -57,7 +57,7 @@ class Migration(migrations.Migration):
                 ('end_date', models.DateField(blank=True, null=True)),
                 ('type', models.CharField(blank=True, max_length=20, null=True)),
                 ('customer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='accounting.Customer')),
-                ('files', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tools.File')),
+                ('files', models.ForeignKey(blank=True, null=True, to='tools.File')),
                 ('users', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),

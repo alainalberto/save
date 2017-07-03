@@ -12,8 +12,8 @@ from apps.services.components.ServicesForm import *
 from apps.tools.components.AlertForm import AlertForm
 from apps.services.models import *
 from apps.tools.models import Folder
-from datetime import datetime, date, time
-
+from datetime import datetime, date, time, timedelta
+import html
 # Create your views here.
 
 
@@ -76,6 +76,10 @@ def AccountDocument(request, pk):
 class CustomersView(ListView):
     model = Customer
     template_name = 'accounting/customer/customerViews.html'
+
+def CustomerView(request, pk):
+       customer = Customer.objects.get(id_cut=pk)
+       return render(request, 'accounting/customer/customerView.html', {'customer': customer, 'title': 'Customer Folder'})
 
 class CustomersCreate(CreateView):
      model = Customer
@@ -199,6 +203,7 @@ def CustomersService(request):
     form_plate = PlateForm()
     form_contract = ContractForm()
     form_alert = AlertForm()
+
     if request.method == 'POST':
         user_exist = User.objects.filter(username=request.POST['email'])
         if user_exist:
@@ -206,7 +211,8 @@ def CustomersService(request):
         else:
             user = User.objects.create_user(username=request.POST['email'], email=request.POST['email'],
                                             password=request.POST['phone'], is_staff=False, is_active=True)
-        date_now = datetime.today().strftime("%Y/%m/%d")
+        formatDate = "%Y/%m/%d"
+        date_now = datetime.today()
         user_create = request.user
         form = CustomerForm(request.POST)
         form_company = CompanyForm(request.POST, request.FILES['logo'])
@@ -239,6 +245,7 @@ def CustomersService(request):
                     'form_title': form_title,
                     'form_plate': form_plate,
                     'form_file': form_file,
+                    'form_alert': form_alert,
                 })
             else:
                 folder = Folder.objects.create(name=form.data['fullname'] + "_Customer",
@@ -251,16 +258,128 @@ def CustomersService(request):
 
             company = form_company.save(commit=False)
             company.customers_id = customer.id_cut
+            company.folders_id = folder.id_fld
+            company.users_id = user_create.id
+            company.created_date = date_now.strftime(formatDate)
+            company.save()
+
+            permit = form_permit.save(commit=False)
+            permit.date = date_now
+            permit.customers_id = customer.id_cut
+            permit.users_id = user_create.id
+            permit.save()
+            if request.POST['txdmv_alert']:
+                alert = form_alert.save(commit=False)
+                dateExp = datetime.strptime(permit.txdmv_date_exp, formatDate)
+                day = int(request.POST['alert_day'])
+                dateShow = date_now - timedelta(days=day)
+                alert.category = "Urgents"
+                alert.description= "Expires customer TXDMV Permit" + customer
+                alert.create_date = date_now.strftime(formatDate)
+                alert.show_date = dateShow.strftime(formatDate)
+                alert.end_date = dateExp.strftime(formatDate)
+                alert.users_id = user_create.id
+                alert.save()
+
+            insurance = form_insurance.save(commit=False)
+            insurance.customers_id = customer.id_cut
+            insurance.users_id = user_create.id
+            insurance.save()
+            if request.POST['policy_alert']:
+                alert = form_alert.save(commit=False)
+                dateExp = datetime.strptime(insurance.policy_date_exp, formatDate)
+                day = int(request.POST['alert_day'])
+                dateShow = date_now - timedelta(days=day)
+                alert.category = "Urgents"
+                alert.description= "Expires customer insurance policy " + customer
+                alert.create_date = date_now.strftime(formatDate)
+                alert.show_date = dateShow.strftime(formatDate)
+                alert.end_date = dateExp.strftime(formatDate)
+                alert.users_id = user_create.id
+                alert.save()
+
+            contract = form_contract.save(commit=False)
+            contract.customer_id = customer.id_cut
+            contract.users_id = user_create.id
+            contract.save()
+            mtt = form_mtt.save(commit=False)
+            mtt.contracts_id = contract.id_con
+            mtt.customers_id = customer.id_cut
+            mtt.users_id = user_create.id
+            mtt.save()
+            if request.POST['contract_alert']:
+                alert = form_alert.save(commit=False)
+                dateExp = datetime.strptime(contract.end_date, formatDate)
+                day = int(request.POST['alert_day'])
+                dateShow = date_now - timedelta(days=day)
+                alert.category = "Urgents"
+                alert.description= "Expires customer Maintenance Contract " + customer
+                alert.create_date = date_now.strftime(formatDate)
+                alert.show_date = dateShow.strftime(formatDate)
+                alert.end_date = dateExp.strftime(formatDate)
+                alert.users_id = user_create.id
+                alert.save()
+
+            title = form_title.save(commit=False)
+            title.customers_id = customer.id_cut
+            title.users_id = user_create.id
+            title.save()
+            if request.POST['register_alert']:
+                alert = form_alert.save(commit=False)
+                dateExp = datetime.strptime(title.date_exp_reg, formatDate)
+                day = int(request.POST['alert_day'])
+                dateShow = date_now - timedelta(days=day)
+                alert.category = "Urgents"
+                alert.description= "Expires customer Registration(Title) " + customer
+                alert.create_date = date_now.strftime(formatDate)
+                alert.show_date = dateShow.strftime(formatDate)
+                alert.end_date = dateExp.strftime(formatDate)
+                alert.users_id = user_create.id
+                alert.save()
+            if request.POST['inspection_alert']:
+                alert = form_alert.save(commit=False)
+                dateExp = datetime.strptime(title.date_exp_insp, formatDate)
+                day = int(request.POST['alert_day'])
+                dateShow = date_now - timedelta(days=day)
+                alert.category = "Urgents"
+                alert.description= "Expires customer Inspection(Title) " + customer
+                alert.create_date = date_now.strftime(formatDate)
+                alert.show_date = dateShow.strftime(formatDate)
+                alert.end_date = dateExp.strftime(formatDate)
+                alert.users_id = user_create.id
+                alert.save()
 
 
-            form_permit = PermitForm(request.POST)
-            form_file = FileFormSet(request.POST, request.FILES['url'])
-            form_insurance = InsuranceForm(request.POST)
-            form_ifta = IftaFormSet(request.POST)
-            form_mtt = MTTForm(request.POST)
-            form_title = TitleForm(request.POST)
-            form_plate = PlateForm(request.POST)
-            form_contract = ContractForm(request.POST)
+            plate = form_plate.save(commit=False)
+            plate.customers_id = customer.id_cut
+            plate.users_id = user_create.id
+            plate.save()
+            if request.POST['plate_alert']:
+                alert = form_alert.save(commit=False)
+                dateExp = datetime.strptime(plate.date_exp, formatDate)
+                day = int(request.POST['alert_day'])
+                dateShow = date_now - timedelta(days=day)
+                alert.category = "Urgents"
+                alert.description= "Expires customer Plate " + customer
+                alert.create_date = date_now.strftime(formatDate)
+                alert.show_date = dateShow.strftime(formatDate)
+                alert.end_date = dateExp.strftime(formatDate)
+                alert.users_id = user_create.id
+                alert.save()
+
+            ifta = form_ifta.save(commit=False)
+            for i in ifta:
+                i.customers_id = customer.id_cut
+                i.users_id = user_create.id
+                i.save()
+
+            files = form_file.save(commit=False)
+            for file in files:
+                file.description = file.name
+                file.date_save = date_now.strftime(formatDate)
+                file.folders_id = folder.id_fld
+                file.users_id = user_create.id
+                file.save()
 
             accion_user(customer, ADDITION, request.user)
             messages.success(request, "Customer saved with an extension")
@@ -281,6 +400,7 @@ def CustomersService(request):
            'form_title': form_title,
            'form_plate': form_plate,
            'form_file': form_file,
+           'form_alert': form_alert,
 })
 
 
@@ -359,6 +479,20 @@ class EmployeesDelete(DeleteView):
 class InvoicesView(ListView):
     model = Invoice
     template_name = 'accounting/invoices/invoicesViews.html'
+
+def InvoiceView(request, pk):
+        invoice = Invoice.objects.get(id_inv=pk)
+        invitem = InvoicesHasItem.objects.filter(invoices_id=invoice.id_inv)
+        items = Item.objects.all()
+        loads = Load.objects.all().order_by('number')
+        context = {'invoice': invoice,
+                   'invitems': invitem,
+                    'id': pk,
+                    'items' :items,
+                    'loads': loads,
+                    'title': 'Edit new Invoice',
+                   }
+        return render(request,'accounting/invoices/invoicesView.html', context)
 
 def InvoicesCreate(request):
     ItemFormSet = inlineformset_factory(
@@ -449,45 +583,54 @@ def InvoicesCreate(request):
         'title': 'Create new Invoice'
     })
 
-def InvoicesEdit(request, pk):
-    ItemFormSet = inlineformset_factory(
-        Invoice,
-        InvoicesHasItem,
-        form=ItemHasInvoiceForm,
-        fields=['quantity',
-                'description',
-                'accounts',
-                'value',
-                'tax',
-                'subtotal'],
-        extra=10
-    )
-    invoice = Invoice.objects.get(id_inv=pk)
-    invitem = InvoicesHasItem.objects.filter(invoices_id=invoice.id_inv)
-    items = Item.objects.all()
-    loads = Load.objects.all().order_by('number')
-    accounts = []
-    inv = Account.objects.get(primary=True, name='Income')
-    inv_acconts = Account.objects.filter(accounts_id_id=inv.id_acn)
-    for e in inv_acconts:
-        accounts.append(e)
-    for a in inv_acconts:
-        exp_accont = Account.objects.filter(accounts_id_id=a.id_acn)
-        if exp_accont != None:
-            for ac in exp_accont:
-                accounts.append(ac)
-    if request.method == 'GET':
-        formset = ItemFormSet()
-        form = InvoicesForm(instance=invoice)
-    else:
-        formset = ItemFormSet(request.POST, instance=invitem)
-        form = InvoicesForm(request.POST, instance=invoice)
+class InvoicesEdit(UpdateView):
+    model = Invoice
+    sec_model = InvoicesHasItem
+    template_name = 'accounting/invoices/invoicesForm.html'
+    form_class = InvoicesForm
+    form_class_item = ItemHasInvoiceForm
+
+    def get_context_data(self, **kwargs):
+        context = super(InvoicesEdit, self).get_context_data(**kwargs)
+        pk = self.kwargs.get('pk',0)
+        invoice = self.model.objects.get(id_inv=pk)
+        invitem = self.sec_model.objects.filter(invoices_id=invoice.id_inv)
+        items = Item.objects.all()
+        loads = Load.objects.all().order_by('number')
+        accounts = []
+        inv = Account.objects.get(primary=True, name='Income')
+        inv_acconts = Account.objects.filter(accounts_id_id=inv.id_acn)
+        for e in inv_acconts:
+         accounts.append(e)
+         for a in inv_acconts:
+            exp_accont = Account.objects.filter(accounts_id_id=a.id_acn)
+            if exp_accont != None:
+               for ac in exp_accont:
+                  accounts.append(ac)
+        if 'form' not in context:
+            context['form'] = self.form_class()
+        if 'formset' not in  context:
+
+            context['formset'] = self.form_class_item(instance=invitem)
+        context['id'] = pk
+        context['items'] = items
+        context['loads'] = loads
+        context['accounts'] = accounts
+        context['title'] = 'Edit new Invoice'
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object
+        id_inv = kwargs['pk']
+        invoice = self.model.objects.get(id_inv=id_inv)
+        invitem = self.sec_model.objects.filter(invoices_id=invoice.id_inv)
+        formset = self.form_class_item(request.POST, instance=invitem)
+        form = self.form_class(request.POST, instance=invoice)
         if form.is_valid() and formset.is_valid():
-            form.save()
             if request.POST['btnService']:
+                form.save()
                 accion_user(invoice, CHANGE, request.user)
                 itemhasInv = formset.save(commit=False)
-
                 for itinv in itemhasInv:
                     if Item.objects.filter(name__contains=itinv.description):
                         item = Item.objects.get(name=itinv.description)
@@ -495,7 +638,6 @@ def InvoicesEdit(request, pk):
                         itinv.invoices = invoice
                         itinv.save()
                         acountDescp = AccountDescrip.objects.get(date=invoice.start_date, accounts_id=itinv.accounts_id, document=invoice.id_inv, type='invoices').update(value=itinv.subtotal)
-
                     else:
                         item = Item.objects.create(name=itinv.description, value=itinv.value,
                                                    accounts_id=itinv.accounts_id)
@@ -515,14 +657,6 @@ def InvoicesEdit(request, pk):
                 messages.error(request, "ERROR: "+er)
             for er in formset.errors:
                 messages.error(request, "ERROR: " + er)
-        return render(request, 'accounting/invoices/invoicesForm.html', {
-               'form': form,
-               'formset': formset,
-               'items': items,
-               'loads': loads,
-               'accounts': accounts,
-               'title': 'Edit new Invoice'
-    })
 
 
 

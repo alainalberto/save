@@ -38,7 +38,7 @@
                     <tbody>
                     <tr>
                         <td>{{i.prefix}}</td>
-                        <td>{{i.serial}}</td>
+                        <td><a href="{% url 'accounting:invoices_view' i.id_inv %}">{{i.serial}}</a></td>
                         <td>{{i.customers}}</td>
                         <td>{{i.business}}</td>
                         <td>{{i.start_date}}</td>

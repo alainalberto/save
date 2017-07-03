@@ -181,7 +181,7 @@ class ItemHasInvoiceForm(forms.ModelForm):
         widgets = {
             'quantity': forms.NumberInput(attrs={'placeholder': '0', 'class': 'form-control entrada'}),
             'description': forms.TextInput(attrs={'placeholder': 'Description ', 'class': 'form-control input-md descript'}),
-            'accounts': forms.Select(attrs={'class': 'form-control input-md', 'name': 'account'}),
+            'accounts': forms.Select(attrs={'class': 'form-control input-md account', 'name': 'account'}),
             'value': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control precie'}),
             'tax': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control tax'}),
             'subtotal': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control subtotal', 'readonly':''}),

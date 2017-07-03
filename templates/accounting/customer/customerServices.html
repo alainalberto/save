@@ -201,7 +201,7 @@
                                 <fieldset>
                                     <div class="form-group col-md-6">
                                         <label class="label-control">Days to be for show alert:</label>
-                                        <select name="police_day">
+                                        <select name="alert_day">
                                             <option value="5">5 day</option>
                                             <option value="15">15 day</option>
                                             <option value="30">30 day</option>
@@ -221,7 +221,7 @@
                     </div>
                 </div>
                 <div class=" col-md-5 col-md-offset-4">
-                    <input type="submit" class="btn btn-success" value="Save">
+                    <input type="submit" class="btn btn-success" value="Save" data-toggle="modal" data-target="#myModal">
                     <a type="button" href="{% url 'accounting:customers' %}" class="btn btn-danger">Cancel </a>
                     <input type="button" class="btn btn-primary" value="Save and Proces">
                 </div>

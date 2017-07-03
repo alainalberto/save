@@ -33,7 +33,7 @@ class Contract(models.Model):
     id_con = models.AutoField(primary_key=True)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
-    files = models.ForeignKey(File, on_delete=models.CASCADE)  # Field name made lowercase.
+    files = models.ForeignKey(File, blank=True, null=True)  # Field name made lowercase.
     description = models.CharField(max_length=255, blank=True, null=True)
     serial = models.CharField(max_length=20, blank=True, null=True)
     start_date = models.DateField(blank=True, null=True)
