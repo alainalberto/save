@@ -183,6 +183,11 @@
                         <li>
                             <a href="{% url 'panel:password' %}"> Change my password</a>
                         </li>
+                        {% if perms.tools %}
+                        <li>
+                            <a class="item" href="{% url 'services:forms' %}"> Forms</a>
+                        </li>
+                        {% endif %}
                         <li>
                             <a class="item" href="{% url 'panel:document' %}"> My Documents</a>
                         </li>
@@ -266,11 +271,6 @@
                         {% if perms.services.add_maintenance %}
                         <li>
                             <a class="item" href="{% url 'services:maintenance' %}"> Maintenance</a>
-                        </li>
-                        {% endif %}
-                        {% if perms.services.add_insurance %}
-                        <li>
-                            <a class="item" href="{% url 'services:forms' %}"> Forms</a>
                         </li>
                         {% endif %}
                         {% if perms.tools.add_folder %}

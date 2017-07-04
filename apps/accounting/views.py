@@ -86,8 +86,6 @@ class CustomersCreate(CreateView):
      form_class = CustomerForm
      template_name = 'accounting/customer/customerForm.html'
      success_url = reverse_lazy('accounting:customers')
-
-
      def get(self, request, *args, **kwargs):
          form = self.form_class(initial=self.initial)
          return render(request, self.template_name, {'form': form, 'title': 'Create new Customer'})
@@ -588,11 +586,22 @@ class InvoicesEdit(UpdateView):
     sec_model = InvoicesHasItem
     template_name = 'accounting/invoices/invoicesForm.html'
     form_class = InvoicesForm
-    form_class_item = ItemHasInvoiceForm
+    form_class_item = inlineformset_factory(
+                          Invoice,
+                          InvoicesHasItem,
+                          form=ItemHasInvoiceForm,
+                          fields=['quantity',
+                                  'description',
+                                  'accounts',
+                                  'value',
+                                  'tax',
+                                  'subtotal'],
+                           extra=10
+    )
 
     def get_context_data(self, **kwargs):
         context = super(InvoicesEdit, self).get_context_data(**kwargs)
-        pk = self.kwargs.get('pk',0)
+        pk = self.kwargs.get('pk', 0)
         invoice = self.model.objects.get(id_inv=pk)
         invitem = self.sec_model.objects.filter(invoices_id=invoice.id_inv)
         items = Item.objects.all()
@@ -609,9 +618,8 @@ class InvoicesEdit(UpdateView):
                   accounts.append(ac)
         if 'form' not in context:
             context['form'] = self.form_class()
-        if 'formset' not in  context:
-
-            context['formset'] = self.form_class_item(instance=invitem)
+        if 'formset' not in context:
+            context['formset'] = self.form_class_item()
         context['id'] = pk
         context['items'] = items
         context['loads'] = loads
