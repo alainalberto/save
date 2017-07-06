@@ -1,3 +1,5 @@
+import datetime
+
 from django.shortcuts import render, redirect, HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse_lazy
 from apps.logistic.components.LogisticForm import *
@@ -6,12 +8,13 @@ from django.contrib import messages
 from django.contrib.admin.models import ADDITION, CHANGE, DELETION
 from FirstCall.util import accion_user
 from apps.logistic.models import *
-
+from apps.tools.components.AlertForm import AlertOtherForm
+from datetime import datetime, date, time, timedelta
 
 # Create your views here.
 
 
-# Customers
+# Load
 class LoadsView(ListView):
     model = Load
     template_name = 'logistic/load/loadViews.html'
@@ -93,14 +96,24 @@ class DriversView(ListView):
 class DriversCreate(CreateView):
      model = DriversLogt
      form_class = DriversForm
+     form_alert = AlertOtherForm
      template_name = 'logistic/drivers/driversForm.html'
 
-     def get(self, request, *args, **kwargs):
-         form = self.form_class(initial=self.initial)
-         return render(request, self.template_name, {'form': form, 'title': 'Create new Drivers'})
+     def get_context_data(self, **kwargs):
+         context = super(DriversCreate, self).get_context_data(**kwargs)
+         if 'form' not in context:
+             context['form'] = self.form_class(self.request.GET)
+         if 'form_alert' not in context:
+             context['form_alert'] = self.form_alert(self.request.GET)
+         context['title'] = 'Create new Driver'
+         return context
 
      def post(self, request, *args, **kwargs):
          form = self.form_class(request.POST)
+         form_alert = self.form_alert(request.POST)
+         formatDate = "%Y/%m/%d"
+         date_now = datetime.today()
+         user_create = request.user
          if form.is_valid():
              driver_exist = DriversLogt.objects.filter(license_numb=form.data['license_numb'], name=form.data['name'])
              if driver_exist:
@@ -112,16 +125,62 @@ class DriversCreate(CreateView):
                  if user_exist:
                      user = User.objects.get(username=request.POST['email'])
                  else:
-                   user = User.objects.create_user(username=request.POST['email'],email=request.POST['email'], password=request.POST['license_numb'], is_staff=False, is_active=True)
+                    user = User.objects.create_user(username=request.POST['email'],email=request.POST['email'], password=request.POST['license_numb'], is_staff=False, is_active=True)
                  driver = form.save(commit=False)
                  driver.users_id = user.id
                  driver.save()
+                 if request.POST['lic_alert'] and form_alert.is_valid():
+
+                     alert = form_alert.save(commit=False)
+                     dateExp = driver.lic_date_exp
+                     day = int(request.POST['alert_day'])
+                     dateShow = dateExp - timedelta(days=day)
+                     alert.category = "Urgents"
+                     alert.description = "Expires driver license " + driver.name
+                     alert.show_date = dateShow
+                     alert.end_date = dateExp
+                     alert.users_id = user_create.id
+                     alert.save()
+                 if request.POST['medicard_alert'] and form_alert.is_valid():
+                     alert = form_alert.save(commit=False)
+                     dateExp = driver.medicard_date_exp
+                     day = int(request.POST['alert_day'])
+                     dateShow = dateExp - timedelta(days=day)
+                     alert.category = "Urgents"
+                     alert.description = "Expires driver MediCard " + driver.name
+                     alert.show_date = dateShow
+                     alert.end_date = dateExp
+                     alert.users_id = user_create.id
+                     alert.save()
+                 if request.POST['drugtest_alert'] and form_alert.is_valid():
+                     alert = form_alert.save(commit=False)
+                     dateExp = driver.drugtest_date_exp
+                     day = int(request.POST['alert_day'])
+                     dateShow = dateExp - timedelta(days=day)
+                     alert.category = "Urgents"
+                     alert.description = "Expires driver Drog Test " + driver.name
+                     alert.show_date = dateShow
+                     alert.end_date = dateExp
+                     alert.users_id = user_create.id
+                     alert.save()
+                 if request.POST['mbr_alert'] and form_alert.is_valid():
+                     alert = form_alert.save(commit=False)
+                     dateExp = driver.mbr_date_exp
+                     day = int(request.POST['alert_day'])
+                     dateShow = dateExp - timedelta(days=day)
+                     alert.category = "Urgents"
+                     alert.description = "Expires driver MVR " + driver.name
+                     alert.show_date = dateShow
+                     alert.end_date = dateExp
+                     alert.users_id = user_create.id
+                     alert.save()
                  accion_user(driver, ADDITION, request.user)
                  messages.success(request, 'Driver save with an extension')
-                 return HttpResponseRedirect(reverse_lazy('logistic:drivers'))
+             return HttpResponseRedirect(reverse_lazy('logistic:drivers'))
          else:
             for er in form.errors:
                messages.error(request, "ERROR: "+er)
+            return render(request, self.template_name, {'form': form, 'form_alert': form_alert, 'title': 'Create new Drivers'})
 
 class DriversEdit(UpdateView):
     model = DriversLogt

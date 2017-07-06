@@ -32,3 +32,17 @@ class AlertForm(forms.ModelForm):
             'deactivated': forms.CheckboxInput(attrs={'class': 'checkbox'}),
             'group': forms.SelectMultiple(attrs={'class': 'form-control input-md'}),
         }
+
+class AlertOtherForm(forms.ModelForm):
+    class Meta:
+        model = Alert
+
+        fields = [
+            'group',
+        ]
+        labels = {
+            'group': 'Group:',
+        }
+        widgets = {
+            'group': forms.SelectMultiple(attrs={'class': 'form-control input-md'}),
+        }

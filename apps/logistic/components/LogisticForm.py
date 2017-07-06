@@ -28,7 +28,7 @@ class LoadsForm(forms.ModelForm):
             'driver': 'Driver:',
             'value': 'Agreed Amount:',
             'number': 'Load Number:',
-            'paid': 'Paid:',
+            'paid': 'Is Paid:',
             'note': 'Note:',
         }
         widgets = {
@@ -41,7 +41,7 @@ class LoadsForm(forms.ModelForm):
             'value': forms.NumberInput(attrs={'placeholder': 'Value', 'class': 'form-control input-md'}),
             'number': forms.TextInput(attrs={'placeholder': 'Number', 'class': 'form-control input-md', 'required': 'true'}),
             'paid': forms.CheckboxInput(attrs={'class': 'checkbox'}),
-            'Note': forms.Textarea(attrs={'class': 'form-control input-md'}),
+            'note': forms.Textarea(attrs={'class': 'form-control'}),
 
         }
 
@@ -65,7 +65,6 @@ class DriversForm(forms.ModelForm):
             'mbr_date_exp',
             'begining_date',
             'deactivate',
-            'date_deactivated',
         ]
         labels = {
             'name': 'Name:',
@@ -73,16 +72,15 @@ class DriversForm(forms.ModelForm):
             'license_numb': 'License Number:',
             'address': 'Address:',
             'email': 'Email:',
-            'dob': 'Dob:',
-            'lic_date_exp': 'Lic Date Exp:',
-            'medicard_date_exp': 'Medicard Date Exp:',
-            'drugtest_date': 'Drugtest Date:',
-            'drugtest_date_exp': 'Drugtest Date Exp:',
-            'mbr_date': 'Mbr Date:',
-            'mbr_date_exp': 'Mbr Date Exp:',
+            'dob': 'DOB:',
+            'lic_date_exp': 'License Date Expirate:',
+            'medicard_date_exp': 'Medicard Date Expirate:',
+            'drugtest_date': 'Drug Test Date:',
+            'drugtest_date_exp': 'Drug Test Date Expirate:',
+            'mbr_date': 'MVR Date:',
+            'mbr_date_exp': 'MBR Date Expirate:',
             'begining_date': 'Beginning Date:',
             'deactivate': 'Deactivate:',
-            'date_deactivated': 'Deactivated Date:',
         }
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Name', 'class': 'form-control input-md', 'required': 'true'}),
@@ -99,8 +97,6 @@ class DriversForm(forms.ModelForm):
             'mbr_date_exp': forms.DateTimeInput(attrs={'class': 'form-control input-md'}),
             'begining_date': forms.DateTimeInput(attrs={'class': 'form-control input-md'}),
             'deactivate': forms.CheckboxInput(attrs={'class': 'checkbox'}),
-            'date_deactivated': forms.DateTimeInput(attrs={'class': 'form-control input-md'}),
-
         }
 
 
