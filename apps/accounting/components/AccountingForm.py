@@ -1,5 +1,6 @@
 from django import forms
 from apps.accounting.models import *
+from apps.logistic.models import InvoicesHasLoad, LoadsHasFee
 from django.core.exceptions import ValidationError
 
 
@@ -113,7 +114,7 @@ class EmployeesForm(forms.ModelForm):
             'date_admis': forms.DateInput(attrs={'placeholder': 'Admission Date', 'class': 'form-control input-md'}),
             'phone': forms.NumberInput(attrs={'placeholder': 'Phone', 'class': 'form-control input-md'}),
             'email': forms.EmailInput(attrs={'placeholder': 'Email', 'class': 'form-control input-md', 'required': 'true'}),
-            'type_salary': forms.TextInput(attrs={'placeholder': 'Salary Type', 'class': 'form-control input-md'}),
+            'type_salary': forms.Select(attrs={'class': 'form-control input-md'},choices=(('pervent','Commission'),('salary','Salary'))),
             'value': forms.NumberInput(attrs={'placeholder': 'Value', 'class': 'form-control input-md'}),
             'position': forms.TextInput(attrs={'placeholder': 'Position', 'class': 'form-control input-md'}),
             'deactivated': forms.CheckboxInput(attrs={'class': 'checkbox'}),
@@ -220,4 +221,75 @@ class ReceiptsForm(forms.ModelForm):
             'end_date': forms.DateInput(attrs={'placeholder': 'End Date', 'class': 'form-control input-md'}),
             'description': forms.Textarea(attrs={'placeholder': 'Description', 'class': 'form-control input-md'}),
             'total': forms.NumberInput(attrs={'placeholder': 'Total', 'class': 'form-control input-md'}),
+        }
+
+class PaymentForm(forms.ModelForm):
+       class Meta:
+            model = Payment
+
+            fields = [
+                'accounts',
+                'business',
+                'start_date',
+                'end_date',
+                'serial',
+                'discount',
+                'value',
+                'waytopay',
+            ]
+            widgets = {
+                'accounts': forms.Select(attrs={'class': 'form-control input-md'}),
+                'business': forms.Select(attrs={'class': 'form-control input-md'}),
+                'start_date': forms.DateInput(attrs={'placeholder': 'Start Date', 'class': 'form-control input-md'}),
+                'end_date': forms.DateInput(attrs={'placeholder': 'Start Date', 'class': 'form-control input-md'}),
+                'discount': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control discount'}),
+                'value': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control total', 'readonly': ''}),
+                'waytopay': forms.Select(attrs={'class': 'form-control input-md'},
+                                         choices=(('Cash', 'Cash'), ('Check', 'Check'), ('Credit Card', 'Credit Card'))),
+            }
+
+
+class InvoiceLoadForm(forms.ModelForm):
+    class Meta:
+        model = InvoicesHasLoad
+        fields = {
+            'id_inl',
+            'loads',
+        }
+        widgets = {
+            'id_inl': forms.NumberInput(attrs={'placeholder': '0', 'class': 'form-control', 'style': 'display : none'}),
+            'loads': forms.Select(attrs={'class': 'form-control input-md load_id', 'name': 'load_id'}),
+        }
+
+class FeeLoadForm(forms.ModelForm):
+    class Meta:
+        model = LoadsHasFee
+        fields = {
+            'id_lfe',
+            'fee',
+            'value',
+
+        }
+        widgets = {
+            'id_inl': forms.NumberInput(attrs={'placeholder': '0', 'class': 'form-control', 'style': 'display : none'}),
+            'fee': forms.Select(attrs={'class': 'form-control input-md load_id', 'name': 'load_id'}),
+            'value': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control fee-value', 'readonly': ''}),
+        }
+
+
+class FeeForm(forms.ModelForm):
+    class Meta:
+        model = Fee
+        fields = {
+            'accounts',
+            'description',
+            'type',
+            'value',
+
+        }
+        widgets = {
+            'accounts': forms.Select(attrs={'class': 'form-control input-md', 'name': 'account'}),
+            'description': forms.Textarea(attrs={'placeholder': 'Description', 'class': 'form-control input-md'}),
+            'type': forms.Select(attrs={'class': 'form-control input-md'},choices=(('pervent','Commission'),('salary','Salary'))),
+            'value': forms.NumberInput(attrs={'placeholder': '0', 'class': 'form-control', 'style': 'display : none'}),
         }

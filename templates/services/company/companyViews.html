@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block content %}
+<section>
+    <div class="panel panel-primary">
+  <div class="panel-heading">
+    <div class="row">
+      <div class="col-xs-3">
+          <i class="fa fa-building fa-4x"></i>
+      </div>
+      <div class="col-xs-9 text-left">
+          <div><h3>{{ title }}</h3></div>
+      </div>
+    </div>
+  </div>
+  <div class="panel-body">
+      <form name="form_customer" method="post" class="form" role="form" id="form_customer" validate>{% csrf_token %}
+      <fieldset>
+          <div class="form-group col-md-5 col-md-offset-1" >
+              <label class="label-control">{{form_company.customers.label}}</label>
+              {{form_company.customers}}
+          </div>
+           </fieldset>
+          {% include 'services/company/companyForm.html'%}
+          <fieldset>
+          <div>
+              <table class="table table-striped">
+                  <thead>
+                  <th>Select Files</th>
+                  <th>File Name</th>
+                  </thead>
+                  <tbody>
+                  {% for f in form_file %}
+                  <tr>
+                      <td>{{f.url}}</td>
+                      <td>{{ f.name }}</td>
+                  </tr>
+                  {% endfor %}
+                  </tbody>
+              </table>
+          </div>
+          <div class="form-group col-md-5 col-md-offset-4">
+              <input type="submit" class="btn btn-success" value="Save">
+              <a type="button" href="{% url 'accounting:customers' %}" class="btn btn-danger">Cancel </a>
+          </div>
+
+      </fieldset>
+      </form>
+  </div>
+    </div>
+
+</section>
+{% endblock %}

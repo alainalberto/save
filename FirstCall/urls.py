@@ -19,12 +19,12 @@ from django.contrib.auth.views import login, logout_then_login
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_required, permission_required
-from FirstCall.views import home_view, Chats, Post, Message
+from apps.tools.views import panel_view, Chats, Post, Message
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-    url(r'^$', login_required(home_view), name='home'),
+    url(r'^$', login_required(panel_view), name='home'),
     url(r'^panel/', include('apps.tools.urls', namespace='panel')),
     url(r'^accounting/', include('apps.accounting.urls', namespace='accounting')),
     url(r'^services/', include('apps.services.urls', namespace='services')),

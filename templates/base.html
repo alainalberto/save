@@ -51,6 +51,7 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="{% static 'js/dataTables.min.js'%}"></script>
     <script src="{% static 'js/jq_app.js'%}"></script>
+    <script src="{% static 'js/chat.js' %}"></script>
 
     <!-- Bootstrap Core JavaScript -->
 
@@ -217,11 +218,11 @@
                             <a class="item" href="{% url 'accounting:receipts' %}"> Receipts</a>
                         </li>
                         {% endif %}
-                        <!--{% if perms.accounting.add_payment %}
+                        {% if perms.accounting.add_payment %}
                         <li>
                             <a class="item" href="{% url 'accounting:payments' %}"> Payments</a>
                         </li>
-                        {% endif %} -->
+                        {% endif %}
                         {% if perms.accounting.add_employee %}
                         <li>
                             <a class="item" href="{% url 'accounting:employees' %}"> Employees</a>
@@ -230,7 +231,7 @@
                     </ul>
                 </li>
                 {% endif %}
-        <!--        {% if perms.services %}
+               {% if perms.services %}
                 <li class="active">
                     <a href="javascript:;" data-toggle="collapse" data-target="#serv"><i class="fa fa-tasks"></i> Services <i class="right fa fa-fw fa-caret-down"></i></a>
                     <ul id="serv" class="collapse">
@@ -239,7 +240,7 @@
                             <a class="item" href="{% url 'services:company' %}"> Open Company</a>
                         </li>
                         {% endif %}
-                        <li>
+                       <!-- <li>
                             <a class="item" href="{% url 'services:title' %}"> Title record</a>
                         </li>
                         {% if perms.services.add_insurance %}
@@ -277,10 +278,10 @@
                         <li>
                             <a class="item" href="{% url 'services:folder' %}"> Folder</a>
                         </li>
-                        {% endif %}
+                        {% endif %} -->
                     </ul>
                 </li>
-                {% endif %}-->
+                {% endif %}
                 {% if perms.logistic %}
                 <li class="active">
                     <a href="javascript:;" data-toggle="collapse" data-target="#logc"><i class="fa fa-truck"></i> Logistic <i class="right fa fa-fw fa-caret-down"></i></a>

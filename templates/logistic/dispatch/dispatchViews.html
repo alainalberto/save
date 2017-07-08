@@ -27,7 +27,7 @@
                     <th>Name</th>
                     <th>Address</th>
                     <th>Deactivate</th>
-                    <th>Deactivate Date</th>
+                    <th class="col-md-2">Action</th>
 
                 </tr>
                 </thead>
@@ -37,8 +37,6 @@
                     <td>{{l.name}}</td>
                     <td>{{l.address}}</td>
                      <td>{{l.deactivate}}</td>
-                     <td>{{l.date_deactivated}}</td>
-
                     <td>
                         <toolbar class="md-accent">
                             <a data-type="info" data-trigger="focus" title="Edit Drivers" data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'logistic:dispatch_edit' l.id_dsp %}">

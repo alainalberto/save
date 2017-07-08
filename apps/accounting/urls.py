@@ -30,7 +30,7 @@ urlpatterns = [
 
 
     #Payments
-    url(r'^payments/$', login_required(permission_required('accounting.add_payment')(CustomersView.as_view())), name='payments'),
+    url(r'^payments/$', login_required(permission_required('accounting.add_payment')(PaymentView.as_view())), name='payments'),
 
     #Employees
     url(r'^employees/$', login_required(permission_required('accounting.add_employee')(EmployeesView.as_view())), name='employees'),

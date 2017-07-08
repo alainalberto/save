@@ -239,6 +239,28 @@ $('#btnphysical').change(function(){
 
     });
 
+    $(".btn_add_load").click(function() {
+      var column1 = $(this).closest('tr').children()[0].textContent;
+      var column2 = $(this).closest('tr').children()[1].textContent;
+      var column3 = $(this).closest('tr').children()[2].textContent;
+      var column4 = $(this).closest('tr').children()[3].textContent;
+      var column5 = $(this).closest('tr').children()[4].textContent;
+      var column7 = $(this).closest('tr').children()[6].textContent;
+      $('#tbLoad tr').each(function(index, element){
+          if($(element).eq(1).text() == "" ){
+            $(element).eq(1).text() = column1;
+            $(element).eq(2).text() = column2;
+            $(element).eq(3).text() = column3;
+            $(element).eq(4).text() = column4;
+            $(element).eq(5).text() = column5;
+            $(element).find(".load_id").val(column7);
+             return false;
+          }
+
+       });
+
+    });
+
 
    $(".listitem").on("change", function() {
       $('#valueunt').val();

@@ -147,6 +147,7 @@ class Migration(migrations.Migration):
                 ('serial', models.CharField(blank=True, max_length=20, null=True)),
                 ('discount', models.DecimalField(blank=True, decimal_places=2, max_digits=10, null=True)),
                 ('value', models.DecimalField(blank=True, decimal_places=2, max_digits=10, null=True)),
+                ('waytopay', models.CharField(max_length=20)),
                 ('accounts', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='accounting.Account')),
                 ('business', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tools.Busines')),
                 ('users', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),

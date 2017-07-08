@@ -71,9 +71,7 @@
                     </div>
                     <br/>
                 </fieldset>
-                    <fieldset>
-                        <p class="bg-info"><strong>Drescription to Invoice</strong></p>
-                        <div class="modal fade" id="itemList" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal fade" id="itemList" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -109,21 +107,22 @@
                             </div>
                         </div>
                         <div class="modal fade" id="loadList" tabindex="-1" role="dialog" aria-labelledby="ModalLabel">
-                            <div class="modal-dialog" role="document">
+                            <div class="modal-dialog modal-lg" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h4 class="modal-title text-center"><strong>Items Services List</strong></h4>
+                                        <h4 class="modal-title text-center"><strong>Load List</strong></h4>
                                     </div>
                                     <div class="modal-body">
                                         <table id="second_table" class="table data-table table-bordered">
                                             <thead>
                                             <tr>
-                                                <th>No.</th>
-                                                <th>Broker</th>
-                                                <th>Driver</th>
-                                                <th>Pick up Date</th>
-                                                <th>Value</th>
+                                                <th class=" text-center col-md-1">No.</th>
+                                                <th class=" text-center col-md-3">Broker</th>
+                                                <th class="text-center col-md-3">Driver</th>
+                                                <th class="text-center col-md-2">Pick up Date</th>
+                                                <th class="text-center col-md-1">Value</th>
                                                 <th class="text-center col-md-1">Action</th>
+                                                <th class="text-center"></th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -137,6 +136,7 @@
                                                 <td>
                                                     <a type="button" class="btn btn-info btn_add_load">Add</a>
                                                 </td>
+                                                <td style="display : none">{{load.id_lod}}</td>
                                             </tr>
                                             {% endfor %}
                                             </tbody>
@@ -145,6 +145,8 @@
                                 </div>
                             </div>
                         </div>
+                    <fieldset>
+                        <p class="bg-info"><strong>Drescription to Invoice</strong></p>
                         <div id="panelService" style="...">
                             <div class="form-group col-md-offset-11">
                                 <a type="button" id="addService" class="btn btn-success test-tooltip" data-toggle="modal" data-target="#itemList"data-type="info" data-trigger="focus" title="Item List" data-animation="am-flip-x">
@@ -168,7 +170,7 @@
                                 </thead>
                                 <tbody>
                                 {{ formset.management_form }}
-                                 {% for form in formset %}
+                                 {% for form in formset_item %}
                                   {{ form.errors }}
                                  {{ form.non_field_errors }}
                                 <tr>
@@ -189,59 +191,87 @@
                                 {% endfor %}
                                 </tbody>
                             </table>
-                            </div>
-                        <div id="panelLoad" style="display : none">
-                            <div class="form-group">
-                                <div class="col-md-6" >
-                                    <select id="selecLoad" class="form-control">
-                                        <option>Select one</option>
-                                        {% for load in loads %}
-                                        <option>{{load.number}}/{{ load.broker }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <button data-type="info" data-trigger="focus" title="Add new Item" data-animation="am-flip-x" class="btn btn-primary test-tooltip">
-                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                    <tooltip md-direction="left"></tooltip>
-                                </button>
-                            </div>
-                            <div class="form-group">
-                                <table id="tbLoad" class="table table-striped table-bordered ">
-                                    <thead>
-                                    <tr>
-                                        <th>No.</th>
-                                        <th>Broker</th>
-                                        <th>Driver</th>
-                                        <th>Date Loading</th>
-                                        <th>Place Loading</th>
-                                        <th>Dispash</th>
-                                        <th>Value</th>
-                                        <th>Action</th>
-
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td class="col-md-1"></td>
-                                        <td class="col-md-2"></td>
-                                        <td class="col-md-2"></td>
-                                        <td class="col-md-2"></td>
-                                        <td class="col-md-2"></td>
-                                        <td class="col-md-2"></td>
-                                        <td class="col-md-1"></td>
-                                        <td class="col-md-1">
-                                            <toolbar class="md-accent">
-                                                <button data-type="info" data-trigger="focus" title="Add new Item" data-animation="am-flip-x" type="button" class="btn btn-danger test-tooltip" href="">
-                                                    <i class="fa fa-times" aria-hidden="true"></i>
-                                                    <tooltip md-direction="left"></tooltip>
-                                                </button>
-                                            </toolbar>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
                         </div>
+                        <div id="panelLoad" style="display : none">
+                            <div class="form-group col-xs-4 col-md-5 col-md-offset-1">
+                                <label class="label-control">Select Account: </label>
+                                 <select  class="form-group input-md" name="account" required>
+                                    {% for a in accounts %}
+                                    <option value="{{a.id_acn}}">{{a.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group col-md-offset-11">
+                                <a type="button" id="addLoad" class="btn btn-success test-tooltip" data-toggle="modal" data-target="#loadList"data-type="info" data-trigger="focus" title="Item List" data-animation="am-flip-x">
+                                    <i class="fa fa-list" aria-hidden="true"></i>
+                                    <tooltip md-direction="left"></tooltip>
+                                </a>
+                            </div>
+                            <br/>
+                            <table id="tbLoad" class="table table-striped table-bordered ">
+                                <thead>
+                                <tr>
+                                    <th style="display : none"></th>
+                                    <th style="display : none"></th>
+                                    <th>No.</th>
+                                    <th>Broker</th>
+                                    <th>Driver</th>
+                                    <th>Pick Up Date</th>
+                                    <th>Value</th>
+                                    <th>Action</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {{ formset.management_form }}
+                                {% for form in formset_load %}
+                                {{ form.errors }}
+                                {{ form.non_field_errors }}
+                                {% for load in loads %}
+                                <tr>
+                                    <td style="display : none">{{ form.id_inl }}</td>
+                                    <td style="display : none">{{ form.loads }}</td>
+                                    <td class="col-md-1">{% if load.id_lod == form.loads %} {{load.number}} {% endif %}</td>
+                                    <td class="col-md-2">{% if load.id_lod == form.loads %} {{load.broker}} {% endif %}</td>
+                                    <td class="col-md-2">{% if load.id_lod == form.loads %} {{load.driver}} {% endif %}</td>
+                                    <td class="col-md-2">{% if load.id_lod == form.loads %} {{load.pickup_date}} {% endif %}</td>
+                                    <td class="col-md-1">{% if load.id_lod == form.loads %} {{load.value}} {% endif %}</td>
+                                    <td class="col-md-1">
+                                        <toolbar class="md-accent">
+                                            <button data-type="info" data-trigger="focus" title="Add new Item" data-animation="am-flip-x" type="button" class="btn btn-danger test-tooltip" href="">
+                                                <i class="fa fa-times" aria-hidden="true"></i>
+                                                <tooltip md-direction="left"></tooltip>
+                                            </button>
+                                        </toolbar>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {{ formset.management_form }}
+                            {% for form in formset_fee %}
+                            {{ form.errors }}
+                            {{ form.non_field_errors }}
+                            <div>
+                                <div class="form-group col-xs-9 col-md-2 col-md-offset-7">
+                                    <label class="label-control">Select Fee: </label>
+                                    <div class="input-group">
+                                        {{form.fee}}
+                                    </div>
+                                </div>
+                                <div class="form-group col-xs-9 col-md-2 col-md-offset-7">
+                                    <label class="label-control">Value:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">$</span>
+                                        {{form.value}}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </fieldset>
+                    <fieldset>
                         <div class="form-group col-xs-9 col-md-2 col-md-offset-1">
                             <label class="label-control">{{form.subtotal.label}}</label>
                             <div class="input-group">
@@ -277,5 +307,4 @@
             </div>
          </div>
 
-{% endblock content %}
-
+i{% endblock %}

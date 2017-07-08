@@ -18,6 +18,7 @@ class CompanyForm(forms.ModelForm):
                   'unity',
                   'logo',
                   'deactivate',
+                  'customers',
         ]
         labels = {
                   'name': 'Company Name:',
@@ -29,6 +30,7 @@ class CompanyForm(forms.ModelForm):
                   'unity': 'Unity:',
                   'logo': 'Up logo:',
                   'deactivate': 'Is Deactivate:',
+                  'customers': 'Customer:',
         }
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Company Name', 'class': 'form-control input-md'}),
@@ -39,6 +41,7 @@ class CompanyForm(forms.ModelForm):
             'ein': forms.NumberInput(attrs={'placeholder': 'EIN', 'class': 'form-control input-md'}),
             'unity': forms.NumberInput(attrs={'placeholder': 'Unit', 'class': 'form-control input-md'}),
             'deactivate': forms.CheckboxInput(attrs={'class': 'checkbox'}),
+            'customers': forms.Select(attrs={'class': 'form-control input-md'}),
 
         }
 
@@ -59,6 +62,7 @@ class PermitForm(forms.ModelForm):
             'boc3',
             'boc3_date',
             'ucr',
+            'customers',
         ]
         labels = {
             'usdot': 'USDOT Number:',
@@ -73,6 +77,7 @@ class PermitForm(forms.ModelForm):
             'boc3': 'BOC 3 Number:',
             'boc3_date': 'BOC 3 Date:',
             'ucr': 'URC:',
+            'customers': 'Customer',
         }
         widgets = {
             'usdot': forms.NumberInput(attrs={'placeholder': 'USDOT Number', 'class': 'form-control input-md'}),
@@ -87,6 +92,7 @@ class PermitForm(forms.ModelForm):
             'boc3': forms.TextInput(attrs={'placeholder': 'BOC3 Number', 'class': 'form-control input-md'}),
             'boc3_date': forms.DateInput(attrs={'placeholder': 'BOC3 Date', 'class': 'form-control input-md'}),
             'ucr': forms.NumberInput(attrs={'placeholder': 'USDOT Number', 'class': 'form-control input-md'}),
+            'customers': forms.Select(attrs={'class': 'form-control input-md'}),
         }
 
 class InsuranceForm(forms.ModelForm):
@@ -108,6 +114,7 @@ class InsuranceForm(forms.ModelForm):
             'total',
             'comision',
             'paid',
+            'customers',
         ]
         labels = {
             'down_payment': 'Down Payment:',
@@ -124,6 +131,7 @@ class InsuranceForm(forms.ModelForm):
             'total': 'Total:',
             'comision': 'Comision:',
             'paid': 'Is Paid:',
+            'customers': 'Customer:',
         }
         widgets = {
             'down_payment': forms.NumberInput(attrs={'placeholder': 'value Down', 'class': 'form-control input-md'}),
@@ -140,6 +148,7 @@ class InsuranceForm(forms.ModelForm):
             'total': forms.NumberInput(attrs={'placeholder': 'value', 'class': 'form-control input-md'}),
             'comision': forms.NumberInput(attrs={'placeholder': 'value', 'class': 'form-control input-md'}),
             'paid': forms.CheckboxInput(attrs={'class': 'checkbox'}),
+            'customers': forms.Select(attrs={'class': 'form-control input-md'}),
         }
 
 class IftaForm(forms.ModelForm):
@@ -152,6 +161,7 @@ class IftaForm(forms.ModelForm):
             'milles',
             'gallons',
             'trucks',
+            'customers',
         ]
         labels = {
             'date': 'Date:',
@@ -159,6 +169,7 @@ class IftaForm(forms.ModelForm):
             'milles': 'Quantity Milles:',
             'gallons': 'Gallos',
             'trucks': 'Truck',
+            'customers':'Customer:',
         }
         widgets = {
             'date': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
@@ -166,6 +177,7 @@ class IftaForm(forms.ModelForm):
             'milles': forms.NumberInput(attrs={'placeholder': 'value', 'class': 'form-control input-md'}),
             'gallons': forms.NumberInput(attrs={'placeholder': 'value', 'class': 'form-control input-md'}),
             'trucks': forms.Select(attrs={'class': 'form-control input-md'}),
+            'customers': forms.Select(attrs={'class': 'form-control input-md'}),
         }
 
 class ContractForm(forms.ModelForm):
@@ -201,12 +213,16 @@ class MTTForm(forms.ModelForm):
 
         fields = [
             'nota',
+            'customers',
+
         ]
         labels = {
             'nota': 'Description of Maintenance:',
+            'customers': 'Customer:',
         }
         widgets = {
             'nota': forms.Textarea(attrs={'placeholder': 'State', 'class': 'form-control input-md'}),
+            'customers': forms.Select(attrs={'class': 'form-control input-md'}),
         }
 
 class TitleForm(forms.ModelForm):
@@ -219,6 +235,7 @@ class TitleForm(forms.ModelForm):
             'date_insp',
             'date_exp_insp',
             'trucks',
+            'customers',
         ]
         labels = {
             'date_reg': 'Register Date:',
@@ -226,6 +243,7 @@ class TitleForm(forms.ModelForm):
             'date_insp': 'Inspection Date:',
             'date_exp_insp': 'Inspection Expire Date: ',
             'trucks': 'Trucks:',
+            'customers': 'Customer:',
         }
         widgets = {
             'date_reg': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
@@ -233,6 +251,7 @@ class TitleForm(forms.ModelForm):
             'date_insp': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
             'date_exp_insp': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
             'trucks': forms.Select(attrs={'class': 'form-control input-md'}),
+            'customers': forms.Select(attrs={'class': 'form-control input-md'}),
         }
 
 class PlateForm(forms.ModelForm):
@@ -246,6 +265,7 @@ class PlateForm(forms.ModelForm):
             'account_user',
             'account_password',
             'trucks',
+            'customers',
         ]
         labels = {
             'date': 'Date:',
@@ -254,6 +274,7 @@ class PlateForm(forms.ModelForm):
             'account_user': 'Account User',
             'account_password': 'Account Password:',
             'trucks': 'Trucks:',
+            'customers': 'Customer',
         }
         widgets = {
             'date': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
@@ -262,6 +283,7 @@ class PlateForm(forms.ModelForm):
             'account_user': forms.TextInput(attrs={'placeholder': 'State', 'class': 'form-control input-md'}),
             'account_password': forms.TextInput(attrs={'placeholder': 'State', 'class': 'form-control input-md'}),
             'trucks': forms.Select(attrs={'class': 'form-control input-md'}),
+            'customers': forms.Select(attrs={'class': 'form-control input-md'}),
         }
 
 class FileForm(forms.ModelForm):

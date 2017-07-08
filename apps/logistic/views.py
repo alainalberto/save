@@ -29,10 +29,6 @@ class LoadsCreate(CreateView):
          return render(request, self.template_name, {'form': form, 'title': 'Create new Load'})
 
      def post(self, request, *args, **kwargs):
-         if User.objects.get(username=request.POST['license_numb']):
-            user = User.objects.get(username=request.POST['license_numb'])
-         else:
-             user = User.objects.create(username=request.POST['license_numb'], password=request.POST['license_numb'], email=request.POST['email'], is_staff=False, is_active=True)
          form = self.form_class(request.POST)
          if form.is_valid():
              load_exist = Load.objects.filter(broker=form.data['broker'], number=form.data['number'])
@@ -42,7 +38,7 @@ class LoadsCreate(CreateView):
                  return render(request, self.template_name, {'form': form, 'title': 'Create new Drivers'})
              else:
                 load = form.save(commit=False)
-                load.users_id = user.id
+                load.users_id = request.user.id
                 load.save()
                 accion_user(load, ADDITION, request.user)
                 messages.success(request, 'Load save with an extension')

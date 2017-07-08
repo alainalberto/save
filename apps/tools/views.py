@@ -15,32 +15,37 @@ from apps.tools.components.AlertForm import AlertForm
 from django.contrib.auth import authenticate, logout, login, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
-import django_tables2 as tables
-from django_tables2 import RequestConfig
+from datetime import datetime, date, time, timedelta
+
 
 
 
 # Create your views here.
 
-def home_view(requiret):
-    return render(requiret, 'home/complement/panel.html')
+def Chats(request):
+    return render(request, "home/complement/chat.html")
 
-class PersonTable(tables.Table):
-    class Meta:
-        model = Alert
-        # add class="paleblue" to <table> tag
-        attrs = {'class': 'paleblue'}
+def Post(request):
+    if request.method == "POST":
+        msg = request.POST.get('msgbox', None)
+        c = Chat(users=request.user, message=msg)
+        if msg != '':
+            c.save()
+        return JsonResponse({'msg': msg, 'user': c.user.username})
+    else:
+        return HttpResponse('Request must be POST.')
 
-def people(request):
-    table = PersonTable(Alert.objects.all())
-    RequestConfig(request).configure(table)
-    return render(request, 'people.html', {'table': table})
+def Message(request):
+    c = Chat.objects.all()
+    return render(request, 'home/complement/messages.html', {'chat': c})
 
-def panel_view(requiret):
+def panel_view(request):
     balance = []
     income = []
     valueInc = 0
     valueExp = 0
+    alertUrg = Alert.objects.filter(category='Urgents')
+    date_now = datetime.now().date()
     inc = Account.objects.get(primary=True, name='Income')
     inc_acconts = Account.objects.filter(accounts_id_id=inc.id_acn)
     for i in inc_acconts:
@@ -93,8 +98,8 @@ def panel_view(requiret):
             balance.append({'account': e.name, 'income': valueInc, 'expense': valueExp, 'earning': str(valueEarn)})
 
 
-    contexto = {'balance': balance}
-    return render(requiret, 'home/complement/panel.html', contexto)
+    contexto = {'balance': balance, 'alert':alertUrg, 'date_now':date_now}
+    return render(request, 'home/complement/panel.html', contexto)
 
 class PostCalendar(CreateView):
     model = Calendar
@@ -187,12 +192,12 @@ def NotificationView(requiret):
     return render(requiret, 'alert/alertViews.html', contexto)
 
 def AlertView(requiret):
-    alertas = Alert.objects.filter(category='Alert')
+    alertas = Alert.objects.filter(category='Alerts')
     contexto = {'alerts': alertas, 'title':'List Alert', 'style':'warning'}
     return render(requiret, 'alert/alertViews.html', contexto)
 
 def UrgentView(requiret):
-    urgents = Alert.objects.filter(category='Urgent')
+    urgents = Alert.objects.filter(category='Urgents')
     contexto = {'alerts': urgents, 'title':'List Urgent', 'style':'danger'}
     return render(requiret, 'alert/alertViews.html', contexto)
 
