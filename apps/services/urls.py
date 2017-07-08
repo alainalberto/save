@@ -16,6 +16,8 @@ urlpatterns = [
     url(r'^maintenance/$', login_required(permission_required('services.add_maintenance')(CompanyView)), name='maintenance'),
     url(r'^forms/$', login_required(FileView.as_view()), name='forms'),
     url(r'^forms/create$', login_required(FileCreate.as_view()), name='file_create'),
+    url(r'^forms/edit/(?P<pk>\d+)/$', login_required(FileEdit.as_view()), name='file_edit'),
+    url(r'^forms/(?P<pk>\d+)/$', login_required(FileDelete.as_view()), name='file_delete'),
     url(r'^folder/$', login_required(permission_required('tools.add_folder')(CompanyView)), name='folder'),
 
 ]

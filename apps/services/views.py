@@ -80,6 +80,7 @@ class FileCreate(CreateView):
     model = File
     form_class = FileForm
     template_name = 'services/file/fileForm.html'
+    success_url = reverse_lazy('services:forms')
 
     def get(self, request, *args, **kwargs):
         form = self.form_class(initial=self.initial)
@@ -89,9 +90,11 @@ class FileCreate(CreateView):
         user = request.user
         form = self.form_class(request.POST, request.FILES)
         if form.is_valid():
-           folder = Folder.objects.filter(name='Forms')
-           if not folder:
+           folder_exist = Folder.objects.filter(name='Forms')
+           if not folder_exist:
               folder = Folder.objects.create(name='Forms', description='All Forms')
+           else:
+              folder = Folder.objects.get(name='Forms')
            file = form.save(commit=False)
            file.users_id = user.id
            file.folders_id = folder.id_fld
@@ -101,10 +104,11 @@ class FileCreate(CreateView):
            file.save()
            messages.success(request,"Form saved with an extension")
            accion_user(file, ADDITION, request.user)
-           return HttpResponseRedirect(reverse_lazy('services:forms'))
+           return HttpResponseRedirect(self.success_url)
         else:
             for er in form.errors:
                 messages.error(request, "ERROR: "+er)
+            return render(request, self.template_name, {'form': form, 'title': 'Create new File'})
 
 class FileEdit(UpdateView):
     model = File
