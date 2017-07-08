@@ -228,15 +228,17 @@ $('#btnphysical').change(function(){
       var column3 = $(this).closest('tr').children()[2].textContent;
       var column4 = $(this).closest('tr').children()[3].textContent;
       $('#tbItem tr').each(function(index, element){
-          if($(element).find("td input").eq(1).val() == ""){
-            $(element).find("td input").eq(1).val(column2);
+          if($(element).find(".descript").val() == "" ){
+            $(element).find(".precie").val(column4);
             $(element).find(".account").val(column1);
-            $(element).find("td input").eq(2).val(column4);
+            $(element).find(".descript").val(column2);
              return false;
           }
+
        });
 
     });
+
 
    $(".listitem").on("change", function() {
       $('#valueunt').val();

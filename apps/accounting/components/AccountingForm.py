@@ -171,6 +171,7 @@ class ItemHasInvoiceForm(forms.ModelForm):
     class Meta:
         model = InvoicesHasItem
         fields = {
+            'id_ind',
             'quantity',
             'description',
             'accounts',
@@ -179,6 +180,7 @@ class ItemHasInvoiceForm(forms.ModelForm):
             'subtotal',
         }
         widgets = {
+            'id_ind': forms.NumberInput(attrs={'placeholder': '0', 'class': 'form-control', 'style':'display : none'}),
             'quantity': forms.NumberInput(attrs={'placeholder': '0', 'class': 'form-control entrada'}),
             'description': forms.TextInput(attrs={'placeholder': 'Description ', 'class': 'form-control input-md descript'}),
             'accounts': forms.Select(attrs={'class': 'form-control input-md account', 'name': 'account'}),

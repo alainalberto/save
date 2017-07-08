@@ -2,7 +2,7 @@ from django.contrib.admin.models import ADDITION, CHANGE, DELETION
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
-from django.forms import inlineformset_factory
+from django.forms import modelform_factory, inlineformset_factory, formset_factory, BaseModelFormSet
 from django.contrib import messages
 from FirstCall.util import accion_user
 from apps.accounting.components.AccountingForm import *
@@ -503,7 +503,7 @@ def InvoicesCreate(request):
                                   'value',
                                   'tax',
                                   'subtotal'],
-                           extra=10
+                          extra=10
     )
     form = InvoicesForm()
     formset = ItemFormSet()
@@ -581,6 +581,16 @@ def InvoicesCreate(request):
         'title': 'Create new Invoice'
     })
 
+class ItemInlineFormSet(BaseModelFormSet):
+    def clean(self):
+        super(ItemInlineFormSet, self).clean()
+
+        for form in self.forms:
+            name = form.cleaned_data['name'].upper()
+            form.cleaned_data['name'] = name
+            # update the instance value.
+            form.instance.name = name
+
 class InvoicesEdit(UpdateView):
     model = Invoice
     sec_model = InvoicesHasItem
@@ -590,20 +600,20 @@ class InvoicesEdit(UpdateView):
                           Invoice,
                           InvoicesHasItem,
                           form=ItemHasInvoiceForm,
-                          fields=['quantity',
+                          fields=['id_ind',
+                                  'quantity',
                                   'description',
                                   'accounts',
                                   'value',
                                   'tax',
                                   'subtotal'],
-                           extra=10
+                          extra=3
     )
 
     def get_context_data(self, **kwargs):
         context = super(InvoicesEdit, self).get_context_data(**kwargs)
         pk = self.kwargs.get('pk', 0)
         invoice = self.model.objects.get(id_inv=pk)
-        invitem = self.sec_model.objects.filter(invoices_id=invoice.id_inv)
         items = Item.objects.all()
         loads = Load.objects.all().order_by('number')
         accounts = []
@@ -619,7 +629,7 @@ class InvoicesEdit(UpdateView):
         if 'form' not in context:
             context['form'] = self.form_class()
         if 'formset' not in context:
-            context['formset'] = self.form_class_item()
+            context['formset'] = self.form_class_item(instance=invoice)
         context['id'] = pk
         context['items'] = items
         context['loads'] = loads
@@ -631,10 +641,9 @@ class InvoicesEdit(UpdateView):
         self.object = self.get_object
         id_inv = kwargs['pk']
         invoice = self.model.objects.get(id_inv=id_inv)
-        invitem = self.sec_model.objects.filter(invoices_id=invoice.id_inv)
-        formset = self.form_class_item(request.POST, instance=invitem)
+        formset = self.form_class_item(request.POST, instance=invoice)
         form = self.form_class(request.POST, instance=invoice)
-        if form.is_valid() and formset.is_valid():
+        if form.is_valid():
             if request.POST['btnService']:
                 form.save()
                 accion_user(invoice, CHANGE, request.user)
