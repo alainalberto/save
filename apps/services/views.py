@@ -59,7 +59,7 @@ class FileEdit(UpdateView):
         self.object = self.get_object
         id_fil = kwargs['pk']
         file = self.model.objects.get(id_fil=id_fil)
-        form = self.form_class(request.POST, instance=file)
+        form = self.form_class(request.POST, request.FILES, instance=file)
         if form.is_valid():
             file =form.save()
             accion_user(file, CHANGE, request.user)
