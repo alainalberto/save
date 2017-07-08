@@ -15,7 +15,8 @@ from apps.tools.components.AlertForm import AlertForm
 from django.contrib.auth import authenticate, logout, login, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
-
+import django_tables2 as tables
+from django_tables2 import RequestConfig
 
 
 
@@ -24,6 +25,16 @@ from django.contrib import messages
 def home_view(requiret):
     return render(requiret, 'home/complement/panel.html')
 
+class PersonTable(tables.Table):
+    class Meta:
+        model = Alert
+        # add class="paleblue" to <table> tag
+        attrs = {'class': 'paleblue'}
+
+def people(request):
+    table = PersonTable(Alert.objects.all())
+    RequestConfig(request).configure(table)
+    return render(request, 'people.html', {'table': table})
 
 def panel_view(requiret):
     balance = []

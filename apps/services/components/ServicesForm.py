@@ -269,11 +269,13 @@ class FileForm(forms.ModelForm):
         model = File
 
         fields = [
+            'name',
+            'drescription',
             'url',
-            'name'
         ]
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'name', 'class': 'form-control input-md'}),
+            'drescription': forms.TextInput(attrs={'placeholder': 'Description', 'class': 'form-control input-md'}),
             'url': forms.FileInput(),
         }
 

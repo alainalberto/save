@@ -13,7 +13,9 @@ urlpatterns = [
     url(r'^permits/$', login_required(permission_required('services.add_permit')(CompanyView.as_view())), name='permits'),
     url(r'^plate/$', login_required(permission_required('services.add_plate')(CompanyView.as_view())), name='plate'),
     url(r'^maintenance/$', login_required(permission_required('services.add_maintenance')(CompanyView.as_view())), name='maintenance'),
-    url(r'^forms/$', login_required(), name='forms'),
+    url(r'^forms/$', login_required(FileView.as_view()), name='forms'),
     url(r'^folder/$', login_required(permission_required('tools.add_folder')(CompanyView.as_view())), name='folder'),
-
+    url(r'^forms/create/$', login_required(FileCreate.as_view()), name='file_create'),
+    url(r'^forms/edit/(?P<pk>\d+)/$', login_required(FileEdit.as_view()), name='file_edit'),
+    url(r'^forms/delete/(?P<pk>\d+)/$', login_required(FileDelete.as_view()), name='file_delete'),
 ]

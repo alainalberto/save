@@ -19,4 +19,5 @@ url(r'^alerts/create$', login_required(AlertsCreate.as_view()), name='alert_crea
 url(r'^alerts/edit/(?P<pk>\d+)/$', login_required(AlertstEdit.as_view()), name='alert_edit'),
 url(r'^alerts/delete/(?P<pk>\d+)/$', login_required(AlertsDelete.as_view()), name='alert_delete'),
 url(r'^password/$', login_required(change_password), name='password'),
+url(r'^people/$', login_required(people), name='people'),
 ]

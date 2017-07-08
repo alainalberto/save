@@ -7,8 +7,7 @@ from django.views.generic import TemplateView
 from apps.tools.models import Menu, Alert, Chat
 from django.db.models import Q
 from django.conf import settings
-from django.template import Context
-from django.template import RequestContext
+from django.template import Context, RequestContext
 
 def home_view(requiret):
     grupos = Group.objects.get(user=requiret.user)
