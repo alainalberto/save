@@ -91,11 +91,11 @@ class CustomersCreate(CreateView):
          return render(request, self.template_name, {'form': form, 'title': 'Create new Customer'})
 
      def post(self, request, *args, **kwargs):
-         user_exist = User.objects.filter(username=request.POST['email'])
-         if user_exist:
-            user = User.objects.get(username=request.POST['email'])
-         else:
-             user = User.objects.create_user(username=request.POST['email'],email=request.POST['email'], password=request.POST['phone'],  is_staff=False, is_active=True)
+         """user = User.objects.filter(username=request.POST['email'])
+            if user_exist:
+              user = User.objects.get(username=request.POST['email'])
+            else:
+                user = User.objects.create_user(username=request.POST['email'],email=request.POST['email'], password=request.POST['phone'],  is_staff=False, is_active=True)"""
          form = self.form_class(request.POST)
          folders = Folder.objects.filter(name='Customers')
          if not folders:
@@ -113,7 +113,7 @@ class CustomersCreate(CreateView):
                                                 folder=folder_father.id_fld)
                  customer = form.save(commit=False)
                  customer.folders_id = folder.id_fld
-                 customer.users_id = user.id
+                 customer.users_id = request.user.id
                  customer.save()
                  accion_user(customer, ADDITION, request.user)
                  messages.success(request,'The customer was saved successfully')
