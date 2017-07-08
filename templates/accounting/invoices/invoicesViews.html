@@ -34,8 +34,9 @@
                         <th class="col-md-2">Action</th>
                     </tr>
                     </thead>
-                    {% for i in object_list %}
+
                     <tbody>
+                    {% for i in object_list %}
                     <tr>
                         <td>{{i.prefix}}</td>
                         <td><a href="{% url 'accounting:invoices_view' i.id_inv %}">{{i.serial}}</a></td>
@@ -66,8 +67,9 @@
                         </td>
 
                     </tr>
+                    {% endfor %}
                     </tbody>
-                     {% endfor %}
+
                 </table>
             </div>
             </div>

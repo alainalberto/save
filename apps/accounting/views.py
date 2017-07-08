@@ -506,15 +506,15 @@ def InvoicesCreate(request):
                           extra=10
     )
     LoadFormSet = inlineformset_factory(
-        Invoice,
-        InvoicesHasLoad,
-        form=ItemHasInvoiceForm,
-        fields=['id_inl',
-                'loads'],
-        extra=10
+                          Invoice,
+                          InvoicesHasLoad,
+                          form=ItemHasInvoiceForm,
+                          fields=['id_inl',
+                                  'loads'],
+                          extra=10
     )
     form = InvoicesForm()
-    formset_item = ItemFormSet()
+    formset = ItemFormSet()
     formset_load = LoadFormSet()
     items = Item.objects.all()
     loads = Load.objects.all().order_by('number')
@@ -530,14 +530,14 @@ def InvoicesCreate(request):
                 accounts.append(ac)
     if request.method == 'POST':
         form = InvoicesForm(request.POST)
-        formset_item = ItemFormSet(request.POST)
+        formset = ItemFormSet(request.POST)
         user = request.user
         invs = Invoice.objects.filter(business_id=form.data['business']).order_by('-serial')
         serial = 1
         serials = []
         for s in invs:
             serials.append(s.serial)
-        if form.is_valid() and formset_item.is_valid():
+        if form.is_valid() and formset.is_valid():
             if serials:
                 serial = int(serials[0]) + 1
             invoice = form.save(commit=False)
@@ -547,7 +547,7 @@ def InvoicesCreate(request):
                 invoice.type = request.POST['btnService']
                 invoice.save()
                 accion_user(invoice, ADDITION, request.user)
-                itemhasInv = formset_item.save(commit=False)
+                itemhasInv = formset.save(commit=False)
                 for itinv in itemhasInv:
                    if Item.objects.filter(name__contains=itinv.description):
                       item = Item.objects.get(name=itinv.description)
@@ -595,12 +595,12 @@ def InvoicesCreate(request):
         else:
             for er in form.errors:
                 messages.error(request, "ERROR: "+er)
-            for er in formset_item.errors:
+            for er in formset.errors:
                 messages.error(request, "ERROR: " + er)
 
     return render(request, 'accounting/invoices/invoicesForm.html', {
         'form': form,
-        'formset_item': formset_item,
+        'formset': formset,
         'formset_load': formset_load,
         'items': items,
         'loads': loads,

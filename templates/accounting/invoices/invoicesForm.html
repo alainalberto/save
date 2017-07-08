@@ -170,8 +170,8 @@
                                 </thead>
                                 <tbody>
                                 {{ formset.management_form }}
-                                 {% for form in formset_item %}
-                                  {{ form.errors }}
+                                 {% for form in formset %}
+                                 {{ form.errors }}
                                  {{ form.non_field_errors }}
                                 <tr>
                                     <td style="display : none">{{ form.id_ind }}</td>
@@ -223,7 +223,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {{ formset.management_form }}
+                                {{ formset_load.management_form }}
                                 {% for form in formset_load %}
                                 {{ form.errors }}
                                 {{ form.non_field_errors }}
