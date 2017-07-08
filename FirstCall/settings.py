@@ -32,7 +32,7 @@ if socket.gethostname() == 'MageRanse-PC' or socket.gethostname() == 'LAPTOP-RQJ
     ALLOWED_HOSTS = []
 else:
     DEBUG = True
-    ALLOWED_HOSTS = ['www.fcintermodal.com']
+    ALLOWED_HOSTS = ['www.fcintermodal.com','fcintermodal.com','138.68.17.117']
 
 
 # Application definition
