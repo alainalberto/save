@@ -4,7 +4,7 @@ from apps.services.views import *
 
 urlpatterns = [
     #Company
-    url(r'^company/$', login_required(permission_required('services.add_company')(CompanyCreate.as_view())), name='company'),
+    url(r'^company/$', login_required(permission_required('services.add_companie')(CompanyCreate.as_view())), name='company'),
 
     url(r'^title/$', login_required(permission_required('services.add_title')(CompanyView)), name='title'),
     url(r'^insurance/$', login_required(permission_required('services.add_insurance')(CompanyView)), name='insurance'),
