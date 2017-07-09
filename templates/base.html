@@ -273,12 +273,12 @@
                         <li>
                             <a class="item" href="{% url 'services:maintenance' %}"> Maintenance</a>
                         </li>
-                        {% endif %}
-                        {% if perms.tools.add_folder %}
+                        {% endif %}-->
+                        {% if perms.tools.add_folder and perms.services %}
                         <li>
-                            <a class="item" href="{% url 'services:folder' %}"> Folder</a>
+                            <a class="item" href="{% url 'services:folder_create' %}"> Folder</a>
                         </li>
-                        {% endif %} -->
+                        {% endif %}
                     </ul>
                 </li>
                 {% endif %}

@@ -74,7 +74,7 @@ class Invoice(models.Model):
     waytopay = models.CharField(max_length=20, blank=True, null=True)
     discount = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     paid = models.BooleanField(default=True)
-    prefix = models.CharField(max_length=4, blank=True, null=True)
+    prefix = models.CharField(max_length=4, blank=True, null=True, default='inv')
     end_date = models.DateField(blank=True, null=True)
 
     def __str__(self):
@@ -163,10 +163,15 @@ class AccountDescrip(models.Model):
         if self.type == "Payment":
             return Payment.objects.get(id_sal=self.document)
 
-
 class EmployeeHasPayment(models.Model):
     id_pym = models.AutoField(primary_key=True)
     payments = models.ForeignKey(Payment, on_delete=models.CASCADE)  # Field name made lowercase.
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)  # Field name made lowercase.
 
+class Note(models.Model):
+    id = models.AutoField(primary_key=True)
+    customers = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    users = models.ForeignKey(User,  on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+    note = models.CharField(max_length=300, blank=True, null=True)
 

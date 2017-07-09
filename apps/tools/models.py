@@ -67,7 +67,7 @@ class File(models.Model):
     name = models.CharField(max_length=45, blank=True, null=True)
     drescription = models.CharField(max_length=255, blank=True, null=True)
     url = models.FileField(upload_to="Forms/", blank=True, null=True)
-    date_save = models.DateField(blank=True, null=True)
+    date_save = models.DateField(blank=True, null=True, auto_now_add=True)
 
     def __str__(self):
         return '{}'.format(self.name)

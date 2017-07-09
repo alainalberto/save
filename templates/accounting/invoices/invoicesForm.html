@@ -18,6 +18,7 @@
                 <fieldset>
                     <!-- Form Name -->
                     <!-- Text input-->
+                    <div class="row">
                      <div class="form-group col-md-1 col-md-offset-1">
                         <label class="label-control">{{ form.prefix.label }}</label>
                         {{ form.prefix }}
@@ -47,15 +48,26 @@
                     </div>
                     <div class="form-group col-md-3 col-md-offset-1">
                         <label class="label-control">{{ form.customers.label }} </label>
+                       <div class="input-group">
+                           <span class="input-group-btn">
+                           <button type="button" id="addcustomer" class="btn btn-success test-tooltip" data-toggle="modal" data-target="#customerList"data-type="info" data-trigger="focus" title="Item List" data-animation="am-flip-x">
+                            <i class="fa fa-search-plus" aria-hidden="true"></i>
+                            <tooltip md-direction="left"></tooltip>
+                        </button>
+                           </span>
                         {{ form.customers }}
+                       </div>
                     </div>
-                    <br/>
-                    </fieldset>
+                    <div class="form-group col-md-offset-1">
+
+                    </div>
+                    </div>
+                </fieldset>
                     <fieldset>
-                    <div class="form-group col-md-3 col-md-offset-2">
-                        <div class="list-group" name="type">
-                            <legend class="list-group-item active">Type of description:</legend>
-                            <div class="radio active">
+                        <div class="form-group col-md-3 col-md-offset-2">
+                            <div class="list-group" name="type">
+                                <legend class="list-group-item active">Type of description:</legend>
+                                <div class="radio active">
                                 <label>
                                     <input type="radio" name="btnService" id="btnService" value="service" checked>
                                     Service
@@ -63,7 +75,7 @@
                             </div>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" disabled name="btnService" id="btnLoad" value="load">
+                                    <input type="radio"  name="btnService" id="btnLoad" value="load">
                                     Load
                                 </label>
                             </div>
@@ -306,5 +318,41 @@
                 </form>
             </div>
          </div>
-
-i{% endblock %}
+ <div class="modal fade" id="customerList" tabindex="-1" role="dialog" aria-labelledby="ModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title text-center"><strong>Load List</strong></h4>
+                </div>
+                <div class="modal-body">
+                    <table id="customer_table" class="table data-table">
+                        <thead>
+                        <tr>
+                            <th class="col-md-3">Name</th>
+                            <th class="col-md-3">Company Name</th>
+                            <th class="col-md-4">Address</th>
+                            <th class="col-md-1">Phone</th>
+                            <th class="col-md-1">Action</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for c in customers %}
+                        <tr>
+                            <td>{{c.fullname}}</td>
+                            <td>{{c.company_name}}</td>
+                            <td>{{c.address}}</td>
+                            <td>{{c.phone}}</td>
+                            <td>
+                                <a type="button" class="btn btn-info btn_add_cut">Add</a>
+                            </td>
+                            <td style="display : none">{{c.id_cut}}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

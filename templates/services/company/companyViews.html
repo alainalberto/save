@@ -24,29 +24,6 @@
           </div>
            </fieldset>
           {% include 'services/company/companyForm.html'%}
-          <fieldset>
-          <div>
-              <table class="table table-striped">
-                  <thead>
-                  <th>Select Files</th>
-                  <th>File Name</th>
-                  </thead>
-                  <tbody>
-                  {% for f in form_file %}
-                  <tr>
-                      <td>{{f.url}}</td>
-                      <td>{{ f.name }}</td>
-                  </tr>
-                  {% endfor %}
-                  </tbody>
-              </table>
-          </div>
-          <div class="form-group col-md-5 col-md-offset-4">
-              <input type="submit" class="btn btn-success" value="Save">
-              <a type="button" href="{% url 'accounting:customers' %}" class="btn btn-danger">Cancel </a>
-          </div>
-
-      </fieldset>
       </form>
   </div>
     </div>

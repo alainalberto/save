@@ -79,7 +79,8 @@ class CustomersView(ListView):
 
 def CustomerView(request, pk):
        customer = Customer.objects.get(id_cut=pk)
-       return render(request, 'accounting/customer/customerView.html', {'customer': customer, 'title': 'Customer Folder'})
+       files = File.objects.filter(folders=customer.folders)
+       return render(request, 'accounting/customer/customerView.html', {'customer': customer, 'files':files, 'title': 'Customer Folder'})
 
 class CustomersCreate(CreateView):
      model = Customer

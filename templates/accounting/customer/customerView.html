@@ -149,14 +149,16 @@
           <p class="bg-primary text-center">CUSTOMER FILES</p>
       <table class="table table-striped">
                             <thead>
-                            <th>Select Files</th>
-                            <th>File Name</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Up load Date</th>
                             </thead>
                             <tbody>
                             {% for f in files %}
                             <tr>
-                                <td>{{f.url}}</td>
-                                <td>{{ f.name }}</td>
+                                <td><i class="fa fa-file-pdf-o" aria-hidden="true"></i> <a href="/static/media/{{ f.url }}" target="_blank">{{f.name}}</br></a></td>
+                                <td>{{ f.drescription }}</td>
+                                <td>{{ f.date_save }}</td>
                             </tr>
                             {% endfor %}
                             </tbody>
