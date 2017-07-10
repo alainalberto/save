@@ -22,7 +22,7 @@ class CompanyForm(forms.ModelForm):
         ]
         labels = {
                   'name': 'Company Name:',
-                  'attorney': 'Attorney`s Name:',
+                  'attorney': 'Authorized Person:',
                   'address': 'Address:',
                   'phone': 'Phone Number:',
                   'fax': 'Fax Number:',

@@ -34,10 +34,10 @@ class Customer(models.Model):
     email = models.CharField(max_length=255)
     deactivated = models.BooleanField(default=False)
     date_deactivated = models.DateField(blank=True, null=True)
-    usdot = models.IntegerField(blank=True, null=True)
-    mc = models.IntegerField(blank=True, null=True)
-    txdmv = models.IntegerField(blank=True, null=True)
-    ein = models.IntegerField(blank=True, null=True)
+    usdot = models.CharField(max_length=20,blank=True, null=True)
+    mc = models.CharField(max_length=20,blank=True, null=True)
+    txdmv = models.CharField(max_length=20,blank=True, null=True)
+    ein = models.CharField(max_length=20,blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.fullname)

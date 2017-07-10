@@ -8,11 +8,14 @@
                     <i class="fa fa-list fa-4x"></i>
                 </div>
                 <div class="col-xs-9 text-left">
-                    <div><h3>Customers</h3></div>
+                    <div><h3>{{ title }}</h3></div>
                 </div>
             </div>
         </div>
         <div class="panel-body">
+            {% if form %}
+              {% include 'accounting/customer/customerForm.html'%}
+            {% else %}
             <div class="navbar-button">
                 <a id="btnAdd" class="btn-primary btn col-md-offset-11" role="button" data-trigger="focus" title="Add User" href="{% url 'accounting:customer_create' %}">
                     <i class="fa fa-plus" aria-hidden="true"></i>
@@ -28,6 +31,7 @@
                     <th class="col-md-3">Company Name</th>
                     <th class="col-md-3">Address</th>
                     <th class="col-md-1">Phone</th>
+                    <th class="col-md-1">Active</th>
                     <th class="col-md-2">Action</th>
                 </tr>
                 </thead>
@@ -38,6 +42,7 @@
                     <td>{{c.company_name}}</td>
                     <td>{{c.address}}</td>
                     <td>{{c.phone}}</td>
+                    <td class="text-center">{% if not c.deactivated %}<i class="fa fa-check text-success" aria-hidden="true"></i>{% endif %}</td>
                     <td>
                         <toolbar class="md-accent">
                             <a data-type="info" data-trigger="focus" title="Edit Customer" data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'accounting:customer_edit' c.id_cut %}" {% if not perms.accounting.change_customer %} disabled {% endif %}>
@@ -57,6 +62,7 @@
                 </tbody>
             </table>
             </div>
+            {% endif %}
         </div>
     </div>
 </section>

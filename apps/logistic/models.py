@@ -67,7 +67,7 @@ class Load(models.Model):
     pickup_date = models.DateField(blank=True, null=True)
     deliver = models.CharField(max_length=45, blank=True, null=True)
     value = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
-    number = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
+    number = models.CharField(max_length=20,blank=True, null=True)
     paid = models.BooleanField(default=True)
     note = models.TextField(blank=True, null=True)
 

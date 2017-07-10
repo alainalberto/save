@@ -27,30 +27,20 @@ class CompanyCreate(CreateView):
       model = Companie
       template_name = 'services/company/companyViews.html'
       form_class = CompanyForm
-      FileFormSet = inlineformset_factory(
-          Folder,
-          File,
-          form=FileForm,
-          fields=['name',
-                  'url',
-                  ],
-          extra=5
-      )
 
       def get(self, request, *args, **kwargs):
           form = self.form_class(initial=self.initial)
-          form_file = self.FileFormSet()
-          return render(request, self.template_name, {'form_company': form, 'form_file': form_file, 'title': 'Create new Company'})
+          customer = Customer.objects.filter(deactivated=False)
+          return render(request, self.template_name, {'form_company': form, 'customers': customer, 'title': 'Create new Company'})
 
       def post(self, request, *args, **kwargs):
           form = self.form_class(request.POST)
-          form_file = self.FileFormSet(request.POST, request.FILES)
-          if form.is_valid() and form_file.is_valid():
+          if form.is_valid():
               company_exist = Companie.objects.filter(name=form.data['name'], ein=form.data['ein'])
               if company_exist:
                   messages.error(request, 'The Company already exists')
                   form = self.form_class(initial=self.initial)
-                  return render(request, self.template_name, {'form_company': form, 'form_file': form_file, 'title': 'Create new Company'})
+                  return render(request, self.template_name, {'form_company': form, 'title': 'Create new Company'})
               else:
                   company = form.save(commit=False)
                   customer = Customer.objects.get(id_cut=company.customers_id)
@@ -58,21 +48,60 @@ class CompanyCreate(CreateView):
                   company.folders_id = folder.id_fld
                   company.users_id = request.user.id
                   company.save()
-                  files = form_file.save(commit=False)
-                  for file in files:
-                      file.description = file.name
-                      file.date_save = company.created_date
-                      file.folders_id = folder.id_fld
-                      file.users_id = request.user.id
-                      file.save()
-
                   accion_user(customer, ADDITION, request.user)
                   messages.success(request, 'The customer was saved successfully')
-                  return HttpResponseRedirect(reverse_lazy('accounting:customer_view', customer.id_cut))
+                  return HttpResponseRedirect('/accounting/customers/view/'+customer.id_cut)
           else:
               for er in form.errors:
                   messages.error(request, "ERROR: " + er)
-              return render(request, self.template_name, {'form_company': form, 'form_file': form_file, 'title': 'Create new Company'})
+              return render(request, self.template_name, {'form_company': form, 'title': 'Create new Company'})
+
+
+class CompanyEdit(UpdateView):
+    model = Companie
+    template_name = 'services/company/companyViews.html'
+    form_class = CompanyForm
+
+    def get_context_data(self, **kwargs):
+        context = super(CompanyEdit, self).get_context_data(**kwargs)
+        pk = self.kwargs.get('pk', 0)
+        company = self.model.objects.get(id_com=pk)
+        form = self.form_class()
+        customer = Customer.objects.filter(deactivated=False)
+        if 'form_company' not in context:
+            context['form_company'] = form()
+        context['pk'] = pk
+        context['customers'] = customer
+        context['title'] = 'Create new Company'
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object
+        pk = kwargs['pk']
+        company = self.model.objects.get(id_com=pk)
+        form = self.form_class(request.POST, instance=company)
+        if form.is_valid():
+            company_exist = Companie.objects.filter(name=form.data['name'], ein=form.data['ein'])
+            if company_exist:
+                messages.error(request, 'The Company already exists')
+                form = self.form_class(initial=self.initial)
+                return render(request, self.template_name,
+                              {'form_company': form, 'title': 'Create new Company'})
+            else:
+                company = form.save(commit=False)
+                customer = Customer.objects.get(id_cut=company.customers_id)
+                folder = Folder.objects.get(id_fld=customer.folders_id)
+                company.folders_id = folder.id_fld
+                company.users_id = request.user.id
+                company.save()
+                accion_user(customer, ADDITION, request.user)
+                messages.success(request, 'The customer was saved successfully')
+                return HttpResponseRedirect('/accounting/customers/view/'+customer.id_cut)
+        else:
+            for er in form.errors:
+                messages.error(request, "ERROR: " + er)
+            return render(request, self.template_name,
+                          {'form_company': form, 'title': 'Create new Company'})
 
 class FileView(ListView):
     model = File
@@ -176,7 +205,7 @@ class FolderCreate(CreateView):
     success_url = reverse_lazy('services:folder')
 
     def get(self, request, *args, **kwargs):
-        customer = Customer.objects.all()
+        customer = Customer.objects.filter(deactivated=False)
         form = self.form_class(initial=self.initial)
         return render(request, self.template_name, {'form': form, 'customers':customer, 'title': 'Create new Folder'})
 

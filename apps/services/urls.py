@@ -5,6 +5,7 @@ from apps.services.views import *
 urlpatterns = [
     #Company
     url(r'^company/$', login_required(permission_required('services.add_companie')(CompanyCreate.as_view())), name='company'),
+    url(r'^company/edit/(?P<pk>\d+)/$', login_required(permission_required('services.change_companie')(CompanyEdit.as_view())), name='company_edit'),
 
     #Forms
     url(r'^forms/$', login_required(FileView.as_view()), name='forms'),

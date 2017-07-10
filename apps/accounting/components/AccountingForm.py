@@ -68,7 +68,7 @@ class CustomerForm(forms.ModelForm):
             'deactivated': forms.CheckboxInput(attrs={'class': 'checkbox'}),
             'usdot': forms.NumberInput(attrs={'placeholder': 'USDOT Number', 'class': 'form-control input-md'}),
             'mc': forms.NumberInput(attrs={'placeholder': 'MC Number', 'class': 'form-control input-md'}),
-            'txdmv': forms.NumberInput(attrs={'placeholder': 'TXDMV Number', 'class': 'form-control input-md'}),
+            'txdmv': forms.TextInput(attrs={'placeholder': 'TXDMV Number', 'class': 'form-control input-md'}),
             'ein': forms.NumberInput(attrs={'placeholder': 'EIN Number', 'class': 'form-control input-md'}),
         }
 

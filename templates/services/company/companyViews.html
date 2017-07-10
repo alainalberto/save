@@ -15,18 +15,63 @@
   <div class="panel-body">
       <form name="form_customer" method="post" class="form" role="form" id="form_customer" validate>{% csrf_token %}
       <fieldset>
-          <div class="form-group col-md-5 col-md-offset-1" >
-              <label class="label-control">{{form_company.customers.label}}</label>
-              {{form_company.customers}}
-              <a tipe="button" class="btn btn-link" href="">
-
-              </a>
-          </div>
+           <div class="form-group col-md-3 col-md-offset-1">
+                        <label class="label-control">{{ form_company.customers.label }} </label>
+                       <div class="input-group">
+                           <span class="input-group-btn">
+                           <button type="button" id="addcustomer" class="btn btn-success test-tooltip" data-toggle="modal" data-target="#customerList"data-type="info" data-trigger="focus" title="Item List" data-animation="am-flip-x">
+                            <i class="fa fa-search-plus" aria-hidden="true"></i>
+                            <tooltip md-direction="left"></tooltip>
+                        </button>
+                           </span>
+                        {{ form_company.customers }}
+                       </div>
+                    </div>
            </fieldset>
           {% include 'services/company/companyForm.html'%}
+          <div class="form-group col-md-5 col-md-offset-4">
+              <input type="submit" class="btn btn-success" value="Save">
+              <a type="button" href="{% url 'accounting:customers' %}" class="btn btn-danger">Cancel </a>
+          </div>
       </form>
   </div>
     </div>
-
+<div class="modal fade" id="customerList" tabindex="-1" role="dialog" aria-labelledby="ModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title text-center"><strong>Load List</strong></h4>
+                </div>
+                <div class="modal-body">
+                    <table id="customer_table" class="table data-table">
+                        <thead>
+                        <tr>
+                            <th class="col-md-3">Name</th>
+                            <th class="col-md-3">Company Name</th>
+                            <th class="col-md-4">Address</th>
+                            <th class="col-md-1">Phone</th>
+                            <th class="col-md-1">Action</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for c in customers %}
+                        <tr>
+                            <td>{{c.fullname}}</td>
+                            <td>{{c.company_name}}</td>
+                            <td>{{c.address}}</td>
+                            <td>{{c.phone}}</td>
+                            <td>
+                                <a type="button" class="btn btn-info btn_add_cut">Add</a>
+                            </td>
+                            <td style="display : none">{{c.id_cut}}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 {% endblock %}

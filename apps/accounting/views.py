@@ -69,7 +69,7 @@ def AccountDocument(request, pk):
     accountDescrp = AccountDescrip.objects.get(id_acd=pk)
     if accountDescrp:
         if accountDescrp.type:
-            return redirect('/accounting/'+accountDescrp.type+'/edit/'+str(accountDescrp.document)+'/')
+            return redirect('/accounting/'+accountDescrp.type.lower()+'/view/'+str(accountDescrp.document)+'/')
     return redirect('accounting:accounts')
 
 # Customers
@@ -77,15 +77,29 @@ class CustomersView(ListView):
     model = Customer
     template_name = 'accounting/customer/customerViews.html'
 
+    def get(self, request, *args, **kwargs):
+        customer = self.model.objects.all()
+        context ={'title': 'List Customer', 'object_list': customer}
+        return render(request, self.template_name, context)
+
 def CustomerView(request, pk):
        customer = Customer.objects.get(id_cut=pk)
+       company = Companie.objects.filter(customers_id=customer.id_cut)
+       permit = Permission.objects.filter(customers_id=customer.id_cut)
        files = File.objects.filter(folders=customer.folders)
-       return render(request, 'accounting/customer/customerView.html', {'customer': customer, 'files':files, 'title': 'Customer Folder'})
+       context = {
+           'customer': customer,
+           'files': files,
+           'companys': company,
+           'permit': permit,
+           'title': 'Customer Folder'
+       }
+       return render(request, 'accounting/customer/customerView.html', context)
 
 class CustomersCreate(CreateView):
      model = Customer
      form_class = CustomerForm
-     template_name = 'accounting/customer/customerForm.html'
+     template_name = 'accounting/customer/customerViews.html'
      success_url = reverse_lazy('accounting:customers')
      def get(self, request, *args, **kwargs):
          form = self.form_class(initial=self.initial)
@@ -128,7 +142,7 @@ class CustomersCreate(CreateView):
 class CustomersEdit(UpdateView):
     model = Customer
     form_class = CustomerForm
-    template_name = 'accounting/customer/customerForm.html'
+    template_name = 'accounting/customer/customerViews.html'
     success_url = reverse_lazy('accounting:customers')
 
     def post(self, request, *args, **kwargs):
@@ -489,7 +503,7 @@ def InvoiceView(request, pk):
                     'id': pk,
                     'items' :items,
                     'loads': loads,
-                    'title': 'Edit new Invoice',
+                    'title': 'Invoice',
                    }
         return render(request,'accounting/invoices/invoicesView.html', context)
 
@@ -519,6 +533,7 @@ def InvoicesCreate(request):
     formset_load = LoadFormSet()
     items = Item.objects.all()
     loads = Load.objects.all().order_by('number')
+    customer = Customer.objects.filter(deactivated=False)
     accounts = []
     inc = Account.objects.get(primary=True, name='Income')
     inc_acconts = Account.objects.filter(accounts_id_id=inc.id_acn)
@@ -560,7 +575,7 @@ def InvoicesCreate(request):
                                                                   accounts_id=itinv.accounts_id,
                                                                   document=invoice.id_inv,
                                                                   users_id=user.id,
-                                                                  type='invoices')
+                                                                  type='Invoices')
                    else:
                        item = Item.objects.create(name=itinv.description, value=itinv.value, accounts_id=itinv.accounts_id )
                        itinv.items_id = item.id_ite
@@ -571,7 +586,7 @@ def InvoicesCreate(request):
                                                                    accounts_id=itinv.accounts_id,
                                                                    document=invoice.id_inv,
                                                                    users_id=user.id,
-                                                                   type='invoices')
+                                                                   type='Invoices')
                 messages.success(request, "Invoice saved with an extension")
             else:
                 invoice.type = request.POST['btnService']
@@ -588,7 +603,7 @@ def InvoicesCreate(request):
                                                                     accounts_id=request.POST['account'],
                                                                     document=invoice.id_inv,
                                                                     users_id=user.id,
-                                                                    type='invoices')
+                                                                    type='Invoices')
 
                 messages.success(request, "Invoice saved with an extension")
 
@@ -606,6 +621,7 @@ def InvoicesCreate(request):
         'items': items,
         'loads': loads,
         'accounts': accounts,
+        'customers': customer,
         'title': 'Create new Invoice'
     })
 
@@ -644,6 +660,7 @@ class InvoicesEdit(UpdateView):
         invoice = self.model.objects.get(id_inv=pk)
         items = Item.objects.all()
         loads = Load.objects.all().order_by('number')
+        customer = Customer.objects.all()
         accounts = []
         inv = Account.objects.get(primary=True, name='Income')
         inv_acconts = Account.objects.filter(accounts_id_id=inv.id_acn)
@@ -662,6 +679,7 @@ class InvoicesEdit(UpdateView):
         context['items'] = items
         context['loads'] = loads
         context['accounts'] = accounts
+        context['customers'] = customer
         context['title'] = 'Edit new Invoice'
         return context
 
@@ -682,7 +700,7 @@ class InvoicesEdit(UpdateView):
                         itinv.items_id = item.id_ite
                         itinv.invoices = invoice
                         itinv.save()
-                        acountDescp = AccountDescrip.objects.get(date=invoice.start_date, accounts_id=itinv.accounts_id, document=invoice.id_inv, type='invoices').update(value=itinv.subtotal)
+                        acountDescp = AccountDescrip.objects.get(date=invoice.start_date, accounts_id=itinv.accounts_id, document=invoice.id_inv, type='Invoices').update(value=itinv.subtotal)
                     else:
                         item = Item.objects.create(name=itinv.description, value=itinv.value,
                                                    accounts_id=itinv.accounts_id)
@@ -694,7 +712,7 @@ class InvoicesEdit(UpdateView):
                                                                     accounts_id=itinv.accounts_id,
                                                                     document=invoice.id_inv,
                                                                     users_id=request.user.id,
-                                                                    type='invoices')
+                                                                    type='Invoices')
             messages.success(request, "Invoice update with an extension")
             return HttpResponseRedirect(reverse_lazy('accounting:invoices'))
         else:
@@ -714,7 +732,7 @@ class InvoicesDelete(DeleteView):
         self.object = self.get_object
         id_inv = kwargs['pk']
         invoice = self.model.objects.get(id_inv=id_inv)
-        acountDescp = AccountDescrip.objects.get(type='invoices', document=int(invoice.id_inv))
+        acountDescp = AccountDescrip.objects.get(type='Invoices', document=int(invoice.id_inv))
         invitem = InvoicesHasItem.objects.filter(invoices_id=invoice.id_inv)
         acountDescp.delete()
         accion_user(invoice, DELETION, request.user)
@@ -773,7 +791,7 @@ class ReceiptsCreate(CreateView):
                                                          accounts_id=request.POST['account'],
                                                          document=receipt.id_rec,
                                                          users_id=user.id,
-                                                         type='receipts'
+                                                         type='Receipts'
                                                          )
              messages.success(request, "Receipt save with an extension")
              return HttpResponseRedirect(reverse_lazy('accounting:receipts'))
@@ -915,7 +933,7 @@ class PaymentCreate(CreateView):
                                                          accounts_id=request.POST['account'],
                                                          document=receipt.id_rec,
                                                          users_id=user.id,
-                                                         type='receipts'
+                                                         type='Receipts'
                                                          )
              messages.success(request, "Receipt save with an extension")
              return HttpResponseRedirect(reverse_lazy('accounting:receipts'))
