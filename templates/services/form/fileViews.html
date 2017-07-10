@@ -21,6 +21,7 @@
       </div>
       <br/>
 
+       {% if object_list %}
        <table class="table table-striped">
                             <thead>
                             <th>Name</th>
@@ -31,6 +32,7 @@
                             <tbody>
                              {% for file in object_list %}
                             <tr>
+
                               <td><i class="fa fa-file-pdf-o" aria-hidden="true"></i> <a href="/static/media/{{ file.url }}" target="_blank">{{file.name}}</br></a></td>
                               <td>{{ file.date_save }}</td>
                               <td>
@@ -54,6 +56,9 @@
 
        {% for file in object_list %}
        {% endfor %}
+      {% else %}
+      <div class="alert alert-info"> <strong>Atention!</strong> No documents.</div>
+      {% endif %}
       </div>
   </div>
 </section>

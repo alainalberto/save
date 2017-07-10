@@ -66,6 +66,7 @@
     <script src="{% static 'lib/morris/morris.min.js'%}"></script>
     <script src="{% static 'lib/morris/morris-data.js'%}"></script>
 
+
 </head>
 
 <body>
@@ -338,10 +339,10 @@
 
         <div class="container-fluid">
             {% if messages %}
-            {% for sms in messages %}
-             <div class="alert alert-{{sms.tags}} alert-dismissible messager" role="alert">
+            {% for message in messages %}
+             <div class="alert alert-{{message.tags}} class="{{ message.tags }}"  alert-dismissible messager" role="alert">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <strong>{{sms.tags|upper}} </strong>{{sms}}
+                <strong>{{message.tags|upper}} </strong>{{message}}
              </div>
             {% endfor %}
             {% endif %}

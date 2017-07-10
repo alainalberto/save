@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.contenttypes.models import ContentType
 from django.forms import modelform_factory, inlineformset_factory, formset_factory, BaseModelFormSet
-from django.shortcuts import render, redirect, HttpResponseRedirect
+from django.shortcuts import render, render_to_response, redirect, HttpResponseRedirect
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.admin.models import LogEntry, ADDITION, CHANGE, DELETION
 from apps.logistic.models import Load
@@ -14,6 +14,8 @@ from apps.tools.models import Folder, Busines, File
 from datetime import datetime, date, time, timedelta
 from django.contrib import messages
 from FirstCall.util import accion_user
+from django.template import Template, RequestContext
+
 
 # Create your views here.
 def CompanyView(request, pk):
@@ -123,7 +125,7 @@ class FileEdit(UpdateView):
         if form.is_valid():
             file =form.save()
             accion_user(file, CHANGE, request.user)
-            messages.success(request, "File update with an extension")
+            messages.success(request, "File update")
             return HttpResponseRedirect(self.success_url)
         else:
             for er in form.errors:
@@ -141,7 +143,7 @@ class FileDelete(DeleteView):
         file = self.model.objects.get(id_fil=id_fil)
         accion_user(file, DELETION, request.user)
         file.delete()
-        messages.success(request, "File delete with an extension")
+        messages.success(request, "File delete")
         return HttpResponseRedirect(self.success_url)
 
 class FolderView(ListView):
