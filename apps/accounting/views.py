@@ -84,14 +84,16 @@ class CustomersView(ListView):
 
 def CustomerView(request, pk):
        customer = Customer.objects.get(id_cut=pk)
-       company = Companie.objects.filter(customers_id=customer.id_cut)
-       permit = Permission.objects.filter(customers_id=customer.id_cut)
+       company = Companie.objects.filter(customers=customer)
+       permit = Permission.objects.filter(customers=customer)
        files = File.objects.filter(folders=customer.folders)
+       note = Note.objects.filter(customers=customer)
        context = {
            'customer': customer,
            'files': files,
            'companys': company,
            'permit': permit,
+           'notes': note,
            'title': 'Customer Folder'
        }
        return render(request, 'accounting/customer/customerView.html', context)
@@ -101,9 +103,14 @@ class CustomersCreate(CreateView):
      form_class = CustomerForm
      template_name = 'accounting/customer/customerViews.html'
      success_url = reverse_lazy('accounting:customers')
+
      def get(self, request, *args, **kwargs):
+         if kwargs.__contains__('popup'):
+             popup = kwargs['popup']
+         else:
+             popup = 0
          form = self.form_class(initial=self.initial)
-         return render(request, self.template_name, {'form': form, 'title': 'Create new Customer'})
+         return render(request, self.template_name, {'form': form, 'is_popup': popup, 'title': 'Create new Customer'})
 
      def post(self, request, *args, **kwargs):
          """user = User.objects.filter(username=request.POST['email'])
@@ -111,6 +118,10 @@ class CustomersCreate(CreateView):
               user = User.objects.get(username=request.POST['email'])
             else:
                 user = User.objects.create_user(username=request.POST['email'],email=request.POST['email'], password=request.POST['phone'],  is_staff=False, is_active=True)"""
+         if kwargs.__contains__('popup'):
+             popup = kwargs['popup']
+         else:
+             popup = 0
          form = self.form_class(request.POST)
          folders = Folder.objects.filter(name='Customers')
          if not folders:
@@ -121,7 +132,7 @@ class CustomersCreate(CreateView):
              if customer_exist:
                  messages.error(request,'The customer already exists')
                  form = self.form_class(initial=self.initial)
-                 return render(request, self.template_name, {'form': form, 'title': 'Create new Customer'})
+                 return render(request, self.template_name, {'form': form, 'is_popup': popup, 'title': 'Create new Customer'})
              else:
                  folder = Folder.objects.create(name=form.data['fullname'] + "_Customer",
                                                 description=form.data['fullname'] + "_Customer",
@@ -129,6 +140,8 @@ class CustomersCreate(CreateView):
                  customer = form.save(commit=False)
                  customer.folders_id = folder.id_fld
                  customer.users_id = request.user.id
+                 if customer.deactivated:
+                     customer.date_deactivated = datetime.now().strftime("%Y-%m-%d")
                  customer.save()
                  accion_user(customer, ADDITION, request.user)
                  messages.success(request,'The customer was saved successfully')
@@ -136,7 +149,7 @@ class CustomersCreate(CreateView):
          else:
             for er in form.errors:
                 messages.error(request, "ERROR: "+er)
-            return render(request, self.template_name, {'form': form, 'title': 'Create new Customer'})
+            return render(request, self.template_name, {'form': form, 'is_popup': popup,  'title': 'Create new Customer'})
 
 
 class CustomersEdit(UpdateView):
@@ -145,13 +158,33 @@ class CustomersEdit(UpdateView):
     template_name = 'accounting/customer/customerViews.html'
     success_url = reverse_lazy('accounting:customers')
 
+    def get_context_data(self, **kwargs):
+        context = super(CustomersEdit, self).get_context_data(**kwargs)
+        if kwargs.__contains__('popup'):
+            popup = self.kwargs.get('popup')
+        else:
+            popup = 0
+        pk = self.kwargs.get('pk', 0)
+        customer = Customer.objects.get(id_cut=pk)
+        if 'form' not in context:
+            context['form'] = self.form_class(instance=customer)
+        context['id'] = pk
+        context['is_popup'] = popup
+        context['title'] = 'Edit Customer'
+        return context
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object
         id_cut = kwargs['pk']
         customer = self.model.objects.get(id_cut=id_cut)
         form = self.form_class(request.POST, instance=customer)
         if form.is_valid():
-            customer = form.save()
+            customer = form.save(commit=False)
+            if customer.deactivated:
+                customer.date_deactivated = datetime.today().strftime("%Y-%m-%d")
+            else:
+                customer.date_deactivated = None
+            customer.save()
             accion_user(customer, CHANGE, request.user)
             messages.success(request, 'The customer was update successfully')
             return HttpResponseRedirect(self.success_url)
@@ -442,7 +475,12 @@ class EmployeesCreate(CreateView):
                  form = self.form_class(initial=self.initial)
                  return render(request, self.template_name, {'form': form, 'title': 'Create new Employee'})
              else:
-               employee=form.save()
+               employee=form.save(commit=False)
+               if employee.deactivated:
+                   employee.date_deactivated = datetime.now().strftime("%Y-%m-%d")
+               else:
+                   employee.date_deactivated = None
+               employee.save()
                accion_user(employee, ADDITION, request.user)
                messages.success(request, 'The employee was saved successfully')
                return HttpResponseRedirect(self.success_url)
@@ -464,7 +502,12 @@ class EmployeesEdit(UpdateView):
         employee = self.model.objects.get(id_emp=id_emp)
         form = self.form_class(request.POST, instance=employee)
         if form.is_valid():
-            employee =form.save()
+            employee =form.save(commit=False)
+            if employee.deactivated:
+                employee.date_deactivated = datetime.now().strftime("%Y-%m-%d")
+            else:
+                employee.date_deactivated = None
+            employee.save()
             accion_user(employee, CHANGE, request.user)
             messages.success(request, "Employee update with an extension")
             return HttpResponseRedirect(self.success_url)
@@ -721,8 +764,6 @@ class InvoicesEdit(UpdateView):
             for er in formset.errors:
                 messages.error(request, "ERROR: " + er)
 
-
-
 class InvoicesDelete(DeleteView):
     model = Invoice
     template_name = 'confirm_delete.html'
@@ -747,8 +788,6 @@ class InvoicesDelete(DeleteView):
 class ReceiptsView(ListView):
     model = Receipt
     template_name = 'accounting/receipts/receiptsViews.html'
-
-
 
 class ReceiptsCreate(CreateView):
      model = Receipt
@@ -908,7 +947,6 @@ class PaymentCreate(CreateView):
 
      def get(self, request, *args, **kwargs):
          form = self.form_class(initial=self.initial)
-
          return render(request, self.template_name, {'form': form, 'title': 'Create new Payment'})
 
      def post(self, request, *args, **kwargs):
@@ -1003,7 +1041,7 @@ class PaymentEdit(UpdateView):
 class PaymentDelete(DeleteView):
     model = Receipt
     template_name = 'confirm_delete.html'
-    success_url = reverse_lazy('accounting:receipts')
+    success_url = reverse_lazy('accounting:payment')
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object
@@ -1016,3 +1054,73 @@ class PaymentDelete(DeleteView):
         messages.success(request, "Receipt delete with an extension")
         return HttpResponseRedirect(self.success_url)
 
+class NoteCreate(CreateView):
+    model = Note
+    form_class = NoteForm
+    template_name = 'accounting/customer/noteForm.html'
+
+    def get(self, request, *args, **kwargs):
+        is_popup = kwargs['popup']
+        form = self.form_class(initial=self.initial)
+        return render(request, self.template_name, {'form': form, 'is_popup': is_popup, 'title': 'Create new Note'})
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        id = kwargs['pk']
+        is_popup = kwargs['popup']
+        customer = Customer.objects.get(id_cut=id)
+        form = self.form_class(request.POST)
+        if form.is_valid():
+             note = form.save(commit=False)
+             note.customers = customer
+             note.users = user
+             note.save()
+             accion_user(note, ADDITION, request.user)
+             return messages.success(request, 'Added your note to customer')
+        else:
+            for er in form.errors:
+                messages.error(request, "ERROR: " + er)
+            return render(request, self.template_name, {'form': form, 'is_popup': is_popup, 'title': 'Create new Note'})
+
+class NoteEdit(UpdateView):
+    model = Note
+    form_class = NoteForm
+    template_name = 'accounting/customer/noteForm.html'
+
+    def get(self, request, *args, **kwargs):
+        is_popup = kwargs['popup']
+        form = self.form_class(initial=self.initial)
+        return render(request, self.template_name, {'form': form, 'is_popup': is_popup, 'title': 'Create new Note'})
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        id = kwargs['pk']
+        is_popup = kwargs['popup']
+        customer = Customer.objects.get(id_cut=id)
+        form = self.form_class(request.POST)
+        if form.is_valid():
+             note = form.save(commit=False)
+             note.customers = customer
+             note.users = user
+             note.save()
+             accion_user(note, ADDITION, request.user)
+             return messages.success(request, 'Added your note to customer')
+        else:
+            for er in form.errors:
+                messages.error(request, "ERROR: " + er)
+            return render(request, self.template_name, {'form': form, 'is_popup': is_popup, 'title': 'Create new Note'})
+
+class NoteDelete(DeleteView):
+    model = Note
+    template_name = 'confirm_delete.html'
+
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object
+        id = kwargs['pk']
+        note = self.model.objects.get(id_rec=id)
+        customer = Customer.objects.get(id_cut=note.customers_id)
+        accion_user(note, DELETION, request.user)
+        note.delete()
+        messages.success(request, "Receipt delete with an extension")
+        return HttpResponseRedirect('accounting/customers/view/'+customer.id_cut)

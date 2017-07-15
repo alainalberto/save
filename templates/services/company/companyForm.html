@@ -31,4 +31,8 @@
         <label class="label-control">{{form_company.deactivate.label}}</label>
         {{form_company.deactivate}}
     </div>
+    <div class="form-group col-md-5 col-md-offset-4">
+        <input type="submit" class="btn btn-success" value="Save" {% if is_popup %} onclick="window.close()" {% endif %}>
+        <a type="button"  class="btn btn-danger" {% if is_popup %} onclick="window.close()" {% else %} onclick="history.back(-1)" {% endif %}>Cancel </a>
+    </div>
 </fieldset>

@@ -106,71 +106,148 @@
                         </div>
                         <div class="panel-body">
                             <div  class="tab-content">
-                                {% if companys %}
-                                {% for company in companys %}
-                                <div role="tabpanel" class="tab-pane fade in active" id="newCompany">
-                                    <div class="col-md-offset-11">
-                                        <a type="button" class="btn btn-info" href="{% url 'services:company_edit' company.id_com %}"><span><i class="fa fa-pencil-square-o"></i> Edit </span></a>
+
+                                <div role="tabpanel" class="tab-pane fade" id="newCompany">
+                                   <div class="col-md-offset-11">
+                                        <a type="button" class="btn btn-success" href="{% url 'services:company_create_popup' pk=customer.id_cut popup=1 %}" target="popup" onclick="window.open('', 'popup', 'width=5 00,height=600')"><span><i class="fa fa-plus"></i> Add </span></a>
+                                   </div><br/>
+                                    {% if companys %}
+                                    {% for company in companys %}
+                                   <div class="col-md-offset-11">
+                                        <a type="button" class="btn btn-info" href="{% url 'services:company_edit_popup' pk=company.id_com popup=1 %}" target="popup" onclick="window.open('', 'popup', 'width=5 00,height=600')"><span><i class="fa fa-pencil-square-o"></i> Edit </span></a>
                                     </div>
                                     {% include 'services/company/companyView.html'%}
+                                    {% endfor %}
+                                    {% endif %}
                                 </div>
-                                {% endfor %}
-                                {% endif %}
-                                {% if permit %}
+
                                 <div role="tabpanel" class="tab-pane fade" id="permit">
+                                    {% if permit %}
                                     {% include 'services/permit/permitForm.html'%}
+                                    {% endif %}
                                 </div>
-                                {% endif %}
-                                {% if titles %}
+
                                 <div role="tabpanel" class="tab-pane fade" id="title">
+                                    {% if titles %}
                                         {% include 'services/title/titleForm.html'%}
+                                    {% endif %}
                                 </div>
-                                {% endif %}
-                                {% if plate %}
+
                                 <div role="tabpanel" class="tab-pane fade" id="plate">
+                                    {% if plate %}
                                         {% include 'services/plate/plateForm.html'%}
+                                    {% endif %}
                                 </div>
-                                {% endif %}
-                                {% if insurance %}
+
                                 <div role="tabpanel" class="tab-pane fade" id="insurance">
+                                    {% if insurance %}
                                        {% include 'services/insurance/insuranceForm.html'%}
+                                    {% endif %}
                                 </div>
-                                {% endif %}
-                                {% if mtt %}
+
                                 <div role="tabpanel" class="tab-pane fade" id="dot">
+                                    {% if mtt %}
                                    {% include 'services/maintenance/maintenanceForm.html'%}
+                                    {% endif %}
                                 </div>
-                                {% endif %}
-                                {% if ifta %}
+
                                 <div role="tabpanel" class="tab-pane fade" id="ifta">
+                                    {% if ifta %}
                                          {% include 'services/ifta/iftaForm.html'%}
+                                    {% endif %}
                                 </div>
-                                {% endif %}
+
                             </div>
                         </div>
                     </div>
                 </div>
-       <div class="form-group col-md-12">
+      <div class="form-group col-md-12">
           <p class="bg-primary text-center">CUSTOMER FILES</p>
-      <table class="table table-striped">
-                            <thead>
-                            <th>Name</th>
-                            <th>Creative user </th>
-                            <th>Up load Date</th>
-                            </thead>
-                            <tbody>
-                            {% for f in files %}
-                            <tr>
-                                <td><i class="fa fa-file-pdf-o" aria-hidden="true"></i> <a href="/static/media/{{ f.url }}" target="_blank">{{f.name}}</br></a></td>
-                                <td>{{ f.users }}</td>
-                                <td>{{ f.date_save }}</td>
-                            </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-       </div>
-</div>
+          <div class="col-md-offset-11">
+              <a type="button" class="btn btn-success" href="{% url 'services:folder_create_popup' pk=customer.id_cut popup=1 %}" target="popup" onclick="window.open('', 'popup', 'width=5 00,height=600')"><span><i class="fa fa-plus"></i></span></a>
+          </div>
+          <table class="table table-striped">
+              <thead>
+              <th>Name</th>
+              <th>Creative user </th>
+              <th>Up load Date</th>
+              <th>Action</th>
+              </thead>
+              <tbody>
+              {% for f in files %}
+              <tr>
+                  <td><i class="fa fa-file-pdf-o" aria-hidden="true"></i> <a href="/static/media/{{ f.url }}" target="_blank">{{f.name}}</br></a></td>
+                  <td>{{ f.users }}</td>
+                  <td>{{ f.date_save }}</td>
+                  <td>
+                      <toolbar class="md-accent">
+                          <a data-type="info" href="{% url 'services:folder_edit_popup' pk=f.id_fil popup=1 %}" data-trigger="focus"  data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" target="popup" onclick="window.open('', 'popup', 'width=5 00,height=600')">
+                              <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                              <tooltip md-direction="left"></tooltip>
+                          </a>
+                      </toolbar>
+                      <toolbar class="md-accent">
+                          <a data-type="info" href="{% url 'services:folder_delete_popup' pk=f.id_fil popup=1 %}" data-animation="am-flip-x" data-trigger="focus"   type="button" class="btn btn-danger test-tooltip" target="popup" onclick="window.open('', 'popup', 'width=500,height=400')">
+                              <i class="fa fa-trash" aria-hidden="true"></i>
+                              <tooltip md-direction="left"></tooltip>
+                          </a>
+                      </toolbar>
+                  </td>
+              </tr>
+              {% endfor %}
+              </tbody>
+          </table>
+      </div>
+      <div class="form-group col-md-12">
+          <p class="bg-primary text-center">NOTES</p>
+          <div class="col-md-offset-11">
+              <a type="button" class="btn btn-success" href="{% url 'accounting:note_create' pk=customer.id_cut popup=1 %}" target="popup" onclick="window.open('', 'popup', 'width=5 00,height=600')"><span><i class="fa fa-plus"></i></span></a>
+          </div>
+          <table class="table table-striped">
+              <thead>
+              <th>User</th>
+              <th>Note</th>
+              <th>Date and Timer</th>
+              <th>Action</th>
+              </thead>
+              <tbody>
+              {% for n in notes %}
+              <tr>
+                  <td>{{n.users}}</td>
+                  <td>{{ n.note }}</td>
+                  <td>{{ n.date }}</td>
+                   <td>
+                      <toolbar class="md-accent">
+                          <a data-type="info" href="{% url 'accounting:note_edit' pk=n.id popup=1 %}" data-trigger="focus"  data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" target="popup" onclick="window.open('', 'popup', 'width=500,height=400')">
+                              <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                              <tooltip md-direction="left"></tooltip>
+                          </a>
+                      </toolbar>
+                      <toolbar class="md-accent">
+                          <a data-type="info" href="{% url 'accounting:note_delete' pk=n.id popup=1 %}" data-animation="am-flip-x" data-trigger="focus"   type="button" class="btn btn-danger test-tooltip" target="popup" onclick="window.open('', 'popup', 'width=500,height=400')">
+                              <i class="fa fa-trash" aria-hidden="true"></i>
+                              <tooltip md-direction="left"></tooltip>
+                          </a>
+                      </toolbar>
+                  </td>
+              </tr>
+              {% endfor %}
+              </tbody>
+          </table>
+      </div>
+  </div>
     </div>
-
+<div class="modal fade" id="customerList" tabindex="-1" role="dialog" aria-labelledby="ModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title text-center"><strong>Load List</strong></h4>
+                </div>
+                <div class="modal-body">
+                   {% include 'accounting/customer/noteForm.html'%}
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 {% endblock %}

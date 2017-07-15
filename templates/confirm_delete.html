@@ -18,8 +18,8 @@
                 <div class="row">
                     <div class="col-md-10 col-md-offset-4">
                         <p>
-                            <input class="btm btn-danger" type="submit" value="Yes, I'm sure"/>
-                            <input class="btm btn-primary" type="button" value="No, take me back" onclick="history.back(-1)" />
+                            <input class="btm btn-danger" type="submit" value="Yes, I'm sure" {% if is_popup %} onclick="window.close()" {% endif %}/>
+                            <input class="btm btn-primary" type="button" value="No, take me back" {% if is_popup %} onclick="window.close()" {% else %} onclick="history.back(-1)" {% endif %} />
                         </p>
                     </div>
                 </div>

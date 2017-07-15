@@ -29,24 +29,40 @@ class CompanyCreate(CreateView):
       form_class = CompanyForm
 
       def get(self, request, *args, **kwargs):
+          if kwargs.__contains__('popup'):
+            popup = kwargs['popup']
+          else:
+              popup = 0
           form = self.form_class(initial=self.initial)
           customer = Customer.objects.filter(deactivated=False)
-          return render(request, self.template_name, {'form_company': form, 'customers': customer, 'title': 'Create new Company'})
+          return render(request, self.template_name, {'form_company': form, 'customers': customer, 'is_popup': popup, 'title': 'Create new Company'})
 
       def post(self, request, *args, **kwargs):
+          id = kwargs['pk']
+          if kwargs.__contains__('popup'):
+            popup = kwargs['popup']
+          else:
+              popup = 0
           form = self.form_class(request.POST)
           if form.is_valid():
               company_exist = Companie.objects.filter(name=form.data['name'], ein=form.data['ein'])
               if company_exist:
                   messages.error(request, 'The Company already exists')
                   form = self.form_class(initial=self.initial)
-                  return render(request, self.template_name, {'form_company': form, 'title': 'Create new Company'})
+                  return render(request, self.template_name, {'form_company': form, 'is_popup': popup, 'title': 'Create new Company'})
               else:
                   company = form.save(commit=False)
-                  customer = Customer.objects.get(id_cut=company.customers_id)
+                  if popup:
+                    customer = Customer.objects.get(id_cut=id())
+                  else:
+                      customer = Customer.objects.get(id_cut=company.customers_id)
                   folder = Folder.objects.get(id_fld=customer.folders_id)
                   company.folders_id = folder.id_fld
                   company.users_id = request.user.id
+                  if company.deactivated:
+                      company.deactivate_date = datetime.now().strftime("%Y-%m-%d")
+                  else:
+                      company.deactivate_date = None
                   company.save()
                   accion_user(customer, ADDITION, request.user)
                   messages.success(request, 'The customer was saved successfully')
@@ -54,7 +70,7 @@ class CompanyCreate(CreateView):
           else:
               for er in form.errors:
                   messages.error(request, "ERROR: " + er)
-              return render(request, self.template_name, {'form_company': form, 'title': 'Create new Company'})
+              return render(request, self.template_name, {'form_company': form, 'is_popup': popup,'title': 'Create new Company'})
 
 
 class CompanyEdit(UpdateView):
@@ -64,20 +80,25 @@ class CompanyEdit(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(CompanyEdit, self).get_context_data(**kwargs)
+        if self.kwargs.__contains__('popup'):
+            popup = self.kwargs.get('popup')
+        else:
+            popup = 0
         pk = self.kwargs.get('pk', 0)
         company = self.model.objects.get(id_com=pk)
-        form = self.form_class()
         customer = Customer.objects.filter(deactivated=False)
         if 'form_company' not in context:
-            context['form_company'] = form()
-        context['pk'] = pk
+            context['form_company'] = self.form_class(instance=company)
+        context['id'] = pk
         context['customers'] = customer
-        context['title'] = 'Create new Company'
+        context['is_popup'] = popup
+        context['title'] = 'Edit Company'
         return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object
         pk = kwargs['pk']
+        popup = kwargs['popup']
         company = self.model.objects.get(id_com=pk)
         form = self.form_class(request.POST, instance=company)
         if form.is_valid():
@@ -86,13 +107,17 @@ class CompanyEdit(UpdateView):
                 messages.error(request, 'The Company already exists')
                 form = self.form_class(initial=self.initial)
                 return render(request, self.template_name,
-                              {'form_company': form, 'title': 'Create new Company'})
+                              {'form_company': form, 'is_popup': popup, 'title': 'Create new Company'})
             else:
                 company = form.save(commit=False)
                 customer = Customer.objects.get(id_cut=company.customers_id)
                 folder = Folder.objects.get(id_fld=customer.folders_id)
                 company.folders_id = folder.id_fld
                 company.users_id = request.user.id
+                if company.deactivated:
+                    company.deactivate_date = datetime.now().strftime("%Y-%m-%d")
+                else:
+                    company.deactivate_date = None
                 company.save()
                 accion_user(customer, ADDITION, request.user)
                 messages.success(request, 'The customer was saved successfully')
@@ -101,7 +126,7 @@ class CompanyEdit(UpdateView):
             for er in form.errors:
                 messages.error(request, "ERROR: " + er)
             return render(request, self.template_name,
-                          {'form_company': form, 'title': 'Create new Company'})
+                          {'form_company': form,  'is_popup': popup, 'title': 'Create new Company'})
 
 class FileView(ListView):
     model = File
@@ -202,16 +227,26 @@ class FolderCreate(CreateView):
         extra=10
     )
     template_name = 'services/folder/folderForm.html'
-    success_url = reverse_lazy('services:folder')
+
 
     def get(self, request, *args, **kwargs):
         customer = Customer.objects.filter(deactivated=False)
+        if kwargs.__contains__('popup'):
+            popup = kwargs.get('popup')
+        else:
+            popup = 0
         form = self.form_class(initial=self.initial)
-        return render(request, self.template_name, {'form': form, 'customers':customer, 'title': 'Create new Folder'})
+        return render(request, self.template_name, {'form_files': form, 'is_popup':popup, 'customers':customer, 'title': 'Create new Folder'})
 
     def post(self, request, *args, **kwargs):
-        customer = Customer.objects.get(id_cut=request.POST['customers'])
         user = request.user
+        if kwargs.__contains__('popup'):
+            popup = kwargs['popup']
+            id = kwargs['pk']
+            customer = Customer.objects.get(id_cut=id)
+        else:
+            popup = 0
+            customer = Customer.objects.get(id_cut=request.POST['customers'])
         form = self.form_class(request.POST, request.FILES)
         if form.is_valid():
             folder = Folder.objects.get(id_fld=customer.folders_id)
@@ -223,44 +258,70 @@ class FolderCreate(CreateView):
               f.save()
             messages.success(request, "Form saved with an extension")
             accion_user(file, ADDITION, request.user)
-            return HttpResponseRedirect(self.success_url)
+            return HttpResponseRedirect('/accounting/customers/view/' + str(customer.id_cut))
         else:
             for er in form.errors:
                 messages.error(request, "ERROR: " + er)
-            return render(request, self.template_name, {'form': form, 'title': 'Create new File'})
+            return render(request, self.template_name, {'form_files': form, 'is_popup':popup, 'customers':customer,'title': 'Create new File'})
 
 
 class FolderEdit(UpdateView):
     model = File
-    form_class = FileForm
     template_name = 'services/folder/folderForm.html'
-    success_url = reverse_lazy('services:forms')
+    form_class = FileForm
+
+    def get_context_data(self, **kwargs):
+        context = super(FolderEdit, self).get_context_data(**kwargs)
+        id = self.kwargs.get('pk', 0)
+        if self.kwargs.__contains__('popup'):
+            popup = self.kwargs.get('popup')
+        else:
+            popup = 0
+        if 'form_file' not in context:
+            context['form_file'] = self.form_class
+        context['id'] = id
+        context['is_popup'] = popup
+        context['title'] = 'Edit File'
+        return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object
         id_fil = kwargs['pk']
         file = self.model.objects.get(id_fil=id_fil)
+        customer = Customer.objects.get(folders=file.folders)
         form = self.form_class(request.POST, request.FILES, instance=file)
         if form.is_valid():
             file =form.save()
             accion_user(file, CHANGE, request.user)
-            messages.success(request, "File update with an extension")
-            return HttpResponseRedirect(self.success_url)
+            messages.success(request, "File update")
+            return HttpResponseRedirect('/accounting/customers/view/' + str(customer.id_cut))
         else:
             for er in form.errors:
                 messages.error(request, "ERROR: "+er)
-            return render(request, self.template_name, {'form': form, 'title': 'Edit File'})
+            return render(request, self.template_name, {'form_file': form, 'title': 'Edit File'})
 
 class FolderDelete(DeleteView):
     model = File
     template_name = 'confirm_delete.html'
     success_url = reverse_lazy('services:forms')
 
+    def get_context_data(self, **kwargs):
+        context = super(FolderDelete, self).get_context_data(**kwargs)
+        if self.kwargs.__contains__('popup'):
+            popup = self.kwargs.get('popup')
+        else:
+            popup = 0
+        id = self.kwargs.get('pk', 0)
+        context['id'] = id
+        context['is_popup'] = popup
+        return context
+
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object
         id_fil = kwargs['pk']
         file = self.model.objects.get(id_fil=id_fil)
+        customer = Customer.objects.get(folders=file.folders)
         accion_user(file, DELETION, request.user)
         file.delete()
         messages.success(request, "File delete with an extension")
-        return HttpResponseRedirect(self.success_url)
+        return HttpResponseRedirect('/accounting/customers/view/' + str(customer.id_cut))

@@ -4,12 +4,12 @@
       <!-- Text input-->
       <div class="form-group col-md-3 col-md-offset-1" >
         <label class="label-control">{{form.fullname.label}} </label>
-        {{form.fullname}}
+        {{form.fullname|capfirst}}
       </div>
       <!-- Text input-->
        <div class="form-group col-md-4 col-md-offset-1">
          <label class="label-control">{{ form.company_name.label }}</label>
-        {{ form.company_name }}
+        {{ form.company_name|capfirst }}
       </div>
     <!-- Select Basic -->
       <div class="form-group col-md-3 col-md-offset-1">
@@ -54,8 +54,8 @@
           </div>
           <!-- Button (Double) -->
           <div class="form-group col-md-5 col-md-offset-4">
-              <input type="submit" class="btn btn-success" value="Save">
-              <a type="button" href="{% url 'accounting:customers' %}" class="btn btn-danger">Cancel </a>
+              <input type="submit" class="btn btn-success" value="Save" {% if is_popup %} onclick="window.close()" {% endif %}>
+              <a type="button" class="btn btn-danger" {% if is_popup %} onclick="window.close()" {% else %} onclick="history.back(-1)" {% endif %}>Cancel </a>
           </div>
 
       </fieldset>

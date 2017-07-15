@@ -31,6 +31,7 @@
                             </thead>
                             <tbody>
                              {% for file in object_list %}
+                             {% if file.folder.name == 'Form' %}
                             <tr>
 
                               <td><i class="fa fa-file-pdf-o" aria-hidden="true"></i> <a href="/static/media/{{ file.url }}" target="_blank">{{file.name}}</br></a></td>
@@ -50,6 +51,7 @@
                             </toolbar>
                         </td>
                             </tr>
+                             {% endif %}
                             {% endfor %}
                             </tbody>
                         </table>

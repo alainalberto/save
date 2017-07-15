@@ -58,8 +58,8 @@ class CustomerForm(forms.ModelForm):
             'ein': 'EIN:',
         }
         widgets = {
-            'fullname': forms.TextInput(attrs={'placeholder': 'Full Name', 'class': 'form-control input-md'}),
-            'company_name': forms.TextInput(attrs={'placeholder': 'Company Name', 'class': 'form-control input-md'}),
+            'fullname': forms.TextInput(attrs={'placeholder': 'Full Name', 'class': 'form-control input-md capital'}),
+            'company_name': forms.TextInput(attrs={'placeholder': 'Company Name', 'class': 'form-control input-md capital'}),
             'no_social': forms.NumberInput(attrs={'placeholder': 'SSN', 'class': 'form-control input-md'}),
             'address': forms.TextInput(attrs={'placeholder': 'Address', 'class': 'form-control input-md'}),
             'phone': forms.NumberInput(attrs={'placeholder': 'Telepone Number', 'class': 'form-control input-md'}),
@@ -292,4 +292,14 @@ class FeeForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'placeholder': 'Description', 'class': 'form-control input-md'}),
             'type': forms.Select(attrs={'class': 'form-control input-md'},choices=(('pervent','Commission'),('salary','Salary'))),
             'value': forms.NumberInput(attrs={'placeholder': '0', 'class': 'form-control', 'style': 'display : none'}),
+        }
+
+class NoteForm(forms.ModelForm):
+    class Meta:
+        model = Note
+        fields = {
+            'note',
+        }
+        widgets = {
+            'value': forms.Textarea(attrs={'class': 'form-control fee-value'}),
         }

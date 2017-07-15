@@ -12,31 +12,38 @@
       </div>
     </div>
   </div>
-  <div class="panel-body">
-      <form name="form_customer" method="post" class="form" role="form" id="form_customer" validate>{% csrf_token %}
-      <fieldset>
-           <div class="form-group col-md-3 col-md-offset-1">
+        <div class="panel-body">
+            <form name="form_customer" method="post" class="form" role="form" id="form_customer" validate>{% csrf_token %}
+                {% if not is_popup %}
+                <fieldset>
+
+                    <div class="form-group col-md-5 col-md-offset-1">
                         <label class="label-control">{{ form_company.customers.label }} </label>
-                       <div class="input-group">
-                           <span class="input-group-btn">
-                           <button type="button" id="addcustomer" class="btn btn-success test-tooltip" data-toggle="modal" data-target="#customerList"data-type="info" data-trigger="focus" title="Item List" data-animation="am-flip-x">
-                            <i class="fa fa-search-plus" aria-hidden="true"></i>
-                            <tooltip md-direction="left"></tooltip>
-                        </button>
-                           </span>
-                        {{ form_company.customers }}
-                       </div>
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <button type="button" id="addcustomer" class="btn btn-success test-tooltip" data-toggle="modal" data-target="#customerList"data-type="info" data-trigger="focus" title="Customer List" data-animation="am-flip-x">
+                                    <i class="fa fa-search-plus" aria-hidden="true"></i>
+                                    <tooltip md-direction="left"></tooltip>
+                                </button>
+                            </span>
+                            {{ form_company.customers }}
+                            <span class="input-group-btn">
+                                <a type="button" id="newcustomer" class="btn btn-success test-tooltip" href="{% url 'accounting:customer_popup' popup=1 %}" target="popup" onclick="window.open('', 'popup', 'width=5 00,height=600')" data-trigger="focus" title="Add new Customer" data-animation="am-flip-x">
+                                    <i class="fa fa-plus"></i>
+                                    <tooltip md-direction="right"></tooltip>
+                                </a>
+                            </span>
+                        </div>
+
                     </div>
-           </fieldset>
-          {% include 'services/company/companyForm.html'%}
-          <div class="form-group col-md-5 col-md-offset-4">
-              <input type="submit" class="btn btn-success" value="Save">
-              <a type="button" href="{% url 'accounting:customers' %}" class="btn btn-danger">Cancel </a>
-          </div>
-      </form>
-  </div>
+
+                </fieldset>
+                {% endif %}
+                {% include 'services/company/companyForm.html'%}
+            </form>
+        </div>
     </div>
-<div class="modal fade" id="customerList" tabindex="-1" role="dialog" aria-labelledby="ModalLabel">
+    <div class="modal fade" id="customerList" tabindex="-1" role="dialog" aria-labelledby="ModalLabel">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">

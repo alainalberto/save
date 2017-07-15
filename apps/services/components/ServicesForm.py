@@ -34,7 +34,7 @@ class CompanyForm(forms.ModelForm):
         }
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Company Name', 'class': 'form-control input-md'}),
-            'attorney': forms.TextInput(attrs={'placeholder': 'Attorney', 'class': 'form-control input-md'}),
+            'attorney': forms.TextInput(attrs={'placeholder': 'Authorized Person:', 'class': 'form-control input-md'}),
             'address': forms.TextInput(attrs={'placeholder': 'Address', 'class': 'form-control input-md'}),
             'phone': forms.NumberInput(attrs={'placeholder': 'Telepone Number', 'class': 'form-control input-md'}),
             'fax': forms.NumberInput(attrs={'placeholder': 'Fax Number', 'class': 'form-control input-md'}),

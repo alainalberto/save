@@ -322,6 +322,7 @@ $('#btnphysical').change(function(){
       var column = $(this).closest('tr').children()[5].textContent;
       $('#id_customers').val(column)
     });
+  // Convert in Capital
 
 
  });
