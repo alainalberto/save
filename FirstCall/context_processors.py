@@ -22,5 +22,5 @@ def base(request):
            urgent.append(u)
     all = len(notif) + len(alert) + len(urgent)
     c = Chat.objects.all()
-    contexto = {'notif': len(notif), 'alert': len(alert), 'urgent': len(urgent), 'all': all, 'chat': c}
+    contexto = {'notif': len(notif), 'alrt': len(alert), 'urgent': len(urgent), 'all': all, 'chat': c}
     return (contexto)

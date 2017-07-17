@@ -164,7 +164,7 @@
       <div class="form-group col-md-12">
           <p class="bg-primary text-center">CUSTOMER FILES</p>
           <div class="col-md-offset-11">
-              <a type="button" class="btn btn-success" href="{% url 'services:folder_create_popup' pk=customer.id_cut popup=1 %}" target="popup" onclick="window.open('', 'popup', 'width=5 00,height=600')"><span><i class="fa fa-plus"></i></span></a>
+              <a type="button" class="btn btn-success" href="{% url 'services:folder_create_popup' pk=customer.id_cut popup=1 %}" target="popup" onclick="window.open('', 'popup', 'width=700, height=600')"><span><i class="fa fa-plus"></i></span></a>
           </div>
           <table class="table table-striped">
               <thead>
@@ -181,13 +181,13 @@
                   <td>{{ f.date_save }}</td>
                   <td>
                       <toolbar class="md-accent">
-                          <a data-type="info" href="{% url 'services:folder_edit_popup' pk=f.id_fil popup=1 %}" data-trigger="focus"  data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" target="popup" onclick="window.open('', 'popup', 'width=5 00,height=600')">
+                          <a data-type="info" href="{% url 'services:folder_edit_popup' pk=f.id_fil popup=1 %}" data-trigger="focus"  data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" target="popup" onclick="window.open('', 'popup', 'width=500, height=600')">
                               <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                               <tooltip md-direction="left"></tooltip>
                           </a>
                       </toolbar>
                       <toolbar class="md-accent">
-                          <a data-type="info" href="{% url 'services:folder_delete_popup' pk=f.id_fil popup=1 %}" data-animation="am-flip-x" data-trigger="focus"   type="button" class="btn btn-danger test-tooltip" target="popup" onclick="window.open('', 'popup', 'width=500,height=400')">
+                          <a data-type="info" href="{% url 'services:folder_delete_popup' pk=f.id_fil popup=1 %}" data-animation="am-flip-x" data-trigger="focus"   type="button" class="btn btn-danger test-tooltip" target="popup" onclick="window.open('', 'popup', 'width=10%, height=8%')">
                               <i class="fa fa-trash" aria-hidden="true"></i>
                               <tooltip md-direction="left"></tooltip>
                           </a>
