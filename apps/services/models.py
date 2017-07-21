@@ -149,13 +149,12 @@ class Trucks(models.Model):
 
 class Ifta(models.Model):
     id_ift = models.AutoField(primary_key=True)
-    trucks = models.ForeignKey(Trucks, on_delete=models.CASCADE)  # Field name made lowercase.
     users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
     customers = models.ForeignKey(Customer, on_delete=models.CASCADE)  # Field name made lowercase.
-    date = models.DateField(blank=True, null=True)
-    state = models.CharField(max_length=45, blank=True, null=True)
-    milles = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
-    gallons = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
+    date = models.DateField(auto_now_add=True)
+    type = models.CharField(max_length=45, blank=True, null=True)
+    period = models.CharField(max_length=45, blank=True, null=True)
+    nex_period = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.trucks.number)

@@ -323,11 +323,17 @@ $('#btnphysical').change(function(){
       $('#id_customers').val(column)
       $('#customerList').modal('hide');
     });
-  // Convert in Capital
 
 
  });
-  function deleteitem(i){
-      document.getElementsByTagName("table")[0].setAttribute("id","tableid");
-      document.getElementById("tableid").deleteRow(i);
-    }
+
+  // Modal Save botton
+function openpopup(page){
+ window.open(page,'popup',' location=0, directories=0, resizable=0, width=500,height=700,Top=20,Left=490');
+ }
+
+ function closepopup(){
+ window.opener.location.reload();
+ window.opener.location.href=window.opener.location.href;
+ window.close();
+ }

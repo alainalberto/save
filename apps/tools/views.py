@@ -227,8 +227,8 @@ class DeleteCalendar(DeleteView):
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object
-        id_cal = kwargs['pk']
-        calendar = self.model.objects.get(id=id_cal)
+        id = kwargs['pk']
+        calendar = self.model.objects.get(id=id)
         accion_user(calendar, DELETION, request.user)
         calendar.delete()
         messages.success(request, "Enent delete with an extension")

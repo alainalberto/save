@@ -1,4 +1,6 @@
-<fieldset>
+{% extends 'base.html' %}
+{% block content %}
+<section>
     <div class="form-group col-md-4 col-md-offset-1" >
         <label class="label-control">Company Name:</label>
         <div>{{company.name}}</div>
@@ -17,7 +19,7 @@
     </div>
     <div class="form-group col-md-4 col-md-offset-1" >
         <label class="label-control">Fax Number:</label>
-        <div>{{company.fax}}}</div>
+        <div>{{company.fax}}</div>
     </div>
     <div class="form-group col-md-4 col-md-offset-1" >
         <label class="label-control">EIN Number:</label>
@@ -37,4 +39,5 @@
         {{company.deactivate_date}}
     </div>
     {% endif %}
-</fieldset>
+</section>
+{% endblock %}

@@ -73,6 +73,40 @@ def AccountDocument(request, pk):
     return redirect('accounting:accounts')
 
 # Customers
+def CustomerView(request, pk):
+       customer = Customer.objects.get(id_cut=pk)
+       company = Companie.objects.filter(customers=customer)
+       permit = Permission.objects.filter(customers=customer)
+       insurance = Insurance.objects.filter(customers=customer)
+       plate = Plate.objects.filter(customers=customer)
+       title = Title.objects.filter(customers=customer)
+       ifta = Ifta.objects.filter(customers=customer)
+       mtt = Maintenance.objects.filter(customers=customer)
+       audit = Audit.objects.filter(customers=customer)
+       if company:
+         for c in company:
+           driver = Driver.objects.filter(companies=c)
+           truck = Driver.objects.filter(companies=c)
+       files = File.objects.filter(folders=customer.folders)
+       note = Note.objects.filter(customers=customer)
+       context = {
+           'customer': customer,
+           'files': files,
+           'companys': company,
+           'permits': permit,
+           'insurances': insurance,
+           'plates': plate,
+           'titles': title,
+           'iftas': ifta,
+           'mtts': mtt,
+           'audits': audit,
+           #'drives': driver,
+          #'trucks': truck,
+           'notes': note,
+           'title': 'Customer Folder'
+       }
+       return render(request, 'accounting/customer/customerView.html', context)
+
 class CustomersView(ListView):
     model = Customer
     template_name = 'accounting/customer/customerViews.html'
@@ -81,22 +115,6 @@ class CustomersView(ListView):
         customer = self.model.objects.all()
         context ={'title': 'List Customer', 'object_list': customer}
         return render(request, self.template_name, context)
-
-def CustomerView(request, pk):
-       customer = Customer.objects.get(id_cut=pk)
-       company = Companie.objects.filter(customers=customer)
-       permit = Permission.objects.filter(customers=customer)
-       files = File.objects.filter(folders=customer.folders)
-       note = Note.objects.filter(customers=customer)
-       context = {
-           'customer': customer,
-           'files': files,
-           'companys': company,
-           'permit': permit,
-           'notes': note,
-           'title': 'Customer Folder'
-       }
-       return render(request, 'accounting/customer/customerView.html', context)
 
 class CustomersCreate(CreateView):
      model = Customer
@@ -214,240 +232,6 @@ class CustomersDelete(DeleteView):
             file.delete()
         messages.success(request, 'The customer was delete successfully')
         return HttpResponseRedirect(self.success_url)
-
-
-def CustomersService(request):
-    FileFormSet = inlineformset_factory(
-        Folder,
-        File,
-        form=FileForm,
-        fields=['name',
-                'url',
-                ],
-        extra=10
-    )
-    IftaFormSet = inlineformset_factory(
-        Customer,
-        Ifta,
-        form=IftaForm,
-        fields=['date',
-                'state',
-                'milles',
-                'gallons',
-                'trucks',
-                ],
-        extra=10
-    )
-    form = CustomerForm()
-    form_permit = PermitForm()
-    form_company = CompanyForm()
-    form_file = FileFormSet()
-    form_insurance = InsuranceForm()
-    form_ifta = IftaFormSet()
-    form_mtt = MTTForm()
-    form_title = TitleForm()
-    form_plate = PlateForm()
-    form_contract = ContractForm()
-    form_alert = AlertForm()
-
-    if request.method == 'POST':
-        user_exist = User.objects.filter(username=request.POST['email'])
-        if user_exist:
-            user = User.objects.get(username=request.POST['email'])
-        else:
-            user = User.objects.create_user(username=request.POST['email'], email=request.POST['email'],
-                                            password=request.POST['phone'], is_staff=False, is_active=True)
-        formatDate = "%Y/%m/%d"
-        date_now = datetime.today()
-        user_create = request.user
-        form = CustomerForm(request.POST)
-        form_company = CompanyForm(request.POST, request.FILES['logo'])
-        form_permit = PermitForm(request.POST)
-        form_file = FileFormSet(request.POST, request.FILES['url'])
-        form_insurance = InsuranceForm(request.POST)
-        form_ifta = IftaFormSet(request.POST)
-        form_mtt = MTTForm(request.POST)
-        form_title = TitleForm(request.POST)
-        form_plate = PlateForm(request.POST)
-        form_contract = ContractForm(request.POST)
-        form_alert = AlertForm(request.POST)
-        folders = Folder.objects.filter(name='Customers')
-        if not folders:
-            Folder.objects.create(name='Customers', description='Customers', folder='NULL')
-        folder_father = Folder.objects.get(name='Customers')
-        if form.is_valid():
-            customer_exist = Customer.objects.filter(email=form.data['email'], fullname=form.data['fullname'])
-            if customer_exist:
-                messages.error(request, 'The customer already exists')
-                form = CustomerForm(initial=request.initial)
-                return render(request, 'accounting/customer/customerServices.html', {
-                    'form': form,
-                    'form_company': form_company,
-                    'form_permit': form_permit,
-                    'form_ifta': form_ifta,
-                    'form_insurance': form_insurance,
-                    'form_mtt': form_mtt,
-                    'form_contract': form_contract,
-                    'form_title': form_title,
-                    'form_plate': form_plate,
-                    'form_file': form_file,
-                    'form_alert': form_alert,
-                })
-            else:
-                folder = Folder.objects.create(name=form.data['fullname'] + "_Customer",
-                                               description=form.data['fullname'] + "_Customer",
-                                               folder=folder_father.id_fld)
-            customer = form.save(commit=False)
-            customer.folders_id = folder.id_fld
-            customer.users_id = user.id
-            customer.save()
-
-            company = form_company.save(commit=False)
-            company.customers_id = customer.id_cut
-            company.folders_id = folder.id_fld
-            company.users_id = user_create.id
-            company.created_date = date_now.strftime(formatDate)
-            company.save()
-
-            permit = form_permit.save(commit=False)
-            permit.date = date_now
-            permit.customers_id = customer.id_cut
-            permit.users_id = user_create.id
-            permit.save()
-            if request.POST['txdmv_alert']:
-                alert = form_alert.save(commit=False)
-                dateExp = datetime.strptime(permit.txdmv_date_exp, formatDate)
-                day = int(request.POST['alert_day'])
-                dateShow = date_now - timedelta(days=day)
-                alert.category = "Urgents"
-                alert.description= "Expires customer TXDMV Permit" + customer
-                alert.create_date = date_now.strftime(formatDate)
-                alert.show_date = dateShow.strftime(formatDate)
-                alert.end_date = dateExp.strftime(formatDate)
-                alert.users_id = user_create.id
-                alert.save()
-
-            insurance = form_insurance.save(commit=False)
-            insurance.customers_id = customer.id_cut
-            insurance.users_id = user_create.id
-            insurance.save()
-            if request.POST['policy_alert']:
-                alert = form_alert.save(commit=False)
-                dateExp = datetime.strptime(insurance.policy_date_exp, formatDate)
-                day = int(request.POST['alert_day'])
-                dateShow = date_now - timedelta(days=day)
-                alert.category = "Urgents"
-                alert.description= "Expires customer insurance policy " + customer
-                alert.create_date = date_now.strftime(formatDate)
-                alert.show_date = dateShow.strftime(formatDate)
-                alert.end_date = dateExp.strftime(formatDate)
-                alert.users_id = user_create.id
-                alert.save()
-
-            contract = form_contract.save(commit=False)
-            contract.customer_id = customer.id_cut
-            contract.users_id = user_create.id
-            contract.save()
-            mtt = form_mtt.save(commit=False)
-            mtt.contracts_id = contract.id_con
-            mtt.customers_id = customer.id_cut
-            mtt.users_id = user_create.id
-            mtt.save()
-            if request.POST['contract_alert']:
-                alert = form_alert.save(commit=False)
-                dateExp = datetime.strptime(contract.end_date, formatDate)
-                day = int(request.POST['alert_day'])
-                dateShow = date_now - timedelta(days=day)
-                alert.category = "Urgents"
-                alert.description= "Expires customer Maintenance Contract " + customer
-                alert.create_date = date_now.strftime(formatDate)
-                alert.show_date = dateShow.strftime(formatDate)
-                alert.end_date = dateExp.strftime(formatDate)
-                alert.users_id = user_create.id
-                alert.save()
-
-            title = form_title.save(commit=False)
-            title.customers_id = customer.id_cut
-            title.users_id = user_create.id
-            title.save()
-            if request.POST['register_alert']:
-                alert = form_alert.save(commit=False)
-                dateExp = datetime.strptime(title.date_exp_reg, formatDate)
-                day = int(request.POST['alert_day'])
-                dateShow = date_now - timedelta(days=day)
-                alert.category = "Urgents"
-                alert.description= "Expires customer Registration(Title) " + customer
-                alert.create_date = date_now.strftime(formatDate)
-                alert.show_date = dateShow.strftime(formatDate)
-                alert.end_date = dateExp.strftime(formatDate)
-                alert.users_id = user_create.id
-                alert.save()
-            if request.POST['inspection_alert']:
-                alert = form_alert.save(commit=False)
-                dateExp = datetime.strptime(title.date_exp_insp, formatDate)
-                day = int(request.POST['alert_day'])
-                dateShow = date_now - timedelta(days=day)
-                alert.category = "Urgents"
-                alert.description= "Expires customer Inspection(Title) " + customer
-                alert.create_date = date_now.strftime(formatDate)
-                alert.show_date = dateShow.strftime(formatDate)
-                alert.end_date = dateExp.strftime(formatDate)
-                alert.users_id = user_create.id
-                alert.save()
-
-
-            plate = form_plate.save(commit=False)
-            plate.customers_id = customer.id_cut
-            plate.users_id = user_create.id
-            plate.save()
-            if request.POST['plate_alert']:
-                alert = form_alert.save(commit=False)
-                dateExp = datetime.strptime(plate.date_exp, formatDate)
-                day = int(request.POST['alert_day'])
-                dateShow = date_now - timedelta(days=day)
-                alert.category = "Urgents"
-                alert.description= "Expires customer Plate " + customer
-                alert.create_date = date_now.strftime(formatDate)
-                alert.show_date = dateShow.strftime(formatDate)
-                alert.end_date = dateExp.strftime(formatDate)
-                alert.users_id = user_create.id
-                alert.save()
-
-            ifta = form_ifta.save(commit=False)
-            for i in ifta:
-                i.customers_id = customer.id_cut
-                i.users_id = user_create.id
-                i.save()
-
-            files = form_file.save(commit=False)
-            for file in files:
-                file.description = file.name
-                file.date_save = date_now.strftime(formatDate)
-                file.folders_id = folder.id_fld
-                file.users_id = user_create.id
-                file.save()
-
-            accion_user(customer, ADDITION, request.user)
-            messages.success(request, "Customer saved with an extension")
-    else:
-        for er in form.errors:
-            messages.error(request, "ERROR: " + er)
-        for er in form_company.errors:
-            messages.error(request, "ERROR: " + er)
-
-    return render(request, 'accounting/customer/customerServices.html', {
-           'form': form,
-           'form_company': form_company,
-           'form_permit': form_permit,
-           'form_ifta': form_ifta,
-           'form_insurance': form_insurance,
-           'form_mtt': form_mtt,
-           'form_contract': form_contract,
-           'form_title': form_title,
-           'form_plate': form_plate,
-           'form_file': form_file,
-           'form_alert': form_alert,
-})
 
 
 #Employees
@@ -1118,9 +902,9 @@ class NoteDelete(DeleteView):
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object
         id = kwargs['pk']
-        note = self.model.objects.get(id_rec=id)
+        note = self.model.objects.get(id=id)
         customer = Customer.objects.get(id_cut=note.customers_id)
         accion_user(note, DELETION, request.user)
         note.delete()
         messages.success(request, "Receipt delete with an extension")
-        return HttpResponseRedirect('accounting/customers/view/'+customer.id_cut)
+        return HttpResponseRedirect('accounting/customers/view/'+str(customer.id_cut))

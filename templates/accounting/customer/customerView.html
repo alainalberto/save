@@ -66,17 +66,17 @@
               <div>{{ customer.ein }}</div>
           </div>
            {% if customer.deactivated %}
-          <div class="form-group col-md-2 col-md-offset-1" >
-              <label class="label-control"></label>
-              {{customer.deactivated}}
+          <div class="form-group col-md-3 col-md-offset-2" >
+              <label class="label-control">Is Deactivated: </label>
+              <samp class="text-danger">{{customer.deactivated}}</samp>
           </div>
-          <div class="form-group col-md-2 col-md-offset-1" >
-              <label class="label-control"> </label>
-              {{customer.date_deactivated}}
+          <div class="form-group col-md-4 col-md-offset-2" >
+              <label class="label-control">Deactivated Date: </label>
+               <samp class="text-danger">{{customer.date_deactivated}}</samp>
           </div>
           {% endif %}
 
-      <div class="form-group col-md-12">
+     <div class="form-group col-md-12">
           <p class="bg-primary text-center">CUSTOMER SERVICES</p>
                     <div class="panel panel-success">
                         <div class="panel-heading">
@@ -84,22 +84,22 @@
                                 {% if companys %}
                                 <li id="tabCompany" role="presentation"><a href="#newCompany" aria-controls="newCompany" role="tab" data-toggle="tab">New Company</a></li>
                                 {% endif %}
-                                {% if permit %}
+                                {% if permits %}
                                 <li id="tabPermit" role="presentation"><a href="#permit" aria-controls="permite" role="tab" data-toggle="tab">Permits</a></li>
                                 {% endif %}
                                 {% if titles %}
                                 <li id="tabTitle" role="presentation"><a href="#title" aria-controls="title" role="tab" data-toggle="tab">Title Record</a></li>
                                 {% endif %}
-                                {% if plate %}
+                                {% if plates %}
                                 <li id="tabPlate" role="presentation"><a href="#plate" aria-controls="plate" role="tab" data-toggle="tab">Plate Registration</a></li>
                                 {% endif %}
-                                {% if insurance %}
+                                {% if insurances %}
                                 <li id="tabInsurance" role="presentation"><a href="#insurance" aria-controls="insurance" role="tab" data-toggle="tab">Insurance</a></li>
                                {% endif %}
-                                {% if mtt %}
+                                {% if mtts %}
                                 <li id="tabDot" role="presentation"><a href="#dot" aria-controls="dot" role="tab" data-toggle="tab">Maintenance</a></li>
                                {% endif %}
-                                {% if ifta %}
+                                {% if iftas %}
                                 <li id="tabIfta" role="presentation"><a href="#ifta" aria-controls="ifta" role="tab" data-toggle="tab">IFTA</a></li>
                                 {% endif %}
                             </ul>
@@ -108,16 +108,43 @@
                             <div  class="tab-content">
 
                                 <div role="tabpanel" class="tab-pane fade" id="newCompany">
-                                   <div class="col-md-offset-11">
-                                        <a type="button" class="btn btn-success" href="{% url 'services:company_create_popup' pk=customer.id_cut popup=1 %}" target="popup" onclick="window.open('', 'popup', 'width=5 00,height=600')"><span><i class="fa fa-plus"></i> Add </span></a>
-                                   </div><br/>
+                                    <div class="col-md-offset-11">
+                                        <a type="button" class="btn btn-success" target="popup" onclick="openpopup('{% url 'services:company_create_popup' pk=customer.id_cut popup=1 %}')"><span><i class="fa fa-plus"></i> Add </span></a>
+                                    </div><br/>
                                     {% if companys %}
-                                    {% for company in companys %}
-                                   <div class="col-md-offset-11">
-                                        <a type="button" class="btn btn-info" href="{% url 'services:company_edit_popup' pk=company.id_com popup=1 %}" target="popup" onclick="window.open('', 'popup', 'width=5 00,height=600')"><span><i class="fa fa-pencil-square-o"></i> Edit </span></a>
+                                    <div class="table-responsive">
+                                        <table id="listCustomer" class="data-table table table-striped table-bordered table-hover" cellspacing="0" width="100%">
+                                            <thead>
+                                            <tr>
+                                                <th class="col-md-2">Name</th>
+                                                <th class="col-md-3">Authorize Person</th>
+                                                <th class="col-md-3">Address</th>
+                                                <th class="col-md-1">Phone</th>
+                                                <th class="col-md-1">EIN</th>
+                                                <th class="col-md-2">Action</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for c in companys %}
+                                            <tr>
+                                                <td><a onclick="openpopup('{% url 'services:company' pk=c.id_com popup=1%}')">{{c.name}}</a></td>
+                                                <td>{{c.attorney}}</td>
+                                                <td>{{c.address}}</td>
+                                                <td>{{c.phone}}</td>
+                                                <td>{{c.ein}} </td>
+                                                <td>
+                                                    <toolbar class="md-accent">
+                                                        <a type="button" class="btn btn-info"  target="popup" onclick="openpopup('{% url 'services:company_edit_popup' pk=c.id_com popup=1 %}')"><span><i class="fa fa-pencil-square-o"></i></span></a>
+                                                    </toolbar>
+                                                    <toolbar class="md-accent">
+                                                        <a type="button" class="btn btn-danger"  target="popup" onclick="openpopup('{% url 'services:company_delete' c.id_com %}')"><span><i class="fa fa-trash"></i></span></a>
+                                                    </toolbar>
+                                                </td>
+                                                {% endfor %}
+                                            </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                    {% include 'services/company/companyView.html'%}
-                                    {% endfor %}
                                     {% endif %}
                                 </div>
 
@@ -164,7 +191,7 @@
       <div class="form-group col-md-12">
           <p class="bg-primary text-center">CUSTOMER FILES</p>
           <div class="col-md-offset-11">
-              <a type="button" class="btn btn-success" href="{% url 'services:folder_create_popup' pk=customer.id_cut popup=1 %}" target="popup" onclick="window.open('', 'popup', 'width=700, height=600')"><span><i class="fa fa-plus"></i></span></a>
+              <a type="button" class="btn btn-success" target="popup" onclick="openpopup('{% url 'services:folder_create_popup' pk=customer.id_cut popup=1 %}')"><span><i class="fa fa-plus"></i></span></a>
           </div>
           <table class="table table-striped">
               <thead>
@@ -181,13 +208,13 @@
                   <td>{{ f.date_save }}</td>
                   <td>
                       <toolbar class="md-accent">
-                          <a data-type="info" href="{% url 'services:folder_edit_popup' pk=f.id_fil popup=1 %}" data-trigger="focus"  data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" target="popup" onclick="window.open('', 'popup', 'width=500, height=600')">
+                          <a data-type="info"  data-trigger="focus"  data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" target="popup" onclick="openpopup('{% url 'services:folder_edit_popup' pk=f.id_fil popup=1 %}')">
                               <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                               <tooltip md-direction="left"></tooltip>
                           </a>
                       </toolbar>
                       <toolbar class="md-accent">
-                          <a data-type="info" href="{% url 'services:folder_delete_popup' pk=f.id_fil popup=1 %}" data-animation="am-flip-x" data-trigger="focus"   type="button" class="btn btn-danger test-tooltip" target="popup" onclick="window.open('', 'popup', 'width=10%, height=8%')">
+                          <a data-type="info"  data-animation="am-flip-x" data-trigger="focus"   type="button" class="btn btn-danger test-tooltip" target="popup" onclick="openpopup('{% url 'services:folder_delete' f.id_fil %}')">
                               <i class="fa fa-trash" aria-hidden="true"></i>
                               <tooltip md-direction="left"></tooltip>
                           </a>
@@ -201,7 +228,7 @@
       <div class="form-group col-md-12">
           <p class="bg-primary text-center">NOTES</p>
           <div class="col-md-offset-11">
-              <a type="button" class="btn btn-success" href="{% url 'accounting:note_create' pk=customer.id_cut popup=1 %}" target="popup" onclick="window.open('', 'popup', 'width=5 00,height=600')"><span><i class="fa fa-plus"></i></span></a>
+              <a type="button" class="btn btn-success" target="popup" onclick="openpopup('{% url 'accounting:note_create' pk=customer.id_cut popup=1 %}')"><span><i class="fa fa-plus"></i></span></a>
           </div>
           <table class="table table-striped">
               <thead>
@@ -218,13 +245,13 @@
                   <td>{{ n.date }}</td>
                    <td>
                       <toolbar class="md-accent">
-                          <a data-type="info" href="{% url 'accounting:note_edit' pk=n.id popup=1 %}" data-trigger="focus"  data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" target="popup" onclick="window.open('', 'popup', 'width=500,height=400')">
+                          <a data-type="info" data-trigger="focus"  data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" target="popup" onclick="openpopup('{% url 'accounting:note_edit' pk=n.id popup=1 %}')">
                               <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                               <tooltip md-direction="left"></tooltip>
                           </a>
                       </toolbar>
                       <toolbar class="md-accent">
-                          <a data-type="info" href="{% url 'accounting:note_delete' pk=n.id popup=1 %}" data-animation="am-flip-x" data-trigger="focus"   type="button" class="btn btn-danger test-tooltip" target="popup" onclick="window.open('', 'popup', 'width=500,height=400')">
+                          <a data-type="info"  data-animation="am-flip-x" data-trigger="focus"   type="button" class="btn btn-danger test-tooltip" target="popup" onclick="openpopup('{% url 'accounting:note_delete' pk=n.id %}')">
                               <i class="fa fa-trash" aria-hidden="true"></i>
                               <tooltip md-direction="left"></tooltip>
                           </a>
@@ -236,18 +263,6 @@
           </table>
       </div>
   </div>
-    </div>
-<div class="modal fade" id="customerList" tabindex="-1" role="dialog" aria-labelledby="ModalLabel">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title text-center"><strong>Load List</strong></h4>
-                </div>
-                <div class="modal-body">
-                   {% include 'accounting/customer/noteForm.html'%}
-                </div>
-            </div>
-        </div>
     </div>
 </section>
 {% endblock %}

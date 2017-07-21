@@ -16,7 +16,6 @@
             <form name="form_customer" method="post" class="form" role="form" id="form_customer" validate>{% csrf_token %}
                 {% if not is_popup %}
                 <fieldset>
-
                     <div class="form-group col-md-5 col-md-offset-1">
                         <label class="label-control">Select Customer:</label>
                         <div class="input-group">
@@ -28,21 +27,20 @@
                             </span>
                             {{ form_company.customers }}
                             <span class="input-group-btn">
-                                <a type="button" id="newcustomer" class="btn btn-success test-tooltip" href="{% url 'accounting:customer_popup' popup=1 %}" target="popup" onclick="window.open('', 'popup', 'width=5 00,height=600')" data-trigger="focus" title="Add new Customer" data-animation="am-flip-x">
+                                <a type="button" id="newcustomer" class="btn btn-success test-tooltip" target="popup" onclick="openpopup('{% url 'accounting:customer_popup' popup=1 %}')" data-trigger="focus" title="Add new Customer" data-animation="am-flip-x">
                                     <i class="fa fa-plus"></i>
                                     <tooltip md-direction="right"></tooltip>
                                 </a>
                             </span>
                         </div>
-
                     </div>
-
+                    {% include 'accounting/customer/customerModal.html'%}
                 </fieldset>
                 {% endif %}
                 {% include 'services/company/companyForm.html'%}
             </form>
         </div>
     </div>
-      {% include 'accounting/customer/customerModal.html'%}
+
 </section>
 {% endblock %}

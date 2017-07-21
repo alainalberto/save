@@ -20,18 +20,7 @@ class CompanyForm(forms.ModelForm):
                   'deactivate',
                   'customers',
         ]
-        labels = {
-                  'name': 'Company Name:',
-                  'attorney': 'Authorized Person:',
-                  'address': 'Address:',
-                  'phone': 'Phone Number:',
-                  'fax': 'Fax Number:',
-                  'ein': 'EIN Number:',
-                  'unity': 'Unity:',
-                  'logo': 'Up logo:',
-                  'deactivate': 'Is Deactivate:',
-                  'customers': 'Customer:',
-        }
+
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Company Name', 'class': 'form-control input-md'}),
             'attorney': forms.TextInput(attrs={'placeholder': 'Authorized Person:', 'class': 'form-control input-md'}),
@@ -156,28 +145,23 @@ class IftaForm(forms.ModelForm):
         model = Ifta
 
         fields = [
-            'date',
-            'state',
-            'milles',
-            'gallons',
-            'trucks',
+            'type',
+            'period',
+            'nex_period',
             'customers',
         ]
         labels = {
-            'date': 'Date:',
-            'state': 'State:',
-            'milles': 'Quantity Milles:',
-            'gallons': 'Gallos',
-            'trucks': 'Truck',
+            'type': 'Select Type:',
+            'period': 'Select Period:',
+            'nex_period': 'Date of nex Period: ',
             'customers':'Customer:',
         }
         widgets = {
-            'date': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
-            'state': forms.TextInput(attrs={'placeholder': 'State', 'class': 'form-control input-md'}),
-            'milles': forms.NumberInput(attrs={'placeholder': 'value', 'class': 'form-control input-md'}),
-            'gallons': forms.NumberInput(attrs={'placeholder': 'value', 'class': 'form-control input-md'}),
-            'trucks': forms.Select(attrs={'class': 'form-control input-md'}),
+            'type': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('Annual', 'Annual'), ('Quarter', 'Quarter'))),
+            'period': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('Annual', 'Annual'), ('Quarter1', 'Quarter 1st'), ('Quarter2', 'Quarter 2nd'), ('Quarter3', 'Quarter 3rd'), ('Quarter4', 'Quarter 4th'))),
+            'nex_period': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
             'customers': forms.Select(attrs={'class': 'form-control input-md'}),
+
         }
 
 class ContractForm(forms.ModelForm):

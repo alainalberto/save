@@ -4,10 +4,12 @@ from apps.services.views import *
 
 urlpatterns = [
     #Company
+    url(r'^company/view/(?P<pk>\d+)&(?P<popup>[^/]+)/$', login_required(permission_required('services.add_companie')(CompanyView)), name='company'),
     url(r'^company/create$', login_required(permission_required('services.add_companie')(CompanyCreate.as_view())), name='company_create'),
     url(r'^company/create/(?P<pk>\d+)&(?P<popup>[^/]+)/$', login_required(permission_required('services.add_companie')(CompanyCreate.as_view())), name='company_create_popup'),
     url(r'^company/edit/(?P<pk>\d+)/$', login_required(permission_required('services.change_companie')(CompanyEdit.as_view())), name='company_edit'),
     url(r'^company/edit/(?P<pk>\d+)&(?P<popup>[^/]+)/$', login_required(permission_required('services.change_companie')(CompanyEdit.as_view())), name='company_edit_popup'),
+    url(r'^company/(?P<pk>\d+)/$', login_required(permission_required('services.delete_companie')(CompanyDelete.as_view())), name='company_delete'),
 
     #Forms
     url(r'^forms/$', login_required(FileView.as_view()), name='forms'),
@@ -22,13 +24,16 @@ urlpatterns = [
     url(r'^folder/edit/(?P<pk>\d+)/$', login_required(permission_required('tools.add_file')(FolderEdit.as_view())), name='folder_edit'),
     url(r'^folder/edit/(?P<pk>\d+)&(?P<popup>[^/]+)/$',login_required(permission_required('tools.add_file')(FolderEdit.as_view())), name='folder_edit_popup'),
     url(r'^folder/(?P<pk>\d+)/$', login_required(permission_required('tools.add_file')(FolderDelete.as_view())), name='folder_delete'),
-    url(r'^folder/(?P<pk>\d+)&(?P<popup>[^/]+)/$', login_required(permission_required('tools.add_file')(FolderDelete.as_view())), name='folder_delete_popup'),
 
+    #IFTA
+    url(r'^ifta/$', login_required(permission_required('services.add_ifta')(CompanyView)), name='ifta'),
+    url(r'^ifta/create$', login_required(permission_required('services.add_ifta')(CompanyView)), name='ifta_create'),
 
     url(r'^title/$', login_required(permission_required('services.add_title')(CompanyView)), name='title'),
     url(r'^insurance/$', login_required(permission_required('services.add_insurance')(CompanyView)), name='insurance'),
     url(r'^dot/$', login_required(permission_required('services.add_dot')(CompanyView)), name='dot'),
-    url(r'^ifta/$', login_required(permission_required('services.add_ifta')(CompanyView)), name='ifta'),
+
+
     url(r'^audits/$', login_required(permission_required('services.add_audit')(CompanyView)), name='audits'),
     url(r'^permits/$', login_required(permission_required('services.add_permit')(CompanyView)), name='permits'),
     url(r'^plate/$', login_required(permission_required('services.add_plate')(CompanyView)), name='plate'),
