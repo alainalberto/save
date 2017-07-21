@@ -4,23 +4,16 @@ $('#chat-form').on('submit', function(event){
     $.ajax({
         url : '/post/',
         type : 'POST',
-        data : { msgbox : $('#chat-msg').val() },
+        data : { msgbox : $('#chat-msg').val(), user : $('#user').val() },
 
         success : function(json){
              $('#chat-msg').val('');
-            $('#msg-list').append('<li class="list-group-item">' + json.msg + '</li>');
+            $('#msg-list').append('<div class="text-right alert alert-info col-lg-9 col-md-6">'+ '<strong>' + json.user+ ':' + '</strong>'+ '</br>' + json.msg + '</div>');
            var chatlist = document.getElementById('msg-list-div');
             chatlist.scrollTop = chatlist.scrollHeight;
-
         }
     });
 });
-function clean(){
-    $('#send').click(function(){
-        $('#chat-msg').val('');
-    });
-}
-
 function getMessages(){
     if (!scrolling) {
         $.get('/message/', function(message){

@@ -1,3 +1,4 @@
+from django.core.mail import send_mail
 from django.shortcuts import render
 from django.contrib.contenttypes.models import ContentType
 from django.forms import modelform_factory, inlineformset_factory, formset_factory, BaseModelFormSet
@@ -158,6 +159,7 @@ class FileCreate(CreateView):
             file.save()
             messages.success(request, "Form saved with an extension")
             accion_user(file, ADDITION, request.user)
+
             return HttpResponseRedirect(self.success_url)
         else:
             for er in form.errors:

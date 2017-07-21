@@ -1,5 +1,5 @@
 from django.db import models
-from apps.services.validators import validate_file_extension
+
 from django.contrib.auth.models import User, Group
 
 # Create your models here.
@@ -66,7 +66,7 @@ class File(models.Model):
     folders = models.ForeignKey(Folder, on_delete=models.CASCADE)  # Field name made lowercase.
     name = models.CharField(max_length=45, blank=True, null=True)
     drescription = models.CharField(max_length=255, blank=True, null=True)
-    url = models.FileField(upload_to="Forms/", validators=[validate_file_extension], blank=True, null=True)
+    url = models.FileField(upload_to="Forms/", blank=True, null=True)
     date_save = models.DateField(blank=True, null=True)
 
     def __str__(self):
@@ -98,9 +98,9 @@ class Chat(models.Model):
 class Directory(models.Model):
     id_dir = models.AutoField(primary_key=True)
     users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
-    name = models.CharField(max_length=45, blank=True, null=True)
-    phone = models.CharField(max_length=20, blank=True, null=True)
-    email = models.CharField(max_length=255, blank=True, null=True)
+    name = models.CharField(max_length=45, blank=False, null=False)
+    phone = models.CharField(max_length=20, blank=False, null=False)
+    email = models.EmailField(max_length=50, blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):

@@ -12,18 +12,85 @@ from apps.accounting.models import AccountDescrip, Account
 from apps.tools.models import *
 from apps.tools.components import CalendarForm, AlertForm
 from apps.tools.components.AlertForm import AlertForm
+from apps.tools.components.DirectoryForm import DirectoryForm
 from django.contrib.auth import authenticate, logout, login, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
 from datetime import datetime, date, time, timedelta
-
-
-
+from django.core.mail import send_mail
+from twilio.rest import Client
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
 
 # Create your views here.
 
 def Chats(request):
     return render(request, "home/complement/chat.html")
+
+class DirectoryTelephone(ListView):
+    model = Directory
+    template_name = 'directorytelephone/directoryViews.html'
+
+
+class DirectoryTelephoneCreate(CreateView):
+    model = Directory
+    form_class = DirectoryForm
+    template_name = 'directorytelephone/directoryForm.html'
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(initial=self.initial)
+        return render(request, self.template_name, {'form': form, 'title': 'Create new Directory'})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        user = request.user
+        if form.is_valid():
+            alert = form.save(commit=False)
+            alert.users = user
+            alert.save()
+            accion_user(alert, ADDITION, request.user)
+            messages.success(request, "Contact save")
+
+        else:
+            for er in form.errors:
+                messages.error(request, "ERROR: " + er)
+            return render(request, self.template_name, {'form': form, 'title': 'Create New Contact'})
+        return HttpResponseRedirect(reverse_lazy('panel:directory'))
+
+class DirectoryTelephoneEdit(UpdateView):
+    model = Directory
+    form_class = DirectoryForm
+    template_name = 'directorytelephone/directoryForm.html'
+    success_url = reverse_lazy('panel:directory')
+
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object
+        id_dir = kwargs['pk']
+        directory = self.model.objects.get(id_dir=id_dir)
+        form = self.form_class(request.POST, instance=directory)
+        if form.is_valid():
+            directory =form.save()
+            accion_user(directory, CHANGE, request.user)
+            messages.success(request, "Contact update")
+            return HttpResponseRedirect(self.success_url)
+        else:
+            for er in form.errors:
+                messages.error(request, "ERROR: "+er)
+            return render(request, self.template_name, {'form': form, 'title': 'Edit Contact'})
+
+class DirectoryTelephoneDelete(DeleteView):
+    model = Directory
+    template_name = 'confirm_delete.html'
+    success_url = reverse_lazy('panel:directory')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object
+        id_dir = kwargs['pk']
+        directory = self.model.objects.get(id_dir=id_dir)
+        accion_user(directory, DELETION, request.user)
+        directory.delete()
+        messages.success(request, "Contact delete")
+        return HttpResponseRedirect(self.success_url)
 
 def Post(request):
     if request.method == "POST":
@@ -31,7 +98,7 @@ def Post(request):
         c = Chat(users=request.user, message=msg)
         if msg != '':
             c.save()
-        return JsonResponse({'msg': msg, 'user': c.user.username})
+        return JsonResponse({'msg': msg, 'user': c.users.username})
     else:
         return HttpResponse('Request must be POST.')
 
@@ -224,6 +291,25 @@ class AlertsCreate(CreateView):
              alert.save()
              accion_user(alert, ADDITION, request.user)
              messages.success(request, "Alert save with an extension")
+             send_mail(
+                 'FirstCall Alert',
+                 'Usted tiene una alerta:'+ alert.description + ' con fecha de terminación ' +str(alert.end_date),
+                 'ranselr@gmail.com',
+                 ['ranselr@gmail.com'],
+                 fail_silently=False,
+             )
+             # Your Account SID from twilio.com/console
+             account_sid = "ACc2b4aa7154629a3f9b2767e7ddf9981d"
+             # Your Auth Token from twilio.com/console
+             auth_token = "b6318ebc29ac5cbdc257bb9acac2d89c"
+
+             client = Client(account_sid, auth_token)
+
+             message = client.messages.create(
+                 to="+18322071590",
+                 from_="+18329002832",
+                 body="Hello my wife!")
+
          else:
              for er in form.errors:
                  messages.error(request, "ERROR: " + er)
