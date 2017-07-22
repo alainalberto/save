@@ -260,13 +260,13 @@
                         {% endif %}
                         <li>
                             <a class="item" href="{% url 'services:dot' %}"> DOT</a>
-                        </li>
+                        </li>-->
                         {% if perms.services.add_ifta %}
                         <li>
                             <a class="item" href="{% url 'services:ifta' %}"> IFTA</a>
                         </li>
                         {% endif %}
-                        {% if perms.services.add_audit %}
+                       <!-- {% if perms.services.add_audit %}
                         <li>
                             <a class="item" href="{% url 'services:audits' %}"> Audits</a>
                         </li>
