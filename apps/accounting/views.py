@@ -871,24 +871,29 @@ class NoteEdit(UpdateView):
     form_class = NoteForm
     template_name = 'accounting/customer/noteForm.html'
 
-    def get(self, request, *args, **kwargs):
-        is_popup = kwargs['popup']
-        form = self.form_class(initial=self.initial)
-        return render(request, self.template_name, {'form': form, 'is_popup': is_popup, 'title': 'Create new Note'})
+    def get_context_data(self, **kwargs):
+        context = super(NoteEdit, self).get_context_data(**kwargs)
+        id = self.kwargs.get('pk', 0)
+        if self.kwargs.__contains__('popup'):
+            popup = self.kwargs.get('popup')
+        else:
+            popup = 0
+        if 'form' not in context:
+            context['form'] = self.form_class
+        context['id'] = id
+        context['is_popup'] = popup
+        context['title'] = 'Note Edit'
+        return context
 
     def post(self, request, *args, **kwargs):
-        user = request.user
         id = kwargs['pk']
         is_popup = kwargs['popup']
-        customer = Customer.objects.get(id_cut=id)
-        form = self.form_class(request.POST)
+        note = self.model.objects.get(id=id)
+        form = self.form_class(request.POST, instance=note)
         if form.is_valid():
-             note = form.save(commit=False)
-             note.customers = customer
-             note.users = user
-             note.save()
-             accion_user(note, ADDITION, request.user)
-             return messages.success(request, 'Added your note to customer')
+             note = form.save()
+             accion_user(note, CHANGE, request.user)
+             return messages.success(request, 'Update your note to customer')
         else:
             for er in form.errors:
                 messages.error(request, "ERROR: " + er)

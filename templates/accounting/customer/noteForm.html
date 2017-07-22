@@ -23,8 +23,8 @@
         </div>
         <!-- Button (Double) -->
         <div class="form-group col-md-5 col-md-offset-4">
-            <input type="submit" class="btn btn-success" value="Save" {% if is_popup %} onclick="window.close()" {% endif %}>
-            <a type="button" href="{% url 'accounting:customers' %}" class="btn btn-danger">Cancel </a>
+            <input type="submit" class="btn btn-success" value="Save" {% if is_popup %} onclick="closepopup()" {% endif %}>
+            <a type="button" onclick="closepopup()" class="btn btn-danger">Cancel </a>
         </div>
     </fieldset>
 </form>

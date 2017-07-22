@@ -301,5 +301,5 @@ class NoteForm(forms.ModelForm):
             'note',
         }
         widgets = {
-            'value': forms.Textarea(attrs={'class': 'form-control fee-value'}),
+            'note': forms.Textarea(attrs={'class': 'form-control fee-value'}),
         }
