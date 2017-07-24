@@ -1,6 +1,9 @@
 from django.contrib.admin.models import LogEntry,ADDITION, CHANGE, DELETION
 from django.utils.encoding import force_text
 from django.contrib.contenttypes.models import ContentType
+from datetime import datetime, timedelta
+from FirstCall import settings
+from django.contrib import auth
 
 def accion_user(object, action_flag, user):
     """Log changes to Admin log."""
@@ -22,3 +25,22 @@ def accion_user(object, action_flag, user):
                 )
         except:
             print("Failed to log action.")
+
+
+
+class AutoLogout:
+     def __init__(self, get_response):
+            self.get_response = get_response
+
+     def __call__(self, request):
+       if not request.user.is_authenticated():
+        return
+
+       try:
+         if datetime.now() - request.session['last_touch'] > timedelta(0, settings.AUTO_LOGOUT_DELAY * 60, 0):
+             auth.logout(request)
+             del request.session['last_touch']
+             return
+       except KeyError:
+         pass
+       request.session['last_touch'] = datetime.now()

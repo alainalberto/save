@@ -69,14 +69,19 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     #'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    #'FirstCall.util.AutoLogout',
 
 ]
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+AUTO_LOGOUT_DELAY = 15
 
-SESSION_COOKIE_AGE = 900
+SESSION_IDLE_TIMEOUT = 60
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+#SESSION_COOKIE_AGE = 900
 
 ROOT_URLCONF = 'FirstCall.urls'
 

@@ -64,7 +64,7 @@ $(document).ready( function () {
 			businessHours: true, // display business hours
 			editable: true,
 			events: {
-                     url: 'http://localhost:8000/panel/calendar/list/',
+                     url: '/panel/calendar/list/',
                      data: function() { // a function that returns an object
                             return {
                             dynamic_value: Math.random()
@@ -339,5 +339,11 @@ function openpopup(page){
  function closepopup(){
    window.opener.location.reload();
    window.opener.location.href=window.opener.location.href;
+   var url = window.opener.location.href
+   $(document).ready( function () {
+     $("#submit").click(function(event) {
+        $('#page-wrapper').load(url);
+      });
+   });
    window.close();
  }
