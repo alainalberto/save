@@ -21,7 +21,7 @@
       </div>
       <br/>
 
-       {% if object_list %}
+       {% if forms %}
        <table class="table table-striped">
                             <thead>
                             <th>Name</th>
@@ -30,34 +30,28 @@
 
                             </thead>
                             <tbody>
-                             {% for file in object_list %}
-                             {% if file.folder.name == 'Form' %}
+                             {% for file in forms %}
                             <tr>
-
-                              <td><i class="fa fa-file-pdf-o" aria-hidden="true"></i> <a href="/static/media/{{ file.url }}" target="_blank">{{file.name}}</br></a></td>
+                              <td><i class="fa fa-file-pdf-o" aria-hidden="true"></i> <a href="/static/media/{{ file.url }}" target="_blank">{{file.name}}</a></td>
                               <td>{{ file.date_save }}</td>
                               <td>
                             <toolbar class="md-accent">
-                                <a data-type="info" href="{% url 'services:file_edit' file.id_fil %}" data-trigger="focus"  data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip">
+                                <a data-type="info" onclick="openpopup('{% url 'services:file_edit_popup' pk=file.id_fil popup=1 %}')" data-trigger="focus"  data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip">
                                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                     <tooltip md-direction="left"></tooltip>
                                 </a>
                             </toolbar>
                             <toolbar class="md-accent">
-                                <a data-type="info" href="{% url 'services:file_delete' file.id_fil %}" data-animation="am-flip-x" data-trigger="focus"   type="button" class="btn btn-danger test-tooltip">
+                                <a data-type="info" onclick="openpopup('{% url 'services:file_delete' file.id_fil %}')" data-animation="am-flip-x" data-trigger="focus"   type="button" class="btn btn-danger test-tooltip">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                     <tooltip md-direction="left"></tooltip>
                                 </a>
                             </toolbar>
                         </td>
                             </tr>
-                             {% endif %}
                             {% endfor %}
                             </tbody>
                         </table>
-
-       {% for file in object_list %}
-       {% endfor %}
       {% else %}
       <div class="alert alert-info"> <strong>Atention!</strong> No documents.</div>
       {% endif %}

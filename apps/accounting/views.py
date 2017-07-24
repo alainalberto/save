@@ -842,6 +842,8 @@ class NoteCreate(CreateView):
     model = Note
     form_class = NoteForm
     template_name = 'accounting/customer/noteForm.html'
+    success_url = reverse_lazy('accounting:customers')
+
 
     def get(self, request, *args, **kwargs):
         is_popup = kwargs['popup']
@@ -860,7 +862,8 @@ class NoteCreate(CreateView):
              note.users = user
              note.save()
              accion_user(note, ADDITION, request.user)
-             return messages.success(request, 'Added your note to customer')
+             messages.success(request, 'Added your note to customer')
+             return HttpResponseRedirect(self.success_url)
         else:
             for er in form.errors:
                 messages.error(request, "ERROR: " + er)
@@ -870,6 +873,7 @@ class NoteEdit(UpdateView):
     model = Note
     form_class = NoteForm
     template_name = 'accounting/customer/noteForm.html'
+    success_url = reverse_lazy('accounting:customers')
 
     def get_context_data(self, **kwargs):
         context = super(NoteEdit, self).get_context_data(**kwargs)
@@ -893,7 +897,8 @@ class NoteEdit(UpdateView):
         if form.is_valid():
              note = form.save()
              accion_user(note, CHANGE, request.user)
-             return messages.success(request, 'Update your note to customer')
+             messages.success(request, 'Update your note to customer')
+             return HttpResponseRedirect(self.success_url)
         else:
             for er in form.errors:
                 messages.error(request, "ERROR: " + er)
@@ -902,14 +907,13 @@ class NoteEdit(UpdateView):
 class NoteDelete(DeleteView):
     model = Note
     template_name = 'confirm_delete.html'
-
+    success_url = reverse_lazy('accounting:customers')
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object
         id = kwargs['pk']
         note = self.model.objects.get(id=id)
-        customer = Customer.objects.get(id_cut=note.customers_id)
         accion_user(note, DELETION, request.user)
         note.delete()
         messages.success(request, "Receipt delete with an extension")
-        return HttpResponseRedirect('accounting/customers/view/'+str(customer.id_cut))
+        return HttpResponseRedirect(self.success_url)

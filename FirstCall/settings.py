@@ -69,7 +69,14 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     #'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+
 ]
+
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
+SESSION_COOKIE_AGE = 900
 
 ROOT_URLCONF = 'FirstCall.urls'
 
@@ -165,6 +172,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'static', 'media')
 
 LOGIN_REDIRECT_URL = reverse_lazy('home')
 LOGOUT_REDIRECT_URL = reverse_lazy('login')
+
+
+
 
 
 #ADMINS = (

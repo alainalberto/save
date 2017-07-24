@@ -142,11 +142,19 @@ class CompanyDelete(DeleteView):
         messages.success(request, "Company delete with an extension")
         return HttpResponseRedirect(self.success_url)
 
-class FileView(ListView):
+class FormView(ListView):
     model = File
     template_name = 'services/form/fileViews.html'
 
-class FileCreate(CreateView):
+    def get_context_data(self, **kwargs):
+        context = super(FormView, self).get_context_data(**kwargs)
+        if Folder.objects.filter(name='Forms'):
+            folder_father = Folder.objects.get(name='Forms')
+            forms = File.objects.filter(folders=folder_father)
+            context['forms'] = forms
+            return context
+
+class FormCreate(CreateView):
     model = File
     form_class = FileForm
     template_name = 'services/form/fileForm.html'
@@ -180,11 +188,25 @@ class FileCreate(CreateView):
             return render(request, self.template_name, {'form': form, 'title': 'Create new Form'})
 
 
-class FileEdit(UpdateView):
+class FormEdit(UpdateView):
     model = File
     form_class = FileForm
     template_name = 'services/form/fileForm.html'
     success_url = reverse_lazy('services:forms')
+
+    def get_context_data(self, **kwargs):
+        context = super(FormEdit, self).get_context_data(**kwargs)
+        id = self.kwargs.get('pk', 0)
+        if self.kwargs.__contains__('popup'):
+            popup = self.kwargs.get('popup')
+        else:
+            popup = 0
+        if 'form' not in context:
+            context['form'] = self.form_class
+        context['id'] = id
+        context['is_popup'] = popup
+        context['title'] = 'Edit Form'
+        return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object
@@ -201,7 +223,7 @@ class FileEdit(UpdateView):
                 messages.error(request, "ERROR: "+er)
             return render(request, self.template_name, {'form': form, 'title': 'Edit File'})
 
-class FileDelete(DeleteView):
+class FormDelete(DeleteView):
     model = File
     template_name = 'confirm_delete.html'
     success_url = reverse_lazy('services:forms')

@@ -31,7 +31,7 @@ class Customer(models.Model):
     address = models.CharField(max_length=255, blank=True, null=True)
     phone = models.CharField(max_length=10, blank=True, null=True)
     no_social = models.CharField(max_length=20, blank=True, null=True)
-    email = models.CharField(max_length=255)
+    email = models.EmailField(max_length=255)
     deactivated = models.BooleanField(default=False)
     date_deactivated = models.DateField(blank=True, null=True)
     usdot = models.CharField(max_length=20,blank=True, null=True)
@@ -51,7 +51,7 @@ class Employee(models.Model):
     social_no = models.CharField(max_length=20, blank=True, null=True)
     date_admis = models.DateField(blank=True, null=True)
     phone = models.CharField(max_length=10, blank=True, null=True)
-    email = models.CharField(max_length=255, blank=True, null=True)
+    email = models.EmailField(max_length=255, blank=True, null=True)
     type_salary = models.CharField(max_length=20, blank=True, null=True)
     value = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     position = models.CharField(max_length=20, blank=True, null=True)
@@ -154,6 +154,7 @@ class AccountDescrip(models.Model):
     document = models.IntegerField()
     date = models.DateField(auto_now_add=True)
     value = models.DecimalField(max_digits=10, decimal_places=2)
+    waytopay = models.CharField(max_length=20, blank=True, null=True)
 
     def get_document(self):
         if self.type == "Receipt":

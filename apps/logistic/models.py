@@ -30,7 +30,7 @@ class DriversLogt(models.Model):
     comercial_name = models.CharField(max_length=45, blank=True, null=True)
     license_numb = models.CharField(max_length=45)
     address = models.CharField(max_length=255, blank=True, null=True)
-    email = models.CharField(max_length=100)
+    email = models.EmailField(max_length=100)
     dob = models.DateField(blank=True, null=True)
     lic_date_exp = models.DateField(blank=True, null=True)
     medicard_date_exp = models.DateField(blank=True, null=True)
@@ -69,7 +69,7 @@ class Load(models.Model):
     value = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
     number = models.CharField(max_length=20,blank=True, null=True)
     paid = models.BooleanField(default=True)
-    note = models.TextField(blank=True, null=True)
+    note = models.CharField(max_length=225, blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.number)

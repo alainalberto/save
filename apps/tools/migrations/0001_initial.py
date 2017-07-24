@@ -74,8 +74,8 @@ class Migration(migrations.Migration):
             name='Directory',
             fields=[
                 ('id_dir', models.AutoField(primary_key=True, serialize=False)),
-                ('name', models.CharField(blank=True, max_length=45, null=True)),
-                ('phone', models.CharField(blank=True, max_length=20, null=True)),
+                ('name', models.CharField(max_length=45)),
+                ('phone', models.CharField(max_length=20)),
                 ('email', models.CharField(blank=True, max_length=255, null=True)),
                 ('address', models.CharField(blank=True, max_length=255, null=True)),
                 ('users', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),

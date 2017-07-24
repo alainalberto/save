@@ -23,6 +23,7 @@ class Companie(models.Model):
     logo = models.ImageField(upload_to='img/', blank=True, null=True)
     created_date = models.DateField(blank=True, null=True)
     unity = models.IntegerField(blank=True, null=True)
+    state =models.CharField(max_length=20,blank=True, null=True)
     deactivate = models.BooleanField(default=False)
     deactivate_date = models.DateField(blank=True, null=True)
 
@@ -38,6 +39,7 @@ class Contract(models.Model):
     serial = models.CharField(max_length=20, blank=True, null=True)
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
+    state = models.CharField(max_length=20, blank=True, null=True)
     type = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self):
@@ -51,6 +53,7 @@ class Audit(models.Model):
     users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
     type = models.CharField(max_length=20, blank=True, null=True)
     date = models.DateField(blank=True, null=True)
+    state = models.CharField(max_length=20, blank=True, null=True)
     results = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
@@ -94,6 +97,7 @@ class Insurance(models.Model):
     total = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
     comision = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
     paid = models.BooleanField(default=False)
+    state = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.companies)
@@ -104,6 +108,7 @@ class Maintenance(models.Model):
     customers = models.ForeignKey(Customer,  on_delete=models.CASCADE)  # Field name made lowercase.
     users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
     nota = models.CharField(max_length=255, blank=True, null=True)
+    state = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.customers)
@@ -127,6 +132,7 @@ class Permission(models.Model):
     boc3_date = models.DateField(blank=True, null=True)
     ucr = models.IntegerField(blank=True, null=True)
     update = models.DateField(blank=True, null=True)
+    state = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.companies)
@@ -155,6 +161,7 @@ class Ifta(models.Model):
     type = models.CharField(max_length=45, blank=True, null=True)
     period = models.CharField(max_length=45, blank=True, null=True)
     nex_period = models.DateField(blank=True, null=True)
+    state = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.trucks.number)
@@ -169,6 +176,7 @@ class Plate(models.Model):
     account_number = models.CharField(max_length=45, blank=True, null=True)
     account_user = models.CharField(max_length=45, blank=True, null=True)
     account_password = models.CharField(max_length=45, blank=True, null=True)
+    state = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.trucks.number)
@@ -182,6 +190,7 @@ class Title(models.Model):
     date_exp_reg = models.DateField(blank=True, null=True)
     date_insp = models.DateField(blank=True, null=True)
     date_exp_insp = models.DateField(blank=True, null=True)
+    state = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.trucks.number)
@@ -194,7 +203,7 @@ class Application(models.Model):
     address = models.CharField(max_length=255, blank=True, null=True)
     phone = models.CharField(max_length=10, blank=True, null=True)
     no_social = models.CharField(max_length=20, blank=True, null=True)
-    email = models.CharField(max_length=255)
+    email = models.EmailField(max_length=255)
     license_numb = models.CharField(max_length=45, blank=True, null=True)
     usdot = models.IntegerField(blank=True, null=True)
     mc = models.IntegerField(blank=True, null=True)
@@ -204,6 +213,7 @@ class Application(models.Model):
     note = models.CharField(max_length=255, blank=True, null=True)
     date_view = models.DateTimeField(blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    state = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.fullname)

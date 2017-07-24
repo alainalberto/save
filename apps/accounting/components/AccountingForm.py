@@ -19,8 +19,8 @@ class AccountForm(forms.ModelForm):
             'accounts_id': 'Main Account:',
         }
         widgets = {
-            'name': forms.TextInput(attrs={'placeholder': 'Name', 'class': 'form-control input-md'}),
-            'description': forms.TextInput(attrs={'placeholder': 'Description', 'class': 'form-control input-md'}),
+            'name': forms.TextInput(attrs={'placeholder': 'Name', 'class': 'form-control input-md upper'}),
+            'description': forms.TextInput(attrs={'placeholder': 'Description', 'class': 'form-control input-md upper'}),
             'accounts_id': forms.Select(attrs={'class': 'form-control input-md'}),
         }
 
@@ -58,17 +58,17 @@ class CustomerForm(forms.ModelForm):
             'ein': 'EIN:',
         }
         widgets = {
-            'fullname': forms.TextInput(attrs={'placeholder': 'Full Name', 'class': 'form-control input-md capital'}),
-            'company_name': forms.TextInput(attrs={'placeholder': 'Company Name', 'class': 'form-control input-md capital'}),
-            'no_social': forms.NumberInput(attrs={'placeholder': 'SSN', 'class': 'form-control input-md'}),
-            'address': forms.TextInput(attrs={'placeholder': 'Address', 'class': 'form-control input-md'}),
+            'fullname': forms.TextInput(attrs={'placeholder': 'Full Name', 'class': 'form-control input-md capital upper'}),
+            'company_name': forms.TextInput(attrs={'placeholder': 'Company Name', 'class': 'form-control input-md capital upper'}),
+            'no_social': forms.NumberInput(attrs={'placeholder': 'SSN', 'class': 'form-control input-md upper'}),
+            'address': forms.TextInput(attrs={'placeholder': 'Address', 'class': 'form-control input-md upper'}),
             'phone': forms.NumberInput(attrs={'placeholder': 'Telepone Number', 'class': 'form-control input-md'}),
-            'email': forms.EmailInput(attrs={'placeholder': 'Email', 'class': 'form-control input-md'}),
+            'email': forms.EmailInput(attrs={'placeholder': 'Email', 'class': 'form-control input-md '}),
             'business': forms.Select(attrs={'class': 'form-control input-md'}),
             'deactivated': forms.CheckboxInput(attrs={'class': 'checkbox'}),
             'usdot': forms.NumberInput(attrs={'placeholder': 'USDOT Number', 'class': 'form-control input-md'}),
             'mc': forms.NumberInput(attrs={'placeholder': 'MC Number', 'class': 'form-control input-md'}),
-            'txdmv': forms.TextInput(attrs={'placeholder': 'TXDMV Number', 'class': 'form-control input-md'}),
+            'txdmv': forms.TextInput(attrs={'placeholder': 'TXDMV Number', 'class': 'form-control input-md upper'}),
             'ein': forms.NumberInput(attrs={'placeholder': 'EIN Number', 'class': 'form-control input-md'}),
         }
 
@@ -76,7 +76,6 @@ class CustomerForm(forms.ModelForm):
 class EmployeesForm(forms.ModelForm):
     class Meta:
         model = Employee
-
         fields = [
             'business',
             'name',
@@ -107,25 +106,19 @@ class EmployeesForm(forms.ModelForm):
         }
         widgets = {
             'business': forms.Select(attrs={'class': 'form-control input-md'}),
-            'name': forms.TextInput(attrs={'placeholder': 'Name', 'class': 'form-control input-md'}),
-            'lastname': forms.TextInput(attrs={'placeholder': 'Last Name', 'class': 'form-control input-md'}),
-            'address': forms.TextInput(attrs={'placeholder': 'Address', 'class': 'form-control input-md'}),
+            'name': forms.TextInput(attrs={'placeholder': 'Name', 'class': 'form-control input-md upper'}),
+            'lastname': forms.TextInput(attrs={'placeholder': 'Last Name', 'class': 'form-control input-md upper'}),
+            'address': forms.TextInput(attrs={'placeholder': 'Address', 'class': 'form-control input-md upper'}),
             'social_no': forms.NumberInput(attrs={'placeholder': 'Social Security', 'class': 'form-control input-md', 'required': 'true'}),
-            'date_admis': forms.DateInput(attrs={'placeholder': 'Admission Date', 'class': 'form-control input-md'}),
+            'date_admis': forms.DateInput(attrs={'placeholder': 'Admission Date', 'class': 'form-control input-md upper'}),
             'phone': forms.NumberInput(attrs={'placeholder': 'Phone', 'class': 'form-control input-md'}),
             'email': forms.EmailInput(attrs={'placeholder': 'Email', 'class': 'form-control input-md', 'required': 'true'}),
             'type_salary': forms.Select(attrs={'class': 'form-control input-md'},choices=(('pervent','Commission'),('salary','Salary'))),
             'value': forms.NumberInput(attrs={'placeholder': 'Value', 'class': 'form-control input-md'}),
-            'position': forms.TextInput(attrs={'placeholder': 'Position', 'class': 'form-control input-md'}),
+            'position': forms.TextInput(attrs={'placeholder': 'Position', 'class': 'form-control input-md upper'}),
             'deactivated': forms.CheckboxInput(attrs={'class': 'checkbox'}),
         }
 
-        def clean_name(self):
-            name = self.clean_data.get('name', '')
-            num_words = len(name.split())
-            if num_words < 4:
-                raise forms.ValidationError("Not enough words!")
-                return message
 
 class InvoicesForm(forms.ModelForm):
         class Meta:
@@ -161,7 +154,7 @@ class InvoicesForm(forms.ModelForm):
                 'start_date': forms.DateInput(attrs={'placeholder': 'Start Date', 'class': 'form-control input-md'}),
                 'waytopay': forms.Select(attrs={'class': 'form-control input-md'},choices=(('Cash','Cash'),('Check','Check'),('Credit Card','Credit Card'))),
                 'paid': forms.CheckboxInput(attrs={'class': 'checkbox'}),
-                'prefix': forms.TextInput(attrs={'placeholder': 'Prefix', 'class': 'form-control input-md'}),
+                'prefix': forms.TextInput(attrs={'placeholder': 'Prefix', 'class': 'form-control input-md upper'}),
                 'end_date': forms.DateInput(attrs={'placeholder': 'End Date', 'class': 'form-control input-md'}),
                 'discount': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control discount'}),
                 'subtotal': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control servSutotal', 'readonly':''}),
@@ -301,5 +294,5 @@ class NoteForm(forms.ModelForm):
             'note',
         }
         widgets = {
-            'note': forms.Textarea(attrs={'class': 'form-control fee-value'}),
+            'note': forms.Textarea(attrs={'class': 'form-control fee-value upper'}),
         }

@@ -1,5 +1,9 @@
 $(document).ready( function () {
 
+   $('.upper').keyup(function() {
+      $(this).val($(this).val().toUpperCase());
+   });
+
 //Data tables
    $(".data-table").DataTable();
 
@@ -329,11 +333,11 @@ $('#btnphysical').change(function(){
 
   // Modal Save botton
 function openpopup(page){
- window.open(page,'popup',' location=0, directories=0, resizable=0, width=500,height=700,Top=20,Left=490');
+ window.open(page,'popup',' location=1, directories=0, resizable=0, width=500,height=700,Top=20,Left=490');
  }
 
  function closepopup(){
- window.opener.location.reload();
- window.opener.location.href=window.opener.location.href;
- window.close();
+   window.opener.location.reload();
+   window.opener.location.href=window.opener.location.href;
+   window.close();
  }

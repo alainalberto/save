@@ -81,7 +81,7 @@
                     <!-- Button (Double) -->
                     <div class="form-group col-md-4 col-md-offset-4">
                         <input type="submit" class="btn btn-success" value="Save" {% if is_popup %} onclick="closepopup()" {% endif %}>
-                        <a type="button" href="/services/forms" class="btn btn-danger" {% if is_popup %} onclick="closepopup()" {% else %} onclick="history.back(-1)" {% endif %}>Cancel </a>
+                        <a type="button" class="btn btn-danger" {% if is_popup %} onclick="closepopup()" {% else %} onclick="history.back(-1)" {% endif %}>Cancel </a>
                     </div>
                 </fieldset>
             </form>

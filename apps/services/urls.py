@@ -12,10 +12,11 @@ urlpatterns = [
     url(r'^company/(?P<pk>\d+)/$', login_required(permission_required('services.delete_companie')(CompanyDelete.as_view())), name='company_delete'),
 
     #Forms
-    url(r'^forms/$', login_required(FileView.as_view()), name='forms'),
-    url(r'^forms/create$', login_required(permission_required('tools.add_file')(FileCreate.as_view())), name='file_create'),
-    url(r'^forms/edit/(?P<pk>\d+)/$', login_required(permission_required('tools.change_file')(FileEdit.as_view())), name='file_edit'),
-    url(r'^forms/(?P<pk>\d+)/$', login_required(permission_required('tools.delete_file')(FileDelete.as_view())), name='file_delete'),
+    url(r'^forms/$', login_required(FormView.as_view()), name='forms'),
+    url(r'^forms/create$', login_required(permission_required('tools.add_file')(FormCreate.as_view())), name='file_create'),
+    url(r'^forms/edit/(?P<pk>\d+)/$', login_required(permission_required('tools.change_file')(FormEdit.as_view())), name='file_edit'),
+    url(r'^forms/edit/(?P<pk>\d+)&(?P<popup>[^/]+)/$', login_required(permission_required('tools.change_file')(FormEdit.as_view())), name='file_edit_popup'),
+    url(r'^forms/(?P<pk>\d+)/$', login_required(permission_required('tools.delete_file')(FormDelete.as_view())), name='file_delete'),
 
     #Folder
     url(r'^folder/$', login_required(permission_required('tools.add_file')(FolderView.as_view())), name='folder'),
