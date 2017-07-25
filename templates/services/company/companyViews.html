@@ -1,46 +1,35 @@
-{% extends 'base.html' %}
-{% block content %}
 <section>
-    <div class="panel panel-primary">
-  <div class="panel-heading">
-    <div class="row">
-      <div class="col-xs-3">
-          <i class="fa fa-building fa-4x"></i>
-      </div>
-      <div class="col-xs-9 text-left">
-          <div><h3>{{ title }}</h3></div>
-      </div>
-    </div>
-  </div>
-        <div class="panel-body">
-            <form name="form_customer" method="post" class="form" role="form" id="form_customer" validate>{% csrf_token %}
-                {% if not is_popup %}
-                <fieldset>
-                    <div class="form-group col-md-5 col-md-offset-1">
-                        <label class="label-control">Select Customer:</label>
-                        <div class="input-group">
-                            <span class="input-group-btn">
-                                <button type="button" id="addcustomer" class="btn btn-success test-tooltip" data-toggle="modal" data-target="#customerList"data-type="info" data-trigger="focus" title="Customer List" data-animation="am-flip-x">
-                                    <i class="fa fa-search-plus" aria-hidden="true"></i>
-                                    <tooltip md-direction="left"></tooltip>
-                                </button>
-                            </span>
-                            {{ form_company.customers }}
-                            <span class="input-group-btn">
-                                <a type="button" id="newcustomer" class="btn btn-success test-tooltip" target="popup" onclick="openpopup('{% url 'accounting:customer_popup' popup=1 %}')" data-trigger="focus" title="Add new Customer" data-animation="am-flip-x">
-                                    <i class="fa fa-plus"></i>
-                                    <tooltip md-direction="right"></tooltip>
-                                </a>
-                            </span>
-                        </div>
-                    </div>
-                    {% include 'accounting/customer/customerModal.html'%}
-                </fieldset>
-                {% endif %}
-                {% include 'services/company/companyForm.html'%}
-            </form>
-        </div>
-    </div>
-
+    <div class="table-responsive">
+                <table id="listCustomer" class="data-table table table-striped table-bordered table-hover" cellspacing="0" width="100%">
+                    <thead>
+                    <tr>
+                        <th class="col-md-2">Name</th>
+                        <th class="col-md-3">Authorize Person</th>
+                        <th class="col-md-3">Address</th>
+                        <th class="col-md-1">Phone</th>
+                        <th class="col-md-1">EIN</th>
+                        <th class="col-md-2">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for c in companys %}
+                    <tr>
+                        <td><a onclick="openpopup('{% url 'services:company' pk=c.id_com popup=1%}')">{{c.name}}</a></td>
+                        <td>{{c.attorney}}</td>
+                        <td>{{c.address}}</td>
+                        <td>{{c.phone}}</td>
+                        <td>{{c.ein}} </td>
+                        <td>
+                            <toolbar class="md-accent">
+                                <a type="button" class="btn btn-info"  target="popup" onclick="openpopup('{% url 'services:company_edit_popup' pk=c.id_com popup=1 %}')"><span><i class="fa fa-pencil-square-o"></i></span></a>
+                            </toolbar>
+                            <toolbar class="md-accent">
+                                <a type="button" class="btn btn-danger"  target="popup" onclick="openpopup('{% url 'services:company_delete' c.id_com %}')"><span><i class="fa fa-trash"></i></span></a>
+                            </toolbar>
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 </section>
-{% endblock %}

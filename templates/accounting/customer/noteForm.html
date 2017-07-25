@@ -1,4 +1,19 @@
 {% extends 'base.html' %}
+{% block extrastyle %}
+<script type="text/javascript">
+   function closepopup(){
+   window.opener.location.reload();
+   window.opener.location.href=window.opener.location.href;
+   var url = window.opener.location.href
+   $(document).ready( function () {
+     $("#submit").click(function(event) {
+        $('#page-wrapper').load();
+      });
+   });
+   window.close();
+ }
+</script>
+{% endblock %}
 {% block content %}
 <section>
     <div class="panel panel-primary">

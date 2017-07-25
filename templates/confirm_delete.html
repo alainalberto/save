@@ -9,7 +9,19 @@
 
         <script src="{% static 'js/jquery.js'%}"></script>
         <script src="{% static 'js/bootstrap.min.js'%}"></script>
-         <script src="{% static 'js/jq_app.js'%}"></script>
+         <script type="text/javascript">
+            function closepopup(){
+                  window.opener.location.reload();
+                  window.opener.location.href=window.opener.location.href;
+                  var url = window.opener.location.href
+                  $(document).ready( function () {
+                      $("#submit").click(function(event) {
+                          $('#page-wrapper').load();
+                       });
+                   });
+                  window.close();
+            }
+          </script>
     </head>
     <body>
 <section>

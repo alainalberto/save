@@ -1,50 +1,112 @@
-<fieldset>
-    <div class="form-group col-md-4 col-md-offset-1" >
-        <label class="label-control">Company Name:</label>
-        {{form_company.name}}
+{% extends 'base.html' %}
+{% block extrastyle %}
+<script type="text/javascript">
+   function openpopup(page){
+     window.open(page,'popup',' location=1, directories=0, resizable=0, width=500,height=700,Top=20,Left=490');
+    }
+   function closepopup(){
+   window.opener.location.reload();
+   window.opener.location.href=window.opener.location.href;
+   var url = window.opener.location.href
+   $(document).ready( function () {
+     $("#submit").click(function(event) {
+        $('#page-wrapper').load();
+      });
+   });
+   window.close();
+ }
+</script>
+{% endblock %}
+{% block content %}
+<section>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-xs-3">
+                    <i class="fa fa-building fa-4x"></i>
+                </div>
+                <div class="col-xs-9 text-left">
+                    <div><h3>{{ title }}</h3></div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <form name="form_customer" method="post" class="form" role="form" id="form_customer" validate>{% csrf_token %}
+
+                <fieldset>
+                    {% if not is_popup %}
+                    <div class="form-group col-md-5 col-md-offset-3">
+                        <label class="label-control">Select Customer:</label>
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <button type="button" id="addcustomer" class="btn btn-success test-tooltip" data-toggle="modal" data-target="#customerList"data-type="info" data-trigger="focus" title="Customer List" data-animation="am-flip-x">
+                                    <i class="fa fa-search-plus" aria-hidden="true"></i>
+                                    <tooltip md-direction="left"></tooltip>
+                                </button>
+                            </span>
+                            {{ form_company.customers }}
+                            <span class="input-group-btn">
+                                <a type="button" id="newcustomer" class="btn btn-success test-tooltip" target="popup" onclick="openpopup('{% url 'accounting:customer_popup' popup=1 %}')" data-trigger="focus" title="Add new Customer" data-animation="am-flip-x">
+                                    <i class="fa fa-plus"></i>
+                                    <tooltip md-direction="right"></tooltip>
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                    {% include 'accounting/customer/customerModal.html'%}
+                    {% endif %}
+
+                    <div class="form-group col-md-4 col-md-offset-1" >
+                        <label class="label-control">Company Name:</label>
+                        {{form_company.name}}
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-1" >
+                        <label class="label-control">Authorized Person:</label>
+                        {{form_company.attorney}}
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-1" >
+                        <label class="label-control">Address:</label>
+                        {{form_company.address}}
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-1" >
+                        <label class="label-control">Phone Number:</label>
+                        {{form_company.phone}}
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-1" >
+                        <label class="label-control">Fax Number:</label>
+                        {{form_company.fax}}
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-1" >
+                        <label class="label-control">EIN Number:</label>
+                        {{form_company.ein}}
+                    </div>
+                    <div class="form-group col-md-2 col-md-offset-1" >
+                        <label class="label-control">Unity:</label>
+                        {{form_company.unity}}
+                    </div>
+                    <div class="form-group col-md-2 col-md-offset-1" >
+                        <label class="label-control">Is Deactivate:</label>
+                        {{form_company.deactivate}}
+                    </div>
+                    <div class="form-group col-md-2 col-md-offset-1" >
+                        <label class="label-control">Service Process:</label>
+                        {{form_company.state}}
+                    </div>
+                    {% if form_company.deactivate and deactivate%}
+                    <div class="form-group col-md-2 col-md-offset-1" >
+                        <label class="label-control">Deactivate Date:</label>
+                        {{form_company.deactivate_date}}
+                    </div>
+                    {% endif %}
+                    {% if not deactivate %}
+                    <div class="form-group col-md-5 col-md-offset-4">
+                        <input type="submit" class="btn btn-success" value="Save" {% if is_popup %} onclick="closepopup()" {% endif %}>
+                        <a type="button"  class="btn btn-danger" {% if is_popup %} onclick="closepopup()" {% else %} onclick="history.back(-1)" {% endif %}>Cancel </a>
+                    </div>
+                    {% endif %}
+                </fieldset>
+            </form>
+        </div>
     </div>
-    <div class="form-group col-md-4 col-md-offset-1" >
-        <label class="label-control">Authorized Person:</label>
-        {{form_company.attorney}}
-    </div>
-    <div class="form-group col-md-4 col-md-offset-1" >
-        <label class="label-control">Address:</label>
-        {{form_company.address}}
-    </div>
-    <div class="form-group col-md-4 col-md-offset-1" >
-        <label class="label-control">Phone Number:</label>
-        {{form_company.phone}}
-    </div>
-    <div class="form-group col-md-4 col-md-offset-1" >
-        <label class="label-control">Fax Number:</label>
-        {{form_company.fax}}
-    </div>
-    <div class="form-group col-md-4 col-md-offset-1" >
-        <label class="label-control">EIN Number:</label>
-        {{form_company.ein}}
-    </div>
-    <div class="form-group col-md-2 col-md-offset-1" >
-        <label class="label-control">Unity:</label>
-        {{form_company.unity}}
-    </div>
-    <div class="form-group col-md-2 col-md-offset-1" >
-        <label class="label-control">Is Deactivate:</label>
-        {{form_company.deactivate}}
-    </div>
-     <div class="form-group col-md-2 col-md-offset-1" >
-        <label class="label-control">Service Process:</label>
-        {{form_company.state}}
-    </div>
-    {% if form_company.deactivate and deactivate%}
-    <div class="form-group col-md-2 col-md-offset-1" >
-        <label class="label-control">Deactivate Date:</label>
-        {{form_company.deactivate_date}}
-    </div>
-    {% endif %}
-    {% if not deactivate %}
-    <div class="form-group col-md-5 col-md-offset-4">
-        <input type="submit" class="btn btn-success" value="Save" {% if is_popup %} onclick="closepopup()" {% endif %}>
-        <a type="button"  class="btn btn-danger" {% if is_popup %} onclick="closepopup()" {% else %} onclick="history.back(-1)" {% endif %}>Cancel </a>
-    </div>
-   {% endif %}
-</fieldset>
+</section>
+{% endblock %}

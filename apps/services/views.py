@@ -16,27 +16,29 @@ from apps.tools.models import Folder, Busines, File, Alert
 from datetime import datetime, date, time, timedelta
 from django.contrib import messages
 from FirstCall.util import accion_user
-
+import os
 
 
 # Create your views here.
 def CompanyView(request, pk, popup):
     company = Companie.objects.get(id_com=pk)
-    return render(request, 'services/company/companyViews.html', {'form_company': company, 'is_popup':popup, 'title':'Company', 'deactivate':True})
+    return render(request, 'services/company/companyForm.html', {'form_company': company, 'is_popup':popup, 'title':'Company', 'deactivate':True})
 
 
 class CompanyCreate(CreateView):
       model = Companie
-      template_name = 'services/company/companyViews.html'
+      template_name = 'services/company/companyForm.html'
       form_class = CompanyForm
 
       def get(self, request, *args, **kwargs):
           if kwargs.__contains__('popup'):
             popup = kwargs['popup']
+            id = kwargs['pk']
+            customer = Customer.objects.get(id_cut=id)
           else:
               popup = 0
+              customer = Customer.objects.filter(deactivated=False)
           form = self.form_class(initial=self.initial)
-          customer = Customer.objects.filter(deactivated=False)
           return render(request, self.template_name, {'form_company': form, 'customers': customer, 'is_popup': popup, 'title': 'Create new Company'})
 
       def post(self, request, *args, **kwargs):
@@ -56,6 +58,7 @@ class CompanyCreate(CreateView):
                   company = form.save(commit=False)
                   if popup:
                     customer = Customer.objects.get(id_cut=id)
+                    company.customers = customer
                   else:
                       customer = Customer.objects.get(id_cut=company.customers_id)
                   folder = Folder.objects.get(id_fld=customer.folders_id)
@@ -77,7 +80,7 @@ class CompanyCreate(CreateView):
 
 class CompanyEdit(UpdateView):
     model = Companie
-    template_name = 'services/company/companyViews.html'
+    template_name = 'services/company/companyForm.html'
     form_class = CompanyForm
 
     def get_context_data(self, **kwargs):
