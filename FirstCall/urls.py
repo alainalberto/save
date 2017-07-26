@@ -19,7 +19,8 @@ from django.contrib.auth.views import login, logout_then_login
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_required, permission_required
-from apps.tools.views import panel_view, Chats, Post, Message
+from apps.tools.views import *
+from FirstCall.views import *
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -34,10 +35,14 @@ urlpatterns = [
     url(r'^chat/$', login_required(Chats), name='chat'),
     url(r'^post/$', login_required(Post), name='post'),
     url(r'^message/$', login_required(Message), name='message'),
+    url(r'^ping/$', login_required(PingView.as_view()), name='session_security_ping'),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.MEDIA_ROOT)
+
+
+
 
 

@@ -73,15 +73,45 @@ MIDDLEWARE = [
 
 ]
 
-SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
+#SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 
-AUTO_LOGOUT_DELAY = 15
+#AUTO_LOGOUT_DELAY = 15
 
-SESSION_IDLE_TIMEOUT = 60
+#SESSION_IDLE_TIMEOUT = 60
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 #SESSION_COOKIE_AGE = 900
+
+
+from django.conf import settings
+
+__all__ = ['EXPIRE_AFTER', 'WARN_AFTER', 'PASSIVE_URLS']
+
+EXPIRE_AFTER = getattr(settings, 'SESSION_SECURITY_EXPIRE_AFTER', 120)
+
+WARN_AFTER = getattr(settings, 'SESSION_SECURITY_WARN_AFTER', 100)
+
+PASSIVE_URLS = getattr(settings, 'SESSION_SECURITY_PASSIVE_URLS', [])
+
+PASSIVE_URL_NAMES = getattr(settings, 'SESSION_SECURITY_PASSIVE_URL_NAMES', [])
+
+expire_at_browser_close = getattr(
+    settings,
+    'SESSION_EXPIRE_AT_BROWSER_CLOSE',
+    False
+)
+force_insecurity = getattr(
+    settings,
+    'SESSION_SECURITY_INSECURE',
+    False
+)
+
+if not (expire_at_browser_close or force_insecurity):
+    raise Exception(
+        'Enable SESSION_EXPIRE_AT_BROWSER_CLOSE or SESSION_SECURITY_INSECURE'
+    )
+
 
 ROOT_URLCONF = 'FirstCall.urls'
 
