@@ -410,8 +410,9 @@ def InvoicesCreate(request):
                        itinv.save()
                        acountDescp = AccountDescrip.objects.create(date=invoice.start_date,
                                                                    value=itinv.subtotal,
-                                                                   accounts_id=itinv.accounts_id,
+                                                                   accounts=itinv.accounts,
                                                                    document=invoice.id_inv,
+                                                                   waytopay=invoice.waytopay,
                                                                    users_id=user.id,
                                                                    type='Invoices')
                 messages.success(request, "Invoice saved with an extension")
@@ -427,9 +428,10 @@ def InvoicesCreate(request):
                         lodinv.save()
                         acountDescp = AccountDescrip.objects.create(date=invoice.start_date,
                                                                     value=invoice.total,
-                                                                    accounts_id=request.POST['account'],
+                                                                    accounts=load.accounts,
                                                                     document=invoice.id_inv,
                                                                     users_id=user.id,
+                                                                    waytopay=invoice.waytopay,
                                                                     type='Invoices')
 
                 messages.success(request, "Invoice saved with an extension")
@@ -536,9 +538,10 @@ class InvoicesEdit(UpdateView):
                         itinv.save()
                         acountDescp = AccountDescrip.objects.create(date=invoice.start_date,
                                                                     value=itinv.subtotal,
-                                                                    accounts_id=itinv.accounts_id,
+                                                                    accounts=itinv.accounts,
                                                                     document=invoice.id_inv,
-                                                                    users_id=request.user.id,
+                                                                    users=request.user,
+                                                                    waytopay = invoice.waytopay,
                                                                     type='Invoices')
             messages.success(request, "Invoice update with an extension")
             return HttpResponseRedirect(reverse_lazy('accounting:invoices'))
@@ -603,6 +606,7 @@ class ReceiptsCreate(CreateView):
                                                          accounts=receipt.accounts,
                                                          document=receipt.id_rec,
                                                          users_id=user.id,
+                                                         waytopay=receipt.waytopay,
                                                          type='Receipts'
                                                          )
              messages.success(request, "Receipt save with an extension")
@@ -732,6 +736,7 @@ class PaymentCreate(CreateView):
                                                          value=form.data['total'],
                                                          accounts_id=request.POST['account'],
                                                          document=receipt.id_rec,
+                                                         waytopay=receipt.waytopay,
                                                          users_id=user.id,
                                                          type='Receipts'
                                                          )
