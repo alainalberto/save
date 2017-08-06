@@ -11,7 +11,8 @@ from apps.tools.models import Folder, Busines, File
 # Model Table accounts
 class Account(models.Model):
     id_acn = models.AutoField(primary_key=True)
-    users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
+    users = models.ForeignKey(User, on_delete=models.CASCADE) # Field name made lowercase.
+    business = models.ForeignKey(Busines, on_delete=models.CASCADE)
     accounts_id = models.ForeignKey('self', on_delete=models.CASCADE, null=True)  # Field name made lowercase.
     name = models.CharField(max_length=20)
     description = models.CharField(max_length=255, blank=True, null=True)

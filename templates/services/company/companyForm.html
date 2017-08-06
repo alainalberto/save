@@ -1,20 +1,17 @@
 {% extends 'base.html' %}
 {% block extrastyle %}
 <script type="text/javascript">
-   function openpopup(page){
-     window.open(page,'popup',' location=1, directories=0, resizable=0, width=500,height=700,Top=20,Left=490');
-    }
-   function closepopup(){
-   window.opener.location.reload();
-   window.opener.location.href=window.opener.location.href;
-   var url = window.opener.location.href
-   $(document).ready( function () {
-     $("#submit").click(function(event) {
-        $('#page-wrapper').load();
-      });
-   });
-   window.close();
+ function openpopup(url){
+   newwindow = window.open(url,'popup',' location=1, directories=0, resizable=0, width=500,height=700,Top=20,Left=490');
+   if (window.focus) {newwindow.focus()}
+   return false;
  }
+ function closepopup(){
+   window.opener.location.href=window.opener.location.href;
+   window.close();
+   return false;
+ }
+
 </script>
 {% endblock %}
 {% block content %}
@@ -39,18 +36,12 @@
                         <label class="label-control">Select Customer:</label>
                         <div class="input-group">
                             <span class="input-group-btn">
-                                <button type="button" id="addcustomer" class="btn btn-success test-tooltip" data-toggle="modal" data-target="#customerList"data-type="info" data-trigger="focus" title="Customer List" data-animation="am-flip-x">
+                                <button type="button" id="addcustomer" class="btn btn-success test-tooltip" data-toggle="modal" data-target="#customerList" data-type="info" data-trigger="focus" title="Customer List" data-animation="am-flip-x">
                                     <i class="fa fa-search-plus" aria-hidden="true"></i>
                                     <tooltip md-direction="left"></tooltip>
                                 </button>
                             </span>
                             {{ form_company.customers }}
-                            <span class="input-group-btn">
-                                <a type="button" id="newcustomer" class="btn btn-success test-tooltip" target="popup" onclick="openpopup('{% url 'accounting:customer_popup' popup=1 %}')" data-trigger="focus" title="Add new Customer" data-animation="am-flip-x">
-                                    <i class="fa fa-plus"></i>
-                                    <tooltip md-direction="right"></tooltip>
-                                </a>
-                            </span>
                         </div>
                     </div>
                     {% include 'accounting/customer/customerModal.html'%}

@@ -1,8 +1,31 @@
 from django import forms
 from apps.accounting.models import *
+from django.urls import reverse
+from django.utils.safestring import mark_safe
 from apps.logistic.models import InvoicesHasLoad, LoadsHasFee
 from django.core.exceptions import ValidationError
 
+class RelatedFieldWidgetCanAdd(forms.widgets.Select):
+
+   def __init__(self, related_model, related_url=None, *args, **kw):
+
+        super(RelatedFieldWidgetCanAdd, self).__init__(*args, **kw)
+
+        if not related_url:
+           rel_to = related_model
+           info = (rel_to._meta.app_label, rel_to._meta.object_name.lower())
+           related_url = 'admin:%s_%s_add' % info
+
+        self.related_url = related_url
+
+   def render(self, name, value, *args, **kwargs):
+       self.related_url = "accounting/customers/1/"
+       accion = "window.open('/accounting/customers/create/1/','popup',' location=1, directories=0, resizable=0, width=500,height=700,Top=20,Left=490')"
+       output = [super(RelatedFieldWidgetCanAdd, self).render(name, value, *args, **kwargs)]
+       output.append(u'<span class="input-group-btn"><a type="button" onclick="%s" type="button" class="btn btn-success test-tooltip" id="add_id_%s"> ' % \
+           (accion, name))
+       output.append(u'<i class="fa fa-plus"></i><tooltip md-direction="right"></tooltip></a></span>')
+       return mark_safe(u''.join(output))
 
 class AccountForm(forms.ModelForm):
     class Meta:
@@ -121,11 +144,15 @@ class EmployeesForm(forms.ModelForm):
 
 
 class InvoicesForm(forms.ModelForm):
-        class Meta:
+         customers = forms.ModelChoiceField(
+            required=True,
+            queryset=Customer.objects.filter(deactivated=False),
+            widget=RelatedFieldWidgetCanAdd(Customer, attrs={'class': 'form-control input-md'})
+         )
+         class Meta:
             model = Invoice
 
             fields = [
-                'customers',
                 'business',
                 'start_date',
                 'waytopay',
@@ -137,7 +164,6 @@ class InvoicesForm(forms.ModelForm):
                 'total',
             ]
             labels = {
-                'customers': 'Customers:',
                 'business': 'Business:',
                 'start_date': 'Start Date:',
                 'waytopay': 'Payment Method:',
@@ -149,7 +175,6 @@ class InvoicesForm(forms.ModelForm):
                 'total': 'Total:',
             }
             widgets = {
-                'customers': forms.Select(attrs={'class': 'form-control input-md'}),
                 'business': forms.Select(attrs={'class': 'form-control input-md'}),
                 'start_date': forms.DateInput(attrs={'placeholder': 'Start Date', 'class': 'form-control input-md'}),
                 'waytopay': forms.Select(attrs={'class': 'form-control input-md'},choices=(('Cash','Cash'),('Check','Check'),('Credit Card','Credit Card'))),
@@ -162,13 +187,17 @@ class InvoicesForm(forms.ModelForm):
             }
 
 class ItemHasInvoiceForm(forms.ModelForm):
+    accounts = forms.ModelChoiceField(
+        required=True,
+        queryset= Account.objects.filter(accounts_id_id=(Account.objects.get(primary=True, name='Income')).id_acn),
+        widget=forms.Select(attrs={'class': 'form-control input-md account', 'name': 'account'}),
+    )
     class Meta:
         model = InvoicesHasItem
         fields = {
             'id_ind',
             'quantity',
             'description',
-            'accounts',
             'value',
             'tax',
             'subtotal',
@@ -177,13 +206,17 @@ class ItemHasInvoiceForm(forms.ModelForm):
             'id_ind': forms.NumberInput(attrs={'placeholder': '0', 'class': 'form-control', 'style':'display : none'}),
             'quantity': forms.NumberInput(attrs={'placeholder': '0', 'class': 'form-control entrada'}),
             'description': forms.TextInput(attrs={'placeholder': 'Description ', 'class': 'form-control input-md descript'}),
-            'accounts': forms.Select(attrs={'class': 'form-control input-md account', 'name': 'account'}),
             'value': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control precie'}),
             'tax': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control tax'}),
             'subtotal': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control subtotal', 'readonly':''}),
         }
 
 class ReceiptsForm(forms.ModelForm):
+    accounts = forms.ModelChoiceField(
+        required=True,
+        queryset=Account.objects.filter(accounts_id_id=(Account.objects.get(primary=True, name='Expenses')).id_acn),
+        widget=forms.Select(attrs={'class': 'form-control input-md account', 'name': 'account'}),
+    )
     class Meta:
         model = Receipt
 

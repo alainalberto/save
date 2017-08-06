@@ -1,16 +1,15 @@
 {% extends 'base.html' %}
 {% block extrastyle %}
 <script type="text/javascript">
-   function closepopup(){
-   window.opener.location.reload();
+ function openpopup(url){
+   newwindow = window.open(url,'popup',' location=1, directories=0, resizable=0, width=500,height=700,Top=20,Left=490');
+   if (window.focus) {newwindow.focus()}
+   return false;
+ }
+ function closepopup(){
    window.opener.location.href=window.opener.location.href;
-   var url = window.opener.location.href
-   $(document).ready( function () {
-     $("#submit").click(function(event) {
-        $('#page-wrapper').load();
-      });
-   });
    window.close();
+   return false;
  }
 </script>
 {% endblock %}
@@ -38,7 +37,7 @@
         </div>
         <!-- Button (Double) -->
         <div class="form-group col-md-5 col-md-offset-4">
-            <input type="submit" class="btn btn-success" value="Save" {% if is_popup %} onclick="closepopup()" {% endif %}>
+            <input type="submit" class="btn btn-success" value="Save" onclick="closepopup()">
             <a type="button" onclick="closepopup()" class="btn btn-danger">Cancel </a>
         </div>
     </fieldset>

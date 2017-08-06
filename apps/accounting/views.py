@@ -580,17 +580,7 @@ class ReceiptsCreate(CreateView):
 
      def get(self, request, *args, **kwargs):
          form = self.form_class(initial=self.initial)
-         accounts = []
-         exp = Account.objects.get(primary = True, name= 'Expenses')
-         exp_acconts = Account.objects.filter(accounts_id_id = exp.id_acn)
-         for e in exp_acconts:
-            accounts.append(e)
-         for a in exp_acconts:
-             exp_accont = Account.objects.filter(accounts_id_id = a.id_acn)
-             if exp_accont != None:
-                 for ac in exp_accont:
-                    accounts.append(ac)
-         return render(request, self.template_name, {'accounts': accounts, 'form': form, 'title': 'Create new Receipt'})
+         return render(request, self.template_name, {'form': form, 'title': 'Create new Receipt'})
 
      def post(self, request, *args, **kwargs):
          user = request.user
@@ -606,12 +596,11 @@ class ReceiptsCreate(CreateView):
              receipt = form.save(commit=False)
              receipt.serial = serial
              receipt.users_id = user.id
-             receipt.accounts_id = request.POST['account']
              receipt.save()
              accion_user(receipt, ADDITION, request.user)
              acountDescp = AccountDescrip.objects.create(date=form.data['start_date'],
                                                          value=form.data['total'],
-                                                         accounts_id=request.POST['account'],
+                                                         accounts=receipt.accounts,
                                                          document=receipt.id_rec,
                                                          users_id=user.id,
                                                          type='Receipts'
@@ -632,16 +621,6 @@ class ReceiptsEdit(UpdateView):
         pk = self.kwargs.get('pk',0)
         receipt = self.model.objects.get(id_rec=pk)
         account = Account.objects.filter(id_acn=receipt.accounts_id)
-        accounts = []
-        exp = Account.objects.get(primary=True, name='Expenses')
-        exp_acconts = Account.objects.filter(accounts_id_id=exp.id_acn)
-        for e in exp_acconts:
-            accounts.append(e)
-        for a in exp_acconts:
-            exp_accont = Account.objects.filter(accounts_id_id=a.id_acn)
-            if exp_accont != None:
-                for ac in exp_accont:
-                    accounts.append(ac)
         if 'form' not in context:
             context['form'] = self.form_class()
         context['id'] = pk
@@ -652,8 +631,7 @@ class ReceiptsEdit(UpdateView):
         self.object = self.get_object
         id_rec = kwargs['pk']
         receipt = self.model.objects.get(id_rec=id_rec)
-        receipt.accounts_id = request.POST['account']
-        acountDescp = AccountDescrip.objects.get(accounts_id=request.POST['account'], document=int(receipt.id_rec))
+        acountDescp = AccountDescrip.objects.get(accounts_id=receipt.accounts_id, document=int(receipt.id_rec))
         form = self.form_class(request.POST, instance=receipt)
         if form.is_valid():
             form.save()

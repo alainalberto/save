@@ -69,7 +69,7 @@ class File(models.Model):
     users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
     folders = models.ForeignKey(Folder, on_delete=models.CASCADE)  # Field name made lowercase.
     name = models.CharField(max_length=45, blank=True, null=True)
-    drescription = models.CharField(max_length=255, blank=True, null=True)
+    category = models.CharField(max_length=255, blank=True, null=True)
     url = models.FileField(upload_to="Forms/", blank=True, null=True)
     date_save = models.DateField(auto_now_add=True)
 

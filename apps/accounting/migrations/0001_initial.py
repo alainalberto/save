@@ -25,6 +25,7 @@ class Migration(migrations.Migration):
                 ('description', models.CharField(blank=True, max_length=255, null=True)),
                 ('primary', models.BooleanField(default=False)),
                 ('accounts_id', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='accounting.Account')),
+                ('business', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='tools.Busines')),
                 ('users', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),

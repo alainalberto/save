@@ -1,19 +1,15 @@
 {% extends 'base.html' %}
 {% block extrastyle %}
 <script type="text/javascript">
-   function openpopup(page){
-     window.open(page,'popup',' location=1, directories=0, resizable=0, width=500,height=700,Top=20,Left=490');
-    }
-   function closepopup(){
-   window.opener.location.reload();
+ function openpopup(url){
+   newwindow = window.open(url,'popup',' location=1, directories=0, resizable=0, width=500,height=700,Top=20,Left=490');
+   if (window.focus) {newwindow.focus()}
+   return false;
+ }
+ function closepopup(){
    window.opener.location.href=window.opener.location.href;
-   var url = window.opener.location.href
-   $(document).ready( function () {
-     $("#submit").click(function(event) {
-        $('#page-wrapper').load();
-      });
-   });
    window.close();
+   return false;
  }
 </script>
 
@@ -185,14 +181,16 @@
               <th>Name</th>
               <th>Creative user </th>
               <th>Up load Date</th>
+              <th>Category</th>
               <th>Action</th>
               </thead>
               <tbody>
-              {% for f in files %}
+              {% for f in files|dictsort:"category" %}
               <tr>
                   <td><i class="fa fa-file-pdf-o" aria-hidden="true"></i> <a href="/static/media/{{ f.url }}" target="_blank">{{f.name}}</br></a></td>
                   <td>{{ f.users }}</td>
                   <td>{{ f.date_save }}</td>
+                  <td>{{ f.category }}</td>
                   <td>
                       <toolbar class="md-accent">
                           <a data-type="info"  data-trigger="focus"  data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" target="popup" onclick="openpopup('{% url 'services:folder_edit_popup' pk=f.id_fil popup=1 %}')">

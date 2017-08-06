@@ -262,6 +262,7 @@ class FolderCreate(CreateView):
         File,
         form=FileForm,
         fields=['name',
+                'category',
                 'url',
                 ],
         extra=10
@@ -294,7 +295,6 @@ class FolderCreate(CreateView):
             for f in file:
               f.users_id = user.id
               f.folders = folder
-              f.description = f.name
               f.save()
             messages.success(request, "Form saved with an extension")
             accion_user(file, ADDITION, request.user)
@@ -302,7 +302,7 @@ class FolderCreate(CreateView):
         else:
             for er in form.errors:
                 messages.error(request, "ERROR: " + er)
-            return render(request, self.template_name, {'form_files': form, 'is_popup':popup, 'customers':customer,'title': 'Create new File'})
+            return render(request, self.template_name, {'form_files': form, 'is_popup':popup, 'customers':customer,'title': 'Create new Folder'})
 
 
 class FolderEdit(UpdateView):
@@ -364,9 +364,10 @@ class MttCreate(CreateView):
         File,
         form=FileForm,
         fields=['name',
+                'category',
                 'url',
                 ],
-        extra=10
+        extra=10,
     )
     IftaFormSet = inlineformset_factory(
         Customer,
@@ -377,7 +378,7 @@ class MttCreate(CreateView):
             'nex_period',
             'customers',
                 ],
-        extra=10
+        extra=10,
     )
     form_class_permit = PermitForm()
     form_class_company = CompanyForm()
