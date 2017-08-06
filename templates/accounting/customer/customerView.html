@@ -188,7 +188,7 @@
               {% for f in files %}
               <tr>
                   <td><i class="fa fa-file-pdf-o" aria-hidden="true"></i> <a href="/static/media/{{ f.url }}" target="_blank">{{f.name}}</br></a></td>
-                  <td>{{ f.users }}</td>
+                  <td>{% if f.users.first_name %} {{ f.users.first_name }} {% else %} {{ f.users }} {% endif %}</td>
                   <td>{{ f.date_save }}</td>
                   <td>{{ f.category }}</td>
                   <td>
@@ -225,7 +225,7 @@
               <tbody>
               {% for n in notes %}
               <tr>
-                  <td>{{n.users}}</td>
+                  <td>{% if n.users.first_name %} {{ n.users.first_name }} {% else %} {{ n.users }} {% endif %}</td>
                   <td>{{ n.note }}</td>
                   <td>{{ n.date }}</td>
                    <td>
