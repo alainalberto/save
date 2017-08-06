@@ -185,7 +185,7 @@
               <th>Action</th>
               </thead>
               <tbody>
-              {% for f in files|dictsort:"category" %}
+              {% for f in files %}
               <tr>
                   <td><i class="fa fa-file-pdf-o" aria-hidden="true"></i> <a href="/static/media/{{ f.url }}" target="_blank">{{f.name}}</br></a></td>
                   <td>{{ f.users }}</td>
