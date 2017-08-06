@@ -291,6 +291,25 @@ class AlertsCreate(CreateView):
              alert.save()
              accion_user(alert, ADDITION, request.user)
              messages.success(request, "Alert save with an extension")
+             send_mail(
+                 'FirstCall Alert',
+                 'Usted tiene una alerta:'+ alert.description + ' con fecha de terminación ' +str(alert.end_date),
+                 'ranselr@gmail.com',
+                 ['ranselr@gmail.com'],
+                 fail_silently=False,
+             )
+             # Your Account SID from twilio.com/console
+             account_sid = "ACc2b4aa7154629a3f9b2767e7ddf9981d"
+             # Your Auth Token from twilio.com/console
+             auth_token = "b6318ebc29ac5cbdc257bb9acac2d89c"
+
+             client = Client(account_sid, auth_token)
+
+             message = client.messages.create(
+                 to="+18322071590",
+                 from_="+18329002832",
+                 body="Hello my wife!")
+
          else:
              for er in form.errors:
                  messages.error(request, "ERROR: " + er)
@@ -340,7 +359,7 @@ def change_password(request):
             user = form.save()
             update_session_auth_hash(request, user)  # Important!
             messages.success(request, 'Your password was successfully updated!')
-            return redirect('panel:panel')
+            return redirect('accounts:change_password')
         else:
             messages.error(request, 'Please correct the error below.')
     else:
