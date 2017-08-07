@@ -242,23 +242,22 @@ class FolderView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(FolderView, self).get_context_data(**kwargs)
-        if Folder.objects.filter(name='Customers'):
-            folder = Folder.objects.all()
-            file = File.objects.all()
-            paginator = Paginator(folder, 10)  # Show 25 contacts per page
+        folder = Folder.objects.all()
+        file = File.objects.all()
+        paginator = Paginator(folder, 10)  # Show 25 contacts per page
 
-            page = self.request.GET.get('page')
-            try:
-                folders = paginator.page(page)
-            except PageNotAnInteger:
-                # If page is not an integer, deliver first page.
-                folders = paginator.page(1)
-            except EmptyPage:
-                # If page is out of range (e.g. 9999), deliver last page of results.
-                folders = paginator.page(paginator.num_pages)
-            context['folders'] = folders
-            context['files'] = file
-            return context
+        page = self.request.GET.get('page')
+        try:
+            folders = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            folders = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            folders = paginator.page(paginator.num_pages)
+        context['folders'] = folders
+        context['files'] = file
+        return context
 
 
 class FolderCreate(CreateView):
