@@ -34,7 +34,7 @@
                     <div id="{{folder.id_fld}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{folder.id_fld}}">
                         <div class="panel-body">
                             <ul class="list-unstyled">
-                                {% for fold in folders %}
+                                {% for fold in folders|dictsort:"name" %}
                                 {% if fold.folders_id == folder.id_fld %}
                                 <li class="col-md-offset-1"><i class="fa fa-folder text-primary" aria-hidden="true"></i><strong>  {{fold.name}}</strong>
                                     <ul class="list-unstyled">
