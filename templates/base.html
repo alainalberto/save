@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="alainalberto03@gmail.com">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
     <script src="{% static 'js/jquery.js'%}"></script>
     <script src="{% static 'js/jq_app.js'%}"></script>
@@ -138,8 +139,8 @@
                     </li>
                 </ul>
             </li> -->
-            <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown"><span class="label label-primary">{{all}}</span> <i class="fa fa-bell"></i> <b class="caret"></b></a>
+            <li  role="presentation" class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown"><span class="badge badge-primary">{{all}}</span> <i class="fa fa-bell"></i> <b class="caret"></b></a>
                 <ul class="dropdown-menu alert-dropdown">
 
                     <li>
@@ -260,13 +261,13 @@
                         {% endif %}
                         <li>
                             <a class="item" href="{% url 'services:dot' %}"> DOT</a>
-                        </li>-->
+                        </li>
                         {% if perms.services.add_ifta %}
                         <li>
                             <a class="item" href="{% url 'services:ifta' %}"> IFTA</a>
                         </li>
                         {% endif %}
-                       <!-- {% if perms.services.add_audit %}
+                        {% if perms.services.add_audit %}
                         <li>
                             <a class="item" href="{% url 'services:audits' %}"> Audits</a>
                         </li>
@@ -286,7 +287,7 @@
                         {% endif %}-->
                         {% if perms.tools.add_folder and perms.services %}
                         <li>
-                            <a class="item" href="{% url 'services:folder_create' %}"> Folder</a>
+                            <a class="item" href="{% url 'services:folder' %}"> Folder</a>
                         </li>
                         {% endif %}
                     </ul>

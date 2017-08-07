@@ -35,7 +35,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for i in object_list %}
+                    {% for i in object_list|dictsort:"start_date" %}
                     <tr>
                         <td>{{i.prefix}}</td>
                         <td><a href="{% url 'accounting:invoices_view' i.id_inv %}">{{i.serial}}</a></td>
@@ -72,6 +72,11 @@
                 </table>
             </div>
             </div>
+        <div class="panel-footer">
+            <a type="button" onclick="history.back(-1)">
+            <i class="fa fa-arrow-circle-left fa-3x"></i>
+            </a>
+        </div>
         </div>
     </div>
 </section>

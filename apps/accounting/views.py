@@ -141,10 +141,6 @@ class CustomersCreate(CreateView):
          else:
              popup = 0
          form = self.form_class(request.POST)
-         folders = Folder.objects.filter(name='Customers')
-         if not folders:
-             Folder.objects.create(name='Customers', description='Customers', folder='NULL')
-         folder_father = Folder.objects.get(name='Customers')
          if form.is_valid():
              customer_exist = Customer.objects.filter(email=form.data['email'], fullname=form.data['fullname'])
              if customer_exist:
@@ -154,7 +150,7 @@ class CustomersCreate(CreateView):
              else:
                  folder = Folder.objects.create(name=form.data['fullname'] + "_Customer",
                                                 description=form.data['fullname'] + "_Customer",
-                                                folder=folder_father.id_fld)
+                                                )
                  customer = form.save(commit=False)
                  customer.folders_id = folder.id_fld
                  customer.users_id = request.user.id

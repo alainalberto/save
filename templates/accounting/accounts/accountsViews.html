@@ -23,10 +23,10 @@
         <ol class="ui list">
           {% if primary %}
          {% for prim in primary %}
-          <li>{{prim.name}}<ol>
+          <li><strong>{{prim.name}}</strong><ol>
             {% for acin in accounts %}
             {% if acin.accounts_id_id == prim.id_acn %}
-            <li><a href="{% url 'accounting:account_descrip' acin.id_acn %}">{{acin.name}} ( {{acin.business}} )</a><ol>
+            <li><a href="{% url 'accounting:account_descrip' acin.id_acn %}"><strong>{{acin.name}}</strong> ( {{acin.business}} )</a><ol>
               {% for sacin in accounts %}
               {% if sacin.accounts_id_id == acin.id_acn %}
               <li><a href="{% url 'accounting:account_descrip' sacin.id_acn%}">{{sacin.name}}</a></li>
@@ -42,6 +42,11 @@
           {% endif %}
         </ol>
       </div>
+    <div class="panel-footer">
+            <a type="button" onclick="history.back(-1)">
+            <i class="fa fa-arrow-circle-left fa-3x"></i>
+            </a>
+        </div>
   </div>
 </section>
 {% endblock %}

@@ -1,16 +1,12 @@
 from django.core.mail import send_mail
-from django.shortcuts import render
-from django.contrib.contenttypes.models import ContentType
-from django.forms import modelform_factory, inlineformset_factory, formset_factory, BaseModelFormSet
-from django.shortcuts import render, render_to_response, redirect, HttpResponseRedirect
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.forms import inlineformset_factory
+from django.shortcuts import render, HttpResponseRedirect
 from django.core.urlresolvers import reverse_lazy
-from django.contrib.admin.models import LogEntry, ADDITION, CHANGE, DELETION
-from apps.logistic.models import Load
-from django.contrib import messages
-from FirstCall.util import accion_user
+from django.contrib.admin.models import ADDITION, CHANGE, DELETION
 from apps.services.components.ServicesForm import *
 from apps.tools.components.AlertForm import AlertForm
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from apps.services.models import *
 from apps.tools.models import Folder, Busines, File, Alert
 from datetime import datetime, date, time, timedelta
@@ -247,10 +243,20 @@ class FolderView(ListView):
     def get_context_data(self, **kwargs):
         context = super(FolderView, self).get_context_data(**kwargs)
         if Folder.objects.filter(name='Customers'):
-            folder_father = Folder.objects.get(name='Customers')
-            folder = Folder.objects.filter(folders_id = folder_father.id_fld)
+            folder = Folder.objects.all()
             file = File.objects.all()
-            context['folders'] = folder
+            paginator = Paginator(folder, 10)  # Show 25 contacts per page
+
+            page = self.request.GET.get('page')
+            try:
+                folders = paginator.page(page)
+            except PageNotAnInteger:
+                # If page is not an integer, deliver first page.
+                folders = paginator.page(1)
+            except EmptyPage:
+                # If page is out of range (e.g. 9999), deliver last page of results.
+                folders = paginator.page(paginator.num_pages)
+            context['folders'] = folders
             context['files'] = file
             return context
 
@@ -298,7 +304,7 @@ class FolderCreate(CreateView):
               f.save()
             messages.success(request, "Form saved with an extension")
             accion_user(file, ADDITION, request.user)
-            return HttpResponseRedirect('/accounting/customers/view/' + str(customer.id_cut))
+            return HttpResponseRedirect(reverse_lazy('services:folder'))
         else:
             for er in form.errors:
                 messages.error(request, "ERROR: " + er)
