@@ -242,8 +242,8 @@ class FolderView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(FolderView, self).get_context_data(**kwargs)
-        folder = Folder.objects.all()
-        file = File.objects.all()
+        folder = Folder.objects.all().order_by('name')
+        file = File.objects.all().order_by('name')
         paginator = Paginator(folder, 10)  # Show 25 contacts per page
 
         page = self.request.GET.get('page')
