@@ -123,9 +123,6 @@
                             <div  class="tab-content">
 
                                 <div role="tabpanel" class="tab-pane fade" id="newCompany">
-                                    <div class="col-md-offset-11">
-                                        <a type="button" class="btn btn-success" target="popup" onclick="openpopup('{% url 'services:company_create_popup' pk=customer.id_cut popup=1 %}')"><span><i class="fa fa-plus"></i> Add </span></a>
-                                    </div><br/>
                                     {% if companys %}
                                      {% include 'services/company/companyViews.html'%}
                                     {% endif %}

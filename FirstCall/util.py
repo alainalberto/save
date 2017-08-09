@@ -1,4 +1,5 @@
 from django.contrib.admin.models import LogEntry,ADDITION, CHANGE, DELETION
+from django.contrib.auth.views import logout_then_login
 from django.utils.encoding import force_text
 from django.contrib.contenttypes.models import ContentType
 from datetime import datetime, timedelta
@@ -29,18 +30,13 @@ def accion_user(object, action_flag, user):
 
 
 class AutoLogout:
-     def __init__(self, get_response):
-            self.get_response = get_response
-
-     def __call__(self, request):
-       if not request.user.is_authenticated():
-        return
-
-       try:
-         if datetime.now() - request.session['last_touch'] > timedelta(0, settings.AUTO_LOGOUT_DELAY * 60, 0):
-             auth.logout(request)
-             del request.session['last_touch']
-             return
-       except KeyError:
-         pass
-       request.session['last_touch'] = datetime.now()
+    def process_request(self, request):
+        if request.user.is_authenticated():
+            current_datetime = datetime.datetime.now()
+            if ('last_login' in request.session):
+                last = (current_datetime - request.session['last_login']).seconds
+                if last > settings.SESSION_IDLE_TIMEOUT:
+                    logout_then_login
+            else:
+                request.session['last_login'] = current_datetime
+        return None

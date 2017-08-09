@@ -4,34 +4,8 @@ from django.utils.safestring import mark_safe
 from apps.services.models import *
 from apps.tools.models import File
 
-class RelatedFieldWidgetCanAdd(forms.widgets.Select):
-
-   def __init__(self, related_model, related_url=None, *args, **kw):
-
-        super(RelatedFieldWidgetCanAdd, self).__init__(*args, **kw)
-
-        if not related_url:
-           rel_to = related_model
-           info = (rel_to._meta.app_label, rel_to._meta.object_name.lower())
-           related_url = 'admin:%s_%s_add' % info
-
-        self.related_url = related_url
-
-   def render(self, name, value, *args, **kwargs):
-       accion = "window.open('/accounting/customers/create/1/','popup',' location=1, directories=0, resizable=0, width=500,height=700,Top=20,Left=490')"
-       output = [super(RelatedFieldWidgetCanAdd, self).render(name, value, *args, **kwargs)]
-       output.append(u'<span class="input-group-btn"><a type="button" onclick="%s" type="button" class="btn btn-success test-tooltip" id="add_id_%s"> ' % \
-           (accion, name))
-       output.append(u'<i class="fa fa-plus"></i><tooltip md-direction="right"></tooltip></a></span>')
-       return mark_safe(u''.join(output))
-
-
 class CompanyForm(forms.ModelForm):
-    customers = forms.ModelChoiceField(
-        required=True,
-        queryset=Customer.objects.filter(deactivated=False),
-        widget=RelatedFieldWidgetCanAdd(Customer, related_url="accounting:customer_create", attrs={'class': 'form-control input-md'})
-    )
+
     class Meta:
         model = Companie
 
@@ -46,6 +20,7 @@ class CompanyForm(forms.ModelForm):
                   'logo',
                   'deactivate',
                   'state',
+                  'customers',
         ]
 
         widgets = {
@@ -58,15 +33,11 @@ class CompanyForm(forms.ModelForm):
             'unity': forms.NumberInput(attrs={'placeholder': 'Unit', 'class': 'form-control input-md'}),
             'deactivate': forms.CheckboxInput(attrs={'class': 'checkbox'}),
             'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
+            'customers': forms.Select(attrs={'class': 'form-control input-md'}),
         }
 
 class PermitForm(forms.ModelForm):
-    customers = forms.ModelChoiceField(
-        required=True,
-        queryset=Customer.objects.filter(deactivated=False),
-        widget=RelatedFieldWidgetCanAdd(Customer, related_url="accounting:customer_create",
-                                        attrs={'class': 'form-control input-md'})
-    )
+
     class Meta:
         model = Permission
 
@@ -84,6 +55,7 @@ class PermitForm(forms.ModelForm):
             'boc3_date',
             'ucr',
             'state',
+            'customers',
         ]
         labels = {
             'usdot': 'USDOT Number:',
@@ -99,6 +71,7 @@ class PermitForm(forms.ModelForm):
             'boc3_date': 'BOC 3 Date:',
             'ucr': 'URC:',
             'state': 'Service Process:',
+
         }
         widgets = {
             'usdot': forms.NumberInput(attrs={'placeholder': 'USDOT Number', 'class': 'form-control input-md'}),
@@ -115,15 +88,11 @@ class PermitForm(forms.ModelForm):
             'ucr': forms.NumberInput(attrs={'placeholder': 'USDOT Number', 'class': 'form-control input-md'}),
             'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(
             ('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
+            'customers': forms.Select(attrs={'class': 'form-control input-md'}),
         }
 
 class InsuranceForm(forms.ModelForm):
-    customers = forms.ModelChoiceField(
-        required=True,
-        queryset=Customer.objects.filter(deactivated=False),
-        widget=RelatedFieldWidgetCanAdd(Customer, related_url="accounting:customer_create",
-                                        attrs={'class': 'form-control input-md'})
-    )
+
     class Meta:
         model = Insurance
 
@@ -143,6 +112,7 @@ class InsuranceForm(forms.ModelForm):
             'comision',
             'paid',
             'state',
+            'customers',
         ]
         labels = {
             'down_payment': 'Down Payment:',
@@ -178,15 +148,11 @@ class InsuranceForm(forms.ModelForm):
             'paid': forms.CheckboxInput(attrs={'class': 'checkbox'}),
             'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(
             ('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
+            'customers': forms.Select(attrs={'class': 'form-control input-md'}),
         }
 
 class IftaForm(forms.ModelForm):
-    customers = forms.ModelChoiceField(
-        required=True,
-        queryset=Customer.objects.filter(deactivated=False),
-        widget=RelatedFieldWidgetCanAdd(Customer, related_url="accounting:customer_create",
-                                        attrs={'class': 'form-control input-md'})
-    )
+
     class Meta:
         model = Ifta
 
@@ -195,6 +161,7 @@ class IftaForm(forms.ModelForm):
             'period',
             'nex_period',
             'state',
+            'customers',
         ]
         labels = {
             'type': 'Select Type:',
@@ -207,6 +174,7 @@ class IftaForm(forms.ModelForm):
             'nex_period': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
             'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(
             ('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
+            'customers': forms.Select(attrs={'class': 'form-control input-md'}),
 
         }
 
@@ -243,18 +211,14 @@ class ContractForm(forms.ModelForm):
         }
 
 class MTTForm(forms.ModelForm):
-    customers = forms.ModelChoiceField(
-        required=True,
-        queryset=Customer.objects.filter(deactivated=False),
-        widget=RelatedFieldWidgetCanAdd(Customer, related_url="accounting:customer_create",
-                                        attrs={'class': 'form-control input-md'})
-    )
+
     class Meta:
         model = Maintenance
 
         fields = [
             'nota',
             'state',
+            'customers',
 
         ]
         labels = {
@@ -264,15 +228,11 @@ class MTTForm(forms.ModelForm):
             'nota': forms.Textarea(attrs={'placeholder': 'State', 'class': 'form-control input-md'}),
             'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(
             ('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
+            'customers': forms.Select(attrs={'class': 'form-control input-md'}),
         }
 
 class TitleForm(forms.ModelForm):
-    customers = forms.ModelChoiceField(
-        required=True,
-        queryset=Customer.objects.filter(deactivated=False),
-        widget=RelatedFieldWidgetCanAdd(Customer, related_url="accounting:customer_create",
-                                        attrs={'class': 'form-control input-md'})
-    )
+
     class Meta:
         model = Title
 
@@ -283,6 +243,7 @@ class TitleForm(forms.ModelForm):
             'date_exp_insp',
             'trucks',
             'state',
+            'customers',
         ]
         labels = {
             'date_reg': 'Register Date:',
@@ -299,15 +260,11 @@ class TitleForm(forms.ModelForm):
             'trucks': forms.Select(attrs={'class': 'form-control input-md'}),
             'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(
             ('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
+            'customers': forms.Select(attrs={'class': 'form-control input-md'}),
         }
 
 class PlateForm(forms.ModelForm):
-    customers = forms.ModelChoiceField(
-        required=True,
-        queryset=Customer.objects.filter(deactivated=False),
-        widget=RelatedFieldWidgetCanAdd(Customer, related_url="accounting:customer_create",
-                                        attrs={'class': 'form-control input-md'})
-    )
+
     class Meta:
         model = Plate
 
@@ -319,6 +276,7 @@ class PlateForm(forms.ModelForm):
             'account_password',
             'trucks',
             'state',
+            'customers',
         ]
         labels = {
             'date': 'Date:',
@@ -337,6 +295,7 @@ class PlateForm(forms.ModelForm):
             'trucks': forms.Select(attrs={'class': 'form-control input-md'}),
             'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(
             ('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
+            'customers': forms.Select(attrs={'class': 'form-control input-md'}),
         }
 
 class FileForm(forms.ModelForm):

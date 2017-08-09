@@ -30,12 +30,11 @@ class CompanyCreate(CreateView):
           if kwargs.__contains__('popup'):
             popup = kwargs['popup']
             id = kwargs['pk']
-            customer = Customer.objects.get(id_cut=id)
           else:
               popup = 0
-              customer = Customer.objects.filter(deactivated=False)
+          customer = Customer.objects.filter(deactivated=False)
           form = self.form_class(initial=self.initial)
-          return render(request, self.template_name, {'form_company': form, 'customers': customer, 'is_popup': popup, 'title': 'Create new Company'})
+          return render(request, self.template_name, {'form_company': form, 'customers':customer, 'is_popup': popup, 'title': 'Create new Company'})
 
       def post(self, request, *args, **kwargs):
           if kwargs.__contains__('popup'):
@@ -54,20 +53,21 @@ class CompanyCreate(CreateView):
                   company = form.save(commit=False)
                   if popup:
                     customer = Customer.objects.get(id_cut=id)
-                    company.customers = customer
                   else:
-                      customer = Customer.objects.get(id_cut=company.customers_id)
+                      customer = Customer.objects.get(id_cut=request.POST['customers'])
+                  company.customers = customer
                   folder = Folder.objects.get(id_fld=customer.folders_id)
                   company.folders_id = folder.id_fld
                   company.users_id = request.user.id
+                  company.update = datetime.now().strftime("%Y-%m-%d")
                   if company.deactivate:
                       company.deactivate_date = datetime.now().strftime("%Y-%m-%d")
                   else:
                       company.deactivate_date = None
                   company.save()
-                  accion_user(customer, ADDITION, request.user)
+                  accion_user(company, ADDITION, request.user)
                   messages.success(request, 'The customer was saved successfully')
-                  return HttpResponseRedirect('/accounting/customers/view/'+str(customer.id_cut))
+                  return HttpResponseRedirect('/accounting/customers/view/'+str(company.customers_id))
           else:
               for er in form.errors:
                   messages.error(request, "ERROR: " + er)
@@ -97,30 +97,24 @@ class CompanyEdit(UpdateView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object
         pk = kwargs['pk']
-        popup = kwargs['popup']
+        if kwargs.__contains__('popup'):
+            popup = kwargs['popup']
+        else:
+            popup = 0
         company = self.model.objects.get(id_com=pk)
         form = self.form_class(request.POST, instance=company)
         if form.is_valid():
-            company_exist = Companie.objects.filter(name=form.data['name'], ein=form.data['ein'])
-            if company_exist:
-                messages.error(request, 'The Company already exists')
-                form = self.form_class(initial=self.initial)
-                return render(request, self.template_name,
-                              {'form_company': form, 'is_popup': popup, 'title': 'Create new Company'})
-            else:
                 company = form.save(commit=False)
-                customer = Customer.objects.get(id_cut=company.customers_id)
-                folder = Folder.objects.get(id_fld=customer.folders_id)
-                company.folders_id = folder.id_fld
+                company.update = datetime.now().strftime("%Y-%m-%d")
                 company.users_id = request.user.id
-                if company.deactivated:
+                if company.deactivate:
                     company.deactivate_date = datetime.now().strftime("%Y-%m-%d")
                 else:
                     company.deactivate_date = None
                 company.save()
-                accion_user(customer, ADDITION, request.user)
+                accion_user(company, ADDITION, request.user)
                 messages.success(request, 'The customer was saved successfully')
-                return HttpResponseRedirect('/accounting/customers/view/'+customer.id_cut)
+                return HttpResponseRedirect('/accounting/customers/view/' + str(company.customers_id))
         else:
             for er in form.errors:
                 messages.error(request, "ERROR: " + er)

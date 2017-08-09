@@ -24,6 +24,7 @@ class Companie(models.Model):
     created_date = models.DateField(blank=True, null=True)
     unity = models.IntegerField(blank=True, null=True)
     state =models.CharField(max_length=20,blank=True, null=True)
+    update = models.DateField(blank=True, null=True)
     deactivate = models.BooleanField(default=False)
     deactivate_date = models.DateField(blank=True, null=True)
 
@@ -41,6 +42,7 @@ class Contract(models.Model):
     end_date = models.DateField(blank=True, null=True)
     state = models.CharField(max_length=20, blank=True, null=True)
     type = models.CharField(max_length=20, blank=True, null=True)
+    update = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return '{} {}'.format(self.serial, self.customer)
@@ -55,6 +57,7 @@ class Audit(models.Model):
     date = models.DateField(blank=True, null=True)
     state = models.CharField(max_length=20, blank=True, null=True)
     results = models.CharField(max_length=255, blank=True, null=True)
+    update = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.customers)
@@ -75,6 +78,7 @@ class Driver(models.Model):
     begining_date = models.DateField(blank=True, null=True)
     deactivate = models.BooleanField(default=False)
     deactivate_date = models.DateField(blank=True, null=True)
+    update = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.name)
@@ -98,6 +102,7 @@ class Insurance(models.Model):
     comision = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
     paid = models.BooleanField(default=False)
     state = models.CharField(max_length=20, blank=True, null=True)
+    update = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.companies)
@@ -109,6 +114,7 @@ class Maintenance(models.Model):
     users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
     nota = models.CharField(max_length=255, blank=True, null=True)
     state = models.CharField(max_length=20, blank=True, null=True)
+    update = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.customers)
@@ -133,6 +139,7 @@ class Permission(models.Model):
     ucr = models.IntegerField(blank=True, null=True)
     update = models.DateField(blank=True, null=True)
     state = models.CharField(max_length=20, blank=True, null=True)
+    update = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.companies)
@@ -149,6 +156,7 @@ class Trucks(models.Model):
     regit_date_exp = models.DateField(blank=True, null=True)
     deactivate = models.BooleanField(default=False)
     deactivate_date = models.DateField(blank=True, null=True)
+    update = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.number)
@@ -162,6 +170,7 @@ class Ifta(models.Model):
     period = models.CharField(max_length=45, blank=True, null=True)
     nex_period = models.DateField(blank=True, null=True)
     state = models.CharField(max_length=20, blank=True, null=True)
+    update = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.trucks.number)
@@ -177,6 +186,7 @@ class Plate(models.Model):
     account_user = models.CharField(max_length=45, blank=True, null=True)
     account_password = models.CharField(max_length=45, blank=True, null=True)
     state = models.CharField(max_length=20, blank=True, null=True)
+    update = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.trucks.number)
@@ -191,6 +201,7 @@ class Title(models.Model):
     date_insp = models.DateField(blank=True, null=True)
     date_exp_insp = models.DateField(blank=True, null=True)
     state = models.CharField(max_length=20, blank=True, null=True)
+    update = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.trucks.number)
@@ -214,6 +225,7 @@ class Application(models.Model):
     date_view = models.DateTimeField(blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     state = models.CharField(max_length=20, blank=True, null=True)
+    update = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.fullname)
