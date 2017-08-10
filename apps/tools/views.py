@@ -12,6 +12,7 @@ from apps.accounting.models import AccountDescrip, Account
 from apps.tools.models import *
 from apps.tools.components import CalendarForm, AlertForm
 from apps.tools.components.AlertForm import AlertForm
+from apps.services.models import *
 from apps.tools.components.DirectoryForm import DirectoryForm
 from django.contrib.auth import authenticate, logout, login, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
@@ -115,57 +116,23 @@ def panel_view(request):
     date_now = datetime.now().date()
     inc = Account.objects.get(primary=True, name='Income')
     inc_acconts = Account.objects.filter(accounts_id_id=inc.id_acn)
-    for i in inc_acconts:
-        income.append(i)
-    for a in inc_acconts:
-        inc_accont = Account.objects.filter(accounts_id_id=a.id_acn)
-        if inc_accont != None:
-            for ac in inc_accont:
-                income.append(ac)
-    expense = []
-    exp = Account.objects.get(primary=True, name='Expenses')
-    exp_acconts = Account.objects.filter(accounts_id_id=exp.id_acn)
-    for e in exp_acconts:
-        expense.append(e)
-    for a in exp_acconts:
-        exp_accont = Account.objects.filter(accounts_id_id=a.id_acn)
-        if exp_accont != None:
-            for ac in exp_accont:
-                expense.append(ac)
-    accounts = Account.objects.filter(primary=False)
-    for a in accounts:
-        if income.__contains__('a.name') and expense.__contains__('a.name'):
-            for e in expense:
-                if e.name == a.name:
-                    Exp = AccountDescrip.objects.filter(accounts_id=e.id_acn)
-                    for sum in Exp:
-                        valueExp = valueExp + int(sum.value)
-            for i in income:
-                if i.name == a.name:
-                    Inc = AccountDescrip.objects.filter(accounts_id=i.id_acn)
-                    for sum in Inc:
-                        valueInc = valueInc + int(sum.value)
-            valueEarn = valueInc - int(valueExp)
-            balance.append({'account': e.name, 'income': valueInc, 'expense': valueExp, 'earning': str(valueEarn)})
-        if income.__contains__('a.name') and not expense.__contains__('a.name'):
-            for i in income:
-                if i.name == a.name:
-                    Inc = AccountDescrip.objects.filter(accounts_id=i.id_acn)
-                    for sum in Inc:
-                        valueInc = valueInc + int(sum.value)
-            valueEarn = valueInc - int(valueExp)
-            balance.append({'account': e.name, 'income': valueInc, 'expense': valueExp, 'earning': str(valueEarn)})
-        if not income.__contains__('a.name') and expense.__contains__('a.name'):
-            for e in expense:
-                if e.name == a.name:
-                    Exp = AccountDescrip.objects.filter(accounts_id=e.id_acn)
-                    for sum in Exp:
-                        valueExp = valueExp + int(sum.value)
-            valueEarn = valueInc - int(valueExp)
-            balance.append({'account': e.name, 'income': valueInc, 'expense': valueExp, 'earning': str(valueEarn)})
-
-
-    contexto = {'balance': balance, 'alert':alertUrg, 'date_now':date_now}
+    company = Companie.objects.all()
+    ifta = Ifta.objects.all()
+    permit = Permission.objects.all()
+    plate = Plate.objects.all()
+    title = Title.objects.all()
+    insurance = Insurance.objects.all()
+    mtt = Maintenance.objects.all()
+    contexto = {'balance': balance,
+                'companies': company,
+                'permits': permit,
+                'iftas': ifta,
+                'plates': plate,
+                'titles': title,
+                'insurances': insurance,
+                'mtts': mtt,
+                'alert':alertUrg,
+                'date_now':date_now}
     return render(request, 'home/complement/panel.html', contexto)
 
 class PostCalendar(CreateView):

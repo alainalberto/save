@@ -42,8 +42,8 @@
             <table id="listCustomer" class="data-table table table-striped table-bordered table-hover" cellspacing="0" width="100%">
                 <thead>
                 <tr>
-                    <th class="col-md-2">Name</th>
                     <th class="col-md-3">Company Name</th>
+                     <th class="col-md-2">Name</th>
                     <th class="col-md-3">Address</th>
                     <th class="col-md-1">Phone</th>
                     <th class="col-md-1">Active</th>
@@ -53,8 +53,8 @@
                 <tbody>
                 {% for c in object_list %}
                 <tr>
+                     <td>{{c.company_name}}</td>
                     <td><a href="{% url 'accounting:customer_view' c.id_cut %}">{{c.fullname}}</a></td>
-                    <td>{{c.company_name}}</td>
                     <td>{{c.address}}</td>
                     <td>{{c.phone}}</td>
                     <td class="text-center">{% if not c.deactivated %}<i class="fa fa-check text-success" aria-hidden="true"></i>{% endif %}</td>

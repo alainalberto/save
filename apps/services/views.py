@@ -56,6 +56,8 @@ class CompanyCreate(CreateView):
                   else:
                       customer = Customer.objects.get(id_cut=request.POST['customers'])
                   company.customers = customer
+                  if not customer.company_name:
+                      update_customer = Customer.objects.filter(id_cut=customer.id_cut).update(company_name=company.name, ein=company.ein)
                   folder = Folder.objects.get(id_fld=customer.folders_id)
                   company.folders_id = folder.id_fld
                   company.users_id = request.user.id

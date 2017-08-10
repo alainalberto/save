@@ -525,7 +525,7 @@ class InvoicesEdit(UpdateView):
                         itinv.items_id = item.id_ite
                         itinv.invoices = invoice
                         itinv.save()
-                        acountDescp = AccountDescrip.objects.get(date=invoice.start_date, accounts_id=itinv.accounts_id, document=invoice.id_inv, type='Invoices').update(value=itinv.subtotal)
+                        acountDescp = AccountDescrip.objects.filter(date=invoice.start_date, accounts_id=itinv.accounts_id, document=invoice.id_inv, type='Invoices').update(value=itinv.subtotal)
                     else:
                         item = Item.objects.create(name=itinv.description, value=itinv.value,
                                                    accounts_id=itinv.accounts_id)

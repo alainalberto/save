@@ -16,8 +16,10 @@ class Companie(models.Model):
     customers = models.ForeignKey(Customer, on_delete=models.CASCADE)  # Field name made lowercase.
     name = models.CharField(max_length=45, blank=True, null=True)
     attorney = models.CharField(max_length=45, blank=True, null=True)
+    otheattorney = models.CharField(max_length=45, blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
     phone = models.CharField(max_length=10, blank=True, null=True)
+    othephone = models.CharField(max_length=10, blank=True, null=True)
     fax = models.CharField(max_length=10, blank=True, null=True)
     ein = models.CharField(max_length=20,blank=True, null=True)
     logo = models.ImageField(upload_to='img/', blank=True, null=True)

@@ -12,8 +12,10 @@ class CompanyForm(forms.ModelForm):
         fields = [
                   'name',
                   'attorney',
+                  'otheattorney',
                   'address',
                   'phone',
+                  'othephone',
                   'fax',
                   'ein',
                   'unity',
@@ -26,8 +28,10 @@ class CompanyForm(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Company Name', 'class': 'form-control input-md upper'}),
             'attorney': forms.TextInput(attrs={'placeholder': 'Authorized Person:', 'class': 'form-control input-md upper'}),
+            'otheattorney': forms.TextInput(                attrs={'placeholder': 'Authorized Person:', 'class': 'form-control input-md upper'}),
             'address': forms.TextInput(attrs={'placeholder': 'Address', 'class': 'form-control input-md upper'}),
             'phone': forms.NumberInput(attrs={'placeholder': 'Telepone Number', 'class': 'form-control input-md'}),
+            'othephone': forms.NumberInput(attrs={'placeholder': 'Telepone Number', 'class': 'form-control input-md'}),
             'fax': forms.NumberInput(attrs={'placeholder': 'Fax Number', 'class': 'form-control input-md'}),
             'ein': forms.NumberInput(attrs={'placeholder': 'EIN', 'class': 'form-control input-md'}),
             'unity': forms.NumberInput(attrs={'placeholder': 'Unit', 'class': 'form-control input-md'}),

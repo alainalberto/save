@@ -171,11 +171,12 @@
         </div>
     </div>
     <!-- /.row -->
+    {% if perms.services %}
     <div class="row">
         <div class="col-md-12">
             <p class="bg-primary text-center">SERVICES PENDING</p>
-            {% if object %}
-            <table class="table table-striped">
+            {% if companies or permits or plates or iftas or mtts or titles or insurances %}
+            <table class="table data-table table-striped">
                 <thead>
                 <th>Service</th>
                 <th>Customer</th>
@@ -183,23 +184,74 @@
                  <th>Status</th>
                 </thead>
                 <tbody>
-                {% for company in companies %}
-                <tr {% if company.state == "Initiated" %} class="danger" {% endif %}  {% if company.state == "Pending" %} class="warning" {% endif %} {% if company.state == "Finalized" %} class="success" {% endif %}>
+                {% for c in companies %}
+                <tr {% if c.state == "Initiated" %} class="warning" {% endif %}  {% if c.state == "Pending" %} class="danger" {% endif %} {% if c.state == "Finalized" %} class="success" {% endif %}>
                     <td>Company</td>
-                    <td><a href="/static/media/{{ file.url }}" target="_blank">{{company.customers}}</a></td>
-                    <td>{{ company.update }}</td>
-                    <td>company.state</td>
+                    <td><a href="{% url 'accounting:customer_view' c.customers_id %}" target="_blank">{{c.customers}}</a></td>
+                    <td>{{ c.update }}</td>
+                    <td>{{c.state}}</td>
+                </tr>
+                {% endfor %}
+                {% for pm in permits %}
+                <tr {% if pm.state == "Initiated" %} class="warning" {% endif %}  {% if pm.state == "Pending" %} class="danger" {% endif %} {% if pm.state == "Finalized" %} class="success" {% endif %}>
+                    <td>Permit</td>
+                    <td><a href="{% url 'accounting:customer_view' pm.customers_id %}" target="_blank">{{pm.customers}}</a></td>
+                    <td>{{ pm.update }}</td>
+                    <td>{{pm.state}}</td>
+                </tr>
+                {% endfor %}
+                {% for m in mtts %}
+                <tr {% if m.state == "Initiated" %} class="warning" {% endif %}  {% if m.state == "Pending" %} class="danger" {% endif %} {% if m.state == "Finalized" %} class="success" {% endif %}>
+                    <td>Maintenance</td>
+                    <td><a href="{% url 'accounting:customer_view' m.customers_id %}" target="_blank">{{m.customers}}</a></td>
+                    <td>{{ m.update }}</td>
+                    <td>{{m.state}}</td>
+                </tr>
+                {% endfor %}
+                {% for pl in plates %}
+                <tr {% if pl.state == "Initiated" %} class="warning" {% endif %}  {% if pl.state == "Pending" %} class="danger" {% endif %} {% if pl.state == "Finalized" %} class="success" {% endif %}>
+                    <td>Plate</td>
+                    <td><a href="{% url 'accounting:customer_view' pl.customers_id %}" target="_blank">{{pl.customers}}</a></td>
+                    <td>{{ pl.update }}</td>
+                    <td>{{pl.state}}</td>
+                </tr>
+                {% endfor %}
+                {% for i in insurances %}
+                <tr {% if i.state == "Initiated" %} class="warning" {% endif %}  {% if i.state == "Pending" %} class="danger" {% endif %} {% if i.state == "Finalized" %} class="success" {% endif %}>
+                    <td>Insurance</td>
+                    <td><a href="{% url 'accounting:customer_view' i.customers_id %}" target="_blank">{{i.customers}}</a></td>
+                    <td>{{ i.update }}</td>
+                    <td>{{i.state}}</td>
+                </tr>
+                {% endfor %}
+                {% for t in titles %}
+                <tr {% if t.state == "Initiated" %} class="warning" {% endif %}  {% if t.state == "Pending" %} class="danger" {% endif %} {% if t.state == "Finalized" %} class="success" {% endif %}>
+                    <td>Plate</td>
+                    <td><a href="{% url 'accounting:customer_view' t.customers_id %}" target="_blank">{{t.customers}}</a></td>
+                    <td>{{ t.update }}</td>
+                    <td>{{t.state}}</td>
+                </tr>
+                {% endfor %}
+                {% for it in iftas %}
+                <tr {% if it.state == "Initiated" %} class="warning" {% endif %}  {% if it.state == "Pending" %} class="danger" {% endif %} {% if it.state == "Finalized" %} class="success" {% endif %}>
+                    <td>Plate</td>
+                    <td><a href="{% url 'accounting:customer_view' it.customers_id %}" target="_blank">{{it.customers}}</a></td>
+                    <td>{{ it.update }}</td>
+                    <td>{{ it.state}}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
             </table>
             {% else %}
-            <div class="alert alert-info"> <strong>Atention!</strong> No have .</div>
+            <div class="alert alert-info"> <strong>Atention!</strong> No have service.</div>
             {% endif %}
         </div>
     </div>
     </div>
+    {% endif %}
+    {% if perms.accounting.account %}
     <div class="row">
+        <p class="bg-primary text-center">STATISTICS</p>
         <div class="col-lg-3">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -213,7 +265,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-3">
+        <!--<div class="col-lg-3">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title"><i class="fa fa-clock-o fa-fw"></i> Recent Actions panel</h3>
@@ -246,8 +298,7 @@
                     {% endif %}
                 </div>
             </div>
-        </div>
-        {% if perms.accounting.account %}
+        </div>-->
         <div class="col-lg-6">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -288,8 +339,9 @@
                 </div>
             </div>
         </div>
-        {% endif %}
+
     </div>
+    {% endif %}
     <!-- /.row -->
 
 </section>
