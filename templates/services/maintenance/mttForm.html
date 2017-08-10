@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% block content %}
+<section>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-xs-3">
+                    <i class="fa fa-clipboard fa-4x"></i>
+                </div>
+                <div class="col-xs-9 text-left">
+                    <div><h3>Customer - Services</h3></div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <form name="form_customer" method="post" class="form" role="form" id="form_customer" validate>{% csrf_token %}
+                <fieldset>
+                    {% if not is_popup %}
+                    <div class="form-group col-md-5 col-md-offset-1">
+                        <label class="label-control">Select Customer:</label>
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <button type="button" id="addcustomer" class="btn btn-success test-tooltip" data-toggle="modal" data-target="#customerList"data-type="info" data-trigger="focus" title="Customer List" data-animation="am-flip-x">
+                                    <i class="fa fa-search-plus" aria-hidden="true"></i>
+                                    <tooltip md-direction="left"></tooltip>
+                                </button>
+                            </span>
+                             <select id="id_customers" class="form-control input-md" name="customers" required="">
+                                <option value="" selected>---------</option>
+                                {% for c in customers %}
+                                <option value="{{c.id_cut}}">{{c}}</option>
+                                {% endfor %}
+                            </select>
+                            <span class="input-group-btn">
+                                <a type="button" id="newcustomer" class="btn btn-success test-tooltip" href="{% url 'accounting:customer_popup' 1 %}" target="popup" onclick="window.open('','popup',' location=1, directories=0, resizable=0, width=500,height=700,Top=20,Left=490')" data-trigger="focus" title="Add new Customer" data-animation="am-flip-x">
+                                    <i class="fa fa-plus"></i>
+                                    <tooltip md-direction="right"></tooltip>
+                                </a>
+                            </span>
+                        </div>
+
+                    </div>
+                   {% include 'accounting/customer/customerModal.html'%}
+                    {% endif %}
+                </fieldset>
+                <!-- Button (Double) -->
+                <div class="form-group col-md-8">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <ul class="nav nav-tabs " role="tablist">
+                                <li id="tabCompany" role="presentation"><a href="#newCompany" aria-controls="newCompany" role="tab" data-toggle="tab">New Company</a></li>
+                                <li id="tabPermit" role="presentation"><a href="#permit" aria-controls="permite" role="tab" data-toggle="tab">Permits</a></li>
+                                <li id="tabTitle" role="presentation"><a href="#title" aria-controls="title" role="tab" data-toggle="tab">Title Record</a></li>
+                                <li id="tabPlate" role="presentation"><a href="#plate" aria-controls="plate" role="tab" data-toggle="tab">Plate Registration</a></li>
+                                <li id="tabInsurance" role="presentation" style="display: none;"><a href="#insurance" aria-controls="insurance" role="tab" data-toggle="tab">Insurance</a></li>
+                                <li id="tabDot" role="presentation"><a href="#dot" aria-controls="dot" role="tab" data-toggle="tab">Maintenance</a></li>
+                                <li id="tabIfta" role="presentation"><a href="#ifta" aria-controls="ifta" role="tab" data-toggle="tab">IFTA</a></li>
+                            </ul>
+                        </div>
+                        <div class="panel-body">
+                            <div  class="tab-content">
+                                <div role="tabpanel" class="tab-pane" id="newCompany">
+                                    <div id="idcompany">
+                                        {% include 'services/company/CompanyForm.html'%}
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="permit">
+                                    <div id="idpermit">
+                                        {% include 'services/permit/permitForm.html'%}
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="title">
+                                    <div id="idtitle">
+
+                                        {% include 'services/title/titleForm.html'%}
+
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="plate">
+                                    <div id="idplate">
+
+                                        {% include 'services/plate/plateForm.html'%}
+
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="insurance">
+                                    <div id="idinsurance">
+
+                                        {% include 'services/insurance/insuranceForm.html'%}
+
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="dot">
+                                    <div id="iddot">
+
+                                        {% include 'services/maintenance/maintenanceForm.html'%}
+
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="ifta">
+                                    <div id="idifta">
+
+                                        {% include 'services/ifta/iftaForm.html'%}
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="police_alert" tabindex="-1" role="dialog" aria-labelledby="Police Expire">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Add Alert URGENT</h4>
+                            </div>
+                            <div class="modal-body">
+                                <fieldset>
+                                    <div class="form-group col-md-6">
+                                        <label class="label-control">Days to be for show alert:</label>
+                                        <select name="alert_day">
+                                            <option value="5">5 day</option>
+                                            <option value="15">15 day</option>
+                                            <option value="30">30 day</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-8">
+                                        <label class="label-control">{{ form.group.label }}</label>
+                                        {{ form_alert.group }}
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class=" col-md-5 col-md-offset-4">
+                    <input type="submit" class="btn btn-success" value="Save" data-toggle="modal" data-target="#myModal">
+                    <a type="button" href="{% url 'accounting:customers' %}" class="btn btn-danger">Cancel </a>
+                    <input type="button" class="btn btn-primary" value="Save and Proces">
+                </div>
+            </form>
+        </div>
+    </div>
+
+</section>
+{% endblock %}

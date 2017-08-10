@@ -356,7 +356,7 @@ class FolderDelete(DeleteView):
 
 class MttCreate(CreateView):
     model = Maintenance
-    template_name = 'services/mtt/mttForm.html'
+    template_name = 'services/maintenance/mttForm.html'
     form_class_mtt = MTTForm()
     FileFormSet = inlineformset_factory(
         Folder,
@@ -471,7 +471,7 @@ class MttCreate(CreateView):
                 day = int(request.POST['alert_day'])
                 dateShow = date_now - timedelta(days=day)
                 alert.category = "Urgents"
-                alert.description= "Expires customer TXDMV Permit" + customer
+                alert.description= "Expires customer TXDMV Permit" + str(customer)
                 alert.create_date = date_now.strftime(formatDate)
                 alert.show_date = dateShow.strftime(formatDate)
                 alert.end_date = dateExp.strftime(formatDate)

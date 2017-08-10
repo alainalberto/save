@@ -180,14 +180,15 @@
                 <th>Service</th>
                 <th>Customer</th>
                 <th>Last UpDate</th>
+                 <th>Status</th>
                 </thead>
                 <tbody>
                 {% for company in companies %}
-                <tr>
-                    <td><i class="fa fa-file-pdf-o" aria-hidden="true"></i> <a href="/static/media/{{ file.url }}" target="_blank">{{file.name}}</a></td>
-                    <td>{{ file.date_save }}</td>
-                    <td>
-                    </td>
+                <tr {% if company.state == "Initiated" %} class="danger" {% endif %}  {% if company.state == "Pending" %} class="warning" {% endif %} {% if company.state == "Finalized" %} class="success" {% endif %}>
+                    <td>Company</td>
+                    <td><a href="/static/media/{{ file.url }}" target="_blank">{{company.customers}}</a></td>
+                    <td>{{ company.update }}</td>
+                    <td>company.state</td>
                 </tr>
                 {% endfor %}
                 </tbody>

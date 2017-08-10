@@ -100,7 +100,7 @@ $(document).ready( function () {
 
   //Funcion for Acordion Services Customer
 
-   $('#btnCompany').change(function(){
+   /*$('#btnCompany').change(function(){
         if (this.checked) {
             $('#idcompany').attr("style", "display : initial;");
             $('#tabCompany').attr("style", "display : initial;");
@@ -172,7 +172,7 @@ $(document).ready( function () {
             $('#tabIfta').attr("style", "display : none;");
             $('#idifta').attr("style", "display : none;");
         }
-   });
+   });*/
 
 // Insurance
 

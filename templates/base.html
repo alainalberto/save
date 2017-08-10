@@ -279,12 +279,12 @@
                         {% endif %}
                         <li>
                             <a class="item" href="{% url 'services:plate' %}"> Plate registration</a>
-                        </li>
+                        </li>-->
                         {% if perms.services.add_maintenance %}
                         <li>
                             <a class="item" href="{% url 'services:maintenance' %}"> Maintenance</a>
                         </li>
-                        {% endif %}-->
+                        {% endif %}
                         {% if perms.tools.add_folder and perms.services %}
                         <li>
                             <a class="item" href="{% url 'services:folder' %}"> Folder</a>

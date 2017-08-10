@@ -30,6 +30,9 @@ urlpatterns = [
     url(r'^ifta/$', login_required(permission_required('services.add_ifta')(CompanyView)), name='ifta'),
     url(r'^ifta/create$', login_required(permission_required('services.add_ifta')(CompanyView)), name='ifta_create'),
 
+    #Mtt
+    url(r'^maintenance/$', login_required(permission_required('services.add_maintenance')(MttCreate.as_view())), name='maintenance'),
+
     url(r'^title/$', login_required(permission_required('services.add_title')(CompanyView)), name='title'),
     url(r'^insurance/$', login_required(permission_required('services.add_insurance')(CompanyView)), name='insurance'),
     url(r'^dot/$', login_required(permission_required('services.add_dot')(CompanyView)), name='dot'),
@@ -38,6 +41,6 @@ urlpatterns = [
     url(r'^audits/$', login_required(permission_required('services.add_audit')(CompanyView)), name='audits'),
     url(r'^permits/$', login_required(permission_required('services.add_permit')(CompanyView)), name='permits'),
     url(r'^plate/$', login_required(permission_required('services.add_plate')(CompanyView)), name='plate'),
-    url(r'^maintenance/$', login_required(permission_required('services.add_maintenance')(CompanyView)), name='maintenance'),
+
 
 ]
