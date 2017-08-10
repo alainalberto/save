@@ -358,27 +358,7 @@ class MttCreate(CreateView):
     model = Maintenance
     template_name = 'services/maintenance/mttForm.html'
     form_class_mtt = MTTForm()
-    FileFormSet = inlineformset_factory(
-        Folder,
-        File,
-        form=FileForm,
-        fields=['name',
-                'category',
-                'url',
-                ],
-        extra=10,
-    )
-    IftaFormSet = inlineformset_factory(
-        Customer,
-        Ifta,
-        form=IftaForm,
-        fields=['type',
-            'period',
-            'nex_period',
-            'customers',
-                ],
-        extra=10,
-    )
+    form_class_ifta = IftaForm()
     form_class_permit = PermitForm()
     form_class_company = CompanyForm()
     form_class_insurance = InsuranceForm()
@@ -393,19 +373,16 @@ class MttCreate(CreateView):
             popup = kwargs.get('popup')
         else:
             popup = 0
-            form_file = self.FileFormSet()
-            form_ifta = self.IftaFormSet()
         return render(request, self.template_name, {'is_popup': popup, 'customers': customer,
                                                     'title': 'Create new Folder',
                                                     'form_company': self.form_class_company,
                                                     'form_permit': self.form_class_permit,
-                                                    'form_ifta': form_ifta,
+                                                    'form_ifta': self.form_class_ifta,
                                                     'form_insurance': self.form_class_insurance,
                                                     'form_mtt': self.form_class_mtt,
                                                     'form_contract': self.form_class_contract,
                                                     'form_title': self.form_class_title,
                                                     'form_plate': self.form_class_plate,
-                                                    'form_file': form_file,
                                                     'form_alert': self.form_class_alert,})
 
 
@@ -418,12 +395,11 @@ class MttCreate(CreateView):
         else:
             popup = 0
             customer = Customer.objects.get(id_cut=request.POST['customers'])
-        form = self.form_class(request.POST, request.FILES)
+        form = self.form_class(request.POST)
         formatDate = "%Y/%m/%d"
         date_now = datetime.today()
         form_company = self.form_class_company(request.POST)
         form_permit = self.form_class_permit(request.POST)
-        form_file = self.FileFormSet(request.POST, request.FILES['url'])
         form_insurance = self.form_class_insurance(request.POST)
         form_ifta = self.IftaFormSet(request.POST)
         form_mtt = self.form_class_mtt(request.POST)
@@ -548,14 +524,6 @@ class MttCreate(CreateView):
                 i.users = user
                 i.save()
 
-            files = form_file.save(commit=False)
-            for file in files:
-                file.description = file.name
-                file.date_save = date_now.strftime(formatDate)
-                file.folders = customer.folders
-                file.users_id = user
-                file.save()
-
             accion_user(mtt, ADDITION, request.user)
             messages.success(request, "Service saved with an extension")
             return HttpResponseRedirect('/accounting/customers/view/' + str(customer.id_cut))
@@ -583,6 +551,5 @@ class MttCreate(CreateView):
                     'form_contract': form_contract,
                     'form_title': form_title,
                     'form_plate': form_plate,
-                    'form_file': form_file,
                     'form_alert': form_alert,
 })

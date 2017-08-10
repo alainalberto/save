@@ -42,12 +42,6 @@
                                 </button>
                             </span>
                             {{ form_company.customers }}
-                            <span class="input-group-btn">
-                                <a type="button" id="newcustomer" class="btn btn-success test-tooltip" href="{% url 'accounting:customer_popup' 1 %}" target="popup" onclick="window.open('','popup',' location=1, directories=0, resizable=0, width=500,height=700,Top=20,Left=490')" data-trigger="focus" title="Add new Customer" data-animation="am-flip-x">
-                                    <i class="fa fa-plus"></i>
-                                    <tooltip md-direction="right"></tooltip>
-                                </a>
-                            </span>
                         </div>
                     </div>
                     {% include 'accounting/customer/customerModal.html'%}
@@ -97,7 +91,7 @@
                     {% endif %}
                     {% if not deactivate %}
                     <div class="form-group col-md-5 col-md-offset-4">
-                        <input type="submit" class="btn btn-success" value="Save" {% if is_popup %} onclick="closepopup()" {% else %} onclick="history.back(-1)"  {% endif %}>
+                        <input type="submit" class="btn btn-success" value="Save" {% if is_popup %} onclick="closepopup()" {% endif %}>
                         <a type="button"  class="btn btn-danger" {% if is_popup %} onclick="closepopup()" {% else %} onclick="history.back(-1)" {% endif %}>Cancel </a>
                     </div>
                     {% endif %}
