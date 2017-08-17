@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 
 from apps.tools.models import Folder, Busines, File
 
+from datetime import datetime
+
 
 
 # Create your models here.
@@ -69,13 +71,13 @@ class Invoice(models.Model):
     users = models.ForeignKey(User,  on_delete=models.CASCADE)  # Field name made lowercase.
     serial = models.IntegerField()
     type = models.CharField(max_length=20, blank=True, null=True)
-    start_date = models.DateField(blank=True, null=True)
+    start_date = models.DateField(default=datetime.now().strftime("%Y-%m-%d"))
     subtotal = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     total = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    waytopay = models.CharField(max_length=20, blank=True, null=True)
+    waytopay = models.CharField(max_length=20)
     discount = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     paid = models.BooleanField(default=True)
-    prefix = models.CharField(max_length=4, blank=True, null=True, default='inv')
+    prefix = models.CharField(max_length=4, default='inv')
     end_date = models.DateField(blank=True, null=True)
 
     def __str__(self):
@@ -98,7 +100,7 @@ class Receipt(models.Model):
     users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
     files = models.ForeignKey(File, on_delete=models.CASCADE)
     serial = models.CharField(max_length=20)
-    start_date = models.DateField()
+    start_date = models.DateField(default=datetime.now().strftime("%Y-%m-%d"))
     end_date = models.DateField(blank=True, null=True)
     description = models.CharField(max_length=45)
     total = models.DecimalField(max_digits=10, decimal_places=2)
@@ -138,11 +140,11 @@ class InvoicesHasItem(models.Model):
     invoices = models.ForeignKey(Invoice, on_delete=models.CASCADE)  # Field name made lowercase.
     items = models.ForeignKey(Item, on_delete=models.CASCADE, blank=True, null=True)  # Field name made lowercase.
     accounts = models.ForeignKey(Account, on_delete=models.CASCADE)
-    description = models.CharField(max_length=50, blank=True, null=True)
-    quantity = models.IntegerField(blank=True, null=True)
+    description = models.CharField(max_length=50)
+    quantity = models.IntegerField()
     tax = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    value = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    subtotal = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    value = models.DecimalField(max_digits=10, decimal_places=2)
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
         return '{}'.format(self.description)

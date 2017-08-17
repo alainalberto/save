@@ -387,31 +387,44 @@ def InvoicesCreate(request):
                 invoice.save()
                 accion_user(invoice, ADDITION, request.user)
                 itemhasInv = formset.save(commit=False)
-                for itinv in itemhasInv:
-                   if Item.objects.filter(name__contains=itinv.description):
-                      item = Item.objects.get(name=itinv.description)
-                      itinv.items_id = item.id_ite
-                      itinv.invoices = invoice
-                      itinv.save()
-                      acountDescp = AccountDescrip.objects.create(date=invoice.start_date,
+                if not itemhasInv:
+                    messages.error(request, "ERROR: Insert one Items ")
+                    return render(request, 'accounting/invoices/invoicesForm.html', {
+                        'form': form,
+                        'formset': formset,
+                        'formset_load': formset_load,
+                        'items': items,
+                        'loads': loads,
+                        'accounts': accounts,
+                        'customers': customer,
+                        'title': 'Create new Invoice'
+                    })
+                else:
+                   for itinv in itemhasInv:
+                      if Item.objects.filter(name__contains=itinv.description):
+                         item = Item.objects.get(name=itinv.description)
+                         itinv.items_id = item.id_ite
+                         itinv.invoices = invoice
+                         itinv.save()
+                         acountDescp = AccountDescrip.objects.create(date=invoice.start_date,
                                                                   value=itinv.subtotal,
                                                                   accounts_id=itinv.accounts_id,
                                                                   document=invoice.id_inv,
                                                                   users_id=user.id,
                                                                   type='Invoices')
-                   else:
-                       item = Item.objects.create(name=itinv.description, value=itinv.value, accounts_id=itinv.accounts_id )
-                       itinv.items_id = item.id_ite
-                       itinv.invoices = invoice
-                       itinv.save()
-                       acountDescp = AccountDescrip.objects.create(date=invoice.start_date,
+                      else:
+                          item = Item.objects.create(name=itinv.description, value=itinv.value, accounts_id=itinv.accounts_id )
+                          itinv.items_id = item.id_ite
+                          itinv.invoices = invoice
+                          itinv.save()
+                          acountDescp = AccountDescrip.objects.create(date=invoice.start_date,
                                                                    value=itinv.subtotal,
                                                                    accounts=itinv.accounts,
                                                                    document=invoice.id_inv,
                                                                    waytopay=invoice.waytopay,
                                                                    users_id=user.id,
                                                                    type='Invoices')
-                messages.success(request, "Invoice saved with an extension")
+                   messages.success(request, "Invoice saved with an extension")
             else:
                 invoice.type = request.POST['btnService']
                 invoice.save()
@@ -435,9 +448,9 @@ def InvoicesCreate(request):
             return HttpResponseRedirect(reverse_lazy('accounting:invoices'))
         else:
             for er in form.errors:
-                messages.error(request, "ERROR: "+er)
+                messages.error(request, "ERROR: "+ str(er))
             for er in formset.errors:
-                messages.error(request, "ERROR: " + er)
+                messages.error(request, "ERROR: " + str(er))
 
     return render(request, 'accounting/invoices/invoicesForm.html', {
         'form': form,
