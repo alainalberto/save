@@ -29,7 +29,7 @@
             </div>
             <div class="panel-body">
                 <form name="form_invoices" method="post" class="form" role="form" id="form_invoices" validate>{% csrf_token %}
-                <p class="bg-info"><strong>Invoice Header</strong></p>
+                    <p class="bg-info"><strong>Invoice Header</strong></p>
                 <fieldset>
                     <!-- Form Name -->
                     <!-- Text input-->
@@ -201,9 +201,7 @@
                                 </thead>
                                 <tbody>
                                 {{ formset.management_form }}
-                                 {% for form in formset %}
-                                 {{ form.errors }}
-                                 {{ form.non_field_errors }}
+                                {% for form in formset %}
                                 <tr>
                                     <td style="display : none">{{ form.id_ind }}</td>
                                     <td>{{ form.quantity }}</td>

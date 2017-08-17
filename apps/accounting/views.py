@@ -448,9 +448,9 @@ def InvoicesCreate(request):
             return HttpResponseRedirect(reverse_lazy('accounting:invoices'))
         else:
             for er in form.errors:
-                messages.error(request, "ERROR: "+ str(er))
+                messages.error(request, er)
             for er in formset.errors:
-                messages.error(request, "ERROR: " + str(er))
+                messages.error(request, er)
 
     return render(request, 'accounting/invoices/invoicesForm.html', {
         'form': form,
