@@ -355,6 +355,153 @@ class FolderDelete(DeleteView):
         messages.success(request, "File delete with an extension")
         return HttpResponseRedirect(self.success_url)
 
+def PermitView(request, pk, popup):
+    permit = Permission.objects.get(id_com=pk)
+    return render(request, 'services/permit/permitForm.html', {'form_permit': permit, 'is_popup':popup, 'title':'Permit', 'deactivate':True})
+
+
+class PermitCreate(CreateView):
+      model = Permission
+      template_name = 'services/permit/permitForm.html'
+      form_class = PermitForm
+      form_class_alert = AlertForm
+
+      def get(self, request, *args, **kwargs):
+          if kwargs.__contains__('popup'):
+            popup = kwargs['popup']
+            id = kwargs['pk']
+          else:
+              popup = 0
+          customer = Customer.objects.filter(deactivated=False)
+          form = self.form_class(initial=self.initial)
+          form_alert = self.form_class_alert()
+          return render(request, self.template_name, {'form_permit': form, 'form_alert':form_alert, 'customers':customer, 'is_popup': popup, 'title': 'Create Permit'})
+
+      def post(self, request, *args, **kwargs):
+          if kwargs.__contains__('popup'):
+            popup = kwargs['popup']
+            id = kwargs['pk']
+          else:
+              popup = 0
+          form = self.form_class(request.POST)
+          form_alert = self.form_class_alert(request.POST)
+          if form.is_valid():
+              permit_exist = Permission.objects.filter(usdot=form.data['usdot'], txdmv=form.data['txdmv'])
+              if permit_exist:
+                  messages.error(request, 'The Permit already exists')
+                  form = self.form_class(initial=self.initial)
+                  return render(request, self.template_name, {'form_permit': form, 'form_alert':form_alert, 'is_popup': popup, 'title': 'Create Permit'})
+              else:
+                  permit = form.save(commit=False)
+                  if popup:
+                    customer = Customer.objects.get(id_cut=id)
+                  else:
+                      customer = Customer.objects.get(id_cut=request.POST['customers'])
+                  permit.customers = customer
+                  permit.users = request.user
+                  permit.update = datetime.now().strftime("%Y-%m-%d")
+                  permit.date = datetime.now().strftime("%Y-%m-%d")
+                  permit.save()
+                  if request.POST['txdmv_alert']:
+                      if form.is_valid():
+                        alert = form_alert.save(commit=False)
+                        dateExp = datetime.strptime(permit.txdmv_date_exp, "%Y-%m-%d")
+                        day = int(request.POST['alert_day'])
+                        dateShow = datetime.now().strftime("%Y-%m-%d") - timedelta(days=day)
+                        alert.category = "Urgents"
+                        alert.description = "Expires customer TXDMV Permit" + str(customer)
+                        alert.create_date = datetime.now().strftime("%Y-%m-%d")
+                        alert.show_date = dateShow.strftime("%Y-%m-%d")
+                        alert.end_date = dateExp.strftime("%Y-%m-%d")
+                        alert.users = request.user
+                        alert.save()
+                  accion_user(permit, ADDITION, request.user)
+                  messages.success(request, 'The customer permit was saved successfully')
+                  return HttpResponseRedirect('/accounting/customers/view/'+str(permit.customers_id))
+          else:
+              for er in form.errors:
+                  messages.error(request, "ERROR: " + er)
+              return render(request, self.template_name, {'form_permit': form, 'form_alert':form_alert, 'is_popup': popup,'title': 'Create Permit'})
+
+
+class PermitEdit(UpdateView):
+    model = Permission
+    template_name = 'services/permit/permitForm.html'
+    form_class = PermitForm
+    form_class_alert = AlertForm
+
+    def get_context_data(self, **kwargs):
+        context = super(PermitEdit, self).get_context_data(**kwargs)
+        if self.kwargs.__contains__('popup'):
+            popup = self.kwargs.get('popup')
+        else:
+            popup = 0
+        pk = self.kwargs.get('pk', 0)
+        permit = self.model.objects.get(id_per=pk)
+        alert = Alert.objects.filter(description__contains = 'TXDMV '+ str(permit.customers), end_date = permit.txdmv_date_exp)
+        if 'form_permit' not in context:
+            context['form_permit'] = self.form_class(instance=permit)
+        if alert:
+            if 'form_alert' not in context:
+               context['form_alert'] = self.form_class_alert(instance=alert)
+        context['id'] = pk
+        context['is_popup'] = popup
+        context['title'] = 'Edit Permit'
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object
+        pk = kwargs['pk']
+        if kwargs.__contains__('popup'):
+            popup = kwargs['popup']
+        else:
+            popup = 0
+        permit_last = self.model.objects.get(id_per=pk)
+        alert = Alert.objects.filter(description__contains='TXDMV ' + str(permit_last.customers), end_date=permit_last.txdmv_date_exp)
+        form = self.form_class(request.POST, instance=permit_last)
+        form_alert = self.form_class_alert(request.POST, instance=alert)
+        if form.is_valid():
+                permit = form.save(commit=False)
+                permit.update = datetime.now().strftime("%Y-%m-%d")
+                permit.users_id = request.user.id
+                permit.save()
+                if permit != permit_last:
+                    if request.POST['txdmv_alert']:
+                        alert = form_alert.save(commit=False)
+                        dateExp = datetime.strptime(permit.txdmv_date_exp, "%Y-%m-%d")
+                        day = int(request.POST['alert_day'])
+                        dateShow = datetime.now().strftime("%Y-%m-%d") - timedelta(days=day)
+                        alert.create_date = datetime.now().strftime("%Y-%m-%d")
+                        alert.show_date = dateShow.strftime("%Y-%m-%d")
+                        alert.end_date = dateExp.strftime("%Y-%m-%d")
+                        alert.users = request.user
+                        alert.save()
+                accion_user(permit, ADDITION, request.user)
+                messages.success(request, 'The customer permit was update successfully')
+                return HttpResponseRedirect('/accounting/customers/view/' + str(permit.customers_id))
+        else:
+            for er in form.errors:
+                messages.error(request, "ERROR: " + er)
+            return render(request, self.template_name,
+                          {'form_company': form,  'is_popup': popup, 'form_alert':form_alert, 'title': 'Edit Permit'})
+
+class PermitDelete(DeleteView):
+    model = Companie
+    template_name = 'confirm_delete.html'
+    success_url = reverse_lazy('accounting:customer')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object
+        id = kwargs['pk']
+        permit = self.model.objects.get(id_per=id)
+        alert = Alert.objects.filter(description__contains='TXDMV ' + str(permit.customers),
+                                     end_date=permit.txdmv_date_exp)
+        accion_user(permit, DELETION, request.user)
+        alert.delete()
+        permit.delete()
+        messages.success(request, "Permit delete with an extension")
+        return HttpResponseRedirect(self.success_url)
+
 
 class MttCreate(CreateView):
     model = Maintenance

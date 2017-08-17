@@ -30,16 +30,21 @@ urlpatterns = [
     url(r'^ifta/$', login_required(permission_required('services.add_ifta')(CompanyView)), name='ifta'),
     url(r'^ifta/create$', login_required(permission_required('services.add_ifta')(CompanyView)), name='ifta_create'),
 
+    #Permit
+    url(r'^permits/$', login_required(permission_required('services.add_permission')(PermitView)), name='permits'),
+    url(r'^permit/create$', login_required(permission_required('services.add_permission')(PermitCreate.as_view())), name='permit_create'),
+    url(r'^permit/create/(?P<pk>\d+)&(?P<popup>[^/]+)/$', login_required(permission_required('services.add_permission')(PermitCreate.as_view())), name='permit_create_popup'),
+    url(r'^permit/edit/(?P<pk>\d+)/$', login_required(permission_required('services.change_permission')(PermitEdit.as_view())), name='permit_edit'),
+    url(r'^permit/edit/(?P<pk>\d+)&(?P<popup>[^/]+)/$', login_required(permission_required('services.change_permission')(CompanyEdit.as_view())), name='permit_edit_popup'),
+    url(r'^permit/(?P<pk>\d+)/$', login_required(permission_required('services.delete_permission')(PermitDelete.as_view())), name='permit_delete'),
+
     #Mtt
     url(r'^maintenance/$', login_required(permission_required('services.add_maintenance')(MttCreate.as_view())), name='maintenance'),
 
     url(r'^title/$', login_required(permission_required('services.add_title')(CompanyView)), name='title'),
     url(r'^insurance/$', login_required(permission_required('services.add_insurance')(CompanyView)), name='insurance'),
     url(r'^dot/$', login_required(permission_required('services.add_dot')(CompanyView)), name='dot'),
-
-
     url(r'^audits/$', login_required(permission_required('services.add_audit')(CompanyView)), name='audits'),
-    url(r'^permits/$', login_required(permission_required('services.add_permit')(CompanyView)), name='permits'),
     url(r'^plate/$', login_required(permission_required('services.add_plate')(CompanyView)), name='plate'),
 
 

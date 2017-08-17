@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block content %}
+<section>
+    <div class="form-group col-md-5 col-md-offset-1" >
+        <label class="label-control">USDOT Number:</label>
+        {{permit.usdot}}
+    </div>
+    <div class="form-group col-md-5 col-md-offset-1" >
+        <label class="label-control">USDOT Pin:</label>
+        {{permit.usdot_pin}}
+    </div>
+    <div class="form-group col-md-5 col-md-offset-1" >
+        <label class="label-control">TEXA DMV Number:</label>
+        {{permit.txdmv}}
+    </div>
+    <div class="form-group col-md-5 col-md-offset-1" >
+        <label class="label-control">TEXA DMV User:</label>
+        {{permit.txdmv_user}}
+    </div>
+    <div class="form-group col-md-5 col-md-offset-1" >
+        <label class="label-control">TEXA DMV Password:</label>
+        {{permit.txdmv_passd}}
+    </div>
+    <div class="form-group col-md-5 col-md-offset-1">
+        <label class="label-control">TEXA DMV Date:</label>
+        {{permit.txdmv_date}}
+    </div>
+    <div class="form-group col-md-5 col-md-offset-1">
+        <label class="label-control">TEXA DMV Expiration:</label>
+        {{permit.txdmv_date_exp}}
+    </div>
+    <div class="form-group col-md-5 col-md-offset-1" >
+        <label class="label-control">MC Number:</label>
+        {{permit.mc}}
+    </div>
+    <div class="form-group col-md-5 col-md-offset-1" >
+        <label class="label-control">MC Pin:</label>
+        {{permit.mc_pin}}
+    </div>
+    <div class="form-group col-md-5 col-md-offset-1" >
+        <label class="label-control">BOC 3 Number:</label>
+        {{permit.boc3}}
+    </div>
+    <div class="form-group col-md-5 col-md-offset-1">
+        <label class="label-control">BOC 3 Date:</label>
+        {{permit.boc3_date}}
+    </div>
+    <div class="form-group col-md-5 col-md-offset-1" >
+        <label class="label-control">UCR:</label>
+        {{permit.ucr}}
+    </div>
+    <div class="form-group col-md-2 col-md-offset-1" >
+        <label class="label-control">Service Process:</label>
+        {{permit.state}}
+    </div>
+</section>
+{% endblock %}

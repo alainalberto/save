@@ -61,22 +61,6 @@ class PermitForm(forms.ModelForm):
             'state',
             'customers',
         ]
-        labels = {
-            'usdot': 'USDOT Number:',
-            'usdot_pin': 'USDOT Pin:',
-            'txdmv': 'TEXA DMV Number:',
-            'txdmv_user': 'TEXA DMV User:' ,
-            'txdmv_passd': 'TEXA DMV Password:',
-            'txdmv_date': 'TEXA DMV Date:',
-            'txdmv_date_exp': 'TEXA DMV Expiration:',
-            'mc': 'MC Number: ',
-            'mc_pin': 'MC Pin:',
-            'boc3': 'BOC 3 Number:',
-            'boc3_date': 'BOC 3 Date:',
-            'ucr': 'URC:',
-            'state': 'Service Process:',
-
-        }
         widgets = {
             'usdot': forms.NumberInput(attrs={'placeholder': 'USDOT Number', 'class': 'form-control input-md'}),
             'usdot_pin': forms.TextInput(attrs={'placeholder': 'USDOT PIN', 'class': 'form-control input-md upper'}),

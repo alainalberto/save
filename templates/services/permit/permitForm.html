@@ -1,68 +1,159 @@
-<fieldset>
-    <div class="form-group col-md-5 col-md-offset-1" >
-        <label class="label-control">{{form_permit.usdot.label}}</label>
-        {{form_permit.usdot}}
-    </div>
-    <div class="form-group col-md-5 col-md-offset-1" >
-        <label class="label-control">{{form_permit.usdot_pin.label}}</label>
-        {{form_permit.usdot_pin}}
-    </div>
-    <div class="form-group col-md-5 col-md-offset-1" >
-        <label class="label-control">{{form_permit.txdmv.label}}</label>
-        {{form_permit.txdmv}}
-    </div>
-    <div class="form-group col-md-5 col-md-offset-1" >
-        <label class="label-control">{{form_permit.txdmv_user.label}}</label>
-        {{form_permit.txdmv_user}}
-    </div>
-    <div class="form-group col-md-5 col-md-offset-1" >
-        <label class="label-control">{{form_permit.txdmv_passd.label}}</label>
-        {{form_permit.txdmv_passd}}
-    </div>
-    <div class="form-group col-md-5 col-md-offset-1">
-        <label class="label-control">{{form_permit.txdmv_date.label}}</label>
-        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-            {{form_permit.txdmv_date}}
-            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+{% extends 'base.html' %}
+{% block extrastyle %}
+<script type="text/javascript">
+ function openpopup(url){
+   newwindow = window.open(url,'popup',' location=1, directories=0, resizable=0, width=500,height=700,Top=20,Left=490');
+   if (window.focus) {newwindow.focus()}
+   return false;
+ }
+ function closepopup(){
+   window.opener.location.href=window.opener.location.href;
+   window.close();
+   return false;
+ }
+</script>
+{% endblock %}
+{% block content %}
+<section>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-xs-3">
+                    <i class="fa fa-building fa-4x"></i>
+                </div>
+                <div class="col-xs-9 text-left">
+                    <div><h3>{{ title }}</h3></div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <form name="form_permit" method="post" class="form" role="form" id="form_permit" validate>{% csrf_token %}
+
+                <fieldset>
+                    {% if not is_popup %}
+                    <div class="form-group col-md-5 col-md-offset-3">
+                        <label class="label-control">Select Customer:</label>
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <button type="button" id="addcustomer" class="btn btn-success test-tooltip" data-toggle="modal" data-target="#customerList" data-type="info" data-trigger="focus" title="Customer List" data-animation="am-flip-x">
+                                    <i class="fa fa-search-plus" aria-hidden="true"></i>
+                                    <tooltip md-direction="left"></tooltip>
+                                </button>
+                            </span>
+                            {{ form_permit.customers }}
+                            <span class="input-group-btn">
+                            <a type="button" id="newcustomer" class="btn btn-success test-tooltip" href="{% url 'accounting:customer_popup' 1 %}" target="popup" onclick="window.open('','popup',' location=1, directories=0, resizable=0, width=500,height=700,Top=20,Left=490')" data-trigger="focus" title="Add new Customer" data-animation="am-flip-x">
+                                <i class="fa fa-plus"></i>
+                                <tooltip md-direction="right"></tooltip>
+                            </a>
+                        </span>
+                        </div>
+                    </div>
+                    {% include 'accounting/customer/customerModal.html'%}
+                    {% endif %}
+                    <div class="form-group col-md-4 col-md-offset-1" >
+                        <label class="label-control">USDOT Number:</label>
+                        {{form_permit.usdot}}
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-1" >
+                        <label class="label-control">USDOT Pin:</label>
+                        {{form_permit.usdot_pin}}
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-1" >
+                        <label class="label-control">TEXA DMV Number:</label>
+                        {{form_permit.txdmv}}
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-1" >
+                        <label class="label-control">TEXA DMV User:</label>
+                        {{form_permit.txdmv_user}}
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-1" >
+                        <label class="label-control">TEXA DMV Password:</label>
+                        {{form_permit.txdmv_passd}}
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-1">
+                        <label class="label-control">TEXA DMV Date:</label>
+                        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            {{form_permit.txdmv_date}}
+                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-1">
+                        <label class="label-control">TEXA DMV Expiration:</label>
+                        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            {{form_permit.txdmv_date_exp}}
+                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                        </div>
+                        <label>
+                            <input type="checkbox" id="txdmv_alert" name="txdmv_alert" checked> Alert
+                        </label>
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-1" >
+                        <label class="label-control">MC Number:</label>
+                        {{form_permit.mc}}
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-1" >
+                        <label class="label-control">MC Pin:</label>
+                        {{form_permit.mc_pin}}
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-1" >
+                        <label class="label-control">BOC 3 Number:</label>
+                        {{form_permit.boc3}}
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-1">
+                        <label class="label-control">BOC 3 Date:</label>
+                        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            {{form_permit.boc3_date}}
+                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-1" >
+                        <label class="label-control">UCR:</label>
+                        {{form_permit.ucr}}
+                    </div>
+                    <div class="form-group col-md-3 col-md-offset-1" >
+                        <label class="label-control">Service Process:</label>
+                        {{form_permit.state}}
+                    </div>
+                    {% if not deactivate %}
+                    <div class="form-group col-md-5 col-md-offset-4">
+                        <input type="submit" class="btn btn-success" value="Save" data-toggle="modal" data-target="#alert">
+                        <a type="button"  class="btn btn-danger" {% if is_popup %} onclick="closepopup()" {% else %} onclick="history.back(-1)" {% endif %}>Cancel </a>
+                    </div>
+                    {% endif %}
+                    <div class="modal fade" id="alert" tabindex="-1" role="dialog" aria-labelledby="Police Expire">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">Add Alert URGENT</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <fieldset>
+                                        <div class="form-group col-md-6">
+                                            <label class="label-control">Days to be for show alert:</label>
+                                            <select name="alert_day">
+                                                <option value="5">5 day</option>
+                                                <option value="15">15 day</option>
+                                                <option value="30">30 day</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-8">
+                                            <label class="label-control">{{ form.group.label }}</label>
+                                            {{ form_alert.group }}
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <input type="button" class="btn btn-primary" data-dismiss="modal" value="Save changes"></input>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
         </div>
     </div>
-    <div class="form-group col-md-5 col-md-offset-1">
-        <label class="label-control">{{form_permit.txdmv_date_exp.label}}</label>
-        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-            {{form_permit.txdmv_date_exp}}
-            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
-        </div>
-        <label>
-           <input type="checkbox" id="txdmv_alert" name="txdmv_alert" checked> Alert
-        </label>
-    </div>
-    <div class="form-group col-md-5 col-md-offset-1" >
-        <label class="label-control">{{form_permit.mc.label}}</label>
-        {{form_permit.mc}}
-    </div>
-    <div class="form-group col-md-5 col-md-offset-1" >
-        <label class="label-control">{{form_permit.mc_pin.label}}</label>
-        {{form_permit.mc_pin}}
-    </div>
-    <div class="form-group col-md-5 col-md-offset-1" >
-        <label class="label-control">{{form_permit.boc3.label}}</label>
-        {{form_permit.boc3}}
-    </div>
-    <div class="form-group col-md-5 col-md-offset-1">
-        <label class="label-control">{{form_permit.boc3_date.label}}</label>
-        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-            {{form_permit.boc3_date}}
-            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
-        </div>
-    </div>
-    <div class="form-group col-md-5 col-md-offset-1" >
-        <label class="label-control">{{form_permit.urc.label}}</label>
-        {{form_permit.urc}}
-    </div>
-    {% if not deactivate %}
-    <div class="form-group col-md-5 col-md-offset-4">
-        <input type="submit" class="btn btn-success" value="Save" {% if is_popup %} onclick="closepopup()" {% endif %}>
-        <a type="button"  class="btn btn-danger" {% if is_popup %} onclick="closepopup()" {% else %} onclick="history.back(-1)" {% endif %}>Cancel </a>
-    </div>
-   {% endif %}
-</fieldset>
+</section>
+{% endblock %}
