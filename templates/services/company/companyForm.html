@@ -11,6 +11,13 @@
    window.close();
    return false;
  }
+ $(document).ready( function () {
+ $(".btn_add_cut").click(function() {
+      var column = $(this).closest('tr').children()[5].textContent;
+      $('#id_customers').val(column)
+      $('#customerList').modal('hide');
+    });
+  });
 
 </script>
 {% endblock %}
@@ -41,7 +48,7 @@
                                     <tooltip md-direction="left"></tooltip>
                                 </button>
                             </span>
-                            {{ form_company.customers }}
+                            {{ form.customers }}
                             <span class="input-group-btn">
                                 <a type="button" id="newcustomer" class="btn btn-success test-tooltip" href="{% url 'accounting:customer_popup' 1 %}" target="popup" onclick="window.open('','popup',' location=1, directories=0, resizable=0, width=500,height=700,Top=20,Left=490')" data-trigger="focus" title="Add new Customer" data-animation="am-flip-x">
                                     <i class="fa fa-plus"></i>
@@ -56,52 +63,122 @@
 
                     <div class="form-group col-md-4 col-md-offset-1" >
                         <label class="label-control">Company Name:</label>
-                        {{form_company.name}}
+                        {{form.name}}
                     </div>
                     <div class="form-group col-md-4 col-md-offset-1" >
                         <label class="label-control">Authorized Person:</label>
-                        {{form_company.attorney}}
+                        {{form.attorney}}
                     </div>
                     <div class="form-group col-md-4 col-md-offset-1" >
                         <label class="label-control">Other Authorized Person:</label>
-                        {{form_company.otheattorney}}
+                        {{form.otheattorney}}
                     </div>
                     <div class="form-group col-md-4 col-md-offset-1" >
                         <label class="label-control">Address:</label>
-                        {{form_company.address}}
+                        {{form.address}}
                     </div>
                     <div class="form-group col-md-4 col-md-offset-1" >
                         <label class="label-control">Phone Number:</label>
-                        {{form_company.phone}}
+                        {{form.phone}}
                     </div>
                     <div class="form-group col-md-4 col-md-offset-1" >
                         <label class="label-control">Other Phone Number:</label>
-                        {{form_company.othephone}}
+                        {{form.othephone}}
                     </div>
                     <div class="form-group col-md-4 col-md-offset-1" >
                         <label class="label-control">Fax Number:</label>
-                        {{form_company.fax}}
+                        {{form.fax}}
                     </div>
                     <div class="form-group col-md-4 col-md-offset-1" >
                         <label class="label-control">EIN Number:</label>
-                        {{form_company.ein}}
+                        {{form.ein}}
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-1" >
+                        <label class="label-control">USDOT Number:</label>
+                        {{form.usdot}}
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-1" >
+                        <label class="label-control">USDOT Pin:</label>
+                        {{form.usdot_pin}}
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-1" >
+                        <label class="label-control">TEXA DMV Number:</label>
+                        {{form.txdmv}}
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-1" >
+                        <label class="label-control">TEXA DMV User:</label>
+                        {{form.txdmv_user}}
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-1" >
+                        <label class="label-control">TEXA DMV Password:</label>
+                        {{form.txdmv_passd}}
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-1">
+                        <label class="label-control">TEXA DMV Date:</label>
+                        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            {{form.txdmv_date}}
+                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-1">
+                        <label class="label-control">TEXA DMV Expiration:</label>
+                        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            {{form.txdmv_date_exp}}
+                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                        </div>
+                        <label>
+                            <input type="checkbox" id="txdmv_alert" name="txdmv_alert" checked> Alert
+                        </label>
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-1" >
+                        <label class="label-control">BOC 3 Number:</label>
+                        {{form.boc3}}
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-1">
+                        <label class="label-control">BOC 3 Date:</label>
+                        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            {{form.boc3_date}}
+                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-1" >
+                        <label class="label-control">MC Number:</label>
+                        {{form.mc}}
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-1" >
+                        <label class="label-control">MC Pin:</label>
+                        {{form.mc_pin}}
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-1" >
+                        <label class="label-control">UCR:</label>
+                        {{form.ucr}}
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-1">
+                        <label class="label-control">UCR Expiration:</label>
+                        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            {{form.ucr_date_exp}}
+                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                        </div>
+                        <label>
+                            <input type="checkbox" id="ucr_alert" name="ucr_alert" checked> Alert
+                        </label>
                     </div>
                     <div class="form-group col-md-2 col-md-offset-1" >
-                        <label class="label-control">Unity:</label>
-                        {{form_company.unity}}
+                        <label class="label-control">Unit:</label>
+                        {{form.unit}}
                     </div>
                     <div class="form-group col-md-2 col-md-offset-1" >
                         <label class="label-control">Is Deactivate:</label>
-                        {{form_company.deactivate}}
+                        {{form.deactivate}}
                     </div>
                     <div class="form-group col-md-2 col-md-offset-1" >
                         <label class="label-control">Service Process:</label>
-                        {{form_company.state}}
+                        {{form.state}}
                     </div>
-                    {% if form_company.deactivate and deactivate%}
+                    {% if form.deactivate and deactivate%}
                     <div class="form-group col-md-2 col-md-offset-1" >
                         <label class="label-control">Deactivate Date:</label>
-                        {{form_company.deactivate_date}}
+                        {{form.deactivate_date}}
                     </div>
                     {% endif %}
                     {% if not deactivate %}

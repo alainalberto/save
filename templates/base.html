@@ -246,22 +246,16 @@
                 <li class="active">
                     <a href="javascript:;" data-toggle="collapse" data-target="#serv"><i class="fa fa-tasks"></i> Services <i class="right fa fa-fw fa-caret-down"></i></a>
                     <ul id="serv" class="collapse">
-                        {% if perms.services.add_companie %}
+                        {% if perms.services.add_permit %}
                         <li>
-                            <a class="item" href="{% url 'services:company_create' %}"> Open Company</a>
+                            <a class="item" href="{% url 'services:permit_create' %}"> Permit</a>
                         </li>
                         {% endif %}
-                        <!-- <li>
-                            <a class="item" href="{% url 'services:title' %}"> Title record</a>
-                        </li>
-                        {% if perms.services.add_insurance %}
+                        <!--{% if perms.services.add_insurance %}
                         <li>
                             <a class="item" href="{% url 'services:insurance' %}"> Insurance</a>
                         </li>
                         {% endif %}
-                        <li>
-                            <a class="item" href="{% url 'services:dot' %}"> DOT</a>
-                        </li>
                         {% if perms.services.add_ifta %}
                         <li>
                             <a class="item" href="{% url 'services:ifta' %}"> IFTA</a>
@@ -272,17 +266,9 @@
                             <a class="item" href="{% url 'services:audits' %}"> Audits</a>
                         </li>
                         {% endif %}
-                        {% if perms.services.add_permission %}
+                        {% if perms.services.add_equipment %}
                         <li>
-                            <a class="item" href="{% url 'services:permit_create' %}"> Permits</a>
-                        </li>
-                        {% endif %}
-                        <li>
-                            <a class="item" href="{% url 'services:plate' %}"> Plate registration</a>
-                        </li>
-                        {% if perms.services.add_maintenance %}
-                        <li>
-                            <a class="item" href="{% url 'services:maintenance' %}"> Maintenance</a>
+                            <a class="item" href="{% url 'services:equipment_create' %}"> Equipment</a>
                         </li>
                         {% endif %}-->
                         {% if perms.tools.add_folder and perms.services %}

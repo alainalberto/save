@@ -75,33 +75,25 @@ def AccountDocument(request, pk):
 # Customers
 def CustomerView(request, pk):
        customer = Customer.objects.get(id_cut=pk)
-       company = Companie.objects.filter(customers=customer)
-       permit = Permission.objects.filter(customers=customer)
+       permit = Permit.objects.filter(customers=customer)
        insurance = Insurance.objects.filter(customers=customer)
-       plate = Plate.objects.filter(customers=customer)
-       title = Title.objects.filter(customers=customer)
+       equipment = Equipment.objects.filter(customers=customer)
        ifta = Ifta.objects.filter(customers=customer)
-       mtt = Maintenance.objects.filter(customers=customer)
+       contract = Contract.objects.filter(customers=customer)
        audit = Audit.objects.filter(customers=customer)
-       if company:
-         for c in company:
-           driver = Driver.objects.filter(companies=c)
-           truck = Driver.objects.filter(companies=c)
+       #driver = Driver.objects.filter(customers=customer)
        files = File.objects.filter(folders=customer.folders)
        note = Note.objects.filter(customers=customer)
        context = {
            'customer': customer,
            'files': files,
-           'companys': company,
            'permits': permit,
            'insurances': insurance,
-           'plates': plate,
-           'titles': title,
+           'equipments': equipment,
+           'contracts': contract,
            'iftas': ifta,
-           'mtts': mtt,
-           'audits': audit,
            #'drives': driver,
-          #'trucks': truck,
+           'audits': audit,
            'notes': note,
            'title': 'Customer Folder'
        }

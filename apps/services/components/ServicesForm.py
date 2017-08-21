@@ -4,12 +4,15 @@ from django.utils.safestring import mark_safe
 from apps.services.models import *
 from apps.tools.models import File
 
-class CompanyForm(forms.ModelForm):
+class PermitForm(forms.ModelForm):
 
     class Meta:
-        model = Companie
+        model = Permit
 
         fields = [
+                  'is_new',
+                  'legal_status',
+                  'gusiness_type',
                   'name',
                   'attorney',
                   'otheattorney',
@@ -18,50 +21,38 @@ class CompanyForm(forms.ModelForm):
                   'othephone',
                   'fax',
                   'ein',
-                  'unity',
-                  'logo',
+                  'unit',
+                  'usdot',
+                  'usdot_pin',
+                  'txdmv',
+                  'txdmv_user',
+                  'txdmv_passd',
+                  'txdmv_date',
+                  'txdmv_date_exp',
+                  'mc',
+                  'mc_pin',
+                  'boc3',
+                  'boc3_date',
+                  'ucr',
+                  'ucr_date_exp',
                   'deactivate',
                   'state',
                   'customers',
         ]
 
         widgets = {
+            'is_new': forms.CheckboxInput(attrs={'class': 'checkbox'}),
+            'legal_status': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('DBA', 'DBA'), ('LLC', 'LLC'), ('CORP', 'CORP'))),
+            'gusiness_type': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('Flatbed', 'Flabed'), ('Refrigerated', 'Refrigerated'), ('Dry Van', 'Dry Van'), ('Sand Gravel', 'Sand Gravel'), ('Other', 'Other'))),
             'name': forms.TextInput(attrs={'placeholder': 'Company Name', 'class': 'form-control input-md upper'}),
-            'attorney': forms.TextInput(attrs={'placeholder': 'Authorized Person:', 'class': 'form-control input-md upper'}),
-            'otheattorney': forms.TextInput(                attrs={'placeholder': 'Authorized Person:', 'class': 'form-control input-md upper'}),
+            'attorney': forms.TextInput(attrs={'placeholder': 'Authorized Person:', 'class':'form-control input-md upper'}),
+            'otheattorney': forms.TextInput(attrs={'placeholder': 'Authorized Person:', 'class':'form-control input-md upper'}),
             'address': forms.TextInput(attrs={'placeholder': 'Address', 'class': 'form-control input-md upper'}),
             'phone': forms.NumberInput(attrs={'placeholder': 'Telepone Number', 'class': 'form-control input-md'}),
             'othephone': forms.NumberInput(attrs={'placeholder': 'Telepone Number', 'class': 'form-control input-md'}),
             'fax': forms.NumberInput(attrs={'placeholder': 'Fax Number', 'class': 'form-control input-md'}),
             'ein': forms.NumberInput(attrs={'placeholder': 'EIN', 'class': 'form-control input-md'}),
-            'unity': forms.NumberInput(attrs={'placeholder': 'Unit', 'class': 'form-control input-md'}),
-            'deactivate': forms.CheckboxInput(attrs={'class': 'checkbox'}),
-            'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
-            'customers': forms.Select(attrs={'class': 'form-control input-md'}),
-        }
-
-class PermitForm(forms.ModelForm):
-
-    class Meta:
-        model = Permission
-
-        fields = [
-            'usdot',
-            'usdot_pin',
-            'txdmv',
-            'txdmv_user',
-            'txdmv_passd',
-            'txdmv_date',
-            'txdmv_date_exp',
-            'mc',
-            'mc_pin',
-            'boc3',
-            'boc3_date',
-            'ucr',
-            'state',
-            'customers',
-        ]
-        widgets = {
+            'unit': forms.NumberInput(attrs={'placeholder': 'Unit', 'class': 'form-control input-md'}),
             'usdot': forms.NumberInput(attrs={'placeholder': 'USDOT Number', 'class': 'form-control input-md'}),
             'usdot_pin': forms.TextInput(attrs={'placeholder': 'USDOT PIN', 'class': 'form-control input-md upper'}),
             'txdmv': forms.TextInput(attrs={'placeholder': 'TXDMV Number', 'class': 'form-control input-md upper'}),
@@ -74,10 +65,12 @@ class PermitForm(forms.ModelForm):
             'boc3': forms.TextInput(attrs={'placeholder': 'BOC3 Number', 'class': 'form-control input-md'}),
             'boc3_date': forms.DateInput(attrs={'placeholder': 'BOC3 Date', 'class': 'form-control input-md'}),
             'ucr': forms.NumberInput(attrs={'placeholder': 'USDOT Number', 'class': 'form-control input-md'}),
-            'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(
-            ('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
+            'ucr_date_exp': forms.DateInput(attrs={'placeholder': 'BOC3 Date', 'class': 'form-control input-md'}),
+            'deactivate': forms.CheckboxInput(attrs={'class': 'checkbox'}),
+            'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
             'customers': forms.Select(attrs={'class': 'form-control input-md'}),
         }
+
 
 class InsuranceForm(forms.ModelForm):
 
@@ -151,11 +144,6 @@ class IftaForm(forms.ModelForm):
             'state',
             'customers',
         ]
-        labels = {
-            'type': 'Select Type:',
-            'period': 'Select Period:',
-            'nex_period': 'Date of nex Period: ',
-        }
         widgets = {
             'type': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('Annual', 'Annual'), ('Quarter', 'Quarter'))),
             'period': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('Annual', 'Annual'), ('Quarter1', 'Quarter 1st'), ('Quarter2', 'Quarter 2nd'), ('Quarter3', 'Quarter 3rd'), ('Quarter4', 'Quarter 4th'))),
@@ -198,24 +186,31 @@ class ContractForm(forms.ModelForm):
             ('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
         }
 
-class MTTForm(forms.ModelForm):
+class AuditForm(forms.ModelForm):
 
     class Meta:
-        model = Maintenance
+        model = Audit
 
         fields = [
-            'nota',
-            'state',
+            'contracts',
             'customers',
-
+            'type',
+            'auditor_name',
+            'action_plan',
+            'amount_paid',
+            'date',
+            'state',
+            'results',
         ]
-        labels = {
-            'nota': 'Description of Maintenance:',
-        }
         widgets = {
-            'nota': forms.Textarea(attrs={'placeholder': 'State', 'class': 'form-control input-md'}),
-            'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(
-            ('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
+            'contracts': forms.Select(attrs={'class': 'form-control input-md'}),
+            'type': forms.Select(attrs={'class': 'form-control input-md'}),
+            'auditor_name': forms.TextInput(attrs={'placeholder': 'Auditor Name', 'class': 'form-control input-md'}),
+            'action_plan': forms.CheckboxInput(attrs={'class': 'checkbox'}),
+            'amount_paid': forms.NumberInput(attrs={'placeholder': 'value', 'class': 'form-control input-md'}),
+            'date': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'results': forms.Textarea(attrs={'placeholder': 'State', 'class': 'form-control input-md'}),
+            'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
             'customers': forms.Select(attrs={'class': 'form-control input-md'}),
         }
 
@@ -233,13 +228,6 @@ class TitleForm(forms.ModelForm):
             'state',
             'customers',
         ]
-        labels = {
-            'date_reg': 'Register Date:',
-            'date_exp_reg': 'Register Expire Date:',
-            'date_insp': 'Inspection Date:',
-            'date_exp_insp': 'Inspection Expire Date: ',
-            'trucks': 'Trucks:',
-        }
         widgets = {
             'date_reg': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
             'date_exp_reg': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),

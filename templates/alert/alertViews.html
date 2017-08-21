@@ -28,21 +28,20 @@
                     <thead>
                     <tr>
                         <th class="col-md-6">Description</th>
-                        <th class="col-md-3">Group</th>
+                        <th class="col-md-3">Expiration date</th>
                         <th class="col-md-1">Action</th>
                     </tr>
                     </thead>
                   <tbody>
                   {% for a in alerts %}
                   {% if a.deactivated == 0 %}
-                  <tr>
+                  <tr {% if a.end_date <= today %} class="danger" {% endif %}>
                       <td>
                           <div class="form-group col-md-11 col-md-offset-0">
-                              <strong>{{a.users}}: </strong><samp class="{% if a.category == 'Notification'%} text-success {% endif %} {% if a.category == 'Alert'%} text-warning {% endif %} {% if a.category == 'Urgent'%} text-danger {% endif %}" >{{a.description}}</samp>
+                              <strong>{{a.users}}: </strong><samp {% if a.category == 'Notification'%} class="text-success" {% endif %} {% if a.category == 'Alert'%} class="text-warning" {% endif %} {% if a.category == 'Urgent'%} class="text-danger" {% endif %}>{{a.description}}</samp>
                           </div> </td>
                       <td>
-
-                          <strong>{{a.group.list}}, </strong>
+                          <strong>{{a.end_date}} </strong>
                       </td>
                       <td>
                           <toolbar class="md-accent">

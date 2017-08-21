@@ -112,8 +112,15 @@ def panel_view(request):
     income = []
     valueInc = 0
     valueExp = 0
-    alertUrg = Alert.objects.filter(category='Urgents')
+    alert=[]
     date_now = datetime.now().date()
+    user_group = request.user.groups.all()
+    alertUrg = Alert.objects.filter(category='Urgents')
+    for u in alertUrg:
+        for g in user_group:
+            if u.group.filter(name=g.name).exists():
+               if u.show_date <= date_now and u.end_date >= date_now:
+                  alert.append(u)
     inc = Account.objects.get(primary=True, name='Income')
     inc_acconts = Account.objects.filter(accounts_id_id=inc.id_acn)
     company = Companie.objects.all()
@@ -131,7 +138,7 @@ def panel_view(request):
                 'titles': title,
                 'insurances': insurance,
                 'mtts': mtt,
-                'alert':alertUrg,
+                'alert':alert,
                 'date_now':date_now}
     return render(request, 'home/complement/panel.html', contexto)
 
@@ -220,25 +227,54 @@ def GetCalendar(requiret):
     return JsonResponse(context, safe=False)
 
 #Alert
-def NotificationView(requiret):
+def NotificationView(request):
+    alert = []
+    date_now = datetime.now().date()
+    user_group = request.user.groups.all()
     notifications = Alert.objects.filter(category='Notification')
-    contexto = {'alerts': notifications, 'title':'List Notification', 'style':'success'}
-    return render(requiret, 'alert/alertViews.html', contexto)
+    for u in notifications:
+        for g in user_group:
+            if u.group.filter(name=g.name).exists():
+                    alert.append(u)
 
-def AlertView(requiret):
-    alertas = Alert.objects.filter(category='Alerts')
-    contexto = {'alerts': alertas, 'title':'List Alert', 'style':'warning'}
-    return render(requiret, 'alert/alertViews.html', contexto)
+    contexto = {'alerts': alert, 'today':date_now , 'title':'List Notification', 'style':'success'}
+    return render(request, 'alert/alertViews.html', contexto)
 
-def UrgentView(requiret):
+def AlertView(request):
+    alert = []
+    date_now = datetime.now().date()
+    user_group = request.user.groups.all()
+    alerts = Alert.objects.filter(category='Alerts')
+    for u in alerts:
+        for g in user_group:
+            if u.group.filter(name=g.name).exists():
+                    alert.append(u)
+    contexto = {'alerts': alert, 'today':date_now ,'title':'List Alert', 'style':'warning'}
+    return render(request, 'alert/alertViews.html', contexto)
+
+def UrgentView(request):
+    alert = []
+    date_now = datetime.now().date()
+    user_group = request.user.groups.all()
     urgents = Alert.objects.filter(category='Urgents')
-    contexto = {'alerts': urgents, 'title':'List Urgent', 'style':'danger'}
-    return render(requiret, 'alert/alertViews.html', contexto)
+    for u in urgents:
+        for g in user_group:
+            if u.group.filter(name=g.name).exists():
+                    alert.append(u)
+    contexto = {'alerts': alert, 'today':date_now ,'title':'List Urgent', 'style':'danger'}
+    return render(request, 'alert/alertViews.html', contexto)
 
-def AllalertView(requiret):
+def AllalertView(request):
+    alert = []
+    date_now = datetime.now().date()
+    user_group = request.user.groups.all()
     allalert = Alert.objects.all().order_by('-category')
-    contexto = {'alerts': allalert, 'title':'List All Alerts', 'style':'primary'}
-    return render(requiret, 'alert/alertViews.html', contexto)
+    for u in allalert:
+        for g in user_group:
+            if u.group.filter(name=g.name).exists():
+                    alert.append(u)
+    contexto = {'alerts': alert, 'today':date_now , 'title':'List All Alerts', 'style':'primary'}
+    return render(request, 'alert/alertViews.html', contexto)
 
 class AlertsCreate(CreateView):
      model = Alert

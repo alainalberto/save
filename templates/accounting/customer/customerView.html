@@ -96,23 +96,17 @@
                     <div class="panel panel-success">
                         <div class="panel-heading">
                             <ul class="nav nav-tabs " role="tablist">
-                                {% if companys %}
-                                <li id="tabCompany" role="presentation"><a href="#newCompany" aria-controls="newCompany" role="tab" data-toggle="tab">New Company</a></li>
-                                {% endif %}
                                 {% if permits %}
                                 <li id="tabPermit" role="presentation"><a href="#permit" aria-controls="permite" role="tab" data-toggle="tab">Permits</a></li>
                                 {% endif %}
-                                {% if titles %}
-                                <li id="tabTitle" role="presentation"><a href="#title" aria-controls="title" role="tab" data-toggle="tab">Title Record</a></li>
-                                {% endif %}
-                                {% if plates %}
-                                <li id="tabPlate" role="presentation"><a href="#plate" aria-controls="plate" role="tab" data-toggle="tab">Plate Registration</a></li>
+                                {% if equipments %}
+                                <li id="tabEquipment" role="presentation"><a href="#equipment" aria-controls="equipment" role="tab" data-toggle="tab">Equipment</a></li>
                                 {% endif %}
                                 {% if insurances %}
                                 <li id="tabInsurance" role="presentation"><a href="#insurance" aria-controls="insurance" role="tab" data-toggle="tab">Insurance</a></li>
                                {% endif %}
-                                {% if mtts %}
-                                <li id="tabDot" role="presentation"><a href="#dot" aria-controls="dot" role="tab" data-toggle="tab">Maintenance</a></li>
+                                {% if contracts %}
+                                <li id="tabContract" role="presentation"><a href="#contract" aria-controls="contract" role="tab" data-toggle="tab">Contract</a></li>
                                {% endif %}
                                 {% if iftas %}
                                 <li id="tabIfta" role="presentation"><a href="#ifta" aria-controls="ifta" role="tab" data-toggle="tab">IFTA</a></li>
@@ -122,27 +116,15 @@
                         <div class="panel-body">
                             <div  class="tab-content">
 
-                                <div role="tabpanel" class="tab-pane fade" id="newCompany">
-                                    {% if companys %}
-                                     {% include 'services/company/companyViews.html'%}
-                                    {% endif %}
-                                </div>
-
                                 <div role="tabpanel" class="tab-pane fade" id="permit">
-                                    {% if permit %}
-                                    {% include 'services/permit/permitForm.html'%}
+                                    {% if permits %}
+                                    {% include 'services/company/companyViews.html'%}
                                     {% endif %}
                                 </div>
 
-                                <div role="tabpanel" class="tab-pane fade" id="title">
-                                    {% if titles %}
+                                <div role="tabpanel" class="tab-pane fade" id="equipment">
+                                    {% if equipments %}
                                         {% include 'services/title/titleForm.html'%}
-                                    {% endif %}
-                                </div>
-
-                                <div role="tabpanel" class="tab-pane fade" id="plate">
-                                    {% if plate %}
-                                        {% include 'services/plate/plateForm.html'%}
                                     {% endif %}
                                 </div>
 
@@ -152,8 +134,8 @@
                                     {% endif %}
                                 </div>
 
-                                <div role="tabpanel" class="tab-pane fade" id="dot">
-                                    {% if mtt %}
+                                <div role="tabpanel" class="tab-pane fade" id="contract">
+                                    {% if contracts %}
                                    {% include 'services/maintenance/maintenanceForm.html'%}
                                     {% endif %}
                                 </div>
@@ -171,7 +153,7 @@
       <div class="form-group col-md-12">
           <p class="bg-primary text-center">CUSTOMER FILES</p>
           <div class="col-md-offset-11">
-              <a type="button" class="btn btn-success" target="popup" onclick="openpopup('{% url 'services:folder_create_popup' pk=customer.id_cut popup=1 %}')"><span><i class="fa fa-plus"></i></span></a>
+              <a type="button" class="btn btn-success" target="popup" href="{% url 'services:folder_create_popup' customer.id_cut %}"><span><i class="fa fa-plus"></i></span></a>
           </div>
           <table class="table table-striped">
               <thead>
