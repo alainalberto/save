@@ -153,7 +153,7 @@
       <div class="form-group col-md-12">
           <p class="bg-primary text-center">CUSTOMER FILES</p>
           <div class="col-md-offset-11">
-              <a type="button" class="btn btn-success" target="popup" href="{% url 'services:folder_create_popup' customer.id_cut %}"><span><i class="fa fa-plus"></i></span></a>
+              <a type="button" class="btn btn-success" href="{% url 'services:folder_create_popup' customer.id_cut %}"><span><i class="fa fa-plus"></i></span></a>
           </div>
           <table class="table table-striped">
               <thead>
@@ -172,7 +172,7 @@
                   <td>{{ f.category }}</td>
                   <td>
                       <toolbar class="md-accent">
-                          <a data-type="info"  data-trigger="focus"  data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" target="popup" onclick="openpopup('{% url 'services:folder_edit_popup' pk=f.id_fil popup=1 %}')">
+                          <a data-type="info"  data-trigger="focus"  data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'services:folder_edit' f.id_fil %}">
                               <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                               <tooltip md-direction="left"></tooltip>
                           </a>
