@@ -402,6 +402,7 @@ def InvoicesCreate(request):
                                                                   value=itinv.subtotal,
                                                                   accounts_id=itinv.accounts_id,
                                                                   document=invoice.id_inv,
+                                                                  waytopay=invoice.waytopay,
                                                                   users_id=user.id,
                                                                   type='Invoices')
                       else:
@@ -530,7 +531,7 @@ class InvoicesEdit(UpdateView):
                         itinv.items_id = item.id_ite
                         itinv.invoices = invoice
                         itinv.save()
-                        acountDescp = AccountDescrip.objects.filter(date=invoice.start_date, accounts_id=itinv.accounts_id, document=invoice.id_inv, type='Invoices').update(value=itinv.subtotal)
+                        acountDescp = AccountDescrip.objects.filter(date=invoice.start_date, accounts_id=itinv.accounts_id, document=invoice.id_inv, type='Invoices').update(value=itinv.subtotal, waytopay=invoice.waytopay, date=invoice.start_date)
                     else:
                         item = Item.objects.create(name=itinv.description, value=itinv.value,
                                                    accounts_id=itinv.accounts_id)
@@ -644,6 +645,7 @@ class ReceiptsEdit(UpdateView):
             AccountDescrip.objects.filter(id_acd=acountDescp.id_acd).update(
                 date=form.data['start_date'],
                 value=form.data['total'],
+                waytopay=receipt.waytopay,
             )
             messages.success(request, "Receipt update with an extension")
             return HttpResponseRedirect(reverse_lazy('accounting:receipts'))
