@@ -32,10 +32,8 @@ urlpatterns = [
 
 
     #Equipment
-    url(r'^equipment/view/(?P<pk>\d+)&(?P<popup>[^/]+)/$',
-        login_required(permission_required('services.add_equipment')(EquipmentView)), name='equipment'),
-    url(r'^permit/create$', login_required(permission_required('services.add_equipment')(EquipmentCreate.as_view())),
-        name='equipment_create'),
+    url(r'^equipment/view/(?P<pk>\d+)&(?P<popup>[^/]+)/$', login_required(permission_required('services.add_equipment')(EquipmentView)), name='equipment'),
+    url(r'^equipment/create$', login_required(permission_required('services.add_equipment')(EquipmentCreate.as_view())), name='equipment_create'),
     url(r'^equipment/create/(?P<pk>\d+)&(?P<popup>[^/]+)/$',
         login_required(permission_required('services.add_equipment')(EquipmentCreate.as_view())), name='equipment_create_popup'),
     url(r'^equipment/edit/(?P<pk>\d+)/$',

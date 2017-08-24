@@ -71,10 +71,10 @@ class PermitCreate(CreateView):
                         group_manag = Group.objects.get(name= 'System Manager')
                         group_offic = Group.objects.get(name= 'Office Specialist')
                         dateExp = permit.txdmv_date_exp
-                        dateShow = datetime.now() - timedelta(days=30)
+                        dateShow = dateExp - timedelta(days=30)
                         alert = Alert.objects.create(
                             category = "Urgents",
-                            description = "Expires customer TXDMV Permit " + str(customer),
+                            description = "Expires the TXDMV Permit of the customer " + str(customer),
                             create_date = datetime.now().strftime("%Y-%m-%d"),
                             show_date = dateShow.strftime("%Y-%m-%d"),
                             end_date = dateExp.strftime("%Y-%m-%d"),
@@ -85,10 +85,10 @@ class PermitCreate(CreateView):
                         group_manag = Group.objects.get(name='System Manager')
                         group_offic = Group.objects.get(name='Office Specialist')
                         dateExp = permit.ucr_date_exp
-                        dateShow = datetime.now() - timedelta(days=30)
+                        dateShow = dateExp - timedelta(days=30)
                         alert = Alert.objects.create(
                             category = "Urgents",
-                            description = "Expires customer UCR Permit " + str(customer),
+                            description = "Expires the UCR Permit of the customer" + str(customer),
                             create_date = datetime.now().strftime("%Y-%m-%d"),
                             show_date = dateShow.strftime("%Y-%m-%d"),
                             end_date = dateExp.strftime("%Y-%m-%d"),
@@ -142,18 +142,16 @@ class PermitEdit(UpdateView):
                     permit.deactivate_date = None
                 permit.save()
                 if request.POST['txdmv_alert']:
-                   dateExp = datetime.strptime(permit.txdmv_date_exp, "%Y-%m-%d")
-                   dateShow = datetime.now().strftime("%Y-%m-%d") - timedelta(days=30)
-                   alert = Alert.objects.filter(description="Expires customer TXDMV Permit " + str(permit.customers),
-                                             end_date=permit.txdmv_date_exp)
-                   alert.update(show_date = dateShow.strftime("%Y-%m-%d"), end_date = dateExp.strftime("%Y-%m-%d"))
+                   dateExp = permit.txdmv_date_exp
+                   dateShow = dateExp - timedelta(days=30)
+                   alert = Alert.objects.filter(description = "Expires the TXDMV Permit of the customer " + str(permit.customers),
+                                                category="Urgents").update(show_date = dateShow.strftime("%Y-%m-%d"), end_date = dateExp.strftime("%Y-%m-%d"))
                 if request.POST['ucr_alert']:
-                   dateExp = datetime.strptime(permit.ucr_date_exp, "%Y-%m-%d")
-                   dateShow = datetime.now().strftime("%Y-%m-%d") - timedelta(days=30)
-                   alert = Alert.objects.filter(description="Expires customer UCR Permit " + str(permit.customers),
-                                             end_date=permit.ucr_date_exp)
-                   alert.update(show_date = dateShow.strftime("%Y-%m-%d"), end_date = dateExp.strftime("%Y-%m-%d"))
-                accion_user(permit, ADDITION, request.user)
+                   dateExp = permit.ucr_date_exp
+                   dateShow = dateExp - timedelta(days=30)
+                   alert = Alert.objects.filter(description = "Expires the UCR Permit of the customer" + str(permit.customers),
+                                                category="Urgents").update(show_date = dateShow.strftime("%Y-%m-%d"), end_date = dateExp.strftime("%Y-%m-%d"))
+                accion_user(permit, CHANGE, request.user)
                 messages.success(request, 'The Permit was saved successfully')
                 return HttpResponseRedirect('/accounting/customers/view/' + str(permit.customers_id))
         else:
@@ -171,9 +169,9 @@ class PermitDelete(DeleteView):
         self.object = self.get_object
         id = kwargs['pk']
         permit = self.model.objects.get(id_com=id)
-        alert_txdmv = Alert.objects.filter(description="Expires customer TXDMV Permit " + str(permit.customers),
+        alert_txdmv = Alert.objects.filter(description = "Expires the TXDMV Permit of the customer " + str(permit.customers),
                                      end_date=permit.txdmv_date_exp)
-        alert_ucr = Alert.objects.filter(description="Expires customer UCR Permit " + str(permit.customers),
+        alert_ucr = Alert.objects.filter(description = "Expires the UCR Permit of the customer" + str(permit.customers),
                                            end_date=permit.ucr_date_exp)
         accion_user(permit, DELETION, request.user)
         alert_txdmv.delete()
@@ -399,93 +397,122 @@ class FolderDelete(DeleteView):
 
 
 def EquipmentView(request, pk, popup):
-    permit = Permit.objects.get(id_com=pk)
-    return render(request, 'services/company/companyForm.html', {'form': permit, 'is_popup':popup, 'title':'Company', 'deactivate':True})
+    equipment = Equipment.objects.get(id_tru=pk)
+    return render(request, 'services/equipment/equipmentView.html', {'equipment': equipment, 'is_popup':popup, 'title':'Equipment', 'deactivate':True})
 
 
 class EquipmentCreate(CreateView):
-      model = Permit
-      template_name = 'services/company/companyForm.html'
-      form_class = PermitForm
+    model = Equipment
+    template_name = 'services/equipment/equipmentForm.html'
+    form_class = EquipmentForm
 
-      def get(self, request, *args, **kwargs):
-          if kwargs.__contains__('popup'):
+    def get(self, request, *args, **kwargs):
+        if kwargs.__contains__('popup'):
             popup = kwargs['popup']
             id = kwargs['pk']
-          else:
-              popup = 0
-          customer = Customer.objects.filter(deactivated=False)
-          form = self.form_class(initial=self.initial)
-          return render(request, self.template_name, {'form': form, 'customers':customer, 'is_popup': popup, 'title': 'Create Permit'})
+        else:
+            popup = 0
+        customer = Customer.objects.filter(deactivated=False)
+        form = self.form_class(initial=self.initial)
+        return render(request, self.template_name,
+                      {'form': form, 'customers': customer, 'is_popup': popup, 'title': 'Create Equipment'})
 
-      def post(self, request, *args, **kwargs):
-          if kwargs.__contains__('popup'):
+    def post(self, request, *args, **kwargs):
+        if kwargs.__contains__('popup'):
             popup = kwargs['popup']
             id = kwargs['pk']
-          else:
-              popup = 0
-          form = self.form_class(request.POST)
-          if form.is_valid():
-              permit_exist = Permit.objects.filter(name=form.data['name'], ein=form.data['ein'])
-              if permit_exist:
-                  messages.error(request, 'The Company already exists')
-                  form = self.form_class(initial=self.initial)
-                  return render(request, self.template_name, {'form': form, 'is_popup': popup, 'title': 'Create Permit'})
-              else:
-                  permit = form.save(commit=False)
-                  if popup:
+        else:
+            popup = 0
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            equipment_exist = Equipment.objects.filter(type=form.data['type'], serial=form.data['serial'])
+            if equipment_exist:
+                messages.error(request, 'The Equipment already exists')
+                form = self.form_class(initial=self.initial)
+                return render(request, self.template_name, {'form': form, 'is_popup': popup, 'title': 'Create Equipment'})
+            else:
+                equipment = form.save(commit=False)
+                if popup:
                     customer = Customer.objects.get(id_cut=id)
-                  else:
-                      customer = Customer.objects.get(id_cut=request.POST['customers'])
-                  permit.customers = customer
-                  if not customer.company_name:
-                      update_customer = Customer.objects.filter(id_cut=customer.id_cut).update(company_name=permit.name, ein=permit.ein)
-                  permit.users_id = request.user.id
-                  permit.update = datetime.now().strftime("%Y-%m-%d")
-                  if permit.deactivate:
-                      permit.deactivate_date = datetime.now().strftime("%Y-%m-%d")
-                  else:
-                      permit.deactivate_date = None
-                  permit.save()
-                  if request.POST['txdmv_alert']:
-                        groups = Group.objects.filter(name={'System Administrator', 'System Manager', 'Office Specialist'})
-                        dateExp = datetime.strptime(permit.txdmv_date_exp, "%Y-%m-%d")
-                        dateShow = datetime.now().strftime("%Y-%m-%d") - timedelta(days=30)
-                        alert = Alert.objects.create(
-                            category = "Urgents",
-                            groups = groups,
-                            description = "Expires customer TXDMV Permit" + str(customer),
-                            create_date = datetime.now().strftime("%Y-%m-%d"),
-                            show_date = dateShow.strftime("%Y-%m-%d"),
-                            end_date = dateExp.strftime("%Y-%m-%d"),
-                            users = request.user)
-                  accion_user(permit, ADDITION, request.user)
-                  messages.success(request, 'The Permit was saved successfully')
-                  return HttpResponseRedirect('/accounting/customers/view/'+str(permit.customers_id))
-          else:
-              for er in form.errors:
-                  messages.error(request, "ERROR: " + er)
-              return render(request, self.template_name, {'form': form, 'is_popup': popup,'title': 'Create Permit'})
+                else:
+                    customer = Customer.objects.get(id_cut=request.POST['customers'])
+                equipment.customers = customer
+                equipment.users_id = request.user.id
+                equipment.update = datetime.now().strftime("%Y-%m-%d")
+                if equipment.deactivate:
+                    equipment.deactivate_date = datetime.now().strftime("%Y-%m-%d")
+                else:
+                    equipment.deactivate_date = None
+                equipment.save()
+                if request.POST['plate_alert']:
+                    group_admin = Group.objects.get(name='System Administrator')
+                    group_manag = Group.objects.get(name='System Manager')
+                    group_offic = Group.objects.get(name='Office Specialist')
+                    dateExp = equipment.plate_date_exp
+                    dateShow = dateExp - timedelta(days=30)
+                    alert = Alert.objects.create(
+                        category="Urgents",
+                        description="Expires of the Plate Equipment Number "+str(equipment.plate_account_number) +" of the "+ str(customer),
+                        create_date=datetime.now().strftime("%Y-%m-%d"),
+                        show_date=dateShow.strftime("%Y-%m-%d"),
+                        end_date=dateExp.strftime("%Y-%m-%d"),
+                        users=request.user)
+                    alert.group.add(group_admin, group_manag, group_offic)
+                if request.POST['reg_alert']:
+                    group_admin = Group.objects.get(name='System Administrator')
+                    group_manag = Group.objects.get(name='System Manager')
+                    group_offic = Group.objects.get(name='Office Specialist')
+                    dateExp = equipment.title_date_exp_reg
+                    dateShow = dateExp - timedelta(days=30)
+                    alert = Alert.objects.create(
+                        category="Urgents",
+                        description="Expires of the Title Register Equipment Number "+str(equipment.plate_account_number) +" of the "+ str(customer),
+                        create_date=datetime.now().strftime("%Y-%m-%d"),
+                        show_date=dateShow.strftime("%Y-%m-%d"),
+                        end_date=dateExp.strftime("%Y-%m-%d"),
+                        users=request.user)
+                    alert.group.add(group_admin, group_manag, group_offic)
+                if request.POST['insp_alert']:
+                    group_admin = Group.objects.get(name='System Administrator')
+                    group_manag = Group.objects.get(name='System Manager')
+                    group_offic = Group.objects.get(name='Office Specialist')
+                    dateExp = equipment.title_date_exp_insp
+                    dateShow = dateExp - timedelta(days=30)
+                    alert = Alert.objects.create(
+                        category="Urgents",
+                        description="Expires of the Inspection Equipment Number "+str(equipment.plate_account_number) +" of the "+ str(customer),
+                        create_date=datetime.now().strftime("%Y-%m-%d"),
+                        show_date=dateShow.strftime("%Y-%m-%d"),
+                        end_date=dateExp.strftime("%Y-%m-%d"),
+                        users=request.user)
+                    alert.group.add(group_admin, group_manag, group_offic)
+                accion_user(equipment, ADDITION, request.user)
+                messages.success(request, 'The Permit was saved successfully')
+                return HttpResponseRedirect('/accounting/customers/view/' + str(equipment.customers_id))
+        else:
+            for er in form.errors:
+                messages.error(request, "ERROR: " + er)
+            return render(request, self.template_name, {'form': form, 'is_popup': popup, 'title': 'Create Equiptment'})
 
 
 class EquipmentEdit(UpdateView):
-    model = Permit
-    template_name = 'services/company/companyForm.html'
-    form_class = PermitForm
+    model = Equipment
+    template_name = 'services/equipment/equipmentForm.html'
+    form_class = EquipmentForm
 
     def get_context_data(self, **kwargs):
-        context = super(PermitEdit, self).get_context_data(**kwargs)
+        context = super(EquipmentEdit, self).get_context_data(**kwargs)
         if self.kwargs.__contains__('popup'):
             popup = self.kwargs.get('popup')
         else:
             popup = 0
         pk = self.kwargs.get('pk', 0)
-        company = self.model.objects.get(id_com=pk)
+        equipment = self.model.objects.get(id_tru=pk)
         if 'form' not in context:
-            context['form'] = self.form_class(instance=company)
+            context['form'] = self.form_class(instance=equipment)
         context['id'] = pk
         context['is_popup'] = popup
-        context['title'] = 'Edit Permit'
+        context['title'] = 'Edit Equipment'
         return context
 
     def post(self, request, *args, **kwargs):
@@ -495,30 +522,48 @@ class EquipmentEdit(UpdateView):
             popup = kwargs['popup']
         else:
             popup = 0
-        permit = self.model.objects.get(id_com=pk)
-        form = self.form_class(request.POST, instance=permit)
+        equipment = self.model.objects.get(id_tru=pk)
+        form = self.form_class(request.POST, instance=equipment)
         if form.is_valid():
-                permit = form.save(commit=False)
-                permit.update = datetime.now().strftime("%Y-%m-%d")
-                permit.users_id = request.user.id
-                if permit.deactivate:
-                    permit.deactivate_date = datetime.now().strftime("%Y-%m-%d")
-                else:
-                    permit.deactivate_date = None
-                permit.save()
-                dateExp = datetime.strptime(permit.txdmv_date_exp, "%Y-%m-%d")
-                dateShow = datetime.now().strftime("%Y-%m-%d") - timedelta(days=30)
-                alert = Alert.objects.filter(description="Expires customer TXDMV Permit" + str(permit.customers),
-                                             end_date=permit.txdmv_date_exp)
-                alert.update(show_date = dateShow.strftime("%Y-%m-%d"), end_date = dateExp.strftime("%Y-%m-%d"))
-                accion_user(permit, ADDITION, request.user)
-                messages.success(request, 'The Permit was saved successfully')
-                return HttpResponseRedirect('/accounting/customers/view/' + str(permit.customers_id))
+            equipment = form.save(commit=False)
+            equipment.update = datetime.now().strftime("%Y-%m-%d")
+            equipment.users_id = request.user.id
+            if equipment.deactivate:
+                equipment.deactivate_date = datetime.now().strftime("%Y-%m-%d")
+            else:
+                equipment.deactivate_date = None
+            equipment.save()
+            if request.POST['plate_alert']:
+                dateExp = equipment.plate_date_exp
+                dateShow = dateExp - timedelta(days=30)
+                alert = Alert.objects.filter(
+                    category="Urgents",
+                    description="Expires of the Plate Equipment Number " + str(
+                        equipment.plate_account_number) + " of the " + str(equipment.customers)).update(show_date = dateShow.strftime("%Y-%m-%d"), end_date = dateExp.strftime("%Y-%m-%d"))
+
+            if request.POST['reg_alert']:
+                dateExp = equipment.title_date_exp_reg
+                dateShow = dateExp - timedelta(days=30)
+                alert = Alert.objects.filter(category="Urgents", description="Expires of the Title Register Equipment Number " + str(
+                        equipment.plate_account_number) + " of the " + str(equipment.customers)).update(show_date = dateShow.strftime("%Y-%m-%d"), end_date = dateExp.strftime("%Y-%m-%d"))
+
+            if request.POST['insp_alert']:
+                dateExp = equipment.title_date_exp_insp
+                dateShow = dateExp - timedelta(days=30)
+                alert = Alert.objects.filter(
+                    category="Urgents",
+                    description="Expires of the Inspection Equipment Number " + str(
+                        equipment.plate_account_number) + " of the " + str(equipment.customers)).update(show_date = dateShow.strftime("%Y-%m-%d"), end_date = dateExp.strftime("%Y-%m-%d"))
+
+            accion_user(equipment, CHANGE, request.user)
+            messages.success(request, 'The Equipment was saved successfully')
+            return HttpResponseRedirect('/accounting/customers/view/' + str(equipment.customers_id))
         else:
             for er in form.errors:
                 messages.error(request, "ERROR: " + er)
             return render(request, self.template_name,
-                          {'form': form,  'is_popup': popup, 'title': 'Edit Permit'})
+                          {'form': form, 'is_popup': popup, 'title': 'Edit Equipment'})
+
 
 class EquipmentDelete(DeleteView):
     model = Permit
@@ -528,11 +573,24 @@ class EquipmentDelete(DeleteView):
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object
         id = kwargs['pk']
-        permit = self.model.objects.get(id_com=id)
-        alert = Alert.objects.filter(description="Expires customer TXDMV Permit" + str(permit.customers),
-                                     end_date=permit.txdmv_date_exp)
-        accion_user(permit, DELETION, request.user)
-        alert.delete()
-        permit.delete()
+        equipment = self.model.objects.get(id_com=id)
+        alert_plate = Alert.objects.filter(
+            category="Urgents",
+            description="Expires of the Plate Equipment Number " + str(
+                equipment.plate_account_number) + " of the " + str(equipment.customer))
+
+        alert_reg = Alert.objects.filter(category="Urgents",
+                                     description="Expires of the Title Register Equipment Number " + str(
+                                         equipment.plate_account_number) + " of the " + str(equipment.customer))
+
+        alert_insp = Alert.objects.filter(
+            category="Urgents",
+            description="Expires of the Inspection Equipment Number " + str(
+                equipment.plate_account_number) + " of the " + str(equipment.customer))
+        accion_user(equipment, DELETION, request.user)
+        alert_plate.delete()
+        alert_reg.delete()
+        alert_insp.delete()
+        equipment.delete()
         messages.success(request, "Permit delete with an extension")
         return HttpResponseRedirect(self.success_url)

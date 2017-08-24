@@ -227,6 +227,13 @@ def GetCalendar(requiret):
     return JsonResponse(context, safe=False)
 
 #Alert
+
+def AlertsView(request, pk):
+    alert = Alert.objects.get(id_alt=pk)
+    contexto = {'form': alert, 'title':'Alert', 'style': 'primary', 'deactivate':True, 'is_popup':True}
+    return render(request, 'alert/alertForm.html', contexto)
+
+
 def NotificationView(request):
     alert = []
     date_now = datetime.now().date()

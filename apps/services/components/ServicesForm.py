@@ -214,65 +214,50 @@ class AuditForm(forms.ModelForm):
             'customers': forms.Select(attrs={'class': 'form-control input-md'}),
         }
 
-class TitleForm(forms.ModelForm):
+class EquipmentForm(forms.ModelForm):
 
     class Meta:
-        model = Title
+        model = Equipment
 
         fields = [
-            'date_reg',
-            'date_exp_reg',
-            'date_insp',
-            'date_exp_insp',
-            'trucks',
-            'state',
             'customers',
+            'state',
+            'update',
+            'type',
+            'year',
+            'model',
+            'serial',
+            'number',
+            'plate_date_exp',
+            'plate_account_number',
+            'plate_account_user',
+            'plate_account_password',
+            'title_date_reg',
+            'title_date_exp_reg',
+            'title_date_insp',
+            'title_date_exp_insp',
+            'deactivate',
+
         ]
         widgets = {
-            'date_reg': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
-            'date_exp_reg': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
-            'date_insp': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
-            'date_exp_insp': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
-            'trucks': forms.Select(attrs={'class': 'form-control input-md'}),
-            'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(
-            ('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
             'customers': forms.Select(attrs={'class': 'form-control input-md'}),
+            'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
+            'type': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('Truck', 'Truck'), ('Trailer', 'Trailer'), ('Other', 'Other'))),
+            'year': forms.NumberInput(attrs={'placeholder': 'year', 'class': 'form-control input-md'}),
+            'model': forms.TextInput(attrs={'placeholder': 'model', 'class': 'form-control input-md upper'}),
+            'serial': forms.TextInput(attrs={'placeholder': 'serial number', 'class': 'form-control input-md upper'}),
+            'number': forms.TextInput(attrs={'placeholder': 'number', 'class': 'form-control input-md upper'}),
+            'plate_date_exp': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'plate_account_number': forms.TextInput(attrs={'class': 'form-control input-md upper'}),
+            'plate_account_user': forms.TextInput(attrs={'class': 'form-control input-md'}),
+            'plate_account_password': forms.TextInput(attrs={'class': 'form-control input-md'}),
+            'title_date_reg': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'title_date_exp_reg': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'title_date_insp': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'title_date_exp_insp': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'deactivate': forms.CheckboxInput(attrs={'class': 'checkbox'}),
         }
 
-class PlateForm(forms.ModelForm):
-
-    class Meta:
-        model = Plate
-
-        fields = [
-            'date',
-            'date_exp',
-            'account_number',
-            'account_user',
-            'account_password',
-            'trucks',
-            'state',
-            'customers',
-        ]
-        labels = {
-            'date': 'Date:',
-            'date_exp': 'Expire Date',
-            'account_number': 'Account Number:',
-            'account_user': 'Account User',
-            'account_password': 'Account Password:',
-            'trucks': 'Trucks:',
-        }
-        widgets = {
-            'date': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
-            'date_exp': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
-            'account_number': forms.TextInput(attrs={'placeholder': 'State', 'class': 'form-control input-md'}),
-            'account_user': forms.TextInput(attrs={'placeholder': 'State', 'class': 'form-control input-md'}),
-            'account_password': forms.TextInput(attrs={'placeholder': 'State', 'class': 'form-control input-md'}),
-            'trucks': forms.Select(attrs={'class': 'form-control input-md'}),
-            'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(
-            ('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
-            'customers': forms.Select(attrs={'class': 'form-control input-md'}),
-        }
 
 class FileForm(forms.ModelForm):
     class Meta:
