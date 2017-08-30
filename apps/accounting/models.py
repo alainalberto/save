@@ -1,6 +1,7 @@
 from django.db import models
 
 from django.contrib.auth.models import User
+from django.db.models import Sum
 
 from apps.tools.models import Folder, Busines, File
 
@@ -9,6 +10,10 @@ from datetime import datetime
 
 
 # Create your models here.
+
+class Waytopay(models.Manager):
+    def get_waytopay(self,methodo, account):
+        return self.filter(waytopay=methodo, accounts_id=account).aggregate(total=Sum('value'))
 
 # Model Table accounts
 class Account(models.Model):
@@ -22,6 +27,7 @@ class Account(models.Model):
 
     def __str__(self):
         return '{}'.format(self.name)
+
 
 
 class Customer(models.Model):
@@ -98,7 +104,7 @@ class Receipt(models.Model):
     accounts = models.ForeignKey(Account,  on_delete=models.CASCADE)  # Field name made lowercase.
     business = models.ForeignKey(Busines,  on_delete=models.CASCADE)  # Field name made lowercase.
     users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
-    files = models.ForeignKey(File, on_delete=models.CASCADE)
+    files = models.ForeignKey(File, on_delete=models.CASCADE, null=True)
     serial = models.CharField(max_length=20)
     start_date = models.DateField(default=datetime.now().strftime("%Y-%m-%d"))
     end_date = models.DateField(blank=True, null=True)
@@ -149,6 +155,7 @@ class InvoicesHasItem(models.Model):
     def __str__(self):
         return '{}'.format(self.description)
 
+
 class AccountDescrip(models.Model):
     id_acd = models.AutoField(primary_key=True)
     users = models.ForeignKey(User,  on_delete=models.CASCADE)  # Field name made lowercase.
@@ -158,14 +165,20 @@ class AccountDescrip(models.Model):
     date = models.DateField(auto_now_add=True)
     value = models.DecimalField(max_digits=10, decimal_places=2)
     waytopay = models.CharField(max_length=20, blank=True, null=True)
+    objects = Waytopay()
 
     def get_document(self):
         if self.type == "Receipt":
             return Receipt.objects.get(id_rec=self.document)
-        if self.type == "Item":
-            return Item.objects.get(id_itm=self.document)
+        if self.type == "Invoice":
+            return Invoice.objects.get(id_inv=self.document)
         if self.type == "Payment":
             return Payment.objects.get(id_sal=self.document)
+
+    def get_waytopay(self):
+
+        return self.filter(waytopay='Cash').aggregate(total=Sum('value'))
+
 
 class EmployeeHasPayment(models.Model):
     id_pym = models.AutoField(primary_key=True)

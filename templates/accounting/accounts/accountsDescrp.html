@@ -25,6 +25,7 @@
                     <th>Date</th>
                     <th>Account</th>
                     <th>Business</th>
+                     <th>Payment Method</th>
                     <th>Document</th>
                     <th>Value</th>
                 </tr>
@@ -35,6 +36,7 @@
                     <td>{{ account.date}}</td>
                     <td>{{ account.accounts.name }}</td>
                     <td>{{ account.accounts.business }}</td>
+                    <td>{{ account.waytopay }}</td>
                     <td><a href="{% url 'accounting:account_document' account.id_acd %}">{{ account.type}}</a></td>
                     <td>${{ account.value}}</td>
                 </tr>

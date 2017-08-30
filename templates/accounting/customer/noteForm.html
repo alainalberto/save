@@ -1,47 +1,34 @@
 {% extends 'base.html' %}
-{% block extrastyle %}
-<script type="text/javascript">
- function openpopup(url){
-   newwindow = window.open(url,'popup',' location=1, directories=0, resizable=0, width=500,height=700,Top=20,Left=490');
-   if (window.focus) {newwindow.focus()}
-   return false;
- }
- function closepopup(){
-   window.opener.location.href=window.opener.location.href;
-   window.close();
-   return false;
- }
-</script>
-{% endblock %}
 {% block content %}
 <section>
     <div class="panel panel-primary">
-  <div class="panel-heading">
-      <div class="row">
-          <div class="col-xs-3">
-              <i class="fa fa-indent fa-4x"></i>
-          </div>
-          <div class="col-xs-9 text-left">
-              <div><h3>{{ title }}</h3></div>
-          </div>
-      </div>
-  </div>
-        <div class="panel-body">
-<form name="form_note" method="post" class="form" role="form" id="form_note" validate>{% csrf_token %}
-    <fieldset>
-        <!-- Form Name -->
-        <!-- Text input-->
-        <div class="form-group col-md-3 col-md-offset-1" >
-            <label class="label-control">Note:</label>
-            {{form.note}}
-        </div>
-        <!-- Button (Double) -->
-        <div class="form-group col-md-5 col-md-offset-4">
-            <input type="submit" class="btn btn-success" value="Save" onclick="closepopup()">
-            <a type="button" onclick="closepopup()" class="btn btn-danger">Cancel </a>
-        </div>
-    </fieldset>
-</form>
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-xs-3">
+                    <i class="fa fa-indent fa-4x"></i>
+                </div>
+                <div class="col-xs-9 text-left">
+                    <div><h3>{{ title }}</h3></div>
+                </div>
             </div>
+        </div>
+        <div class="panel-body">
+            <form name="form_note" method="post" class="form" role="form" id="form_note" validate>{% csrf_token %}
+                <fieldset>
+                    <!-- Form Name -->
+                    <!-- Text input-->
+                    <div class="form-group col-md-11 col-md-offset-1" >
+                        <label class="label-control">Note:</label>
+                        {{form.note}}
+                    </div>
+                    <!-- Button (Double) -->
+                    <div class="form-group col-md-8 col-md-offset-4">
+                        <input type="submit" class="btn btn-success" value="Save">
+                        <a type="button" onclick="history.back(-1)" class="btn btn-danger">Cancel </a>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
     </div>
+</section>
 {% endblock %}

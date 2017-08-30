@@ -11,6 +11,7 @@
    window.close();
    return false;
  }
+
 </script>
 
 {% endblock %}
@@ -97,19 +98,25 @@
                         <div class="panel-heading">
                             <ul class="nav nav-tabs " role="tablist">
                                 {% if permits %}
-                                <li id="tabPermit" role="presentation"><a href="#permit" aria-controls="permite" role="tab" data-toggle="tab">Permits</a></li>
+                                <li id="tabPermit" role="presentation"><a href="#permit" aria-controls="permite" role="tab" data-toggle="tab">Permits <span class="badge text-danger">{{ permit_pending }}</span></a></li>
                                 {% endif %}
                                 {% if equipments %}
-                                <li id="tabEquipment" role="presentation"><a href="#equipment" aria-controls="equipment" role="tab" data-toggle="tab">Equipment</a></li>
+                                <li id="tabEquipment" role="presentation"><a href="#equipment" aria-controls="equipment" role="tab" data-toggle="tab">Equipment <span class="badge text-danger">{{ equipment_pending }}</span></a></li>
                                 {% endif %}
                                 {% if insurances %}
-                                <li id="tabInsurance" role="presentation"><a href="#insurance" aria-controls="insurance" role="tab" data-toggle="tab">Insurance</a></li>
+                                <li id="tabInsurance" role="presentation"><a href="#insurance" aria-controls="insurance" role="tab" data-toggle="tab">Insurance <span class="badge text-danger">{{insurance_pending}}</span></a></li>
                                {% endif %}
                                 {% if contracts %}
-                                <li id="tabContract" role="presentation"><a href="#contract" aria-controls="contract" role="tab" data-toggle="tab">Contract</a></li>
+                                <li id="tabContract" role="presentation"><a href="#contract" aria-controls="contract" role="tab" data-toggle="tab">Contract <span class="badge text-danger">{{contract_pending}}</span></a></li>
                                {% endif %}
                                 {% if iftas %}
-                                <li id="tabIfta" role="presentation"><a href="#ifta" aria-controls="ifta" role="tab" data-toggle="tab">IFTA</a></li>
+                                <li id="tabIfta" role="presentation"><a href="#ifta" aria-controls="ifta" role="tab" data-toggle="tab">IFTA <span class="badge text-danger">{{ifta_pending}}</span></a></li>
+                                {% endif %}
+                                {% if audits %}
+                                <li id="tabAudit" role="presentation"><a href="#audit" aria-controls="audit" role="tab" data-toggle="tab">Audit <span class="badge text-danger">{{audit_pending}}</span></a></li>
+                                {% endif %}
+                                {% if drives %}
+                                <li id="tabDriver" role="presentation"><a href="#driver" aria-controls="driver" role="tab" data-toggle="tab">Driver <span class="badge text-danger">{{driver_pending}}</span></a></li>
                                 {% endif %}
                             </ul>
                         </div>
@@ -118,7 +125,7 @@
 
                                 <div role="tabpanel" class="tab-pane fade" id="permit">
                                     {% if permits %}
-                                    {% include 'services/company/companyViews.html'%}
+                                    {% include 'services/permit/permitViews.html'%}
                                     {% endif %}
                                 </div>
 
@@ -141,15 +148,33 @@
                                 </div>
 
                                 <div role="tabpanel" class="tab-pane fade" id="ifta">
-                                    {% if ifta %}
+                                    {% if iftas %}
                                          {% include 'services/ifta/iftaForm.html'%}
+                                    {% endif %}
+                                </div>
+
+                                <div role="tabpanel" class="tab-pane fade" id="audit">
+                                    {% if audits %}
+                                         {% include 'services/audit/auditForm.html'%}
+                                    {% endif %}
+                                </div>
+
+                                <div role="tabpanel" class="tab-pane fade" id="driver">
+                                    {% if drivers %}
+                                         {% include 'services/driver/driverForm.html'%}
                                     {% endif %}
                                 </div>
 
                             </div>
                         </div>
                     </div>
-                </div>
+         <div>
+             <p class="bg-success col-md-1">Finalized</p>
+             <p class="bg-warning col-md-1">Initiated</p>
+             <p class="bg-danger col-md-1">Pending</p>
+         </div>
+     </div>
+
       <div class="form-group col-md-12">
           <p class="bg-primary text-center">CUSTOMER FILES</p>
           <div class="col-md-offset-11">
@@ -192,9 +217,9 @@
       <div class="form-group col-md-12">
           <p class="bg-primary text-center">NOTES</p>
           <div class="col-md-offset-11">
-              <a type="button" class="btn btn-success" target="popup" onclick="openpopup('{% url 'accounting:note_create' pk=customer.id_cut popup=1 %}')"><span><i class="fa fa-plus"></i></span></a>
+              <a type="button" class="btn btn-success" href="{% url 'accounting:note_create' customer.id_cut %}"><span><i class="fa fa-plus"></i></span></a>
           </div>
-          <table class="table table-striped">
+          <table id="tb-note" class="table table-striped">
               <thead>
               <th>User</th>
               <th>Note</th>
@@ -207,15 +232,15 @@
                   <td>{% if n.users.first_name %} {{ n.users.first_name }} {% else %} {{ n.users }} {% endif %}</td>
                   <td>{{ n.note }}</td>
                   <td>{{ n.date }}</td>
-                   <td>
+                  <td>
                       <toolbar class="md-accent">
-                          <a data-type="info" data-trigger="focus"  data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" target="popup" onclick="openpopup('{% url 'accounting:note_edit' pk=n.id popup=1 %}')">
+                          <a data-type="info" data-trigger="focus"  data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'accounting:note_edit' n.id %}">
                               <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                               <tooltip md-direction="left"></tooltip>
                           </a>
                       </toolbar>
                       <toolbar class="md-accent">
-                          <a data-type="info"  data-animation="am-flip-x" data-trigger="focus"   type="button" class="btn btn-danger test-tooltip" target="popup" onclick="openpopup('{% url 'accounting:note_delete' pk=n.id %}')">
+                          <a data-type="info"  data-animation="am-flip-x" data-trigger="focus"   type="button" class="btn btn-danger test-tooltip" href="{% url 'accounting:note_delete' n.id %}">
                               <i class="fa fa-trash" aria-hidden="true"></i>
                               <tooltip md-direction="left"></tooltip>
                           </a>
@@ -234,4 +259,11 @@
         </div>
     </div>
 </section>
+<div class="modal fade" id="note" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+
+    </div>
+  </div>
+</div>
 {% endblock %}

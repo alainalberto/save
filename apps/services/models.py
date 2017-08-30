@@ -8,6 +8,10 @@ from apps.accounting.models import Customer, Invoice
 
 # Create your models here.
 
+class CountState(models.Manager):
+    def is_state(self,state):
+        return self.filter(state=state).count()
+
 class Permit(models.Model):
     id_com = models.AutoField(primary_key=True)
     users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
@@ -42,9 +46,11 @@ class Permit(models.Model):
     update = models.DateField(blank=True, null=True)
     deactivate = models.BooleanField(default=False)
     deactivate_date = models.DateField(blank=True, null=True)
+    objects = CountState()
 
     def __str__(self):
         return '{}'.format(self.name)
+
 
 
 class Equipment(models.Model):
@@ -67,6 +73,7 @@ class Equipment(models.Model):
     update = models.DateField(blank=True, null=True)
     deactivate = models.BooleanField(default=False)
     deactivate_date = models.DateField(blank=True, null=True)
+    objects = CountState()
 
     def __str__(self):
         return '{}'.format(self.number)
@@ -92,6 +99,7 @@ class Companie(models.Model):
     deactivate = models.BooleanField(default=False)
     deactivate_date = models.DateField(blank=True, null=True)
 
+
     def __str__(self):
         return '{}'.format(self.name)
 
@@ -107,6 +115,7 @@ class Contract(models.Model):
     state = models.CharField(max_length=20, blank=True, null=True)
     type = models.CharField(max_length=20, blank=True, null=True)
     update = models.DateField(blank=True, null=True)
+    objects= CountState()
 
     def __str__(self):
         return '{} {}'.format(self.serial, self.customer)
@@ -125,13 +134,14 @@ class Audit(models.Model):
     state = models.CharField(max_length=20, blank=True, null=True)
     results = models.CharField(max_length=255, blank=True, null=True)
     update = models.DateField(blank=True, null=True)
+    objects = CountState()
 
     def __str__(self):
         return '{}'.format(self.customers)
 
 class Driver(models.Model):
     id_drv = models.AutoField(primary_key=True)
-    customers = models.ForeignKey(Customer, on_delete=models.CASCADE)  # Field name made lowercase.
+    customers = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
     name = models.CharField(max_length=45, blank=True, null=True)
     license_numb = models.CharField(max_length=45, blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
@@ -145,7 +155,9 @@ class Driver(models.Model):
     begining_date = models.DateField(blank=True, null=True)
     deactivate = models.BooleanField(default=False)
     deactivate_date = models.DateField(blank=True, null=True)
+    state = models.CharField(max_length=20, blank=True, null=True)
     update = models.DateField(blank=True, null=True)
+    objects = CountState()
 
     def __str__(self):
         return '{}'.format(self.name)
@@ -172,6 +184,7 @@ class Insurance(models.Model):
     balance_due = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     state = models.CharField(max_length=20, blank=True, null=True)
     update = models.DateField(blank=True, null=True)
+    objects = CountState()
 
     def __str__(self):
         return '{}'.format(self.companies)
@@ -240,6 +253,7 @@ class Ifta(models.Model):
     nex_period = models.DateField(blank=True, null=True)
     state = models.CharField(max_length=20, blank=True, null=True)
     update = models.DateField(blank=True, null=True)
+    objects = CountState()
 
     def __str__(self):
         return '{}'.format(self.trucks.number)
@@ -295,6 +309,7 @@ class Application(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     state = models.CharField(max_length=20, blank=True, null=True)
     update = models.DateField(blank=True, null=True)
+    objects = CountState()
 
     def __str__(self):
         return '{}'.format(self.fullname)

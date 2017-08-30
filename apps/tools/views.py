@@ -108,11 +108,42 @@ def Message(request):
     return render(request, 'home/complement/messages.html', {'chat': c})
 
 def panel_view(request):
-    balance = []
-    income = []
-    valueInc = 0
-    valueExp = 0
+    incomes = []
+    expenses = []
+    credit = []
+    cash = []
+    check = []
     alert=[]
+    inc = Account.objects.filter(primary=False, accounts_id = 1)
+    exp = Account.objects.filter(primary=False, accounts_id=2)
+    for ac in inc:
+        if AccountDescrip.objects.filter(accounts = ac , waytopay='Cash'):
+          ad = AccountDescrip.objects.filter(accounts = ac , waytopay='Cash')
+          for a in ad:
+              cash.append(a.value)
+        if AccountDescrip.objects.filter(accounts = ac , waytopay='Check'):
+            ad = AccountDescrip.objects.filter(accounts=ac, waytopay='Check')
+            for a in ad:
+                check.append(a.value)
+        if AccountDescrip.objects.filter(accounts = ac , waytopay='Credit Card'):
+            ad = AccountDescrip.objects.filter(accounts=ac, waytopay='Credit Card')
+            for a in ad:
+                credit.append(a.value)
+        incomes.append({'account':ac, 'cash': sum(cash), 'check': sum(check), 'credit': sum(credit)})
+    for ac in exp:
+        if AccountDescrip.objects.filter(accounts = ac , waytopay='Cash'):
+          ad = AccountDescrip.objects.filter(accounts = ac , waytopay='Cash')
+          for a in ad:
+              cash.append(a.value)
+        if AccountDescrip.objects.filter(accounts = ac , waytopay='Check'):
+            ad = AccountDescrip.objects.filter(accounts=ac, waytopay='Check')
+            for a in ad:
+                check.append(a.value)
+        if AccountDescrip.objects.filter(accounts = ac , waytopay='Credit Card'):
+            ad = AccountDescrip.objects.filter(accounts=ac, waytopay='Credit Card')
+            for a in ad:
+                credit.append(a.value)
+        expenses.append({'account':ac, 'cash': sum(cash), 'check': sum(check), 'credit': sum(credit)})
     date_now = datetime.now().date()
     user_group = request.user.groups.all()
     alertUrg = Alert.objects.filter(category='Urgents')
@@ -121,23 +152,22 @@ def panel_view(request):
             if u.group.filter(name=g.name).exists():
                if u.show_date <= date_now and u.end_date >= date_now:
                   alert.append(u)
-    inc = Account.objects.get(primary=True, name='Income')
-    inc_acconts = Account.objects.filter(accounts_id_id=inc.id_acn)
-    company = Companie.objects.all()
-    ifta = Ifta.objects.all()
-    permit = Permission.objects.all()
-    plate = Plate.objects.all()
-    title = Title.objects.all()
+    permit = Permit.objects.all()
     insurance = Insurance.objects.all()
-    mtt = Maintenance.objects.all()
-    contexto = {'balance': balance,
-                'companies': company,
+    equipment = Equipment.objects.all()
+    ifta = Ifta.objects.all()
+    contract = Contract.objects.all()
+    audit = Audit.objects.all()
+    # driver = Driver.objects.all()
+    contexto = {'incomes': incomes,
+                'expenses': expenses,
                 'permits': permit,
-                'iftas': ifta,
-                'plates': plate,
-                'titles': title,
                 'insurances': insurance,
-                'mtts': mtt,
+                'equipments': equipment,
+                'contracts': contract,
+                'iftas': ifta,
+                #'drives': driver,
+                'audits': audit,
                 'alert':alert,
                 'date_now':date_now}
     return render(request, 'home/complement/panel.html', contexto)

@@ -47,8 +47,8 @@ urlpatterns = [
     url(r'^invoices/view/(?P<pk>\d+)/$', login_required(permission_required('accounting.add_invoice')(InvoiceView)), name='invoices_view'),
 
     #Customer Note
-    url(r'^customer/note/create/(?P<pk>\d+)&(?P<popup>[^/]+)/$', login_required(permission_required('accounting.add_note')(NoteCreate.as_view())), name='note_create'),
-    url(r'^customer/note/edit/(?P<pk>\d+)&(?P<popup>[^/]+)/$', login_required(permission_required('accounting.change_note')(NoteEdit.as_view())), name='note_edit'),
+    url(r'^customer/note/create/(?P<pk>\d+)/$', login_required(permission_required('accounting.add_note')(NoteCreate.as_view())), name='note_create'),
+    url(r'^customer/note/edit/(?P<pk>\d+)/$', login_required(permission_required('accounting.change_note')(NoteEdit.as_view())), name='note_edit'),
     url(r'^customer/note/(?P<pk>\d+)/$', login_required(permission_required('accounting.delete_note')(NoteDelete.as_view())), name='note_delete'),
 
 ]

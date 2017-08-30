@@ -19,12 +19,12 @@ import os
 # Create your views here.
 def PermitView(request, pk, popup):
     permit = Permit.objects.get(id_com=pk)
-    return render(request, 'services/company/companyView.html', {'permit': permit, 'is_popup':popup, 'title':'Company', 'deactivate':True})
+    return render(request, 'services/permit/permitView.html', {'permit': permit, 'is_popup':popup, 'title':'Company', 'deactivate':True})
 
 
 class PermitCreate(CreateView):
       model = Permit
-      template_name = 'services/company/companyForm.html'
+      template_name = 'services/permit/permitForm.html'
       form_class = PermitForm
 
       def get(self, request, *args, **kwargs):
@@ -105,7 +105,7 @@ class PermitCreate(CreateView):
 
 class PermitEdit(UpdateView):
     model = Permit
-    template_name = 'services/company/companyForm.html'
+    template_name = 'services/permit/permitForm.html'
     form_class = PermitForm
 
     def get_context_data(self, **kwargs):

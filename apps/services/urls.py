@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from apps.services.views import *
 
 urlpatterns = [
-    #Company
+    #Permit
     url(r'^permit/view/(?P<pk>\d+)&(?P<popup>[^/]+)/$', login_required(permission_required('services.add_permit')(PermitView)), name='permit'),
     url(r'^permit/create$', login_required(permission_required('services.add_permit')(PermitCreate.as_view())), name='permit_create'),
     url(r'^permit/create/(?P<pk>\d+)&(?P<popup>[^/]+)/$', login_required(permission_required('services.add_permit')(PermitCreate.as_view())), name='permit_create_popup'),

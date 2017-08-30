@@ -1,91 +1,181 @@
-<fieldset>
-    <div>
-        <strong>Select Coverage:</strong><br/>
-    <div class="btn-group" data-toggle="buttons">
-        <label class="btn btn-primary">
-            <input type="checkbox" id="btnliability" autocomplete="off"> Liability
-        </label>
-        <label class="btn btn-primary">
-            <input type="checkbox" id="btncargo" autocomplete="off"> Cargo
-        </label>
-        <label class="btn btn-primary">
-            <input type="checkbox" id="btnphysical" autocomplete="off"> Physical Damage
-        </label>
-    </div>
-     <br/>
-          <br/>
-    <div id="liability" style="display: none;">
-        <div class="form-group col-md-5 col-md-offset-1" >
-            <label class="label-control">{{form_insurance.liability.label}}</label>
-            {{form_insurance.liability}}
+{% extends 'base.html' %}
+{% block extrastyle %}
+<script type="text/javascript">
+ function openpopup(url){
+   newwindow = window.open(url,'popup',' location=1, directories=0, resizable=0, width=500,height=700,Top=20,Left=490');
+   if (window.focus) {newwindow.focus()}
+   return false;
+ }
+ function closepopup(){
+   window.opener.location.href=window.opener.location.href;
+   window.close();
+   return false;
+ }
+ $(document).ready( function () {
+ $(".btn_add_cut").click(function() {
+      var column = $(this).closest('tr').children()[5].textContent;
+      $('#id_customers').val(column)
+      $('#customerList').modal('hide');
+    });
+    $('#btnliability').change(function(){
+        if (this.checked) {
+            $('#liability').attr("style", "display : initial;");
+        }
+        else {
+            $('#liability').attr("style", "display : none;");
+        }
+   });
+$('#btncargo').change(function(){
+        if (this.checked) {
+            $('#cargo').attr("style", "display : initial;");
+        }
+        else {
+            $('#cargo').attr("style", "display : none;");
+        }
+   });
+$('#btnphysical').change(function(){
+        if (this.checked) {
+            $('#physical').attr("style", "display : initial;");
+        }
+        else {
+            $('#physical').attr("style", "display : none;");
+        }
+   });
+
+  });
+
+</script>
+{% endblock %}
+{% block content %}
+<section>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-xs-3">
+                    <i class="fa fa-building fa-4x"></i>
+                </div>
+                <div class="col-xs-9 text-left">
+                    <div><h3>{{ title }}</h3></div>
+                </div>
+            </div>
         </div>
-        <div class="form-group col-md-5 col-md-offset-1" >
-            <label class="label-control">{{form_insurance.policy_liability.label}}</label>
-            {{form_insurance.policy_liability}}
+        <div class="panel-body">
+            <form name="form_company" method="post" class="form" role="form" id="form_company" validate>{% csrf_token %}
+                <fieldset>
+                    {% if not is_popup %}
+                    <div class="form-group col-md-5 col-md-offset-3">
+                        <label class="label-control">Select Customer:</label>
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <button type="button" id="addcustomer" class="btn btn-success test-tooltip" data-toggle="modal" data-target="#customerList" data-type="info" data-trigger="focus" title="Customer List" data-animation="am-flip-x">
+                                    <i class="fa fa-search-plus" aria-hidden="true"></i>
+                                    <tooltip md-direction="left"></tooltip>
+                                </button>
+                            </span>
+                            {{ form.customers }}
+                            <span class="input-group-btn">
+                                <a type="button" id="newcustomer" class="btn btn-success test-tooltip" href="{% url 'accounting:customer_popup' 1 %}" target="popup" onclick="window.open('','popup',' location=1, directories=0, resizable=0, width=500,height=700,Top=20,Left=490')" data-trigger="focus" title="Add new Customer" data-animation="am-flip-x">
+                                    <i class="fa fa-plus"></i>
+                                    <tooltip md-direction="right"></tooltip>
+                                </a>
+                            </span>
+                        </div>
+
+                    </div>
+                    {% include 'accounting/customer/customerModal.html'%}
+                    {% endif %}
+                    <div>
+                        <strong>Select Coverage:</strong><br/>
+                        <div class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-primary">
+                                <input type="checkbox" id="btnliability" autocomplete="off"> Liability
+                            </label>
+                            <label class="btn btn-primary">
+                                <input type="checkbox" id="btncargo" autocomplete="off"> Cargo
+                            </label>
+                            <label class="btn btn-primary">
+                                <input type="checkbox" id="btnphysical" autocomplete="off"> Physical Damage
+                            </label>
+                        </div>
+                        <br/>
+                        <br/>
+                        <div id="liability" style="display: none;">
+                            <div class="form-group col-md-5 col-md-offset-1" >
+                                <label class="label-control">{{form_insurance.liability.label}}</label>
+                                {{form_insurance.liability}}
+                            </div>
+                            <div class="form-group col-md-5 col-md-offset-1" >
+                                <label class="label-control">{{form_insurance.policy_liability.label}}</label>
+                                {{form_insurance.policy_liability}}
+                            </div>
+                        </div>
+                        <br/>
+                        <div id="cargo" style="display: none;">
+                            <div class="form-group col-md-5 col-md-offset-1" >
+                                <label class="label-control">{{form_insurance.cargo.label}}</label>
+                                {{form_insurance.cargo}}
+                            </div>
+                            <div class="form-group col-md-5 col-md-offset-1" >
+                                <label class="label-control">{{form_insurance.cargo_policy.label}}</label>
+                                {{form_insurance.cargo_policy}}
+                            </div>
+                        </div>
+                        <br/>
+                        <div id="physical" style="display: none;">
+                            <div class="form-group col-md-5 col-md-offset-1" >
+                                <label class="label-control">{{form_insurance.physical_damage.label}}</label>
+                                {{form_insurance.physical_damage}}
+                            </div>
+                            <div class="form-group col-md-5 col-md-offset-1" >
+                                <label class="label-control">{{form_insurance.physical_damg_policy.label}}</label>
+                                {{form_insurance.physical_damg_policy}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-5 col-md-offset-1">
+                        <label class="label-control">{{form_insurance.policy_efective_date.label}}</label>
+                        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            {{form_insurance.policy_efective_date}}
+                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-5 col-md-offset-1">
+                        <label class="label-control">{{form_insurance.policy_date_exp.label}}</label>
+                        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            {{form_insurance.policy_date_exp}}
+                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                        </div>
+                        <label>
+                            <input type="checkbox" id="policy_alert" name="policy_alert" checked> Alert
+                        </label>
+                    </div>
+                    <div class="form-group col-md-3 col-md-offset-1" >
+                        <label class="label-control">{{form_insurance.sale_type.label}}</label>
+                        {{form_insurance.sale_type}}
+                    </div>
+                    <div class="form-group col-md-3 col-md-offset-1" >
+                        <label class="label-control">{{form_insurance.sale_date_fee.label}}</label>
+                        {{form_insurance.sale_date_fee}}
+                    </div>
+                    <div class="form-group col-md-3 col-md-offset-1" >
+                        <label class="label-control">{{form_insurance.down_payment.label}}</label>
+                        {{form_insurance.down_payment}}
+                    </div>
+                    <div class="form-group col-md-3 col-md-offset-1" >
+                        <label class="label-control">{{form_insurance.comision.label}}</label>
+                        {{form_insurance.comision}}
+                    </div>
+                    <div class="form-group col-md-3 col-md-offset-1" >
+                        <label class="label-control">{{form_insurance.total.label}}</label>
+                        {{form_insurance.total}}
+                    </div>
+                    <div class="form-group col-md-3 col-md-offset-1" >
+                        <label class="label-control">{{form_insurance.paid.label}}</label>
+                        {{form_insurance.paid}}
+                    </div>
+                </fieldset>
+            </form>
         </div>
     </div>
-        <br/>
-    <div id="cargo" style="display: none;">
-        <div class="form-group col-md-5 col-md-offset-1" >
-            <label class="label-control">{{form_insurance.cargo.label}}</label>
-            {{form_insurance.cargo}}
-        </div>
-        <div class="form-group col-md-5 col-md-offset-1" >
-            <label class="label-control">{{form_insurance.cargo_policy.label}}</label>
-            {{form_insurance.cargo_policy}}
-        </div>
-    </div>
-        <br/>
-    <div id="physical" style="display: none;">
-        <div class="form-group col-md-5 col-md-offset-1" >
-            <label class="label-control">{{form_insurance.physical_damage.label}}</label>
-            {{form_insurance.physical_damage}}
-        </div>
-        <div class="form-group col-md-5 col-md-offset-1" >
-            <label class="label-control">{{form_insurance.physical_damg_policy.label}}</label>
-            {{form_insurance.physical_damg_policy}}
-        </div>
-    </div>
-        </div>
-    <div class="form-group col-md-5 col-md-offset-1">
-        <label class="label-control">{{form_insurance.policy_efective_date.label}}</label>
-        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-            {{form_insurance.policy_efective_date}}
-            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
-        </div>
-    </div>
-    <div class="form-group col-md-5 col-md-offset-1">
-        <label class="label-control">{{form_insurance.policy_date_exp.label}}</label>
-        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-            {{form_insurance.policy_date_exp}}
-            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
-        </div>
-        <label>
-           <input type="checkbox" id="policy_alert" name="policy_alert" checked> Alert
-        </label>
-    </div>
-    <div class="form-group col-md-3 col-md-offset-1" >
-        <label class="label-control">{{form_insurance.sale_type.label}}</label>
-        {{form_insurance.sale_type}}
-    </div>
-    <div class="form-group col-md-3 col-md-offset-1" >
-        <label class="label-control">{{form_insurance.sale_date_fee.label}}</label>
-        {{form_insurance.sale_date_fee}}
-    </div>
-    <div class="form-group col-md-3 col-md-offset-1" >
-        <label class="label-control">{{form_insurance.down_payment.label}}</label>
-        {{form_insurance.down_payment}}
-    </div>
-    <div class="form-group col-md-3 col-md-offset-1" >
-        <label class="label-control">{{form_insurance.comision.label}}</label>
-        {{form_insurance.comision}}
-    </div>
-    <div class="form-group col-md-3 col-md-offset-1" >
-        <label class="label-control">{{form_insurance.total.label}}</label>
-        {{form_insurance.total}}
-    </div>
-    <div class="form-group col-md-3 col-md-offset-1" >
-        <label class="label-control">{{form_insurance.paid.label}}</label>
-        {{form_insurance.paid}}
-    </div>
-</fieldset>
+</section>
+{% endblock %}

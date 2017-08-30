@@ -13,7 +13,7 @@
                     </thead>
                     <tbody>
                     {% for e in equipments %}
-                    <tr>
+                    <tr {% if e.state == "Initiated" %} class="warning" {% endif %}  {% if e.state == "Pending" %} class="danger" {% endif %} {% if e.state == "Finalized" %} class="success" {% endif %}>
                         <td><a onclick="openpopup('{% url 'services:equipment' pk=e.id_tru popup=1%}')">{{e.type}}</a></td>
                         <td>{{e.serial}}</td>
                         <td>{{e.model}}</td>

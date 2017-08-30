@@ -95,6 +95,13 @@ def CustomerView(request, pk):
            #'drives': driver,
            'audits': audit,
            'notes': note,
+           'permit_pending': Permit.objects.is_state('Pending'),
+           'equipment_pending': Equipment.objects.is_state('Pending'),
+           'insurance_pending': Insurance.objects.is_state('Pending'),
+           'ifta_pending': Ifta.objects.is_state('Pending'),
+           'contract_pending': Contract.objects.is_state('Pending'),
+           'audit_pending': Audit.objects.is_state('Pending'),
+           'diver_pending': Driver.objects.is_state('Pending'),
            'title': 'Customer Folder'
        }
        return render(request, 'accounting/customer/customerView.html', context)
@@ -828,67 +835,52 @@ class NoteCreate(CreateView):
     model = Note
     form_class = NoteForm
     template_name = 'accounting/customer/noteForm.html'
-    success_url = reverse_lazy('accounting:customers')
-
-
-    def get(self, request, *args, **kwargs):
-        is_popup = kwargs['popup']
-        form = self.form_class(initial=self.initial)
-        return render(request, self.template_name, {'form': form, 'is_popup': is_popup, 'title': 'Create new Note'})
 
     def post(self, request, *args, **kwargs):
-        user = request.user
         id = kwargs['pk']
-        is_popup = kwargs['popup']
-        customer = Customer.objects.get(id_cut=id)
+        customer  = Customer.objects.get(id_cut=id)
         form = self.form_class(request.POST)
         if form.is_valid():
-             note = form.save(commit=False)
-             note.customers = customer
-             note.users = user
-             note.save()
-             accion_user(note, ADDITION, request.user)
-             messages.success(request, 'Added your note to customer')
-             return HttpResponseRedirect(self.success_url)
+            note = form.save(commit=False)
+            note.users = request.user
+            note.customers = customer
+            note.save()
+            accion_user(note, CHANGE, request.user)
+            messages.success(request, 'Add your note to customer')
+            return HttpResponseRedirect('/accounting/customers/view/' + str(customer.id_cut))
         else:
             for er in form.errors:
                 messages.error(request, "ERROR: " + er)
-            return render(request, self.template_name, {'form': form, 'is_popup': is_popup, 'title': 'Create new Note'})
+            return render(request, self.template_name, {'form': form, 'title': 'Create new Note'})
 
 class NoteEdit(UpdateView):
     model = Note
     form_class = NoteForm
     template_name = 'accounting/customer/noteForm.html'
-    success_url = reverse_lazy('accounting:customers')
+
 
     def get_context_data(self, **kwargs):
         context = super(NoteEdit, self).get_context_data(**kwargs)
         id = self.kwargs.get('pk', 0)
-        if self.kwargs.__contains__('popup'):
-            popup = self.kwargs.get('popup')
-        else:
-            popup = 0
         if 'form' not in context:
             context['form'] = self.form_class
         context['id'] = id
-        context['is_popup'] = popup
         context['title'] = 'Note Edit'
         return context
 
     def post(self, request, *args, **kwargs):
         id = kwargs['pk']
-        is_popup = kwargs['popup']
         note = self.model.objects.get(id=id)
         form = self.form_class(request.POST, instance=note)
         if form.is_valid():
              note = form.save()
              accion_user(note, CHANGE, request.user)
              messages.success(request, 'Update your note to customer')
-             return HttpResponseRedirect(self.success_url)
+             return HttpResponseRedirect('/accounting/customers/view/' + str(note.customers_id))
         else:
             for er in form.errors:
                 messages.error(request, "ERROR: " + er)
-            return render(request, self.template_name, {'form': form, 'is_popup': is_popup, 'title': 'Create new Note'})
+            return render(request, self.template_name, {'form': form, 'title': 'Edit Note'})
 
 class NoteDelete(DeleteView):
     model = Note
@@ -902,4 +894,4 @@ class NoteDelete(DeleteView):
         accion_user(note, DELETION, request.user)
         note.delete()
         messages.success(request, "Receipt delete with an extension")
-        return HttpResponseRedirect(self.success_url)
+        return HttpResponseRedirect('/accounting/customers/view/' + str(note.customers_id))
