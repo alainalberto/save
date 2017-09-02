@@ -5,7 +5,7 @@
     <div class="panel-body">
         <div class="table-responsive">
             <p class="bg-primary text-center">INCOMES</p>
-            <table class="table data-table table-bordered table-hover table-striped">
+            <table id="tbinc" class="table data-table table-bordered table-hover table-striped">
                 <thead>
                 <tr>
                     <th>Account</th>
@@ -19,23 +19,23 @@
                 {% for b in incomes %}
                 <tr>
                     <td>{{b.account}}</td>
-                    <td>$ {{b.cash|default:'0'}}</td>
+                    <td>$ {{b.cash.total|default:'0'}}</td>
                     <td>$ {{b.check.total|default:'0'}}</td>
                     <td>$ {{b.credit.total|default:'0'}}</td>
-                    <td>$ 0</td>
+                    <td>$ <samp> {{ b.total }}</samp></td>
                 </tr>
                 {% endfor %}
                 </tbody>
                 <tfoot>
                 <td><strong> </strong></td>
-                <td><strong>$ 0</strong></td>
-                <td><strong>$ 0</strong></td>
-                <td><strong>$ 0</strong></td>
-                <td><strong>$ 0</strong></td>
+                <td><strong>$ <samp> {{ cash_i_total.total }}</samp></strong></td>
+                <td><strong>$ <samp> {{ check_i_total.total }}</samp></strong></td>
+                <td><strong>$ <samp> {{ credit_i_total.total }}</samp></strong></td>
+                <td><strong>$ <samp> {{ income_total.total }}</samp></strong></td>
                 </tfoot>
             </table>
             <p class="bg-primary text-center">EXPENSES</p>
-            <table class="table data-table table-bordered table-hover table-striped">
+            <table id="tbexp" class="table data-table table-bordered table-hover table-striped">
                 <thead>
                 <tr>
                     <th>Account</th>
@@ -52,16 +52,16 @@
                     <td>$ {{b.cash.total|default:'0'}}</td>
                     <td>$ {{b.check.total|default:'0'}}</td>
                     <td>$ {{b.credit.total|default:'0'}}</td>
-                    <td>$ 0</td>
+                    <td>$ <samp> {{ b.total }}</samp></td>
                 </tr>
                 {% endfor %}
                 </tbody>
                 <tfoot>
                 <td><strong> </strong></td>
-                <td><strong>$ 0</strong></td>
-                <td><strong>$ 0</strong></td>
-                <td><strong>$ 0</strong></td>
-                <td><strong>$ 0</strong></td>
+                <td><strong>$ <samp> {{ cash_e_total.total }}</samp></strong></td>
+                <td><strong>$ <samp> {{ check_e_total.total }}</samp></strong></td>
+                <td><strong>$ <samp> {{ credit_e_total.total }}</samp></strong></td>
+                <td><strong>$ <samp> {{ expenses_total.total }}</samp></strong></td>
                 </tfoot>
             </table>
         </div>

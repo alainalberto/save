@@ -110,40 +110,50 @@ def Message(request):
 def panel_view(request):
     incomes = []
     expenses = []
-    credit = []
-    cash = []
-    check = []
+    cash_i_total = {'total': 0}
+    credit_i_total = {'total': 0}
+    check_i__total = {'total': 0}
+    cash_e_total = {'total': 0}
+    credit_e_total = {'total': 0}
+    check_e__total = {'total': 0}
+    income_total = {'total': 0}
+    expenses_total = {'total': 0}
+
     alert=[]
     inc = Account.objects.filter(primary=False, accounts_id = 1)
     exp = Account.objects.filter(primary=False, accounts_id=2)
-    for ac in inc:
-        if AccountDescrip.objects.filter(accounts = ac , waytopay='Cash'):
-          ad = AccountDescrip.objects.filter(accounts = ac , waytopay='Cash')
-          for a in ad:
-              cash.append(a.value)
-        if AccountDescrip.objects.filter(accounts = ac , waytopay='Check'):
-            ad = AccountDescrip.objects.filter(accounts=ac, waytopay='Check')
-            for a in ad:
-                check.append(a.value)
-        if AccountDescrip.objects.filter(accounts = ac , waytopay='Credit Card'):
-            ad = AccountDescrip.objects.filter(accounts=ac, waytopay='Credit Card')
-            for a in ad:
-                credit.append(a.value)
-        incomes.append({'account':ac, 'cash': sum(cash), 'check': sum(check), 'credit': sum(credit)})
-    for ac in exp:
-        if AccountDescrip.objects.filter(accounts = ac , waytopay='Cash'):
-          ad = AccountDescrip.objects.filter(accounts = ac , waytopay='Cash')
-          for a in ad:
-              cash.append(a.value)
-        if AccountDescrip.objects.filter(accounts = ac , waytopay='Check'):
-            ad = AccountDescrip.objects.filter(accounts=ac, waytopay='Check')
-            for a in ad:
-                check.append(a.value)
-        if AccountDescrip.objects.filter(accounts = ac , waytopay='Credit Card'):
-            ad = AccountDescrip.objects.filter(accounts=ac, waytopay='Credit Card')
-            for a in ad:
-                credit.append(a.value)
-        expenses.append({'account':ac, 'cash': sum(cash), 'check': sum(check), 'credit': sum(credit)})
+    for i in inc:
+        cash_i = {'total': 0}
+        credit_i = {'total': 0}
+        check_i = {'total': 0}
+        if AccountDescrip.objects.filter(accounts_id = i.id_acn , waytopay='Cash'):
+            cash_i = AccountDescrip.objects.get_waytopay('Cash', i.id_acn)
+        if AccountDescrip.objects.filter(accounts_id = i.id_acn , waytopay='Check'):
+            check_i = AccountDescrip.objects.get_waytopay('Check', i.id_acn)
+        if AccountDescrip.objects.filter(accounts_id = i.id_acn , waytopay='Credit Card'):
+            credit_i = AccountDescrip.objects.get_waytopay('Credit Card', i.id_acn)
+        total_i = (cash_i['total']) + (check_i['total']) + (credit_i['total'])
+        incomes.append({'account':i, 'cash': cash_i, 'check': check_i, 'credit': credit_i, 'total': total_i})
+        cash_i_total['total'] += cash_i['total']
+        credit_i_total['total'] += credit_i['total']
+        check_i__total['total'] += check_i['total']
+        income_total['total'] = (cash_i_total['total']) + (credit_i_total['total']) + (check_i__total['total'])
+    for e in exp:
+        credit_e = {'total': 0}
+        cash_e = {'total': 0}
+        check_e = {'total': 0}
+        if AccountDescrip.objects.filter(accounts_id = e.id_acn , waytopay='Cash'):
+            cash_e = AccountDescrip.objects.get_waytopay('Cash', e.id_acn)
+        if AccountDescrip.objects.filter(accounts_id = e.id_acn , waytopay='Check'):
+            check_e = AccountDescrip.objects.get_waytopay('Check', e.id_acn)
+        if AccountDescrip.objects.filter(accounts_id = e.id_acn , waytopay='Credit Card'):
+            credit_e = AccountDescrip.objects.get_waytopay('Credit Card', e.id_acn)
+        total_e = (cash_e['total']) + (check_e['total']) + (credit_e['total'])
+        expenses.append({'account':e, 'cash': cash_e, 'check': check_e, 'credit': credit_e, 'total': total_e})
+        cash_e_total['total'] += cash_e['total']
+        credit_e_total['total'] += credit_e['total']
+        check_e__total['total'] += check_e['total']
+        expenses_total['total'] = (cash_e_total['total']) + (credit_e_total['total']) + (check_e__total['total'])
     date_now = datetime.now().date()
     user_group = request.user.groups.all()
     alertUrg = Alert.objects.filter(category='Urgents')
@@ -161,6 +171,14 @@ def panel_view(request):
     # driver = Driver.objects.all()
     contexto = {'incomes': incomes,
                 'expenses': expenses,
+                'cash_i_total': cash_i_total,
+                'credit_i_total': credit_i_total,
+                'check_i_total': check_i__total,
+                'cash_e_total': cash_e_total,
+                'credit_e_total': credit_e_total,
+                'check_e_total': check_e__total,
+                'expenses_total':expenses_total,
+                'income_total': income_total,
                 'permits': permit,
                 'insurances': insurance,
                 'equipments': equipment,
