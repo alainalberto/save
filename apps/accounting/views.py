@@ -95,13 +95,13 @@ def CustomerView(request, pk):
            #'drives': driver,
            'audits': audit,
            'notes': note,
-           'permit_pending': Permit.objects.is_state('Pending'),
-           'equipment_pending': Equipment.objects.is_state('Pending'),
-           'insurance_pending': Insurance.objects.is_state('Pending'),
-           'ifta_pending': Ifta.objects.is_state('Pending'),
-           'contract_pending': Contract.objects.is_state('Pending'),
-           'audit_pending': Audit.objects.is_state('Pending'),
-           'diver_pending': Driver.objects.is_state('Pending'),
+           'permit_pending': Permit.objects.is_state('Pending', customer),
+           'equipment_pending': Equipment.objects.is_state('Pending', customer),
+           'insurance_pending': Insurance.objects.is_state('Pending', customer),
+           'ifta_pending': Ifta.objects.is_state('Pending', customer),
+           'contract_pending': Contract.objects.is_state('Pending', customer),
+           'audit_pending': Audit.objects.is_state('Pending', customer),
+           'diver_pending': Driver.objects.is_state('Pending', customer),
            'title': 'Customer Folder'
        }
        return render(request, 'accounting/customer/customerView.html', context)

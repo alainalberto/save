@@ -9,8 +9,8 @@ from apps.accounting.models import Customer, Invoice
 # Create your models here.
 
 class CountState(models.Manager):
-    def is_state(self,state):
-        return self.filter(state=state).count()
+    def is_state(self,state, customer):
+        return self.filter(state=state, customers = customer ).count()
 
 class Permit(models.Model):
     id_com = models.AutoField(primary_key=True)

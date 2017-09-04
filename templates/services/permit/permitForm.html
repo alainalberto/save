@@ -19,6 +19,15 @@
     });
   });
 
+  $(.ckeck).change(function () {
+    if ($(this).checked) {
+      $(this).value = True;
+    }
+    else{
+       $(this).value = False;
+    }
+  });
+
 </script>
 {% endblock %}
 {% block content %}
@@ -135,7 +144,7 @@
                             <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
                         </div>
                         <label>
-                            <input type="checkbox" id="txdmv_alert" name="txdmv_alert" checked> Alert
+                            <input type="checkbox" aria-pressed="false" aria id="txdmv_alert" name="txdmv_alert" checked> Alert
                         </label>
                     </div>
                     <div class="form-group col-md-4 col-md-offset-1" >
@@ -168,7 +177,7 @@
                             <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
                         </div>
                         <label>
-                            <input type="checkbox" id="ucr_alert" name="ucr_alert" checked> Alert
+                            <input type="checkbox" id="ucr_alert" name="ucr_alert" class="check" checked> Alert
                         </label>
                     </div>
                     <div class="form-group col-md-2 col-md-offset-1" >
@@ -177,6 +186,10 @@
                     </div>
                     <div class="form-group col-md-2 col-md-offset-1" >
                         <label class="label-control">Is Deactivate:</label>
+                        {{form.deactivate}}
+                    </div>
+                     <div class="form-group col-md-2 col-md-offset-1" >
+                        <label class="label-control">Is New Company:</label>
                         {{form.deactivate}}
                     </div>
                     <div class="form-group col-md-2 col-md-offset-1" >
