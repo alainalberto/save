@@ -40,7 +40,7 @@ class LoadsForm(forms.ModelForm):
             'driver': forms.Select(attrs={'class': 'form-control input-md'}),
             'value': forms.NumberInput(attrs={'placeholder': 'Value', 'class': 'form-control input-md'}),
             'number': forms.TextInput(attrs={'placeholder': 'Number', 'class': 'form-control input-md', 'required': 'true'}),
-            'paid': forms.CheckboxInput(attrs={'class': 'checkbox'}),
+            'paid': forms.CheckboxInput(attrs={'data-off-color':"danger", 'class':"switch", 'data-size':"mini", 'data-on-text':"YES", 'data-off-text': "NO"}),
             'note': forms.Textarea(attrs={'class': 'form-control'}),
 
         }
@@ -96,7 +96,7 @@ class DriversForm(forms.ModelForm):
             'mbr_date': forms.DateTimeInput(attrs={'class': 'form-control input-md'}),
             'mbr_date_exp': forms.DateTimeInput(attrs={'class': 'form-control input-md'}),
             'begining_date': forms.DateTimeInput(attrs={'class': 'form-control input-md'}),
-            'deactivate': forms.CheckboxInput(attrs={'class': 'checkbox'}),
+            'deactivate': forms.CheckboxInput(attrs={'data-off-color':"danger", 'class':"switch", 'data-size':"mini", 'data-on-text':"YES", 'data-off-text': "NO"}),
         }
 
 
@@ -119,7 +119,7 @@ class DispatchForm(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Name', 'class': 'form-control input-md upper', 'required': 'true'}),
             'address': forms.TextInput(attrs={'placeholder': 'Address', 'class': 'form-control input-md upper'}),
-            'deactivate': forms.CheckboxInput(attrs={'class': 'checkbox'}),
+            'deactivate': forms.CheckboxInput(attrs={'data-off-color':"danger", 'class':"switch", 'data-size':"mini", 'data-on-text':"YES", 'data-off-text': "NO"}),
             'date_deactivated': forms.DateTimeInput(attrs={'class': 'form-control input-md'}),
 
         }

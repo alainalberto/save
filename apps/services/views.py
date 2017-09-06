@@ -141,7 +141,7 @@ class PermitEdit(UpdateView):
                     permit.deactivate_date = None
                 permit.save()
                 customer = Customer.objects.filter(id_cut=permit.customers_id).update(company_name=permit.name + ' ' + permit.legal_status, ein=permit.ein)
-                if request.POST['txdmv_alert'] and len(request.POST['txdmv_date_exp']) != 0:
+                if request.POST.get('txdmv_alert', False) and len(request.POST['txdmv_date_exp']) != 0:
                    dateExp = permit.txdmv_date_exp
                    dateShow = dateExp - timedelta(days=30)
                    alert = Alert.objects.filter(description = "Expires the TXDMV Permit of the customer " + str(customer), category="Urgents")
@@ -165,7 +165,7 @@ class PermitEdit(UpdateView):
                         category="Urgents")
                     if alert:
                         alert.delete()
-                if request.POST['ucr_alert'] and len(request.POST['ucr_alert']) != 0:
+                if request.POST.get('ucr_alert', False) and len(request.POST['ucr_date_exp']) != 0:
                    dateExp = permit.ucr_date_exp
                    dateShow = dateExp - timedelta(days=30)
                    alert = Alert.objects.filter(description = "Expires the UCR Permit of the customer " + str(customer), category="Urgents")
@@ -189,7 +189,7 @@ class PermitEdit(UpdateView):
                         alert.delete()
                 accion_user(permit, CHANGE, request.user)
                 messages.success(request, 'The Permit was saved successfully')
-                return HttpResponseRedirect('/accounting/customers/view/' + str(customer))
+                return HttpResponseRedirect('/accounting/customers/view/' + str(permit.customers_id))
         else:
             for er in form.errors:
                 messages.error(request, "ERROR: " + er)
@@ -483,7 +483,7 @@ class EquipmentCreate(CreateView):
                 else:
                     equipment.deactivate_date = None
                 equipment.save()
-                if request.POST['plate_alert'] and len(request.POST['plate_alert']) != 0:
+                if request.POST.get('plate_alert', False)  and len(request.POST['plate_date_exp']) != 0:
                     group_admin = Group.objects.get(name='System Administrator')
                     group_manag = Group.objects.get(name='System Manager')
                     group_offic = Group.objects.get(name='Office Specialist')
@@ -497,7 +497,7 @@ class EquipmentCreate(CreateView):
                         end_date=dateExp.strftime("%Y-%m-%d"),
                         users=request.user)
                     alert.group.add(group_admin, group_manag, group_offic)
-                if request.POST['reg_alert'] and len(request.POST['reg_alert']) != 0:
+                if request.POST.get('reg_alert', False) and len(request.POST['title_date_exp_reg']) != 0:
                     group_admin = Group.objects.get(name='System Administrator')
                     group_manag = Group.objects.get(name='System Manager')
                     group_offic = Group.objects.get(name='Office Specialist')
@@ -511,7 +511,7 @@ class EquipmentCreate(CreateView):
                         end_date=dateExp.strftime("%Y-%m-%d"),
                         users=request.user)
                     alert.group.add(group_admin, group_manag, group_offic)
-                if request.POST['insp_alert'] and len(request.POST['insp_alert']) != 0:
+                if request.POST.get('insp_alert', False) and len(request.POST['title_date_exp_insp']) != 0:
                     group_admin = Group.objects.get(name='System Administrator')
                     group_manag = Group.objects.get(name='System Manager')
                     group_offic = Group.objects.get(name='Office Specialist')
@@ -572,7 +572,7 @@ class EquipmentEdit(UpdateView):
             else:
                 equipment.deactivate_date = None
             equipment.save()
-            if request.POST['plate_alert'] and len(request.POST['plate_alert']) != 0:
+            if request.POST.get('plate_alert', False)  and len(request.POST['plate_date_exp']) != 0:
                 dateExp = equipment.plate_date_exp
                 dateShow = dateExp - timedelta(days=30)
                 alert = Alert.objects.filter(
@@ -600,7 +600,7 @@ class EquipmentEdit(UpdateView):
                         equipment.plate_account_number) + " of the " + str(equipment.customers))
                 if alert:
                     alert.delete()
-            if request.POST['reg_alert'] and len(request.POST['reg_alert']) != 0:
+            if request.POST.get('reg_alert', False) and len(request.POST['title_date_exp_reg']) != 0:
                 dateExp = equipment.title_date_exp_reg
                 dateShow = dateExp - timedelta(days=30)
                 alert = Alert.objects.filter(
@@ -628,7 +628,7 @@ class EquipmentEdit(UpdateView):
                         equipment.plate_account_number) + " of the " + str(equipment.customers))
                 if alert:
                     alert.delete()
-            if request.POST['insp_alert'] and len(request.POST['insp_alert']) != 0:
+            if request.POST.get('insp_alert', False) and len(request.POST['title_date_exp_insp']) != 0:
                 dateExp = equipment.title_date_exp_insp
                 dateShow = dateExp - timedelta(days=30)
                 alert = Alert.objects.filter(

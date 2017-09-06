@@ -4,6 +4,10 @@ $(document).ready( function () {
       $(this).val($(this).val().toUpperCase());
    });
 
+// Switch
+$(".switch").bootstrapSwitch();
+$(".switch-min").bootstrapSwitch();
+
 //Data tables
    $(".data-table").DataTable();
 

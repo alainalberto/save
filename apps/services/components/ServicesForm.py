@@ -41,7 +41,7 @@ class PermitForm(forms.ModelForm):
         ]
 
         widgets = {
-            'is_new': forms.CheckboxInput(attrs={'class': 'checkbox'}),
+            'is_new': forms.CheckboxInput(attrs={'data-off-color':"danger", 'class':"switch", 'data-size':"mini", 'data-on-text':"YES", 'data-off-text': "NO"}),
             'legal_status': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('DBA', 'DBA'), ('LLC', 'LLC'), ('CORP', 'CORP'))),
             'gusiness_type': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('Flatbed', 'Flatbed'), ('Refrigerated', 'Refrigerated'), ('Dry Van', 'Dry Van'), ('Sand Gravel', 'Sand Gravel'), ('Other', 'Other'))),
             'name': forms.TextInput(attrs={'placeholder': 'Company Name', 'class': 'form-control input-md upper'}),
@@ -66,7 +66,7 @@ class PermitForm(forms.ModelForm):
             'boc3_date': forms.DateInput(attrs={'placeholder': 'BOC3 Date', 'class': 'form-control input-md'}),
             'ucr': forms.NumberInput(attrs={'placeholder': 'USDOT Number', 'class': 'form-control input-md'}),
             'ucr_date_exp': forms.DateInput(attrs={'placeholder': 'BOC3 Date', 'class': 'form-control input-md'}),
-            'deactivate': forms.CheckboxInput(attrs={'class': 'checkbox'}),
+            'deactivate': forms.CheckboxInput(attrs={'data-off-color':"danger", 'class':"switch", 'data-size':"mini", 'data-on-text':"YES", 'data-off-text': "NO"}),
             'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
             'customers': forms.Select(attrs={'class': 'form-control input-md'}),
         }
@@ -126,7 +126,7 @@ class InsuranceForm(forms.ModelForm):
             'sale_date_fee': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
             'total': forms.NumberInput(attrs={'placeholder': 'value', 'class': 'form-control input-md'}),
             'comision': forms.NumberInput(attrs={'placeholder': 'value', 'class': 'form-control input-md'}),
-            'paid': forms.CheckboxInput(attrs={'class': 'checkbox'}),
+            'paid': forms.CheckboxInput(attrs={'data-off-color':"danger", 'class':"switch", 'data-size':"mini", 'data-on-text':"YES", 'data-off-text': "NO"}),
             'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(
             ('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
             'customers': forms.Select(attrs={'class': 'form-control input-md'}),
@@ -206,7 +206,7 @@ class AuditForm(forms.ModelForm):
             'contracts': forms.Select(attrs={'class': 'form-control input-md'}),
             'type': forms.Select(attrs={'class': 'form-control input-md'}),
             'auditor_name': forms.TextInput(attrs={'placeholder': 'Auditor Name', 'class': 'form-control input-md'}),
-            'action_plan': forms.CheckboxInput(attrs={'class': 'checkbox'}),
+            'action_plan': forms.CheckboxInput(attrs={'data-off-color':"danger", 'class':"switch", 'data-size':"mini", 'data-on-text':"YES", 'data-off-text': "NO"}),
             'amount_paid': forms.NumberInput(attrs={'placeholder': 'value', 'class': 'form-control input-md'}),
             'date': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
             'results': forms.Textarea(attrs={'placeholder': 'State', 'class': 'form-control input-md'}),
@@ -255,7 +255,7 @@ class EquipmentForm(forms.ModelForm):
             'title_date_exp_reg': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
             'title_date_insp': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
             'title_date_exp_insp': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
-            'deactivate': forms.CheckboxInput(attrs={'class': 'checkbox'}),
+            'deactivate': forms.CheckboxInput(attrs={'data-off-color':"danger", 'class':"switch", 'data-size':"mini", 'data-on-text':"YES", 'data-off-text': "NO"}),
         }
 
 

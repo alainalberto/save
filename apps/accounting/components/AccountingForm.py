@@ -66,7 +66,7 @@ class CustomerForm(forms.ModelForm):
             'phone': forms.NumberInput(attrs={'placeholder': 'Telepone Number', 'class': 'form-control input-md'}),
             'email': forms.EmailInput(attrs={'placeholder': 'Email', 'class': 'form-control input-md '}),
             'business': forms.Select(attrs={'class': 'form-control input-md'}),
-            'deactivated': forms.CheckboxInput(attrs={'class': 'checkbox'}),
+            'deactivated': forms.CheckboxInput(attrs={'data-off-color':"danger", 'class':"switch", 'data-size':"mini", 'data-on-text':"YES", 'data-off-text': "NO"}),
             'usdot': forms.NumberInput(attrs={'placeholder': 'USDOT Number', 'class': 'form-control input-md'}),
             'mc': forms.NumberInput(attrs={'placeholder': 'MC Number', 'class': 'form-control input-md'}),
             'txdmv': forms.TextInput(attrs={'placeholder': 'TXDMV Number', 'class': 'form-control input-md upper'}),
@@ -117,7 +117,7 @@ class EmployeesForm(forms.ModelForm):
             'type_salary': forms.Select(attrs={'class': 'form-control input-md'},choices=(('pervent','Commission'),('salary','Salary'))),
             'value': forms.NumberInput(attrs={'placeholder': 'Value', 'class': 'form-control input-md'}),
             'position': forms.TextInput(attrs={'placeholder': 'Position', 'class': 'form-control input-md upper'}),
-            'deactivated': forms.CheckboxInput(attrs={'class': 'checkbox'}),
+            'deactivated': forms.CheckboxInput(attrs={'data-off-color':"danger", 'class':"switch", 'data-size':"mini", 'data-on-text':"YES", 'data-off-text': "NO"}),
         }
 
 
@@ -153,7 +153,7 @@ class InvoicesForm(forms.ModelForm):
                 'business': forms.Select(attrs={'class': 'form-control input-md'}),
                 'start_date': forms.DateInput(attrs={'placeholder': 'Start Date', 'class': 'form-control input-md'}),
                 'waytopay': forms.Select(attrs={'class': 'form-control input-md'},choices=(('Cash','Cash'),('Check','Check'),('Credit Card','Credit Card'))),
-                'paid': forms.CheckboxInput(attrs={'class': 'checkbox'}),
+                'paid': forms.CheckboxInput(attrs={'data-off-color':"danger", 'class':"switch", 'data-size':"mini", 'data-on-text':"YES", 'data-off-text': "NO"}),
                 'prefix': forms.TextInput(attrs={'placeholder': 'Prefix', 'class': 'form-control input-md upper'}),
                 'end_date': forms.DateInput(attrs={'placeholder': 'End Date', 'class': 'form-control input-md'}),
                 'discount': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control discount'}),
