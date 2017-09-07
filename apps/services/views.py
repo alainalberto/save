@@ -64,7 +64,9 @@ class PermitCreate(CreateView):
                   else:
                       permit.deactivate_date = None
                   permit.save()
-                  customer.update(company_name=permit.name+' '+permit.legal_status, ein=permit.ein)
+                  customer.company_name = permit.name+' '+permit.legal_status
+                  customer.ein = permit.ein
+                  customer.save()
                   if request.POST['txdmv_alert'] and len(request.POST['txdmv_date_exp']) != 0:
                         group_admin = Group.objects.get(name='System Administrator')
                         group_manag = Group.objects.get(name= 'System Manager')
@@ -79,7 +81,7 @@ class PermitCreate(CreateView):
                             end_date = dateExp.strftime("%Y-%m-%d"),
                             users = request.user)
                         alert.group.add(group_admin, group_manag, group_offic)
-                  if request.POST['ucr_alert'] and len(request.POST['ucr_alert']) != 0:
+                  if request.POST['ucr_alert'] and len(request.POST['ucr_date_exp']) != 0:
                         group_admin = Group.objects.get(name='System Administrator')
                         group_manag = Group.objects.get(name='System Manager')
                         group_offic = Group.objects.get(name='Office Specialist')
@@ -140,7 +142,10 @@ class PermitEdit(UpdateView):
                 else:
                     permit.deactivate_date = None
                 permit.save()
-                customer = Customer.objects.filter(id_cut=permit.customers_id).update(company_name=permit.name + ' ' + permit.legal_status, ein=permit.ein)
+                customer = Customer.objects.get(id_cut=permit.customers_id)
+                customer.company_name = permit.name + ' ' + permit.legal_status
+                customer.ein = permit.ein
+                customer.save()
                 if request.POST.get('txdmv_alert', False) and len(request.POST['txdmv_date_exp']) != 0:
                    dateExp = permit.txdmv_date_exp
                    dateShow = dateExp - timedelta(days=30)
@@ -491,7 +496,7 @@ class EquipmentCreate(CreateView):
                     dateShow = dateExp - timedelta(days=30)
                     alert = Alert.objects.create(
                         category="Urgents",
-                        description="Expires of the Plate Equipment Number "+str(equipment.plate_account_number) +" of the "+ str(customer),
+                        description="Expires of the Plate Equipment Number "+str(equipment.plate_account_number) +" of the customer "+ str(customer),
                         create_date=datetime.now().strftime("%Y-%m-%d"),
                         show_date=dateShow.strftime("%Y-%m-%d"),
                         end_date=dateExp.strftime("%Y-%m-%d"),
@@ -505,7 +510,7 @@ class EquipmentCreate(CreateView):
                     dateShow = dateExp - timedelta(days=30)
                     alert = Alert.objects.create(
                         category="Urgents",
-                        description="Expires of the Title Register Equipment Number "+str(equipment.plate_account_number) +" of the "+ str(customer),
+                        description="Expires of the Title Register Equipment Number "+str(equipment.plate_account_number) +" of the customer "+ str(customer),
                         create_date=datetime.now().strftime("%Y-%m-%d"),
                         show_date=dateShow.strftime("%Y-%m-%d"),
                         end_date=dateExp.strftime("%Y-%m-%d"),
@@ -519,7 +524,7 @@ class EquipmentCreate(CreateView):
                     dateShow = dateExp - timedelta(days=30)
                     alert = Alert.objects.create(
                         category="Urgents",
-                        description="Expires of the Inspection Equipment Number "+str(equipment.plate_account_number) +" of the "+ str(customer),
+                        description="Expires of the Inspection Equipment Number "+str(equipment.plate_account_number) +" of the customer "+ str(customer),
                         create_date=datetime.now().strftime("%Y-%m-%d"),
                         show_date=dateShow.strftime("%Y-%m-%d"),
                         end_date=dateExp.strftime("%Y-%m-%d"),
@@ -577,7 +582,7 @@ class EquipmentEdit(UpdateView):
                 dateShow = dateExp - timedelta(days=30)
                 alert = Alert.objects.filter(
                     category="Urgents",
-                    description="Expires of the Plate Equipment Number " + str(equipment.plate_account_number) + " of the " + str(equipment.customers))
+                    description="Expires of the Plate Equipment Number " + str(equipment.plate_account_number) + " of the customer " + str(equipment.customers))
                 if alert:
                     alert.update(show_date = dateShow.strftime("%Y-%m-%d"), end_date = dateExp.strftime("%Y-%m-%d"))
                 else:
@@ -587,7 +592,7 @@ class EquipmentEdit(UpdateView):
                     alert = Alert.objects.create(
                         category="Urgents",
                         description="Expires of the Plate Equipment Number " + str(
-                            equipment.plate_account_number) + " of the " + str(equipment.customers),
+                            equipment.plate_account_number) + " of the customer " + str(equipment.customers),
                         create_date=datetime.now().strftime("%Y-%m-%d"),
                         show_date=dateShow.strftime("%Y-%m-%d"),
                         end_date=dateExp.strftime("%Y-%m-%d"),
@@ -597,7 +602,7 @@ class EquipmentEdit(UpdateView):
                 alert = Alert.objects.filter(
                     category="Urgents",
                     description="Expires of the Plate Equipment Number " + str(
-                        equipment.plate_account_number) + " of the " + str(equipment.customers))
+                        equipment.plate_account_number) + " of the customer " + str(equipment.customers))
                 if alert:
                     alert.delete()
             if request.POST.get('reg_alert', False) and len(request.POST['title_date_exp_reg']) != 0:
@@ -605,7 +610,7 @@ class EquipmentEdit(UpdateView):
                 dateShow = dateExp - timedelta(days=30)
                 alert = Alert.objects.filter(
                     category="Urgents",
-                    description="Expires of the Title Register Equipment Number " + str(equipment.plate_account_number) + " of the " + str(equipment.customers))
+                    description="Expires of the Title Register Equipment Number " + str(equipment.plate_account_number) + " of the customer " + str(equipment.customers))
                 if alert:
                     alert.update(show_date = dateShow.strftime("%Y-%m-%d"), end_date = dateExp.strftime("%Y-%m-%d"))
                 else:
@@ -615,7 +620,7 @@ class EquipmentEdit(UpdateView):
                     alert = Alert.objects.create(
                         category="Urgents",
                         description="Expires of the Title Register Equipment Number " + str(
-                            equipment.plate_account_number) + " of the " + str(equipment.customers),
+                            equipment.plate_account_number) + " of the customer " + str(equipment.customers),
                         create_date=datetime.now().strftime("%Y-%m-%d"),
                         show_date=dateShow.strftime("%Y-%m-%d"),
                         end_date=dateExp.strftime("%Y-%m-%d"),
@@ -625,7 +630,7 @@ class EquipmentEdit(UpdateView):
                 alert = Alert.objects.filter(
                     category="Urgents",
                     description="Expires of the Title Register Equipment Number " + str(
-                        equipment.plate_account_number) + " of the " + str(equipment.customers))
+                        equipment.plate_account_number) + " of the customer " + str(equipment.customers))
                 if alert:
                     alert.delete()
             if request.POST.get('insp_alert', False) and len(request.POST['title_date_exp_insp']) != 0:
@@ -633,7 +638,7 @@ class EquipmentEdit(UpdateView):
                 dateShow = dateExp - timedelta(days=30)
                 alert = Alert.objects.filter(
                     category="Urgents",
-                    description="Expires of the Inspection Equipment Number " + str(equipment.plate_account_number) + " of the " + str(equipment.customers))
+                    description="Expires of the Inspection Equipment Number " + str(equipment.plate_account_number) + " of the customer " + str(equipment.customers))
                 if alert:
                     alert.update(show_date = dateShow.strftime("%Y-%m-%d"), end_date = dateExp.strftime("%Y-%m-%d"))
                 else:
@@ -643,7 +648,7 @@ class EquipmentEdit(UpdateView):
                     alert = Alert.objects.create(
                         category="Urgents",
                         description="Expires of the Inspection Equipment Number " + str(
-                            equipment.plate_account_number) + " of the " + str(equipment.customers),
+                            equipment.plate_account_number) + " of the customer " + str(equipment.customers),
                         create_date=datetime.now().strftime("%Y-%m-%d"),
                         show_date=dateShow.strftime("%Y-%m-%d"),
                         end_date=dateExp.strftime("%Y-%m-%d"),
@@ -653,7 +658,7 @@ class EquipmentEdit(UpdateView):
                 alert = Alert.objects.filter(
                     category="Urgents",
                     description="Expires of the Inspection Equipment Number " + str(
-                        equipment.plate_account_number) + " of the " + str(equipment.customers))
+                        equipment.plate_account_number) + " of the customer " + str(equipment.customers))
                 if alert:
                     alert.delete()
             accion_user(equipment, CHANGE, request.user)
@@ -678,16 +683,16 @@ class EquipmentDelete(DeleteView):
         alert_plate = Alert.objects.filter(
             category="Urgents",
             description="Expires of the Plate Equipment Number " + str(
-                equipment.plate_account_number) + " of the " + str(equipment.customer))
+                equipment.plate_account_number) + " of the customer " + str(equipment.customer))
 
         alert_reg = Alert.objects.filter(category="Urgents",
                                      description="Expires of the Title Register Equipment Number " + str(
-                                         equipment.plate_account_number) + " of the " + str(equipment.customer))
+                                         equipment.plate_account_number) + " of the customer " + str(equipment.customer))
 
         alert_insp = Alert.objects.filter(
             category="Urgents",
             description="Expires of the Inspection Equipment Number " + str(
-                equipment.plate_account_number) + " of the " + str(equipment.customer))
+                equipment.plate_account_number) + " of the customer " + str(equipment.customer))
         accion_user(equipment, DELETION, request.user)
         if alert_plate:
           alert_plate.delete()

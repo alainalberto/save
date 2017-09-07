@@ -42,16 +42,16 @@ class PermitForm(forms.ModelForm):
 
         widgets = {
             'is_new': forms.CheckboxInput(attrs={'data-off-color':"danger", 'class':"switch", 'data-size':"mini", 'data-on-text':"YES", 'data-off-text': "NO"}),
-            'legal_status': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('DBA', 'DBA'), ('LLC', 'LLC'), ('CORP', 'CORP'))),
+            'legal_status': forms.Select(attrs={'class': 'form-control input-md', 'required':'true', 'title':'Select one'}, choices=(('DBA', 'DBA'), ('LLC', 'LLC'), ('CORP', 'CORP'))),
             'gusiness_type': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('Flatbed', 'Flatbed'), ('Refrigerated', 'Refrigerated'), ('Dry Van', 'Dry Van'), ('Sand Gravel', 'Sand Gravel'), ('Other', 'Other'))),
-            'name': forms.TextInput(attrs={'placeholder': 'Company Name', 'class': 'form-control input-md upper'}),
+            'name': forms.TextInput(attrs={'placeholder': 'Company Name', 'class': 'form-control input-md upper', 'required':'true', 'title':'Inset Name'}),
             'attorney': forms.TextInput(attrs={'placeholder': 'Authorized Person:', 'class':'form-control input-md upper'}),
             'otheattorney': forms.TextInput(attrs={'placeholder': 'Authorized Person:', 'class':'form-control input-md upper'}),
             'address': forms.TextInput(attrs={'placeholder': 'Address', 'class': 'form-control input-md upper'}),
             'phone': forms.NumberInput(attrs={'placeholder': 'Telepone Number', 'class': 'form-control input-md'}),
             'othephone': forms.NumberInput(attrs={'placeholder': 'Telepone Number', 'class': 'form-control input-md'}),
             'fax': forms.NumberInput(attrs={'placeholder': 'Fax Number', 'class': 'form-control input-md'}),
-            'ein': forms.NumberInput(attrs={'placeholder': 'EIN', 'class': 'form-control input-md'}),
+            'ein': forms.NumberInput(attrs={'placeholder': 'EIN', 'class': 'form-control input-md', 'required':'true', 'title':'Inset EIN'}),
             'unit': forms.NumberInput(attrs={'placeholder': 'Unit', 'class': 'form-control input-md'}),
             'usdot': forms.NumberInput(attrs={'placeholder': 'USDOT Number', 'class': 'form-control input-md'}),
             'usdot_pin': forms.TextInput(attrs={'placeholder': 'USDOT PIN', 'class': 'form-control input-md upper'}),
@@ -68,7 +68,7 @@ class PermitForm(forms.ModelForm):
             'ucr_date_exp': forms.DateInput(attrs={'placeholder': 'BOC3 Date', 'class': 'form-control input-md'}),
             'deactivate': forms.CheckboxInput(attrs={'data-off-color':"danger", 'class':"switch", 'data-size':"mini", 'data-on-text':"YES", 'data-off-text': "NO"}),
             'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
-            'customers': forms.Select(attrs={'class': 'form-control input-md'}),
+            'customers': forms.Select(attrs={'class': 'form-control input-md', 'required':'true', 'title':'Select one'}),
         }
 
 
@@ -129,7 +129,7 @@ class InsuranceForm(forms.ModelForm):
             'paid': forms.CheckboxInput(attrs={'data-off-color':"danger", 'class':"switch", 'data-size':"mini", 'data-on-text':"YES", 'data-off-text': "NO"}),
             'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(
             ('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
-            'customers': forms.Select(attrs={'class': 'form-control input-md'}),
+            'customers': forms.Select(attrs={'class': 'form-control input-md', 'required':'true', 'title':'Select one'}),
         }
 
 class IftaForm(forms.ModelForm):
@@ -150,7 +150,7 @@ class IftaForm(forms.ModelForm):
             'nex_period': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
             'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(
             ('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
-            'customers': forms.Select(attrs={'class': 'form-control input-md'}),
+            'customers': forms.Select(attrs={'class': 'form-control input-md', 'required':'true', 'title':'Select one'}),
 
         }
 
@@ -166,6 +166,7 @@ class ContractForm(forms.ModelForm):
             'end_date',
             'type',
             'state',
+            'customers'
 
         ]
         labels = {
@@ -179,11 +180,13 @@ class ContractForm(forms.ModelForm):
         widgets = {
             'description': forms.TextInput(attrs={'placeholder': 'State', 'class': 'form-control input-md'}),
             'serial': forms.TextInput(attrs={'placeholder': 'State', 'class': 'form-control input-md'}),
-            'start_date': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
-            'end_date': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'start_date': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md', 'required':'true', 'title':'Inset Start Date'}),
+            'end_date': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md', 'required':'true', 'title':'Inset End Date'}),
             'type': forms.TextInput(attrs={'placeholder': 'State', 'class': 'form-control input-md'}),
             'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(
             ('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
+            'customers': forms.Select(
+                attrs={'class': 'form-control input-md', 'required': 'true', 'title': 'Select one'}),
         }
 
 class AuditForm(forms.ModelForm):
@@ -240,13 +243,13 @@ class EquipmentForm(forms.ModelForm):
 
         ]
         widgets = {
-            'customers': forms.Select(attrs={'class': 'form-control input-md'}),
+            'customers': forms.Select(attrs={'class': 'form-control input-md','required': 'true', 'title': 'Select one'}),
             'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
             'type': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('Truck', 'Truck'), ('Trailer', 'Trailer'), ('Other', 'Other'))),
             'year': forms.NumberInput(attrs={'placeholder': 'year', 'class': 'form-control input-md'}),
             'model': forms.TextInput(attrs={'placeholder': 'model', 'class': 'form-control input-md upper'}),
-            'serial': forms.TextInput(attrs={'placeholder': 'serial number', 'class': 'form-control input-md upper'}),
-            'number': forms.TextInput(attrs={'placeholder': 'number', 'class': 'form-control input-md upper'}),
+            'serial': forms.TextInput(attrs={'placeholder': 'serial number', 'class': 'form-control input-md upper','required': 'true', 'title': 'Insert Serial'}),
+            'number': forms.TextInput(attrs={'placeholder': 'number', 'class': 'form-control input-md upper','required': 'true', 'title': 'Insert Number'}),
             'plate_date_exp': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
             'plate_account_number': forms.TextInput(attrs={'class': 'form-control input-md upper'}),
             'plate_account_user': forms.TextInput(attrs={'class': 'form-control input-md'}),
@@ -267,6 +270,7 @@ class FileForm(forms.ModelForm):
             'name',
             'category',
             'url',
+
         ]
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'name', 'class': 'form-control input-md upper'}),
