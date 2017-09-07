@@ -100,6 +100,12 @@ $(".switch-min").bootstrapSwitch();
 
 		});
 
+	$(".btn_add_cut").click(function() {
+      var column = $(this).closest('tr').children()[5].textContent;
+      $('#id_customers').val(column)
+      $('#customerList').modal('hide');
+    });
+
  });
 
 
