@@ -2,10 +2,14 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title text-center"><strong>Load List</strong></h4>
+                    <h4 class="modal-title text-center"><strong>Customers List</strong></h4>
                 </div>
                 <div class="modal-body">
-                    <table id="customer_table" class="table data-table">
+                    <div class="input-group">
+                        <input type="text" class="form-control search" placeholder="Between at least three letters" aria-describedby="basic-addon1">
+                        <span class="input-group-addon glyphicon glyphicon-search" id="basic-addon1"></span>
+                    </div>
+                    <table id="customer_table" class="table search-table">
                         <thead>
                         <tr>
                             <th class="col-md-3">Name</th>
@@ -30,8 +34,34 @@
                         </tr>
                         {% endfor %}
                         </tbody>
+                        <tfoot>
+                        <nav class="col-md-offset-10" aria-label="Page navigation">
+                            <ul class="pager">
+                                {% if customers.has_previous %}
+                                <li>
+                                    <a  href="?page={{ folders.previous_page_number }}"><span>
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </span>
+                                    </a>
+                                </li>
+                                {% endif %}
+                                <span class="current">
+                                    Page {{ customers.number }} of {{ customers.paginator.num_pages }}.
+                                </span>
+                                {% if customers.has_next %}
+                                <li>
+                                    <a href="?page={{ folders.next_page_number }}">
+                                        <span>
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </span>
+                                    </a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                        </tfoot>
                     </table>
                 </div>
             </div>
         </div>
-    </div>
+ </div>

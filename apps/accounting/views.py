@@ -111,7 +111,7 @@ class CustomersView(ListView):
     template_name = 'accounting/customer/customerViews.html'
 
     def get(self, request, *args, **kwargs):
-        customer = self.model.objects.all()
+        customer = self.model.objects.all().order_by('company_name')
         context ={'title': 'List Customer', 'object_list': customer}
         return render(request, self.template_name, context)
 

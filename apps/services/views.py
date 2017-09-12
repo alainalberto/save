@@ -17,6 +17,22 @@ import os
 
 
 # Create your views here.
+
+def pagination(request, objects):
+
+        paginator = Paginator(objects, 10)  # Show 25 contacts per page
+
+        page = request.GET.get('page')
+        try:
+            objs = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            objs = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            objs = paginator.page(paginator.num_pages)
+        return objs
+
 def PermitView(request, pk, popup):
     permit = Permit.objects.get(id_com=pk)
     return render(request, 'services/permit/permitView.html', {'permit': permit, 'is_popup':popup, 'title':'Company', 'deactivate':True})
@@ -33,7 +49,7 @@ class PermitCreate(CreateView):
             id = kwargs['pk']
           else:
               popup = 0
-          customer = Customer.objects.filter(deactivated=False)
+          customer = pagination(request,Customer.objects.filter(deactivated=False).order_by('company_name'))
           form = self.form_class(initial=self.initial)
           return render(request, self.template_name, {'form': form, 'customers':customer, 'is_popup': popup, 'title': 'Create Permit'})
 
@@ -116,9 +132,9 @@ class PermitEdit(UpdateView):
         else:
             popup = 0
         pk = self.kwargs.get('pk', 0)
-        company = self.model.objects.get(id_com=pk)
+        permit = self.model.objects.get(id_com=pk)
         if 'form' not in context:
-            context['form'] = self.form_class(instance=company)
+            context['form'] = self.form_class(instance=permit)
         context['id'] = pk
         context['is_popup'] = popup
         context['title'] = 'Edit Permit'
@@ -325,19 +341,8 @@ class FolderView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(FolderView, self).get_context_data(**kwargs)
-        folder = Folder.objects.all().order_by('name')
-        file = File.objects.all().order_by('name')
-        paginator = Paginator(folder, 10)  # Show 25 contacts per page
-
-        page = self.request.GET.get('page')
-        try:
-            folders = paginator.page(page)
-        except PageNotAnInteger:
-            # If page is not an integer, deliver first page.
-            folders = paginator.page(1)
-        except EmptyPage:
-            # If page is out of range (e.g. 9999), deliver last page of results.
-            folders = paginator.page(paginator.num_pages)
+        folders = pagination(self.request, Folder.objects.all().order_by('name'))
+        file = pagination(self.request,File.objects.all().order_by('name'))
         context['folders'] = folders
         context['files'] = file
         return context
@@ -362,7 +367,7 @@ class FolderCreate(CreateView):
         if kwargs.__contains__('pk'):
             customer = None
         else:
-            customer = Customer.objects.filter(deactivated=False)
+            customer = pagination(request, Customer.objects.filter(deactivated=False).order_by('company_name'))
         form = self.form_class(initial=self.initial)
         return render(request, self.template_name, {'form_files': form,  'customers': customer, 'title': 'Create new Folder'})
 
@@ -456,7 +461,7 @@ class EquipmentCreate(CreateView):
             id = kwargs['pk']
         else:
             popup = 0
-        customer = Customer.objects.filter(deactivated=False)
+            customer = pagination(request, Customer.objects.filter(deactivated=False).order_by('company_name'))
         form = self.form_class(initial=self.initial)
         return render(request, self.template_name,
                       {'form': form, 'customers': customer, 'is_popup': popup, 'title': 'Create Equipment'})

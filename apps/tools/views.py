@@ -352,21 +352,21 @@ class AlertsCreate(CreateView):
              send_mail(
                  'FirstCall Alert',
                  'Usted tiene una alerta:'+ alert.description + ' con fecha de terminación ' +str(alert.end_date),
-                 'ranselr@gmail.com',
-                 ['ranselr@gmail.com'],
-                 fail_silently=False,
+                 'administrator@fcintermodal.com',
+                 ['alainalberto03@gmail.com'],
+                 fail_silently=True,
              )
              # Your Account SID from twilio.com/console
-             account_sid = "ACc2b4aa7154629a3f9b2767e7ddf9981d"
+             #account_sid = "ACc2b4aa7154629a3f9b2767e7ddf9981d"
              # Your Auth Token from twilio.com/console
-             auth_token = "b6318ebc29ac5cbdc257bb9acac2d89c"
+             #auth_token = "b6318ebc29ac5cbdc257bb9acac2d89c"
 
-             client = Client(account_sid, auth_token)
+             #client = Client(account_sid, auth_token)
 
-             message = client.messages.create(
-                 to="+18322071590",
-                 from_="+18329002832",
-                 body="Hello my wife!")
+             #message = client.messages.create(
+                 #to="+18322071590",
+                # from_="+18329002832",
+                # body="Hello my wife!")
 
          else:
              for er in form.errors:

@@ -32,7 +32,6 @@ $(".switch-min").bootstrapSwitch();
 		forceParse: 0
    });
 
-
    $('.form_time').datetimepicker({
         language:  'en',
         weekStart: 1,
@@ -77,7 +76,6 @@ $(".switch-min").bootstrapSwitch();
 
 	});
 
-
     $('#calendar_panel').fullCalendar({
 			header: {
 				left: 'prev,next',
@@ -105,6 +103,26 @@ $(".switch-min").bootstrapSwitch();
       $('#id_customers').val(column)
       $('#customerList').modal('hide');
     });
+
+    // Search Table
+    var container_filter;
+    var match;
+    var exp;
+    $('.search').keyup(function{
+       if ($(this).val().length >= 3)
+           filter($(this).val())
+    });
+    function filter(string){
+      $('.search-table tbody tr').each(function{
+          container_filter = $(this).find('td').html();
+          exp = new RegExp(string,'gi');
+          match = container_filter.match(exp);
+          if (match != null){
+
+
+          }
+      });
+    }
 
  });
 
