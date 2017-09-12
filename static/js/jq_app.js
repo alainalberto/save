@@ -8,6 +8,13 @@ $(document).ready( function () {
 $(".switch").bootstrapSwitch();
 $(".switch-min").bootstrapSwitch();
 
+
+$(".btn_add_cut").click(function() {
+      var column = $(this).closest('tr').children()[5].textContent;
+      $('#id_customers').val(column)
+      $('#customerList').modal('hide');
+    });
+
 //Data tables
    $(".data-table").DataTable();
 
@@ -98,33 +105,42 @@ $(".switch-min").bootstrapSwitch();
 
 		});
 
-	$(".btn_add_cut").click(function() {
-      var column = $(this).closest('tr').children()[5].textContent;
-      $('#id_customers').val(column)
-      $('#customerList').modal('hide');
-    });
-
     // Search Table
-    var container_filter;
-    var match;
-    var exp;
-    $('.search').keyup(function{
-       if ($(this).val().length >= 3)
-           filter($(this).val())
-    });
-    function filter(string){
-      $('.search-table tbody tr').each(function{
-          container_filter = $(this).find('td').html();
-          exp = new RegExp(string,'gi');
-          match = container_filter.match(exp);
-          if (match != null){
-
-
-          }
-      });
-    }
 
  });
 
+function search() {
+  // Declare variables
+  var input, filter, table, tr, td, i;
+  input = document.getElementById("txtsearch");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("customer_table");
+  tr = table.getElementsByTagName("tr");
 
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td1 = tr[i].getElementsByTagName("td")[0];
+    td2 = tr[i].getElementsByTagName("td")[1];
+    td3 = tr[i].getElementsByTagName("td")[2];
+    td4 = tr[i].getElementsByTagName("td")[3];
+
+
+      if (td1.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      }
+      if (td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      }
+      if (td3.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      }
+      if (td4.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      }
+       else {
+        tr[i].style.display = "none";
+      }
+
+  }
+}
 
