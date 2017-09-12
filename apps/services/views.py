@@ -49,7 +49,7 @@ class PermitCreate(CreateView):
             id = kwargs['pk']
           else:
               popup = 0
-          customer = pagination(request,Customer.objects.filter(deactivated=False).order_by('company_name'))
+          customer = Customer.objects.filter(deactivated=False).order_by('company_name')
           form = self.form_class(initial=self.initial)
           return render(request, self.template_name, {'form': form, 'customers':customer, 'is_popup': popup, 'title': 'Create Permit'})
 
@@ -461,7 +461,7 @@ class EquipmentCreate(CreateView):
             id = kwargs['pk']
         else:
             popup = 0
-            customer = pagination(request, Customer.objects.filter(deactivated=False).order_by('company_name'))
+            customer = Customer.objects.filter(deactivated=False).order_by('company_name')
         form = self.form_class(initial=self.initial)
         return render(request, self.template_name,
                       {'form': form, 'customers': customer, 'is_popup': popup, 'title': 'Create Equipment'})
