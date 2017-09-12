@@ -30,32 +30,6 @@
                         </tr>
                         {% endfor %}
                         </tbody>
-                        <tfoot>
-                        <nav class="col-md-offset-10" aria-label="Page navigation">
-                            <ul class="pager">
-                                {% if customers.has_previous %}
-                                <li>
-                                    <a  href="?page={{ folders.previous_page_number }}"><span>
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </span>
-                                    </a>
-                                </li>
-                                {% endif %}
-                                <span class="current">
-                                    Page {{ customers.number }} of {{ customers.paginator.num_pages }}.
-                                </span>
-                                {% if customers.has_next %}
-                                <li>
-                                    <a href="?page={{ folders.next_page_number }}">
-                                        <span>
-                                            <span aria-hidden="true">&raquo;</span>
-                                        </span>
-                                    </a>
-                                </li>
-                                {% endif %}
-                            </ul>
-                        </nav>
-                        </tfoot>
                     </table>
                 </div>
             </div>
