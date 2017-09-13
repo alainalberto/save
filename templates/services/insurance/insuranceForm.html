@@ -84,6 +84,7 @@ $('#btnphysical').change(function(){
                     </div>
                     {% include 'accounting/customer/customerModal.html'%}
                     {% endif %}
+                   <div class="form-group col-md-6 col-md-offset-1">
                     <div>
                         <strong>Select Coverage:</strong><br/>
                         <div class="btn-group" data-toggle="buttons">
@@ -99,80 +100,100 @@ $('#btnphysical').change(function(){
                         </div>
                         <br/>
                         <br/>
-                        <div id="liability" style="display: none;">
+                        <div id="liability"  style="display: none;"  >
                             <div class="form-group col-md-5 col-md-offset-1" >
-                                <label class="label-control">{{form_insurance.liability.label}}</label>
-                                {{form_insurance.liability}}
+                                <label class="label-control">Liability Value:</label>
+                                {{form.liability}}
                             </div>
                             <div class="form-group col-md-5 col-md-offset-1" >
-                                <label class="label-control">{{form_insurance.policy_liability.label}}</label>
-                                {{form_insurance.policy_liability}}
-                            </div>
-                        </div>
-                        <br/>
-                        <div id="cargo" style="display: none;">
-                            <div class="form-group col-md-5 col-md-offset-1" >
-                                <label class="label-control">{{form_insurance.cargo.label}}</label>
-                                {{form_insurance.cargo}}
-                            </div>
-                            <div class="form-group col-md-5 col-md-offset-1" >
-                                <label class="label-control">{{form_insurance.cargo_policy.label}}</label>
-                                {{form_insurance.cargo_policy}}
+                                <label class="label-control">Liability Policy Number:</label>
+                                {{form.policy_liability}}
                             </div>
                         </div>
                         <br/>
-                        <div id="physical" style="display: none;">
+                        <div id="cargo" style="display: none;" >
                             <div class="form-group col-md-5 col-md-offset-1" >
-                                <label class="label-control">{{form_insurance.physical_damage.label}}</label>
-                                {{form_insurance.physical_damage}}
+                                <label class="label-control">Cargo Value:</label>
+                                {{form.cargo}}
                             </div>
                             <div class="form-group col-md-5 col-md-offset-1" >
-                                <label class="label-control">{{form_insurance.physical_damg_policy.label}}</label>
-                                {{form_insurance.physical_damg_policy}}
+                                <label class="label-control">Cargo Policy Number:</label>
+                                {{form.cargo_policy}}
+                            </div>
+                        </div>
+                        <br/>
+                        <div id="physical" style="display: none;" >
+                            <div class="form-group col-md-5 col-md-offset-1" >
+                                <label class="label-control">Physical Damage Value:</label>
+                                    {{form.physical_damage}}
+                            </div>
+                            <div class="form-group col-md-5 col-md-offset-1" >
+                                <label class="label-control">Physical Policy Number:</label>
+                                {{form.physical_damg_policy}}
                             </div>
                         </div>
                     </div>
+                   </div>
                     <div class="form-group col-md-5 col-md-offset-1">
-                        <label class="label-control">{{form_insurance.policy_efective_date.label}}</label>
+                        <label class="label-control">Efective Date of Policy:</label>
                         <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                            {{form_insurance.policy_efective_date}}
+                            {{form.policy_efective_date}}
                             <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
                         </div>
                     </div>
                     <div class="form-group col-md-5 col-md-offset-1">
-                        <label class="label-control">{{form_insurance.policy_date_exp.label}}</label>
+                        <label class="label-control">Expire Date Policy:</label>
                         <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                            {{form_insurance.policy_date_exp}}
+                            {{form.policy_date_exp}}
                             <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
                         </div>
-                        <label>
-                            <input type="checkbox" id="policy_alert" name="policy_alert" checked> Alert
-                        </label>
+                        <input type="checkbox"  aria-pressed="false" data-off-color="danger" class="switch" data-size="mini" data-on-text="Alert ON" data-off-text="Alert OFF" id="policy_alert" name="policy_alert" checked>
                     </div>
                     <div class="form-group col-md-3 col-md-offset-1" >
-                        <label class="label-control">{{form_insurance.sale_type.label}}</label>
-                        {{form_insurance.sale_type}}
+                        <label class="label-control">Sale Type:</label>
+                        {{form.sale_type}}
                     </div>
                     <div class="form-group col-md-3 col-md-offset-1" >
-                        <label class="label-control">{{form_insurance.sale_date_fee.label}}</label>
-                        {{form_insurance.sale_date_fee}}
+                        <label class="label-control">Sale Date Fee:</label>
+                        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            {{form.sale_date_fee}}
+                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                        </div>
                     </div>
                     <div class="form-group col-md-3 col-md-offset-1" >
-                        <label class="label-control">{{form_insurance.down_payment.label}}</label>
-                        {{form_insurance.down_payment}}
+                        <label class="label-control">Down Payment:</label>
+                        {{form.down_payment}}
                     </div>
                     <div class="form-group col-md-3 col-md-offset-1" >
-                        <label class="label-control">{{form_insurance.comision.label}}</label>
-                        {{form_insurance.comision}}
+                        <label class="label-control">Paid Out:</label>
+                        {{form.paid_out}}
                     </div>
                     <div class="form-group col-md-3 col-md-offset-1" >
-                        <label class="label-control">{{form_insurance.total.label}}</label>
-                        {{form_insurance.total}}
+                        <label class="label-control">Balance Due:</label>
+                        {{form.balance_due}}
                     </div>
                     <div class="form-group col-md-3 col-md-offset-1" >
-                        <label class="label-control">{{form_insurance.paid.label}}</label>
-                        {{form_insurance.paid}}
+                        <label class="label-control">Comision:</label>
+                        {{form.comision}}
                     </div>
+                    <div class="form-group col-md-3 col-md-offset-1" >
+                        <label class="label-control">Total:</label>
+                        {{form.total}}
+                    </div>
+                    <div class="form-group col-md-3 col-md-offset-1" >
+                        <label class="label-control">Is Paid:</label>
+                        {{form.paid}}
+                    </div>
+                    <div class="form-group col-md-2 col-md-offset-1" >
+                        <label class="label-control">Service Process:</label>
+                        {{form.state}}
+                    </div>
+                    {% if not deactivate %}
+                    <div class="form-group col-md-5 col-md-offset-4">
+                        <input type="submit" class="btn btn-success" value="Save" {% if is_popup %} onclick="closepopup()" {% endif %}>
+                        <a type="button"  class="btn btn-danger" {% if is_popup %} onclick="closepopup()" {% else %} onclick="history.back(-1)" {% endif %}>Cancel </a>
+                    </div>
+                    {% endif %}
                 </fieldset>
             </form>
         </div>

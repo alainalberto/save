@@ -35,7 +35,7 @@ def pagination(request, objects):
 
 def PermitView(request, pk, popup):
     permit = Permit.objects.get(id_com=pk)
-    return render(request, 'services/permit/permitView.html', {'permit': permit, 'is_popup':popup, 'title':'Company', 'deactivate':True})
+    return render(request, 'services/permit/permitView.html', {'permit': permit, 'is_popup':popup, 'title':'Permit', 'deactivate':True})
 
 
 class PermitCreate(CreateView):
@@ -708,3 +708,149 @@ class EquipmentDelete(DeleteView):
         equipment.delete()
         messages.success(request, "Permit delete with an extension")
         return HttpResponseRedirect(self.success_url)
+
+def InsuranceView(request, pk, popup):
+    insurance = Insurance.objects.get(id_ins=pk)
+    return render(request, 'services/insurance/insuranceView.html', {'insurance': insurance, 'is_popup':popup, 'title':'Insurance', 'deactivate':True})
+
+
+class InsuranceCreate(CreateView):
+      model = Insurance
+      template_name = 'services/insurance/insuranceForm.html'
+      form_class = InsuranceForm
+
+      def get(self, request, *args, **kwargs):
+          if kwargs.__contains__('popup'):
+            popup = kwargs['popup']
+            id = kwargs['pk']
+          else:
+              popup = 0
+          customer = Customer.objects.filter(deactivated=False).order_by('company_name')
+          form = self.form_class(initial=self.initial)
+          return render(request, self.template_name, {'form': form, 'customers':customer, 'is_popup': popup, 'title': 'Create Insurance'})
+
+      def post(self, request, *args, **kwargs):
+          if kwargs.__contains__('popup'):
+            popup = kwargs['popup']
+            id = kwargs['pk']
+          else:
+              popup = 0
+          form = self.form_class(request.POST)
+          if form.is_valid():
+                  insurance = form.save(commit=False)
+                  if popup:
+                    customer = Customer.objects.get(id_cut=id)
+                  else:
+                      customer = Customer.objects.get(id_cut=request.POST['customers'])
+                  insurance.customers = customer
+                  insurance.users = request.user
+                  insurance.update = datetime.now().strftime("%Y-%m-%d")
+                  insurance.save()
+                  if request.POST.get('policy_alert', False) and len(request.POST['policy_date_exp']) != 0:
+                        group_admin = Group.objects.get(name='System Administrator')
+                        group_manag = Group.objects.get(name= 'System Manager')
+                        group_offic = Group.objects.get(name= 'Office Specialist')
+                        dateExp = insurance.policy_date_exp
+                        dateShow = dateExp - timedelta(days=30)
+                        alert = Alert.objects.create(
+                            category = "Urgents",
+                            description = "Expires the Insurance Policy  of the customer " + str(customer),
+                            create_date = datetime.now().strftime("%Y-%m-%d"),
+                            show_date = dateShow.strftime("%Y-%m-%d"),
+                            end_date = dateExp.strftime("%Y-%m-%d"),
+                            users = request.user)
+                        alert.group.add(group_admin, group_manag, group_offic)
+                  accion_user(insurance, ADDITION, request.user)
+                  messages.success(request, 'The Insurance was saved successfully')
+                  return HttpResponseRedirect('/accounting/customers/view/'+str(insurance.customers_id))
+          else:
+              for er in form.errors:
+                  messages.error(request, "ERROR: " + er)
+              return render(request, self.template_name, {'form': form, 'is_popup': popup,'title': 'Create Insurance'})
+
+
+class InsuranceEdit(UpdateView):
+    model = Insurance
+    template_name = 'services/insurance/insuranceForm.html'
+    form_class = InsuranceForm
+
+    def get_context_data(self, **kwargs):
+        context = super(InsuranceEdit, self).get_context_data(**kwargs)
+        if self.kwargs.__contains__('popup'):
+            popup = self.kwargs.get('popup')
+        else:
+            popup = 0
+        pk = self.kwargs.get('pk', 0)
+        insurance = self.model.objects.get(id_ins=pk)
+        if 'form' not in context:
+            context['form'] = self.form_class(instance=insurance)
+        context['id'] = pk
+        context['is_popup'] = popup
+        context['title'] = 'Edit Insurance'
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object
+        pk = kwargs['pk']
+        if kwargs.__contains__('popup'):
+            popup = kwargs['popup']
+        else:
+            popup = 0
+        insurance = self.model.objects.get(id_ins=pk)
+        form = self.form_class(request.POST, instance=insurance)
+        if form.is_valid():
+                insurance = form.save(commit=False)
+                insurance.update = datetime.now().strftime("%Y-%m-%d")
+                insurance.users = request.user
+                insurance.save()
+                customer = Customer.objects.get(id_cut=insurance.customers_id)
+                if request.POST.get('policy_alert', False) and len(request.POST['policy_date_exp']) != 0:
+                   dateExp = insurance.policy_date_exp
+                   dateShow = dateExp - timedelta(days=30)
+                   alert = Alert.objects.filter(description = "Expires the Insurance Policy  of the customer " + str(customer), category="Urgents")
+                   if alert:
+                      alert.update(show_date = dateShow.strftime("%Y-%m-%d"), end_date = dateExp.strftime("%Y-%m-%d"))
+                   else:
+                       group_admin = Group.objects.get(name='System Administrator')
+                       group_manag = Group.objects.get(name='System Manager')
+                       group_offic = Group.objects.get(name='Office Specialist')
+                       alert = Alert.objects.create(
+                           category="Urgents",
+                           description="Expires the Insurance Policy  of the customer " + str(customer),
+                           create_date=datetime.now().strftime("%Y-%m-%d"),
+                           show_date=dateShow.strftime("%Y-%m-%d"),
+                           end_date=dateExp.strftime("%Y-%m-%d"),
+                           users=request.user)
+                       alert.group.add(group_admin, group_manag, group_offic)
+                else:
+                    alert = Alert.objects.filter(
+                        description="Expires the Insurance Policy  of the customer " + str(customer),
+                        category="Urgents")
+                    if alert:
+                        alert.delete()
+                accion_user(insurance, CHANGE, request.user)
+                messages.success(request, 'The Insurance was saved successfully')
+                return HttpResponseRedirect('/accounting/customers/view/' + str(insurance.customers_id))
+        else:
+            for er in form.errors:
+                messages.error(request, "ERROR: " + er)
+            return render(request, self.template_name,
+                          {'form': form,  'is_popup': popup, 'title': 'Edit Insurance'})
+
+class InsuranceDelete(DeleteView):
+    model = Insurance
+    template_name = 'confirm_delete.html'
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object
+        id = kwargs['pk']
+        insurance = self.model.objects.get(id_ins=id)
+        alert_policy = Alert.objects.filter(description = "Expires the Insurance Policy  of the customer " + str(insurance.customers),
+                                     end_date=insurance.policy_date_exp)
+        accion_user(insurance, DELETION, request.user)
+        if alert_policy:
+          alert_policy.delete()
+        customer = insurance.customers
+        insurance.delete()
+        messages.success(request, "Insurance delete with an extension")
+        return HttpResponseRedirect('/accounting/customers/view/' + str(customer.id_cut))

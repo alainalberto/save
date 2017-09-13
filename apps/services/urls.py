@@ -43,7 +43,11 @@ urlpatterns = [
     url(r'^equipment/(?P<pk>\d+)/$', login_required(permission_required('services.delete_equipment')(EquipmentDelete.as_view())),
         name='equipment_delete'),
     #Insurance
-    url(r'^insurance/$', login_required(permission_required('services.add_insurance')(PermitView)), name='insurance'),
+    url(r'^insurance/view/(?P<pk>\d+)&(?P<popup>[^/]+)/$', login_required(permission_required('services.add_insurance')(InsuranceView)), name='insurance'),
+    url(r'^insurance/create$', login_required(permission_required('services.add_insurance')(InsuranceCreate.as_view())), name='insurance_create'),
+    url(r'^insurance/edit/(?P<pk>\d+)/$', login_required(permission_required('services.change_insurance')(InsuranceEdit.as_view())), name='insurance_edit'),
+    url(r'^insurance/(?P<pk>\d+)/$', login_required(permission_required('services.delete_insurance')(InsuranceDelete.as_view())), name='insurance_delete'),
+
 
     url(r'^audits/$', login_required(permission_required('services.add_audit')(PermitView)), name='audits'),
 

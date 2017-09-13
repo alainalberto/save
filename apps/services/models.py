@@ -187,7 +187,7 @@ class Insurance(models.Model):
     objects = CountState()
 
     def __str__(self):
-        return '{}'.format(self.companies)
+        return '{}'.format(self.customers)
 
 class Maintenance(models.Model):
     id_mnt = models.AutoField(primary_key=True)

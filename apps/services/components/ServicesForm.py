@@ -94,24 +94,9 @@ class InsuranceForm(forms.ModelForm):
             'paid',
             'state',
             'customers',
+            'paid_out',
+            'balance_due',
         ]
-        labels = {
-            'down_payment': 'Down Payment:',
-            'policy_efective_date': 'Efective Date of Policy:',
-            'policy_date_exp': 'Expire Date Policy:',
-            'liability': 'Liability Value:',
-            'policy_liability': 'Liability Policy Number:',
-            'cargo': 'Cargo Value:',
-            'cargo_policy': 'Cargo Policy Number:',
-            'physical_damage': 'Physical Damage Value:',
-            'physical_damg_policy': 'Physical Policy Number:',
-            'sale_type': 'Sale Type:',
-            'sale_date_fee': 'Sale Date Fee:',
-            'total': 'Total:',
-            'comision': 'Comision:',
-            'paid': 'Is Paid:',
-            'state':'Service Process:',
-        }
         widgets = {
             'down_payment': forms.NumberInput(attrs={'placeholder': 'value Down', 'class': 'form-control input-md'}),
             'policy_efective_date': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
@@ -130,6 +115,8 @@ class InsuranceForm(forms.ModelForm):
             'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(
             ('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
             'customers': forms.Select(attrs={'class': 'form-control input-md', 'required':'true', 'title':'Select one'}),
+            'paid_out': forms.NumberInput(attrs={'placeholder': 'value', 'class': 'form-control input-md'}),
+            'balance_due': forms.NumberInput(attrs={'placeholder': 'value', 'class': 'form-control input-md'}),
         }
 
 class IftaForm(forms.ModelForm):

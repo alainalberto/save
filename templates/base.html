@@ -254,12 +254,12 @@
                             <a class="item" href="{% url 'services:permit_create' %}"> Permit</a>
                         </li>
                         {% endif %}
-                        <!--{% if perms.services.add_insurance %}
+                        {% if perms.services.add_insurance %}
                         <li>
-                            <a class="item" href="{% url 'services:insurance' %}"> Insurance</a>
+                            <a class="item" href="{% url 'services:insurance_create' %}"> Insurance</a>
                         </li>
                         {% endif %}
-                        {% if perms.services.add_ifta %}
+                       <!-- {% if perms.services.add_ifta %}
                         <li>
                             <a class="item" href="{% url 'services:ifta' %}"> IFTA</a>
                         </li>
