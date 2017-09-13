@@ -84,7 +84,7 @@ $('#btnphysical').change(function(){
                     </div>
                     {% include 'accounting/customer/customerModal.html'%}
                     {% endif %}
-                   <div class="form-group col-md-6 col-md-offset-1">
+                   <div class="form-group col-md-8 col-md-offset-1">
                     <div>
                         <strong>Select Coverage:</strong><br/>
                         <div class="btn-group" data-toggle="buttons">
@@ -134,14 +134,14 @@ $('#btnphysical').change(function(){
                         </div>
                     </div>
                    </div>
-                    <div class="form-group col-md-5 col-md-offset-1">
+                    <div class="form-group col-md-4 col-md-offset-1">
                         <label class="label-control">Efective Date of Policy:</label>
                         <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
                             {{form.policy_efective_date}}
                             <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
                         </div>
                     </div>
-                    <div class="form-group col-md-5 col-md-offset-1">
+                    <div class="form-group col-md-4 col-md-offset-1">
                         <label class="label-control">Expire Date Policy:</label>
                         <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
                             {{form.policy_date_exp}}
