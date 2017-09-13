@@ -83,7 +83,7 @@ class PermitCreate(CreateView):
                   customer.company_name = permit.name+' '+permit.legal_status
                   customer.ein = permit.ein
                   customer.save()
-                  if request.POST['txdmv_alert'] and len(request.POST['txdmv_date_exp']) != 0:
+                  if request.POST.get('txdmv_alert', False) and len(request.POST['txdmv_date_exp']) != 0:
                         group_admin = Group.objects.get(name='System Administrator')
                         group_manag = Group.objects.get(name= 'System Manager')
                         group_offic = Group.objects.get(name= 'Office Specialist')
@@ -97,7 +97,7 @@ class PermitCreate(CreateView):
                             end_date = dateExp.strftime("%Y-%m-%d"),
                             users = request.user)
                         alert.group.add(group_admin, group_manag, group_offic)
-                  if request.POST['ucr_alert'] and len(request.POST['ucr_date_exp']) != 0:
+                  if request.POST.get('ucr_alert', False) and len(request.POST['ucr_date_exp']) != 0:
                         group_admin = Group.objects.get(name='System Administrator')
                         group_manag = Group.objects.get(name='System Manager')
                         group_offic = Group.objects.get(name='Office Specialist')
