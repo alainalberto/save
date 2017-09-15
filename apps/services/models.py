@@ -55,6 +55,7 @@ class Permit(models.Model):
 
 class Equipment(models.Model):
     id_tru = models.AutoField(primary_key=True)
+    users = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     customers = models.ForeignKey(Customer, on_delete=models.CASCADE)  # Field name made lowercase.
     type = models.CharField(max_length=45, blank=True, null=True)
     year = models.IntegerField(blank=True, null=True)
@@ -141,7 +142,8 @@ class Audit(models.Model):
 
 class Driver(models.Model):
     id_drv = models.AutoField(primary_key=True)
-    customers = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    customers = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True)# Field name made lowercase.
+    users = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=45, blank=True, null=True)
     license_numb = models.CharField(max_length=45, blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
