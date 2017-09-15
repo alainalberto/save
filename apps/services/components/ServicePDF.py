@@ -63,27 +63,27 @@ def PendingListPDF(request):
      description;
      if i.policy_liability or i.cargo_policy or i.physical_damg_policy:
         description = 'Liability: '+i.policy_liability, 'Cargo: '+i.cargo_policy, 'Physical Damage: '+i.physical_damg_policy
-     this_insurance = [i.customers, 'Insurance', description, i.update, i.users.first_name]
+     this_insurance = [i.customers, 'Insurance', description, i.update, i.users]
      data.append(this_insurance)
      high = high - 18
     for e in equipment:
-     this_equipment = [e.customers, 'Equipment', 'Serial Number: '+e.serial, e.update, e.users.first_name]
+     this_equipment = [e.customers, 'Equipment', 'Serial Number: '+e.serial, e.update, e.users]
      data.append(this_equipment)
      high = high - 18
     for it in ifta:
-     this_ifta = [it.customers, 'IFTA', 'Type: '+it.type, it.update, it.users.first_name]
+     this_ifta = [it.customers, 'IFTA', 'Type: '+it.type, it.update, it.users]
      data.append(this_ifta)
      high = high - 18
     for c in contract:
-     this_contrac = [c.customers, 'Contract', 'Serial: '+c.serial, c.update, c.users.first_name]
+     this_contrac = [c.customers, 'Contract', 'Serial: '+c.serial, c.update, c.users]
      data.append(this_contrac)
      high = high - 18
     for a in audit:
-     this_audit = [a.customers, 'Audit', 'Type: '+a.type, a.update, a.users.first_name]
+     this_audit = [a.customers, 'Audit', 'Type: '+a.type, a.update, a.users]
      data.append(this_audit)
      high = high - 18
     for d in driver:
-     this_driver = [d.customers, 'Driver', 'Name: '+d.name, d.update, d.users.first_name]
+     this_driver = [d.customers, 'Driver', 'Name: '+d.name, d.update, d.users]
      data.append(this_driver)
      high = high - 18
     width, height = A4
