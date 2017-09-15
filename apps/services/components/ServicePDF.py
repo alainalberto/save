@@ -53,37 +53,37 @@ def PendingListPDF(request):
 
     stylesBD = styles["BodyText"]
     stylesBD.alignment = TA_CENTER
-    stylesBD.fontSize = 7
+    stylesBD.fontSize = 8
     high = 730
     for pr in permit:
-     this_permit = [pr.customers, 'Permit', pr.name, pr.update, pr.users]
+     this_permit = [Paragraph(str(pr.customers),stylesBD), Paragraph('Permit',stylesBD), Paragraph(str(pr.name),stylesBD), Paragraph(str(pr.update),stylesBD), Paragraph(str(pr.users),stylesBD)]
      data.append(this_permit)
      high = high - 18
     for i in insurance:
      description;
      if i.policy_liability or i.cargo_policy or i.physical_damg_policy:
-        description = 'Liability: '+i.policy_liability, 'Cargo: '+i.cargo_policy, 'Physical Damage: '+i.physical_damg_policy
-     this_insurance = [i.customers, 'Insurance', description, i.update, i.users]
+        description = 'Liability: '+str(i.policy_liability), 'Cargo: '+str(i.cargo_policy), 'Physical Damage: '+str(i.physical_damg_policy)
+     this_insurance = [Paragraph(str(i.customers),stylesBD), Paragraph('Insurance',stylesBD), Paragraph(str(description),stylesBD), Paragraph(str(i.update),stylesBD), Paragraph(str(i.users),stylesBD)]
      data.append(this_insurance)
      high = high - 18
     for e in equipment:
-     this_equipment = [e.customers, 'Equipment', 'Serial Number: '+e.serial, e.update, e.users]
+     this_equipment = [Paragraph(str(e.customers),stylesBD), Paragraph('Equipment',stylesBD), Paragraph('Serial Number: '+str(e.serial),stylesBD), Paragraph(str(e.update),stylesBD), Paragraph(str(e.users),stylesBD)]
      data.append(this_equipment)
      high = high - 18
     for it in ifta:
-     this_ifta = [it.customers, 'IFTA', 'Type: '+it.type, it.update, it.users]
+     this_ifta = [Paragraph(str(it.customers),stylesBD), Paragraph('IFTA',stylesBD), Paragraph('Type: '+str(it.type),stylesBD), Paragraph(str(it.update),stylesBD), Paragraph(str(it.users),stylesBD)]
      data.append(this_ifta)
      high = high - 18
     for c in contract:
-     this_contrac = [c.customers, 'Contract', 'Serial: '+c.serial, c.update, c.users]
+     this_contrac = [Paragraph(str(c.customers),stylesBD), Paragraph('Contract',stylesBD), Paragraph('Serial: '+str(c.serial),stylesBD), Paragraph(str(c.update),stylesBD), Paragraph(str(c.users),stylesBD)]
      data.append(this_contrac)
      high = high - 18
     for a in audit:
-     this_audit = [a.customers, 'Audit', 'Type: '+a.type, a.update, a.users]
+     this_audit = [Paragraph(str(a.customers),stylesBD), Paragraph('Audit',stylesBD), Paragraph('Type: '+str(a.type),stylesBD), Paragraph(str(a.update),stylesBD), Paragraph(str(a.users),stylesBD)]
      data.append(this_audit)
      high = high - 18
     for d in driver:
-     this_driver = [d.customers, 'Driver', 'Name: '+d.name, d.update, d.users]
+     this_driver = [Paragraph(str(d.customers),stylesBD), Paragraph('Driver',stylesBD), Paragraph('Name: '+str(d.name),stylesBD), Paragraph(str(d.update),stylesBD), Paragraph(str(d.users),stylesBD)]
      data.append(this_driver)
      high = high - 18
     width, height = A4
