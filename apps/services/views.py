@@ -486,7 +486,7 @@ class EquipmentCreate(CreateView):
                 else:
                     customer = Customer.objects.get(id_cut=request.POST['customers'])
                 equipment.customers = customer
-                equipment.users_id = request.user.id
+                equipment.users = request.user
                 equipment.update = datetime.now().strftime("%Y-%m-%d")
                 if equipment.deactivate:
                     equipment.deactivate_date = datetime.now().strftime("%Y-%m-%d")
