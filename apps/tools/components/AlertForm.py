@@ -29,7 +29,7 @@ class AlertForm(forms.ModelForm):
             'description': forms.TextInput(attrs={'placeholder': 'Description', 'class': 'form-control input-md'}),
             'show_date': forms.DateInput(attrs={'class': 'form-control input-md'}),
             'end_date': forms.DateInput(attrs={'class': 'form-control input-md'}),
-            'deactivated': forms.CheckboxInput(attrs={'class': 'checkbox'}),
+            'deactivated': forms.CheckboxInput(attrs={'data-off-color':"danger", 'class':"switch", 'data-size':"mini", 'data-on-text':"YES", 'data-off-text': "NO"}),
             'group': forms.SelectMultiple(attrs={'class': 'form-control input-md'}),
         }
 

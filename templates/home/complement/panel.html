@@ -28,16 +28,16 @@
 
                 <div class="row">
                     <div class="col-lg-12">
-                         {% for a in alert %}
-                         {% if a.show_date <= date_now and a.end_date >= date_now  %}
+                        {% for a in alert %}
+                        {% if a.show_date <= date_now and a.end_date >= date_now  %}
                         <a class="text-danger" href="{% url 'panel:alert_view' a.id_alt  %}" data-toggle="modal" data-target="#popup">
-                     <div class="alert alert-danger alert-dismissable">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                            <i class="fa fa-exclamation-triangle"></i><strong> {{a.category}} (Exp: {{a.end_date}}): </strong> {{a.description}}
-                        </div>
+                            <div class="alert alert-danger alert-dismissable">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <i class="fa fa-exclamation-triangle"></i><strong> {{a.category}} (Exp: {{a.end_date}}): </strong> {{a.description}}
+                            </div>
                         </a>
-                     {% endif %}
-                    {% endfor %}
+                        {% endif %}
+                        {% endfor %}
 
                     </div>
                 </div>
@@ -49,7 +49,7 @@
     <!-- /.row -->
 
     <div class="row">
-       {% if perms.accounting.add_customer %}
+        {% if perms.accounting.add_customer %}
         <a class="" href="{% url 'accounting:customer_create' %}">
             <div class="col-lg-3 col-md-6">
                 <div class="panel panel-primary zoom-mouse">
@@ -186,71 +186,82 @@
         <div class="col-md-12">
             <p class="bg-primary text-center">SERVICES PENDING</p>
             {% if companies or permits or plates or iftas or mtts or titles or insurances %}
+
             <table class="table data-table table-striped">
                 <thead>
                 <th>Service</th>
                 <th>Customer</th>
                 <th>Last UpDate</th>
-                 <th>Status</th>
+                <th>Status</th>
                 </thead>
                 <tbody>
                 {% for p in permits %}
                 <tr {% if p.state == "Initiated" %} class="warning" {% endif %}  {% if p.state == "Pending" %} class="danger" {% endif %} {% if p.state == "Finalized" %} class="success" {% endif %}>
-                    <td>Permit</td>
-                    <td><a href="{% url 'accounting:customer_view' p.customers_id %}">{{p.customers}}</a></td>
-                    <td>{{ p.update }}</td>
-                    <td>{{p.state}}</td>
+                <td>Permit</td>
+                <td><a href="{% url 'accounting:customer_view' p.customers_id %}">{{p.customers}}</a></td>
+                <td>{{ p.update }}</td>
+                <td>{{p.state}}</td>
                 </tr>
                 {% endfor %}
                 {% for e in equipments %}
                 <tr {% if e.state == "Initiated" %} class="warning" {% endif %}  {% if e.state == "Pending" %} class="danger" {% endif %} {% if e.state == "Finalized" %} class="success" {% endif %}>
-                    <td>Equipment</td>
-                    <td><a href="{% url 'accounting:customer_view' e.customers_id %}">{{e.customers}}</a></td>
-                    <td>{{ e.update }}</td>
-                    <td>{{e.state}}</td>
+                <td>Equipment</td>
+                <td><a href="{% url 'accounting:customer_view' e.customers_id %}">{{e.customers}}</a></td>
+                <td>{{ e.update }}</td>
+                <td>{{e.state}}</td>
                 </tr>
                 {% endfor %}
                 {% for c in contracts %}
                 <tr {% if c.state == "Initiated" %} class="warning" {% endif %}  {% if c.state == "Pending" %} class="danger" {% endif %} {% if c.state == "Finalized" %} class="success" {% endif %}>
-                    <td>Contract</td>
-                    <td><a href="{% url 'accounting:customer_view' c.customers_id %}">{{c.customers}}</a></td>
-                    <td>{{ c.update }}</td>
-                    <td>{{c.state}}</td>
+                <td>Contract</td>
+                <td><a href="{% url 'accounting:customer_view' c.customers_id %}">{{c.customers}}</a></td>
+                <td>{{ c.update }}</td>
+                <td>{{c.state}}</td>
                 </tr>
                 {% endfor %}
                 {% for i in insurances %}
                 <tr {% if i.state == "Initiated" %} class="warning" {% endif %}  {% if i.state == "Pending" %} class="danger" {% endif %} {% if i.state == "Finalized" %} class="success" {% endif %}>
-                    <td>Insurance</td>
-                    <td><a href="{% url 'accounting:customer_view' i.customers_id %}">{{i.customers}}</a></td>
-                    <td>{{ i.update }}</td>
-                    <td>{{i.state}}</td>
+                <td>Insurance</td>
+                <td><a href="{% url 'accounting:customer_view' i.customers_id %}">{{i.customers}}</a></td>
+                <td>{{ i.update }}</td>
+                <td>{{i.state}}</td>
                 </tr>
                 {% endfor %}
                 {% for d in drivers %}
                 <tr {% if d.state == "Initiated" %} class="warning" {% endif %}  {% if d.state == "Pending" %} class="danger" {% endif %} {% if d.state == "Finalized" %} class="success" {% endif %}>
-                    <td>Driver</td>
-                    <td><a href="{% url 'accounting:customer_view' d.customers_id %}">{{d.customers}}</a></td>
-                    <td>{{ d.update }}</td>
-                    <td>{{d.state}}</td>
+                <td>Driver</td>
+                <td><a href="{% url 'accounting:customer_view' d.customers_id %}">{{d.customers}}</a></td>
+                <td>{{ d.update }}</td>
+                <td>{{d.state}}</td>
                 </tr>
                 {% endfor %}
                 {% for it in iftas %}
                 <tr {% if it.state == "Initiated" %} class="warning" {% endif %}  {% if it.state == "Pending" %} class="danger" {% endif %} {% if it.state == "Finalized" %} class="success" {% endif %}>
-                    <td>Plate</td>
-                    <td><a href="{% url 'accounting:customer_view' it.customers_id %}">{{it.customers}}</a></td>
-                    <td>{{ it.update }}</td>
-                    <td>{{ it.state}}</td>
+                <td>Plate</td>
+                <td><a href="{% url 'accounting:customer_view' it.customers_id %}">{{it.customers}}</a></td>
+                <td>{{ it.update }}</td>
+                <td>{{ it.state}}</td>
                 </tr>
                 {% endfor %}
                 {% for a in audits %}
                 <tr {% if a.state == "Initiated" %} class="warning" {% endif %}  {% if a.state == "Pending" %} class="danger" {% endif %} {% if a.state == "Finalized" %} class="success" {% endif %}>
-                    <td>Audit</td>
-                    <td><a href="{% url 'accounting:customer_view' a.customers_id %}">{{a.customers}}</a></td>
-                    <td>{{ a.update }}</td>
-                    <td>{{a.state}}</td>
+                <td>Audit</td>
+                <td><a href="{% url 'accounting:customer_view' a.customers_id %}">{{a.customers}}</a></td>
+                <td>{{ a.update }}</td>
+                <td>{{a.state}}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
+                <tfoot>
+                <dir class="col-md-offset-11">
+                    <toolbar class="md-accent">
+                        <a data-type="info" data-animation="am-flip-x" data-trigger="focus" target="_blank" title="Print Pending" type="button" class="btn btn-success test-tooltip" href="{% url 'services:pending_pdf' %}">
+                            <i class="fa fa-print" aria-hidden="true"></i>
+                            <tooltip md-direction="left"></tooltip>
+                        </a>
+                    </toolbar>
+                </tfoot>
+                </dir>
             </table>
             {% else %}
             <div class="alert alert-info"> <strong>Atention!</strong> No have service.</div>
@@ -310,7 +321,7 @@
             </div>
         </div>-->
         <div class="col-lg-6">
-             {% include 'accounting/statistic/accountPayMethod.html'%}
+            {% include 'accounting/statistic/accountPayMethod.html'%}
         </div>
 
     </div>

@@ -1,8 +1,12 @@
 from django.conf.urls import *
 from django.contrib.auth.decorators import login_required, permission_required
 from apps.services.views import *
+from apps.services.components.ServicePDF import *
 
 urlpatterns = [
+
+    url(r'^service/pending/$', login_required(permission_required('service')(PendingListPDF)),name='pending_pdf'),
+
     #Permit
     url(r'^permit/view/(?P<pk>\d+)&(?P<popup>[^/]+)/$', login_required(permission_required('services.add_permit')(PermitView)), name='permit'),
     url(r'^permit/create$', login_required(permission_required('services.add_permit')(PermitCreate.as_view())), name='permit_create'),
