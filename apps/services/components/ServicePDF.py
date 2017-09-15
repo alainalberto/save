@@ -60,10 +60,7 @@ def PendingListPDF(request):
      data.append(this_permit)
      high = high - 18
     for i in insurance:
-     description;
-     if i.policy_liability or i.cargo_policy or i.physical_damg_policy:
-        description = 'Liability: '+str(i.policy_liability), 'Cargo: '+str(i.cargo_policy), 'Physical Damage: '+str(i.physical_damg_policy)
-     this_insurance = [Paragraph(str(i.customers),stylesBD), Paragraph('Insurance',stylesBD), Paragraph(str(description),stylesBD), Paragraph(str(i.update),stylesBD), Paragraph(str(i.users),stylesBD)]
+     this_insurance = [Paragraph(str(i.customers),stylesBD), Paragraph('Insurance',stylesBD), Paragraph(str(i.sale_type),stylesBD), Paragraph(str(i.update),stylesBD), Paragraph(str(i.users),stylesBD)]
      data.append(this_insurance)
      high = high - 18
     for e in equipment:
