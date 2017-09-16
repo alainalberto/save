@@ -15,7 +15,7 @@
                     {% for i in insurances %}
                     <tr {% if i.state == "Initiated" %} class="warning" {% endif %}  {% if i.state == "Pending" %} class="danger" {% endif %} {% if i.state == "Finalized" %} class="success" {% endif %}>
                         <td><a onclick="openpopup('{% url 'services:insurance' pk=i.id_ins popup=1%}')">{{i.policy_liability}}</a></td>
-                        <td>{{i.policy_cargo}}</td>
+                        <td>{{i.cargo_policy}}</td>
                         <td>{{i.physical_damg_policy}}</td>
                         <td class="text-center">{% if i.paid %}<i class="fa fa-check text-success" aria-hidden="true"></i>{% endif %}</td>
                         <td>{{i.policy_date_exp}} </td>
