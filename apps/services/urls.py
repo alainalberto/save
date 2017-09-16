@@ -55,5 +55,10 @@ urlpatterns = [
 
     url(r'^audits/$', login_required(permission_required('services.add_audit')(PermitView)), name='audits'),
 
+    #Driver
+    url(r'^driver/view/(?P<pk>\d+)&(?P<popup>[^/]+)/$',login_required(permission_required('services.add_driver')(DriverView)), name='driver'),
+    url(r'^driver/create$', login_required(permission_required('services.add_driver')(DriverCreate.as_view())),name='driver_create'),
+    url(r'^driver/edit/(?P<pk>\d+)/$',login_required(permission_required('services.change_driver')(DriverEdit.as_view())),name='driver_edit'),
+    url(r'^driver/(?P<pk>\d+)/$',login_required(permission_required('services.delete_driver')(DriverDelete.as_view())),name='driver_delete'),
 
 ]

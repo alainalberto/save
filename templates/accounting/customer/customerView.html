@@ -115,7 +115,7 @@
                                 {% if audits %}
                                 <li id="tabAudit" role="presentation"><a href="#audit" aria-controls="audit" role="tab" data-toggle="tab">Audit <span class="badge text-danger">{{audit_pending}}</span></a></li>
                                 {% endif %}
-                                {% if drives %}
+                                {% if driver %}
                                 <li id="tabDriver" role="presentation"><a href="#driver" aria-controls="driver" role="tab" data-toggle="tab">Driver <span class="badge text-danger">{{driver_pending}}</span></a></li>
                                 {% endif %}
                             </ul>
@@ -160,7 +160,7 @@
                                 </div>
 
                                 <div role="tabpanel" class="tab-pane fade" id="driver">
-                                    {% if drivers %}
+                                    {% if driver %}
                                          {% include 'services/driver/driverViews.html'%}
                                     {% endif %}
                                 </div>

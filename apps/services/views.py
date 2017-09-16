@@ -854,3 +854,280 @@ class InsuranceDelete(DeleteView):
         insurance.delete()
         messages.success(request, "Insurance delete with an extension")
         return HttpResponseRedirect('/accounting/customers/view/' + str(customer.id_cut))
+
+def DriverView(request, pk, popup):
+    driver = Driver.objects.get(id_com=pk)
+    return render(request, 'services/driver/driverView.html', {'driver': driver, 'is_popup':popup, 'title':'Driver', 'deactivate':True})
+
+class DriverCreate(CreateView):
+      model = Driver
+      template_name = 'services/driver/driverForm.html'
+      form_class = DriverForm
+
+      def get(self, request, *args, **kwargs):
+          if kwargs.__contains__('popup'):
+            popup = kwargs['popup']
+            id = kwargs['pk']
+          else:
+              popup = 0
+          customer = Customer.objects.filter(deactivated=False).order_by('company_name')
+          form = self.form_class(initial=self.initial)
+          return render(request, self.template_name, {'form': form, 'customers':customer, 'is_popup': popup, 'title': 'Create Driver'})
+
+      def post(self, request, *args, **kwargs):
+          if kwargs.__contains__('popup'):
+            popup = kwargs['popup']
+            id = kwargs['pk']
+          else:
+              popup = 0
+          form = self.form_class(request.POST)
+          if form.is_valid():
+              driver_exist = Driver.objects.filter(name=request.POST['name'], license_numb=request.POST['license_numb'])
+              if driver_exist:
+                  messages.error(request, 'The driver already exists')
+                  form = self.form_class(initial=self.initial)
+                  return render(request, self.template_name, {'form': form, 'is_popup': popup, 'title': 'Create Driver'})
+              else:
+                  driver = form.save(commit=False)
+                  if popup:
+                    customer = Customer.objects.get(id_cut=id)
+                  else:
+                      customer = Customer.objects.get(id_cut=request.POST['customers'])
+                  driver.customers = customer
+                  driver.users = request.user
+                  driver.update = datetime.now().strftime("%Y-%m-%d")
+                  if driver.deactivate:
+                      driver.deactivate_date = datetime.now().strftime("%Y-%m-%d")
+                  else:
+                      driver.deactivate_date = None
+                  driver.save()
+                  if request.POST.get('lic_alert', False) and len(request.POST['lic_date_exp']) != 0:
+                        group_admin = Group.objects.get(name='System Administrator')
+                        group_manag = Group.objects.get(name= 'System Manager')
+                        group_offic = Group.objects.get(name= 'Office Specialist')
+                        dateExp = driver.lic_date_exp
+                        dateShow = dateExp - timedelta(days=30)
+                        alert = Alert.objects.create(
+                            category = "Urgents",
+                            description = "Expires the License Driver of the customer " + str(customer),
+                            create_date = datetime.now().strftime("%Y-%m-%d"),
+                            show_date = dateShow.strftime("%Y-%m-%d"),
+                            end_date = dateExp.strftime("%Y-%m-%d"),
+                            users = request.user)
+                        alert.group.add(group_admin, group_manag, group_offic)
+                  if request.POST.get('medicard_alert', False) and len(request.POST['medicard_date_exp']) != 0:
+                        group_admin = Group.objects.get(name='System Administrator')
+                        group_manag = Group.objects.get(name='System Manager')
+                        group_offic = Group.objects.get(name='Office Specialist')
+                        dateExp = driver.medicard_date_exp
+                        dateShow = dateExp - timedelta(days=30)
+                        alert = Alert.objects.create(
+                            category = "Urgents",
+                            description = "Expires the Medicard Driver of the customer " + str(customer),
+                            create_date = datetime.now().strftime("%Y-%m-%d"),
+                            show_date = dateShow.strftime("%Y-%m-%d"),
+                            end_date = dateExp.strftime("%Y-%m-%d"),
+                            users = request.user)
+                        alert.group.add(group_admin, group_manag, group_offic)
+                  if request.POST.get('drugtest_alert', False) and len(request.POST['drugtest_date_exp']) != 0:
+                      group_admin = Group.objects.get(name='System Administrator')
+                      group_manag = Group.objects.get(name='System Manager')
+                      group_offic = Group.objects.get(name='Office Specialist')
+                      dateExp = driver.drugtest_date_exp
+                      dateShow = dateExp - timedelta(days=30)
+                      alert = Alert.objects.create(
+                          category="Urgents",
+                          description="Expires the Drugtest Driver of the customer " + str(customer),
+                          create_date=datetime.now().strftime("%Y-%m-%d"),
+                          show_date=dateShow.strftime("%Y-%m-%d"),
+                          end_date=dateExp.strftime("%Y-%m-%d"),
+                          users=request.user)
+                      alert.group.add(group_admin, group_manag, group_offic)
+                  if request.POST.get('mbr_alert', False) and len(request.POST['mbr_date_exp']) != 0:
+                      group_admin = Group.objects.get(name='System Administrator')
+                      group_manag = Group.objects.get(name='System Manager')
+                      group_offic = Group.objects.get(name='Office Specialist')
+                      dateExp = driver.mbr_date_exp
+                      dateShow = dateExp - timedelta(days=30)
+                      alert = Alert.objects.create(
+                          category="Urgents",
+                          description="Expires the Mbr Driver of the customer " + str(customer),
+                          create_date=datetime.now().strftime("%Y-%m-%d"),
+                          show_date=dateShow.strftime("%Y-%m-%d"),
+                          end_date=dateExp.strftime("%Y-%m-%d"),
+                          users=request.user)
+                      alert.group.add(group_admin, group_manag, group_offic)
+                  accion_user(driver, ADDITION, request.user)
+                  messages.success(request, 'The Driver was saved successfully')
+                  return HttpResponseRedirect('/accounting/customers/view/'+str(driver.customers_id))
+          else:
+              for er in form.errors:
+                  messages.error(request, "ERROR: " + er)
+              return render(request, self.template_name, {'form': form, 'is_popup': popup,'title': 'Create Driver'})
+
+
+class DriverEdit(UpdateView):
+    model = Driver
+    template_name = 'services/driver/driverForm.html'
+    form_class = DriverForm
+
+    def get_context_data(self, **kwargs):
+        context = super(DriverEdit, self).get_context_data(**kwargs)
+        if self.kwargs.__contains__('popup'):
+            popup = self.kwargs.get('popup')
+        else:
+            popup = 0
+        pk = self.kwargs.get('pk', 0)
+        driver = self.model.objects.get(id_drv=pk)
+        if 'form' not in context:
+            context['form'] = self.form_class(instance=driver)
+        context['id'] = pk
+        context['is_popup'] = popup
+        context['title'] = 'Edit Driver'
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object
+        pk = kwargs['pk']
+        if kwargs.__contains__('popup'):
+            popup = kwargs['popup']
+        else:
+            popup = 0
+        driver = self.model.objects.get(id_drv=pk)
+        form = self.form_class(request.POST, instance=driver)
+        if form.is_valid():
+                driver = form.save(commit=False)
+                driver.update = datetime.now().strftime("%Y-%m-%d")
+                driver.users = request.user
+                driver.save()
+                customer = Customer.objects.get(id_cut=driver.customers_id)
+
+                if request.POST.get('lic_alert', False) and len(request.POST['lic_date_exp']) != 0:
+                   dateExp = driver.lic_date_exp
+                   dateShow = dateExp - timedelta(days=30)
+                   alert = Alert.objects.filter(description = "Expires the License Driver of the customer " + str(customer), category="Urgents")
+                   if alert:
+                      alert.update(show_date = dateShow.strftime("%Y-%m-%d"), end_date = dateExp.strftime("%Y-%m-%d"))
+                   else:
+                       group_admin = Group.objects.get(name='System Administrator')
+                       group_manag = Group.objects.get(name='System Manager')
+                       group_offic = Group.objects.get(name='Office Specialist')
+                       alert = Alert.objects.create(
+                           category="Urgents",
+                           description="Expires the License Driver of the customer " + str(customer),
+                           create_date=datetime.now().strftime("%Y-%m-%d"),
+                           show_date=dateShow.strftime("%Y-%m-%d"),
+                           end_date=dateExp.strftime("%Y-%m-%d"),
+                           users=request.user)
+                       alert.group.add(group_admin, group_manag, group_offic)
+                else:
+                    alert = Alert.objects.filter(
+                        description="Expires the License Driver of the customer " + str(customer),
+                        category="Urgents")
+                    if alert:
+                        alert.delete()
+                if request.POST.get('medicard_alert', False) and len(request.POST['medicard_date_exp']) != 0:
+                   dateExp = driver.medicard_date_exp
+                   dateShow = dateExp - timedelta(days=30)
+                   alert = Alert.objects.filter(description = "Expires the Medicard Driver of the customer " + str(customer), category="Urgents")
+                   if alert:
+                       alert.update(show_date = dateShow.strftime("%Y-%m-%d"), end_date = dateExp.strftime("%Y-%m-%d"))
+                   else:
+                       group_admin = Group.objects.get(name='System Administrator')
+                       group_manag = Group.objects.get(name='System Manager')
+                       group_offic = Group.objects.get(name='Office Specialist')
+                       alert = Alert.objects.create(
+                           category="Urgents",
+                           description="Expires the Medicard Driver of the customer " + str(customer),
+                           create_date=datetime.now().strftime("%Y-%m-%d"),
+                           show_date=dateShow.strftime("%Y-%m-%d"),
+                           end_date=dateExp.strftime("%Y-%m-%d"),
+                           users=request.user)
+                       alert.group.add(group_admin, group_manag, group_offic)
+                else:
+                    alert = Alert.objects.filter(description="Expires the Medicard Driver of the customer " + str(customer), category="Urgents")
+                    if alert:
+                        alert.delete()
+                if request.POST.get('drugtest_alert', False) and len(request.POST['drugtest_date_exp']) != 0:
+                   dateExp = driver.drugtest_date_exp
+                   dateShow = dateExp - timedelta(days=30)
+                   alert = Alert.objects.filter(description = "Expires the Drugtest Driver of the customer " + str(customer), category="Urgents")
+                   if alert:
+                       alert.update(show_date = dateShow.strftime("%Y-%m-%d"), end_date = dateExp.strftime("%Y-%m-%d"))
+                   else:
+                       group_admin = Group.objects.get(name='System Administrator')
+                       group_manag = Group.objects.get(name='System Manager')
+                       group_offic = Group.objects.get(name='Office Specialist')
+                       alert = Alert.objects.create(
+                           category="Urgents",
+                           description="Expires the Drugtest Driver of the customer " + str(customer),
+                           create_date=datetime.now().strftime("%Y-%m-%d"),
+                           show_date=dateShow.strftime("%Y-%m-%d"),
+                           end_date=dateExp.strftime("%Y-%m-%d"),
+                           users=request.user)
+                       alert.group.add(group_admin, group_manag, group_offic)
+                else:
+                    alert = Alert.objects.filter(description="Expires the Drugtest Driver of the customer " + str(customer), category="Urgents")
+                    if alert:
+                        alert.delete()
+                if request.POST.get('mbr_alert', False) and len(request.POST['mbr_date_exp']) != 0:
+                   dateExp = driver.mbr_date_exp
+                   dateShow = dateExp - timedelta(days=30)
+                   alert = Alert.objects.filter(description = "Expires the Mbr Driver of the customer " + str(customer), category="Urgents")
+                   if alert:
+                       alert.update(show_date = dateShow.strftime("%Y-%m-%d"), end_date = dateExp.strftime("%Y-%m-%d"))
+                   else:
+                       group_admin = Group.objects.get(name='System Administrator')
+                       group_manag = Group.objects.get(name='System Manager')
+                       group_offic = Group.objects.get(name='Office Specialist')
+                       alert = Alert.objects.create(
+                           category="Urgents",
+                           description="Expires the Mbr Driver of the customer " + str(customer),
+                           create_date=datetime.now().strftime("%Y-%m-%d"),
+                           show_date=dateShow.strftime("%Y-%m-%d"),
+                           end_date=dateExp.strftime("%Y-%m-%d"),
+                           users=request.user)
+                       alert.group.add(group_admin, group_manag, group_offic)
+                else:
+                    alert = Alert.objects.filter(description="Expires the Mbr Driver of the customer " + str(customer), category="Urgents")
+                    if alert:
+                        alert.delete()
+                accion_user(driver, CHANGE, request.user)
+                messages.success(request, 'The Driver was saved successfully')
+                return HttpResponseRedirect('/accounting/customers/view/' + str(driver.customers_id))
+        else:
+            for er in form.errors:
+                messages.error(request, "ERROR: " + er)
+            return render(request, self.template_name,
+                          {'form': form,  'is_popup': popup, 'title': 'Edit Driver'})
+
+class DriverDelete(DeleteView):
+    model = Driver
+    template_name = 'confirm_delete.html'
+    success_url = reverse_lazy('accounting:customer')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object
+        id = kwargs['pk']
+        driver = self.model.objects.get(id_drv=id)
+        alert_lic = Alert.objects.filter(description = "Expires the License Driver of the customer " + str(driver.customers),
+                                           end_date=driver.lic_date_exp)
+        alert_medicard = Alert.objects.filter(description = "Expires the Medicard Driver of the customer" + str(driver.customers),
+                                           end_date=driver.medicard_date_exp)
+        alert_drugtest = Alert.objects.filter(description="Expires the Drugtest Driver of the customer " + str(driver.customers),
+                                           end_date=driver.drugtest_date_exp)
+        alert_mbr = Alert.objects.filter(description="Expires the Mbr Driver of the customer" + str(driver.customers),
+                                           end_date=driver.mbr_date_exp)
+        accion_user(driver, DELETION, request.user)
+        if alert_lic:
+            alert_lic.delete()
+        if alert_medicard:
+            alert_medicard.delete()
+        if alert_drugtest:
+            alert_drugtest.delete()
+        if alert_mbr:
+            alert_mbr.delete()
+        customer = driver.customers
+        driver.delete()
+        messages.success(request, "Driver delete with an extension")
+        return HttpResponseRedirect('/accounting/customers/view/' + str(customer.id_cut))

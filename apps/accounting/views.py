@@ -13,6 +13,7 @@ from apps.tools.components.AlertForm import AlertForm
 from apps.services.models import *
 from apps.tools.models import Folder
 from datetime import datetime, date, time, timedelta
+from django.core.mail import send_mail
 import html
 # Create your views here.
 
@@ -81,7 +82,7 @@ def CustomerView(request, pk):
        ifta = Ifta.objects.filter(customers=customer)
        contract = Contract.objects.filter(customers=customer)
        audit = Audit.objects.filter(customers=customer)
-       #driver = Driver.objects.filter(customers=customer)
+       driver = Driver.objects.filter(customers=customer)
        files = File.objects.filter(folders=customer.folders)
        note = Note.objects.filter(customers=customer)
        context = {
@@ -92,7 +93,7 @@ def CustomerView(request, pk):
            'equipments': equipment,
            'contracts': contract,
            'iftas': ifta,
-           #'drives': driver,
+           'driver': driver,
            'audits': audit,
            'notes': note,
            'permit_pending': Permit.objects.is_state('Pending', customer),
@@ -101,7 +102,7 @@ def CustomerView(request, pk):
            'ifta_pending': Ifta.objects.is_state('Pending', customer),
            'contract_pending': Contract.objects.is_state('Pending', customer),
            'audit_pending': Audit.objects.is_state('Pending', customer),
-           'diver_pending': Driver.objects.is_state('Pending', customer),
+           'driver_pending': Driver.objects.is_state('Pending', customer),
            'title': 'Customer Folder'
        }
        return render(request, 'accounting/customer/customerView.html', context)
@@ -248,6 +249,13 @@ class EmployeesCreate(CreateView):
          user = request.user
          form = self.form_class(request.POST)
          if form.is_valid():
+             send_mail(
+                 'FirstCall Alert',
+                 'Usted tiene una alerta:',
+                 'ranselr@gmail.com',
+                 ['ranselineval@gmail.com'],
+                  fail_silently=False,
+             )
              employee_exist = Employee.objects.filter(email=form.data['email'], social_no=form.data['social_no'])
              if employee_exist:
                  messages.error(request, 'The employee already exists')

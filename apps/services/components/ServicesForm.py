@@ -265,4 +265,42 @@ class FileForm(forms.ModelForm):
             'url': forms.FileInput(),
         }
 
+class DriverForm(forms.ModelForm):
+    class Meta:
+        model = Driver
 
+        fields = [
+            'customers',
+            'name',
+            'license_numb',
+            'address',
+            'dob',
+            'lic_date_exp',
+            'medicard_date_exp',
+            'drugtest_date',
+            'drugtest_date_exp',
+            'mbr_date',
+            'mbr_date_exp',
+            'begining_date',
+            'deactivate',
+            'deactivate_date',
+            'state',
+        ]
+        widgets = {
+            'customers': forms.Select(attrs={'class': 'form-control input-md', 'required': 'true', 'title': 'Select one'}),
+            'name': forms.TextInput(attrs={'placeholder': 'Name', 'class': 'form-control input-md upper'}),
+            'license_numb': forms.TextInput(attrs={'placeholder': 'License Number', 'class': 'form-control input-md upper'}),
+            'address': forms.TextInput(attrs={'placeholder': 'Address', 'class': 'form-control input-md upper'}),
+            'dob': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'lic_date_exp': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'medicard_date_exp': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'drugtest_date': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'drugtest_date_exp': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'mbr_date': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'mbr_date_exp': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'begining_date': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'deactivate': forms.CheckboxInput(attrs={'data-off-color':"danger", 'class':"switch", 'data-size':"mini", 'data-on-text':"YES", 'data-off-text': "NO"}),
+            'deactivate_date': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(
+            ('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
+        }

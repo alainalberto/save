@@ -142,7 +142,7 @@ class Audit(models.Model):
 
 class Driver(models.Model):
     id_drv = models.AutoField(primary_key=True)
-    customers = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True)# Field name made lowercase.
+    customers = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True)  # Field name made lowercase.
     users = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=45, blank=True, null=True)
     license_numb = models.CharField(max_length=45, blank=True, null=True)
@@ -159,6 +159,7 @@ class Driver(models.Model):
     deactivate_date = models.DateField(blank=True, null=True)
     state = models.CharField(max_length=20, blank=True, null=True)
     update = models.DateField(blank=True, null=True)
+
     objects = CountState()
 
     def __str__(self):
