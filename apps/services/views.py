@@ -856,7 +856,7 @@ class InsuranceDelete(DeleteView):
         return HttpResponseRedirect('/accounting/customers/view/' + str(customer.id_cut))
 
 def DriverView(request, pk, popup):
-    driver = Driver.objects.get(id_com=pk)
+    driver = Driver.objects.get(id_drv=pk)
     return render(request, 'services/driver/driverView.html', {'driver': driver, 'is_popup':popup, 'title':'Driver', 'deactivate':True})
 
 class DriverCreate(CreateView):
@@ -1110,9 +1110,9 @@ class DriverDelete(DeleteView):
         self.object = self.get_object
         id = kwargs['pk']
         driver = self.model.objects.get(id_drv=id)
-        alert_lic = Alert.objects.filter(description = "Expires the License Driver of the customer " + str(driver.customers),
+        alert_lic = Alert.objects.filter(description="Expires the License Driver of the customer " + str(driver.customers),
                                            end_date=driver.lic_date_exp)
-        alert_medicard = Alert.objects.filter(description = "Expires the Medicard Driver of the customer" + str(driver.customers),
+        alert_medicard = Alert.objects.filter(description="Expires the Medicard Driver of the customer" + str(driver.customers),
                                            end_date=driver.medicard_date_exp)
         alert_drugtest = Alert.objects.filter(description="Expires the Drugtest Driver of the customer " + str(driver.customers),
                                            end_date=driver.drugtest_date_exp)
