@@ -268,8 +268,8 @@ class IftaForm(forms.ModelForm):
         ]
         widgets = {
             'customers': forms.Select(attrs={'class': 'form-control input-md', 'required': 'true', 'title': 'Select one'}),
-            'type': forms.TextInput(attrs={'placeholder': 'Type', 'class': 'form-control input-md upper'}),
-            'period': forms.TextInput(attrs={'placeholder': 'Period', 'class': 'form-control input-md upper'}),
+            'type': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('Anual', 'Anual'), ('Quarter', 'Quarter'))),
+            'period': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('Anual', 'Anual'), ('1st Quarter', '1st Quarter'), ('2nd Quarter', '2nd Quarter'), ('3rd Quarter', '3rd Quarter'), ('4th Quarter', '4th Quarter'))),
             'nex_period': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
             'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(
             ('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
