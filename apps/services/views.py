@@ -1131,3 +1131,259 @@ class DriverDelete(DeleteView):
         driver.delete()
         messages.success(request, "Driver delete with an extension")
         return HttpResponseRedirect('/accounting/customers/view/' + str(customer.id_cut))
+
+def IftaView(request, pk, popup):
+        ifta = Ifta.objects.get(id_ift=pk)
+        return render(request, 'services/ifta/iftaView.html',
+                      {'ifta': ifta, 'is_popup': popup, 'title': 'Ifta', 'deactivate': True})
+
+class IftaCreate(CreateView):
+        model = Ifta
+        template_name = 'services/ifta/iftaForm.html'
+        form_class = IftaForm
+
+        def get(self, request, *args, **kwargs):
+            if kwargs.__contains__('popup'):
+                popup = kwargs['popup']
+                id = kwargs['pk']
+            else:
+                popup = 0
+            customer = Customer.objects.filter(deactivated=False).order_by('company_name')
+            form = self.form_class(initial=self.initial)
+            return render(request, self.template_name,
+                          {'form': form, 'customers': customer, 'is_popup': popup, 'title': 'Create Ifta'})
+
+        def post(self, request, *args, **kwargs):
+            if kwargs.__contains__('popup'):
+                popup = kwargs['popup']
+                id = kwargs['pk']
+            else:
+                popup = 0
+            form = self.form_class(request.POST)
+            if form.is_valid():
+                    ifta = form.save(commit=False)
+                    if popup:
+                        customer = Customer.objects.get(id_cut=id)
+                    else:
+                        customer = Customer.objects.get(id_cut=request.POST['customers'])
+                    ifta.customers = customer
+                    ifta.users = request.user
+                    ifta.update = datetime.now().strftime("%Y-%m-%d")
+                    ifta.save()
+                    if request.POST.get('nex_period_alert', False) and len(request.POST['nex_period']) != 0:
+                        group_admin = Group.objects.get(name='System Administrator')
+                        group_manag = Group.objects.get(name='System Manager')
+                        group_offic = Group.objects.get(name='Office Specialist')
+                        dateExp = ifta.nex_period
+                        dateShow = dateExp - timedelta(days=30)
+                        alert = Alert.objects.create(
+                            category="Urgents",
+                            description="Next period of the customer " + str(customer),
+                            create_date=datetime.now().strftime("%Y-%m-%d"),
+                            show_date=dateShow.strftime("%Y-%m-%d"),
+                            end_date=dateExp.strftime("%Y-%m-%d"),
+                            users=request.user)
+                        alert.group.add(group_admin, group_manag, group_offic)
+                    accion_user(ifta, ADDITION, request.user)
+                    messages.success(request, 'The Ifta was saved successfully')
+                    return HttpResponseRedirect('/accounting/customers/view/' + str(ifta.customers_id))
+            else:
+                for er in form.errors:
+                    messages.error(request, "ERROR: " + er)
+                return render(request, self.template_name, {'form': form, 'is_popup': popup, 'title': 'Create Ifta'})
+
+class IftaEdit(UpdateView):
+        model = Ifta
+        template_name = 'services/ifta/iftaForm.html'
+        form_class = IftaForm
+
+        def get_context_data(self, **kwargs):
+            context = super(IftaEdit, self).get_context_data(**kwargs)
+            if self.kwargs.__contains__('popup'):
+                popup = self.kwargs.get('popup')
+            else:
+                popup = 0
+            pk = self.kwargs.get('pk', 0)
+            ifta = self.model.objects.get(id_ift=pk)
+            if 'form' not in context:
+                context['form'] = self.form_class(instance=ifta)
+            context['id'] = pk
+            context['is_popup'] = popup
+            context['title'] = 'Edit Ifta'
+            return context
+
+        def post(self, request, *args, **kwargs):
+            self.object = self.get_object
+            pk = kwargs['pk']
+            if kwargs.__contains__('popup'):
+                popup = kwargs['popup']
+            else:
+                popup = 0
+            ifta = self.model.objects.get(id_ift=pk)
+            form = self.form_class(request.POST, instance=ifta)
+            if form.is_valid():
+                ifta = form.save(commit=False)
+                ifta.update = datetime.now().strftime("%Y-%m-%d")
+                ifta.users = request.user
+                ifta.save()
+                customer = Customer.objects.get(id_cut=ifta.customers_id)
+                if request.POST.get('nex_period_alert', False) and len(request.POST['nex_period']) != 0:
+                    dateExp = ifta.nex_period
+                    dateShow = dateExp - timedelta(days=30)
+                    alert = Alert.objects.filter(
+                        description="Next period of the customer " + str(customer), category="Urgents")
+                    if alert:
+                        alert.update(show_date=dateShow.strftime("%Y-%m-%d"), end_date=dateExp.strftime("%Y-%m-%d"))
+                    else:
+                        group_admin = Group.objects.get(name='System Administrator')
+                        group_manag = Group.objects.get(name='System Manager')
+                        group_offic = Group.objects.get(name='Office Specialist')
+                        alert = Alert.objects.create(
+                            category="Urgents",
+                            description="Next period of the customer " + str(customer),
+                            create_date=datetime.now().strftime("%Y-%m-%d"),
+                            show_date=dateShow.strftime("%Y-%m-%d"),
+                            end_date=dateExp.strftime("%Y-%m-%d"),
+                            users=request.user)
+                        alert.group.add(group_admin, group_manag, group_offic)
+                else:
+                    alert = Alert.objects.filter(
+                        description="Next period of the customer " + str(customer),
+                        category="Urgents")
+                    if alert:
+                        alert.delete()
+                accion_user(ifta, CHANGE, request.user)
+                messages.success(request, 'The Ifta was saved successfully')
+                return HttpResponseRedirect('/accounting/customers/view/' + str(ifta.customers_id))
+            else:
+                for er in form.errors:
+                    messages.error(request, "ERROR: " + er)
+                return render(request, self.template_name,
+                              {'form': form, 'is_popup': popup, 'title': 'Edit Ifta'})
+
+class IftaDelete(DeleteView):
+        model = Ifta
+        template_name = 'confirm_delete.html'
+        success_url = reverse_lazy('accounting:customer')
+
+        def delete(self, request, *args, **kwargs):
+            self.object = self.get_object
+            id = kwargs['pk']
+            ifta = self.model.objects.get(id_ift=id)
+            nex_period_alert = Alert.objects.filter(
+                description="Next period of the customer " + str(ifta.customers),
+                end_date=ifta.nex_period)
+            accion_user(ifta, DELETION, request.user)
+            if nex_period_alert:
+                nex_period_alert.delete()
+            customer = ifta.customers
+            ifta.delete()
+            messages.success(request, "Ifta delete with an extension")
+            return HttpResponseRedirect('/accounting/customers/view/' + str(customer.id_cut))
+
+def AuditView(request, pk, popup):
+    audit = Audit.objects.get(id_aud=pk)
+    return render(request, 'services/audit/auditView.html',
+                  {'audit': audit, 'is_popup': popup, 'title': 'Audit', 'deactivate': True})
+
+
+class AuditCreate(CreateView):
+    model = Audit
+    template_name = 'services/audit/auditForm.html'
+    form_class = AuditForm
+
+    def get(self, request, *args, **kwargs):
+        if kwargs.__contains__('popup'):
+            popup = kwargs['popup']
+            id = kwargs['pk']
+        else:
+            popup = 0
+        customer = Customer.objects.filter(deactivated=False).order_by('company_name')
+        form = self.form_class(initial=self.initial)
+        return render(request, self.template_name,
+                      {'form': form, 'customers': customer, 'is_popup': popup, 'title': 'Create Audit'})
+
+    def post(self, request, *args, **kwargs):
+        if kwargs.__contains__('popup'):
+            popup = kwargs['popup']
+            id = kwargs['pk']
+        else:
+            popup = 0
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            audit = form.save(commit=False)
+            if popup:
+                customer = Customer.objects.get(id_cut=id)
+            else:
+                customer = Customer.objects.get(id_cut=request.POST['customers'])
+            audit.customers = customer
+            audit.users = request.user
+            audit.update = datetime.now().strftime("%Y-%m-%d")
+            audit.save()
+            accion_user(audit, ADDITION, request.user)
+            messages.success(request, 'The Audit was saved successfully')
+            return HttpResponseRedirect('/accounting/customers/view/' + str(audit.customers_id))
+        else:
+            for er in form.errors:
+                messages.error(request, "ERROR: " + er)
+            return render(request, self.template_name, {'form': form, 'is_popup': popup, 'title': 'Create Audit'})
+
+
+class AuditEdit(UpdateView):
+    model = Audit
+    template_name = 'services/audit/auditForm.html'
+    form_class = AuditForm
+
+    def get_context_data(self, **kwargs):
+        context = super(AuditEdit, self).get_context_data(**kwargs)
+        if self.kwargs.__contains__('popup'):
+            popup = self.kwargs.get('popup')
+        else:
+            popup = 0
+        pk = self.kwargs.get('pk', 0)
+        audit = self.model.objects.get(id_aud=pk)
+        if 'form' not in context:
+            context['form'] = self.form_class(instance=audit)
+        context['id'] = pk
+        context['is_popup'] = popup
+        context['title'] = 'Edit Audit'
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object
+        pk = kwargs['pk']
+        if kwargs.__contains__('popup'):
+            popup = kwargs['popup']
+        else:
+            popup = 0
+        audit = self.model.objects.get(id_aud=pk)
+        form = self.form_class(request.POST, instance=audit)
+        if form.is_valid():
+            audit = form.save(commit=False)
+            audit.update = datetime.now().strftime("%Y-%m-%d")
+            audit.users = request.user
+            audit.save()
+            accion_user(audit, CHANGE, request.user)
+            messages.success(request, 'The Audit was saved successfully')
+            return HttpResponseRedirect('/accounting/customers/view/' + str(audit.customers_id))
+        else:
+            for er in form.errors:
+                messages.error(request, "ERROR: " + er)
+            return render(request, self.template_name,
+                          {'form': form, 'is_popup': popup, 'title': 'Edit Audit'})
+
+
+class AuditDelete(DeleteView):
+    model = Audit
+    template_name = 'confirm_delete.html'
+    success_url = reverse_lazy('accounting:customer')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object
+        id = kwargs['pk']
+        audit = self.model.objects.get(id_aud=id)
+        accion_user(audit, DELETION, request.user)
+        customer = audit.customers
+        audit.delete()
+        messages.success(request, "Audit delete with an extension")
+        return HttpResponseRedirect('/accounting/customers/view/' + str(customer.id_cut))

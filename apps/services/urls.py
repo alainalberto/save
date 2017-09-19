@@ -30,11 +30,6 @@ urlpatterns = [
     url(r'^folder/edit/(?P<pk>\d+)&(?P<popup>[^/]+)/$',login_required(permission_required('tools.add_file')(FolderEdit.as_view())), name='folder_edit_popup'),
     url(r'^folder/(?P<pk>\d+)/$', login_required(permission_required('tools.add_file')(FolderDelete.as_view())), name='folder_delete'),
 
-    #IFTA
-    url(r'^ifta/$', login_required(permission_required('services.add_ifta')(PermitView)), name='ifta'),
-    url(r'^ifta/create$', login_required(permission_required('services.add_ifta')(PermitView)), name='ifta_create'),
-
-
     #Equipment
     url(r'^equipment/view/(?P<pk>\d+)&(?P<popup>[^/]+)/$', login_required(permission_required('services.add_equipment')(EquipmentView)), name='equipment'),
     url(r'^equipment/create$', login_required(permission_required('services.add_equipment')(EquipmentCreate.as_view())), name='equipment_create'),
@@ -52,13 +47,21 @@ urlpatterns = [
     url(r'^insurance/edit/(?P<pk>\d+)/$', login_required(permission_required('services.change_insurance')(InsuranceEdit.as_view())), name='insurance_edit'),
     url(r'^insurance/(?P<pk>\d+)/$', login_required(permission_required('services.delete_insurance')(InsuranceDelete.as_view())), name='insurance_delete'),
 
-
-    url(r'^audits/$', login_required(permission_required('services.add_audit')(PermitView)), name='audits'),
-
     #Driver
     url(r'^driver/view/(?P<pk>\d+)&(?P<popup>[^/]+)/$',login_required(permission_required('services.add_driver')(DriverView)), name='driver'),
     url(r'^driver/create$', login_required(permission_required('services.add_driver')(DriverCreate.as_view())),name='driver_create'),
     url(r'^driver/edit/(?P<pk>\d+)/$',login_required(permission_required('services.change_driver')(DriverEdit.as_view())),name='driver_edit'),
     url(r'^driver/(?P<pk>\d+)/$',login_required(permission_required('services.delete_driver')(DriverDelete.as_view())),name='driver_delete'),
 
+    #Ifta
+    url(r'^ifta/view/(?P<pk>\d+)&(?P<popup>[^/]+)/$',login_required(permission_required('services.add_ifta')(IftaView)), name='ifta'),
+    url(r'^ifta/create$', login_required(permission_required('services.add_ifta')(IftaCreate.as_view())), name='ifta_create'),
+    url(r'^ifta/edit/(?P<pk>\d+)/$',login_required(permission_required('services.change_ifta')(IftaEdit.as_view())), name='ifta_edit'),
+    url(r'^ifta/(?P<pk>\d+)/$', login_required(permission_required('services.delete_ifta')(IftaDelete.as_view())), name='ifta_delete'),
+
+    #Audit
+    url(r'^audit/view/(?P<pk>\d+)&(?P<popup>[^/]+)/$',login_required(permission_required('services.add_audit')(AuditView)), name='audit'),
+    url(r'^audit/create$', login_required(permission_required('services.add_audit')(AuditCreate.as_view())),name='audit_create'),
+    url(r'^audit/edit/(?P<pk>\d+)/$',login_required(permission_required('services.change_audit')(AuditEdit.as_view())),name='audit_edit'),
+    url(r'^audit/(?P<pk>\d+)/$',login_required(permission_required('services.delete_audit')(AuditDelete.as_view())),name='audit_delete'),
 ]

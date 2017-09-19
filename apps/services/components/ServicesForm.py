@@ -119,28 +119,6 @@ class InsuranceForm(forms.ModelForm):
             'balance_due': forms.NumberInput(attrs={'placeholder': 'value', 'class': 'form-control input-md'}),
         }
 
-class IftaForm(forms.ModelForm):
-
-    class Meta:
-        model = Ifta
-
-        fields = [
-            'type',
-            'period',
-            'nex_period',
-            'state',
-            'customers',
-        ]
-        widgets = {
-            'type': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('Annual', 'Annual'), ('Quarter', 'Quarter'))),
-            'period': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('Annual', 'Annual'), ('Quarter1', 'Quarter 1st'), ('Quarter2', 'Quarter 2nd'), ('Quarter3', 'Quarter 3rd'), ('Quarter4', 'Quarter 4th'))),
-            'nex_period': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
-            'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(
-            ('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
-            'customers': forms.Select(attrs={'class': 'form-control input-md', 'required':'true', 'title':'Select one'}),
-
-        }
-
 class ContractForm(forms.ModelForm):
     class Meta:
         model = Contract
@@ -174,34 +152,6 @@ class ContractForm(forms.ModelForm):
             ('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
             'customers': forms.Select(
                 attrs={'class': 'form-control input-md', 'required': 'true', 'title': 'Select one'}),
-        }
-
-class AuditForm(forms.ModelForm):
-
-    class Meta:
-        model = Audit
-
-        fields = [
-            'contracts',
-            'customers',
-            'type',
-            'auditor_name',
-            'action_plan',
-            'amount_paid',
-            'date',
-            'state',
-            'results',
-        ]
-        widgets = {
-            'contracts': forms.Select(attrs={'class': 'form-control input-md'}),
-            'type': forms.Select(attrs={'class': 'form-control input-md'}),
-            'auditor_name': forms.TextInput(attrs={'placeholder': 'Auditor Name', 'class': 'form-control input-md'}),
-            'action_plan': forms.CheckboxInput(attrs={'data-off-color':"danger", 'class':"switch", 'data-size':"mini", 'data-on-text':"YES", 'data-off-text': "NO"}),
-            'amount_paid': forms.NumberInput(attrs={'placeholder': 'value', 'class': 'form-control input-md'}),
-            'date': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
-            'results': forms.Textarea(attrs={'placeholder': 'State', 'class': 'form-control input-md'}),
-            'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
-            'customers': forms.Select(attrs={'class': 'form-control input-md'}),
         }
 
 class EquipmentForm(forms.ModelForm):
@@ -304,3 +254,52 @@ class DriverForm(forms.ModelForm):
             'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(
             ('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
         }
+
+class IftaForm(forms.ModelForm):
+    class Meta:
+        model = Ifta
+
+        fields = [
+            'customers',
+            'type',
+            'period',
+            'nex_period',
+            'state',
+        ]
+        widgets = {
+            'customers': forms.Select(attrs={'class': 'form-control input-md', 'required': 'true', 'title': 'Select one'}),
+            'type': forms.TextInput(attrs={'placeholder': 'Type', 'class': 'form-control input-md upper'}),
+            'period': forms.TextInput(attrs={'placeholder': 'Period', 'class': 'form-control input-md upper'}),
+            'nex_period': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(
+            ('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
+        }
+
+class AuditForm(forms.ModelForm):
+    class Meta:
+        model = Audit
+
+        fields = [
+            'customers',
+            'contracts',
+            'type',
+            'auditor_name',
+            'action_plan',
+            'amount_paid',
+            'date',
+            'state',
+            'results',
+        ]
+        widgets = {
+            'customers': forms.Select(attrs={'class': 'form-control input-md', 'required': 'true', 'title': 'Select one'}),
+            'contracts': forms.Select(attrs={'class': 'form-control input-md', 'required': 'true', 'title': 'Select one'}),
+            'type': forms.TextInput(attrs={'placeholder': 'Type', 'class': 'form-control input-md upper'}),
+            'auditor_name': forms.TextInput(attrs={'placeholder': 'Auditor Name', 'class': 'form-control input-md upper'}),
+            'action_plan': forms.CheckboxInput(attrs={'data-off-color':"danger", 'class':"switch", 'data-size':"mini", 'data-on-text':"YES", 'data-off-text': "NO"}),
+            'amount_paid': forms.NumberInput(attrs={'placeholder': 'value', 'class': 'form-control input-md'}),
+            'date': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(
+            ('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
+            'results': forms.TextInput(attrs={'placeholder': 'Results', 'class': 'form-control input-md upper'}),
+        }
+

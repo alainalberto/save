@@ -259,7 +259,7 @@ class Ifta(models.Model):
     objects = CountState()
 
     def __str__(self):
-        return '{}'.format(self.trucks.number)
+        return '{}'.format(self.type)
 
 class Plate(models.Model):
     id_plt = models.AutoField(primary_key=True)

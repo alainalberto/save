@@ -264,16 +264,16 @@
                             <a class="item" href="{% url 'services:insurance_create' %}"> Insurance</a>
                         </li>
                         {% endif %}
-                       <!-- {% if perms.services.add_ifta %}
+                        {% if perms.services.add_ifta %}
                         <li>
-                            <a class="item" href="{% url 'services:ifta' %}"> IFTA</a>
+                            <a class="item" href="{% url 'services:ifta_create' %}"> IFTA</a>
                         </li>
                         {% endif %}
                         {% if perms.services.add_audit %}
                         <li>
-                            <a class="item" href="{% url 'services:audits' %}"> Audits</a>
+                            <a class="item" href="{% url 'services:audit_create' %}"> Audits</a>
                         </li>
-                        {% endif %}-->
+                        {% endif %}
                         {% if perms.services.add_equipment %}
                         <li>
                             <a class="item" href="{% url 'services:equipment_create' %}"> Equipment</a>
