@@ -14,13 +14,132 @@ from apps.services.models import *
 from apps.tools.models import Folder
 from datetime import datetime, date, time, timedelta
 from django.core.mail import send_mail
-import html
+import json
 # Create your views here.
 
 
-class AccountingPanel(View):
-    model = Account
-    template_name = 'accounting/panel_account.html'
+
+
+def AccountingPanel(request):
+    incomes = []
+    expenses = []
+    balance = []
+    balance_total = []
+    account_business = []
+    cash_i_total = {'total': 0}
+    credit_i_total = {'total': 0}
+    check_i__total = {'total': 0}
+    cash_e_total = {'total': 0}
+    credit_e_total = {'total': 0}
+    check_e__total = {'total': 0}
+    income_total = {'total': 0}
+    expenses_total = {'total': 0}
+    business = Busines.objects.filter(deactivated=False)
+    inc_list = Account.objects.filter(primary=False, accounts_id=1)
+    exp_list = Account.objects.filter(primary=False, accounts_id=2)
+
+    for i in inc_list:
+        cash_i = {'total': 0}
+        credit_i = {'total': 0}
+        check_i = {'total': 0}
+
+        if AccountDescrip.objects.filter(accounts_id=i.id_acn, waytopay='Cash'):
+            cash_i = AccountDescrip.objects.get_waytopay('Cash', i.id_acn)
+        if AccountDescrip.objects.filter(accounts_id=i.id_acn, waytopay='Check'):
+            check_i = AccountDescrip.objects.get_waytopay('Check', i.id_acn)
+        if AccountDescrip.objects.filter(accounts_id=i.id_acn, waytopay='Credit Card'):
+            credit_i = AccountDescrip.objects.get_waytopay('Credit Card', i.id_acn)
+        total_i = (cash_i['total']) + (check_i['total']) + (credit_i['total'])
+        incomes.append({'account': i, 'cash': cash_i, 'check': check_i, 'credit': credit_i, 'total': total_i})
+        cash_i_total['total'] += cash_i['total']
+        credit_i_total['total'] += credit_i['total']
+        check_i__total['total'] += check_i['total']
+        income_total['total'] = (cash_i_total['total']) + (credit_i_total['total']) + (check_i__total['total'])
+    for e in exp_list:
+        credit_e = {'total': 0}
+        cash_e = {'total': 0}
+        check_e = {'total': 0}
+        if AccountDescrip.objects.filter(accounts_id=e.id_acn, waytopay='Cash'):
+            cash_e = AccountDescrip.objects.get_waytopay('Cash', e.id_acn)
+        if AccountDescrip.objects.filter(accounts_id=e.id_acn, waytopay='Check'):
+            check_e = AccountDescrip.objects.get_waytopay('Check', e.id_acn)
+        if AccountDescrip.objects.filter(accounts_id=e.id_acn, waytopay='Credit Card'):
+            credit_e = AccountDescrip.objects.get_waytopay('Credit Card', e.id_acn)
+        total_e = (cash_e['total']) + (check_e['total']) + (credit_e['total'])
+        expenses.append({'account': e, 'cash': cash_e, 'check': check_e, 'credit': credit_e, 'total': total_e})
+        cash_e_total['total'] += cash_e['total']
+        credit_e_total['total'] += credit_e['total']
+        check_e__total['total'] += check_e['total']
+        expenses_total['total'] = (cash_e_total['total']) + (credit_e_total['total']) + (check_e__total['total'])
+
+    for bus in business:
+        inc = 0
+        exp = 0
+        for i in inc_list:
+               if i.business == bus:
+                  for desc in AccountDescrip.objects.filter(accounts_id=i.id_acn):
+                        inc += desc.value
+        for e in exp_list:
+                if e.business == bus:
+                    for desc in AccountDescrip.objects.filter(accounts_id=e.id_acn):
+                        exp += desc.value
+        ear = inc - exp
+        balance.append({'incomes':inc, 'expenses':exp, 'earning':ear, 'business':bus})
+
+
+    for bus in business:
+        i_account = []
+        i_total = 0
+        e_account = []
+        e_total = []
+        if inc_list:
+               for i in inc_list:
+                  if i.business_id == bus.id_bus:
+                     for desc in AccountDescrip.objects.filter(accounts_id=i.id_acn):
+                        for month in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]:
+                          date = desc.date
+                          value_total = 0
+                          if date.month == month:
+                              value_total += desc.value
+                          i_account.append({'account':i, 'month':month, 'value':value_total})
+        if exp_list:
+               for e in exp_list:
+                   if e.business_id == bus.id_bus:
+                       for desc in AccountDescrip.objects.filter(accounts_id=e.id_acn):
+                          for month in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]:
+                            date = desc.date
+                            value_total = 0
+                            if date.month == month:
+                                value_total += desc.value
+                            e_account.append({'account': e, 'month': month, 'value': value_total})
+
+
+        account_business.append({'incomes':i_total, 'expenses':e_total, 'earning':0, 'business':bus.id_bus})
+
+
+
+
+    context = {
+        'incomes': incomes,
+        'expenses': expenses,
+        'cash_i_total': cash_i_total,
+        'credit_i_total': credit_i_total,
+        'check_i_total': check_i__total,
+        'cash_e_total': cash_e_total,
+        'credit_e_total': credit_e_total,
+        'check_e_total': check_e__total,
+        'expenses_total': expenses_total,
+        'income_total': income_total,
+        'earning_total': (income_total['total'] - expenses_total['total']),
+        'expenses_total_j': json.dumps(float(expenses_total['total'])),
+        'income_total_j': json.dumps(float(income_total['total'])),
+        'earning_total_J': json.dumps(float(income_total['total'] - expenses_total['total'])),
+        'business': business,
+        'balance':  balance,
+        'balance_total':balance_total,
+        'account_business':account_business
+    }
+    return render(request, 'accounting/statistic/principalPanel.html', context)
 #Account
 class AccountCreate(CreateView):
     model = Account

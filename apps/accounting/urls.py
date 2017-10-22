@@ -4,7 +4,7 @@ from apps.accounting.views import *
 from apps.accounting.components.AccountingPDF import Receipt_pdf, Invoices_pdf
 
 urlpatterns = [
-    url(r'^$', login_required(AccountingPanel.as_view()), name='panel_account'),
+    url(r'^accounts/statistic/$', login_required(AccountingPanel), name='panel_account'),
 
     #Account
     url(r'^accounts/$', login_required(permission_required('accounting.add_account')(AccountsViews)), name='accounts'),

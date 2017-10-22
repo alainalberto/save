@@ -760,6 +760,20 @@ class InsuranceCreate(CreateView):
                             end_date = dateExp.strftime("%Y-%m-%d"),
                             users = request.user)
                         alert.group.add(group_admin, group_manag, group_offic)
+                  if request.POST.get('monthly_alert', False) and len(request.POST['monthlypay']) != 0:
+                        group_admin = Group.objects.get(name='System Administrator')
+                        group_manag = Group.objects.get(name= 'System Manager')
+                        group_offic = Group.objects.get(name= 'Office Specialist')
+                        dateExp = insurance.monthlypay
+                        dateShow = dateExp - timedelta(days=7)
+                        alert = Alert.objects.create(
+                            category = "Urgents",
+                            description = "The next "+dateExp+" is the monthly insurance payment day of the customer" + str(customer),
+                            create_date = datetime.now().strftime("%Y-%m-%d"),
+                            show_date = dateShow.strftime("%Y-%m-%d"),
+                            end_date = dateExp.strftime("%Y-%m-%d"),
+                            users = request.user)
+                        alert.group.add(group_admin, group_manag, group_offic)
                   accion_user(insurance, ADDITION, request.user)
                   messages.success(request, 'The Insurance was saved successfully')
                   return HttpResponseRedirect('/accounting/customers/view/'+str(insurance.customers_id))
@@ -828,6 +842,30 @@ class InsuranceEdit(UpdateView):
                         category="Urgents")
                     if alert:
                         alert.delete()
+                if request.POST.get('monthly_alert', False) and len(request.POST['monthlypay']) != 0:
+                   dateExp = insurance.monthlypay
+                   dateShow = dateExp - timedelta(days=7)
+                   alert = Alert.objects.filter(description = "The next "+dateExp+" is the monthly insurance payment day of the customer" + str(customer), category="Urgents")
+                   if alert:
+                      alert.update(show_date = dateShow.strftime("%Y-%m-%d"), end_date = dateExp.strftime("%Y-%m-%d"))
+                   else:
+                       group_admin = Group.objects.get(name='System Administrator')
+                       group_manag = Group.objects.get(name='System Manager')
+                       group_offic = Group.objects.get(name='Office Specialist')
+                       alert = Alert.objects.create(
+                           category="Urgents",
+                           description="The next "+dateExp+" is the monthly insurance payment day of the customer" + str(customer),
+                           create_date=datetime.now().strftime("%Y-%m-%d"),
+                           show_date=dateShow.strftime("%Y-%m-%d"),
+                           end_date=dateExp.strftime("%Y-%m-%d"),
+                           users=request.user)
+                       alert.group.add(group_admin, group_manag, group_offic)
+                else:
+                    alert = Alert.objects.filter(
+                        description="The next "+dateExp+" is the monthly insurance payment day of the customer" + str(customer),
+                        category="Urgents")
+                    if alert:
+                        alert.delete()
                 accion_user(insurance, CHANGE, request.user)
                 messages.success(request, 'The Insurance was saved successfully')
                 return HttpResponseRedirect('/accounting/customers/view/' + str(insurance.customers_id))
@@ -847,9 +885,14 @@ class InsuranceDelete(DeleteView):
         insurance = self.model.objects.get(id_ins=id)
         alert_policy = Alert.objects.filter(description = "Expires the Insurance Policy  of the customer " + str(insurance.customers),
                                      end_date=insurance.policy_date_exp)
+        alert_monthly = Alert.objects.filter(
+            description="The next "+dateExp+" is the monthly insurance payment day of the customer" + str(customer),
+            end_date=insurance.monthlypay)
         accion_user(insurance, DELETION, request.user)
         if alert_policy:
           alert_policy.delete()
+        if alert_monthly:
+          alert_monthly.delete()
         customer = insurance.customers
         insurance.delete()
         messages.success(request, "Insurance delete with an extension")
@@ -1184,6 +1227,21 @@ class IftaCreate(CreateView):
                             end_date=dateExp.strftime("%Y-%m-%d"),
                             users=request.user)
                         alert.group.add(group_admin, group_manag, group_offic)
+                    if request.POST.get('payment_alert', False) and len(request.POST['payment_due']) != 0:
+                        group_admin = Group.objects.get(name='System Administrator')
+                        group_manag = Group.objects.get(name='System Manager')
+                        group_offic = Group.objects.get(name='Office Specialist')
+                        dateExp = ifta.payment_due
+                        dateShow = dateExp - timedelta(days=30)
+                        alert = Alert.objects.create(
+                            category="Urgents",
+                            description="IFTA Payment Due of the customer " + str(customer),
+                            create_date=datetime.now().strftime("%Y-%m-%d"),
+                            show_date=dateShow.strftime("%Y-%m-%d"),
+                            end_date=dateExp.strftime("%Y-%m-%d"),
+                            users=request.user)
+                        alert.group.add(group_admin, group_manag, group_offic)
+
                     accion_user(ifta, ADDITION, request.user)
                     messages.success(request, 'The Ifta was saved successfully')
                     return HttpResponseRedirect('/accounting/customers/view/' + str(ifta.customers_id))
@@ -1252,6 +1310,31 @@ class IftaEdit(UpdateView):
                         category="Urgents")
                     if alert:
                         alert.delete()
+                if request.POST.get('payment', False) and len(request.POST['payment_due']) != 0:
+                    dateExp = ifta.payment_due
+                    dateShow = dateExp - timedelta(days=30)
+                    alert = Alert.objects.filter(
+                        description="IFTA Payment Due of the customer " + str(customer), category="Urgents")
+                    if alert:
+                        alert.update(show_date=dateShow.strftime("%Y-%m-%d"), end_date=dateExp.strftime("%Y-%m-%d"))
+                    else:
+                        group_admin = Group.objects.get(name='System Administrator')
+                        group_manag = Group.objects.get(name='System Manager')
+                        group_offic = Group.objects.get(name='Office Specialist')
+                        alert = Alert.objects.create(
+                            category="Urgents",
+                            description="IFTA Payment Due of the customer " + str(customer),
+                            create_date=datetime.now().strftime("%Y-%m-%d"),
+                            show_date=dateShow.strftime("%Y-%m-%d"),
+                            end_date=dateExp.strftime("%Y-%m-%d"),
+                            users=request.user)
+                        alert.group.add(group_admin, group_manag, group_offic)
+                else:
+                    alert = Alert.objects.filter(
+                        description="IFTA Payment Due of the customer " + str(customer),
+                        category="Urgents")
+                    if alert:
+                        alert.delete()
                 accion_user(ifta, CHANGE, request.user)
                 messages.success(request, 'The Ifta was saved successfully')
                 return HttpResponseRedirect('/accounting/customers/view/' + str(ifta.customers_id))
@@ -1273,9 +1356,14 @@ class IftaDelete(DeleteView):
             nex_period_alert = Alert.objects.filter(
                 description="Next period of the customer " + str(ifta.customers),
                 end_date=ifta.nex_period)
+            payment_alert = Alert.objects.filter(
+                description="IFTA Payment Due of the customer " + str(ifta.customers),
+                end_date=ifta.payment_due)
             accion_user(ifta, DELETION, request.user)
             if nex_period_alert:
                 nex_period_alert.delete()
+            if payment_alert:
+                payment_alert.delete()
             customer = ifta.customers
             ifta.delete()
             messages.success(request, "Ifta delete with an extension")

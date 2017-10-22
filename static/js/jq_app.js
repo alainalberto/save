@@ -105,7 +105,7 @@ $(".btn_add_cut").click(function() {
 
 		});
 
-    // Search Table
+    // swish inter
 
  });
 

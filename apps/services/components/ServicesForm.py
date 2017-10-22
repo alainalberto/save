@@ -35,6 +35,10 @@ class PermitForm(forms.ModelForm):
                   'boc3_date',
                   'ucr',
                   'ucr_date_exp',
+                  'account_number',
+                  'account_user',
+                  'account_password',
+                  'inter',
                   'deactivate',
                   'state',
                   'customers',
@@ -62,10 +66,14 @@ class PermitForm(forms.ModelForm):
             'txdmv_date_exp': forms.DateInput(attrs={'placeholder': 'Exp Date', 'class': 'form-control input-md'}),
             'mc': forms.TextInput(attrs={'placeholder': 'MC Number', 'class': 'form-control input-md'}),
             'mc_pin': forms.TextInput(attrs={'placeholder': 'MC PIN', 'class': 'form-control input-md'}),
-            'boc3': forms.TextInput(attrs={'placeholder': 'BOC3 Number', 'class': 'form-control input-md'}),
+            'boc3': forms.CheckboxInput(attrs={'data-off-color':"danger", 'class':"switch", 'data-size':"mini", 'data-on-text':"YES", 'data-off-text': "NO"}),
             'boc3_date': forms.DateInput(attrs={'placeholder': 'BOC3 Date', 'class': 'form-control input-md'}),
-            'ucr': forms.NumberInput(attrs={'placeholder': 'USDOT Number', 'class': 'form-control input-md'}),
-            'ucr_date_exp': forms.DateInput(attrs={'placeholder': 'BOC3 Date', 'class': 'form-control input-md'}),
+            'ucr': forms.CheckboxInput(attrs={'data-off-color':"danger", 'class':"switch", 'data-size':"mini", 'data-on-text':"YES", 'data-off-text': "NO"}),
+            'ucr_date_exp': forms.DateInput(attrs={'placeholder': 'UCR Date', 'class': 'form-control input-md'}),
+            'account_number': forms.TextInput(attrs={'placeholder': 'Account Number', 'class': 'form-control input-md'}),
+            'account_user': forms.TextInput(attrs={'placeholder': 'Account User', 'class': 'form-control input-md'}),
+            'account_password': forms.TextInput(attrs={'placeholder': 'Account Password', 'class': 'form-control input-md'}),
+            'inter': forms.CheckboxInput(attrs={'id':"btninter", 'data-toggle':"toggle", 'type':"checkbox", 'data-on':"Inter-State", 'data-off':"Intra-State"}),
             'deactivate': forms.CheckboxInput(attrs={'data-off-color':"danger", 'class':"switch", 'data-size':"mini", 'data-on-text':"YES", 'data-off-text': "NO"}),
             'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
             'customers': forms.Select(attrs={'class': 'form-control input-md', 'required':'true', 'title':'Select one'}),
@@ -96,6 +104,8 @@ class InsuranceForm(forms.ModelForm):
             'customers',
             'paid_out',
             'balance_due',
+            'monthlypay',
+            'note',
         ]
         widgets = {
             'down_payment': forms.NumberInput(attrs={'placeholder': 'value Down', 'class': 'form-control input-md'}),
@@ -117,6 +127,8 @@ class InsuranceForm(forms.ModelForm):
             'customers': forms.Select(attrs={'class': 'form-control input-md', 'required':'true', 'title':'Select one'}),
             'paid_out': forms.NumberInput(attrs={'placeholder': 'value', 'class': 'form-control input-md'}),
             'balance_due': forms.NumberInput(attrs={'placeholder': 'value', 'class': 'form-control input-md'}),
+            'monthlypay': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'note': forms.Textarea(attrs={'class': 'form-control fee-value upper'}),
         }
 
 class ContractForm(forms.ModelForm):
@@ -169,9 +181,6 @@ class EquipmentForm(forms.ModelForm):
             'serial',
             'number',
             'plate_date_exp',
-            'plate_account_number',
-            'plate_account_user',
-            'plate_account_password',
             'title_date_reg',
             'title_date_exp_reg',
             'title_date_insp',
@@ -188,9 +197,6 @@ class EquipmentForm(forms.ModelForm):
             'serial': forms.TextInput(attrs={'placeholder': 'serial number', 'class': 'form-control input-md upper','required': 'true', 'title': 'Insert Serial'}),
             'number': forms.TextInput(attrs={'placeholder': 'number', 'class': 'form-control input-md upper','required': 'true', 'title': 'Insert Number'}),
             'plate_date_exp': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
-            'plate_account_number': forms.TextInput(attrs={'class': 'form-control input-md upper'}),
-            'plate_account_user': forms.TextInput(attrs={'class': 'form-control input-md'}),
-            'plate_account_password': forms.TextInput(attrs={'class': 'form-control input-md'}),
             'title_date_reg': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
             'title_date_exp_reg': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
             'title_date_insp': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
@@ -211,7 +217,7 @@ class FileForm(forms.ModelForm):
         ]
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'name', 'class': 'form-control input-md upper'}),
-            'category': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('', '---------'),('Company', 'Company'), ('Insurance', 'Insurance'), ('Misselenious', 'Misselenious'))),
+            'category': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('', '---------'),('Company', 'Company'), ('Insurance', 'Insurance'),('COI', 'COI'),('Quote', 'Quote'),('Accidents', 'Accidents'),('Endorsments', 'Endorsments'), ('Misselenious', 'Misselenious'))),
             'url': forms.FileInput(),
         }
 
@@ -264,6 +270,8 @@ class IftaForm(forms.ModelForm):
             'type',
             'period',
             'nex_period',
+            'paid',
+            'payment_due',
             'state',
         ]
         widgets = {
@@ -271,6 +279,10 @@ class IftaForm(forms.ModelForm):
             'type': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('Anual', 'Anual'), ('Quarter', 'Quarter'))),
             'period': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('Anual', 'Anual'), ('1st Quarter', '1st Quarter'), ('2nd Quarter', '2nd Quarter'), ('3rd Quarter', '3rd Quarter'), ('4th Quarter', '4th Quarter'))),
             'nex_period': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
+            'paid': forms.CheckboxInput(
+                attrs={'data-off-color': "danger", 'class': "switch", 'data-size': "mini", 'data-on-text': "YES",
+                       'data-off-text': "NO"}),
+            'payment_due': forms.DateInput(attrs={'placeholder': 'Select date', 'class': 'form-control input-md'}),
             'state': forms.Select(attrs={'class': 'form-control input-md'}, choices=(
             ('Initiated', 'Initiated'), ('Pending', 'Pending'), ('Finalized', 'Finalized'))),
         }

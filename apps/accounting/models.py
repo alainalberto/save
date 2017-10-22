@@ -15,6 +15,31 @@ class Waytopay(models.Manager):
     def get_waytopay(self,methodo, account):
         return self.filter(waytopay=methodo, accounts_id=account).aggregate(total=Sum('value'))
 
+class TotalAcount(models.Manager):
+    def get_totalaount(self, type):
+        accounts = []
+        acontype = Account.objects.filter(primary=True, name=type)
+        for a in acontype:
+           at = self.filter(accounts_id=a.id_acn)
+           for month in [1,2,3,4,5,6,7,8,9,10,11,12]:
+               for ac in at:
+                 date = datetime.strptime(ac.date, "%Y-%m-%d")
+                 if date.month == month:
+                    mth = {
+                           'id_acd' : ac.id_acd,
+                           'users' : ac.users,
+                           'accounts' : ac.accounts,
+                           'type': ac.type,
+                           'document': ac.document,
+                           'month': month,
+                           'value': ac.value,
+                           'business': a.business_id,
+                           'waytopay': ac.waytopay
+                    }
+               mth.aggregate(total=Sum('value'))
+           accounts.append(mth)
+        return accounts
+
 # Model Table accounts
 class Account(models.Model):
     id_acn = models.AutoField(primary_key=True)
