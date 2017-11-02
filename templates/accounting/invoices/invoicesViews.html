@@ -35,7 +35,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for i in object_list|dictsort:"start_date" %}
+                    {% for i in object_list %}
                     <tr>
                         <td>{{i.prefix}}</td>
                         <td><a href="{% url 'accounting:invoices_view' i.id_inv %}">{{i.serial}}</a></td>

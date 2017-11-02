@@ -1,6 +1,7 @@
 from django.conf.urls import *
 from django.contrib.auth.decorators import login_required, permission_required
 from apps.accounting.views import *
+from django.views.generic.dates import ArchiveIndexView
 from apps.accounting.components.AccountingPDF import Receipt_pdf, Invoices_pdf
 
 urlpatterns = [
@@ -39,7 +40,7 @@ urlpatterns = [
     url(r'^employees/(?P<pk>\d+)/$', login_required(permission_required('accounting.delete_employee')(EmployeesDelete.as_view())), name='employees_delete'),
 
     #Invoices
-    url(r'^invoices/$', login_required(permission_required('accounting.add_invoice')(InvoicesView.as_view())), name='invoices'),
+    url(r'^invoices/$', login_required(permission_required('accounting.add_invoice')(ArchiveIndexView.as_view(model=Invoice, date_field="start_date", template_name = 'accounting/invoices/invoicesViews.html'))), name='invoices'),
     url(r'^invoices/create$', login_required(permission_required('accounting.add_invoice')(InvoicesCreate)), name='invoices_create'),
     url(r'^invoices/edit/(?P<pk>\d+)/$', login_required(permission_required('accounting.change_invoice')(InvoicesEdit.as_view())), name='invoices_edit'),
     url(r'^invoices/(?P<pk>\d+)/$', login_required(permission_required('accounting.delete_invoice')(InvoicesDelete.as_view())), name='invoices_delete'),

@@ -14,10 +14,23 @@ from apps.services.models import *
 from apps.tools.models import Folder
 from datetime import datetime, date, time, timedelta
 from django.core.mail import send_mail
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 import json
 # Create your views here.
 
+def pagination(request, objects):
+    paginator = Paginator(objects, 10)  # Show 25 contacts per page
 
+    page = request.GET.get('page')
+    try:
+        objs = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        objs = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        objs = paginator.page(paginator.num_pages)
+    return objs
 
 
 def AccountingPanel(request):
@@ -202,11 +215,12 @@ def CustomerView(request, pk):
        contract = Contract.objects.filter(customers=customer)
        audit = Audit.objects.filter(customers=customer)
        driver = Driver.objects.filter(customers=customer)
-       files = File.objects.filter(folders=customer.folders)
+       files = pagination(request,File.objects.filter(folders=customer.folders).order_by('category'))
        note = Note.objects.filter(customers=customer)
        context = {
            'customer': customer,
            'files': files,
+           'categories': ['Company','Insurance', 'COI', 'Quote', 'Accidents', 'Endorsments', 'Misselenious'],
            'permits': permit,
            'insurances': insurance,
            'equipments': equipment,
@@ -442,6 +456,12 @@ class InvoicesView(ListView):
     model = Invoice
     template_name = 'accounting/invoices/invoicesViews.html'
 
+    """def get(self, request, *args, **kwargs):
+        invoice = self.model.objects.all().order_by('start_date')
+        context ={'title': 'List Invoices', 'object_list': invoice}
+        return render(request, self.template_name, context)"""
+
+
 def InvoiceView(request, pk):
         invoice = Invoice.objects.get(id_inv=pk)
         invitem = InvoicesHasItem.objects.filter(invoices_id=invoice.id_inv)
@@ -540,8 +560,6 @@ def InvoicesCreate(request):
                                                                   users_id=user.id,
                                                                   type='Invoices')
                       else:
-                          item = Item.objects.create(name=itinv.description, value=itinv.value, accounts_id=itinv.accounts_id )
-                          itinv.items_id = item.id_ite
                           itinv.invoices = invoice
                           itinv.save()
                           acountDescp = AccountDescrip.objects.create(date=invoice.start_date,
@@ -667,9 +685,6 @@ class InvoicesEdit(UpdateView):
                         itinv.save()
                         acountDescp = AccountDescrip.objects.filter(date=invoice.start_date, accounts_id=itinv.accounts_id, document=invoice.id_inv, type='Invoices').update(value=itinv.subtotal, waytopay=invoice.waytopay, date=invoice.start_date)
                     else:
-                        item = Item.objects.create(name=itinv.description, value=itinv.value,
-                                                   accounts_id=itinv.accounts_id)
-                        itinv.items_id = item.id_ite
                         itinv.invoices = invoice
                         itinv.save()
                         acountDescp = AccountDescrip.objects.create(date=invoice.start_date,

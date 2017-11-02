@@ -19,7 +19,6 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
 from datetime import datetime, date, time, timedelta
 from django.core.mail import send_mail
-from twilio.rest import Client
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
 
 # Create your views here.

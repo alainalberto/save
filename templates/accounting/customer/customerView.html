@@ -180,46 +180,67 @@
           <div class="col-md-offset-11">
               <a type="button" class="btn btn-success" href="{% url 'services:folder_create_popup' customer.id_cut %}"><span><i class="fa fa-plus"></i></span></a>
           </div>
-          <table class="table table-striped">
-              <thead>
-              <th>Name</th>
-              <th>Creative user </th>
-              <th>Up load Date</th>
-              <th>Category</th>
-              <th>Action</th>
-              </thead>
-              <tbody>
-              {% for f in files %}
-              <tr>
-                  <td><i class="fa fa-file-pdf-o" aria-hidden="true"></i> <a href="/static/media/{{ f.url }}" target="_blank">{{f.name}}</br></a></td>
-                  <td>{% if f.users.first_name %} {{ f.users.first_name }} {% else %} {{ f.users }} {% endif %}</td>
-                  <td>{{ f.date_save }}</td>
-                  <td>{{ f.category }}</td>
-                  <td>
-                      <toolbar class="md-accent">
-                          <a data-type="info"  data-trigger="focus"  data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'services:folder_edit' f.id_fil %}">
-                              <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                              <tooltip md-direction="left"></tooltip>
+      <br/>
+          <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+               {% regroup files by category as grouped %}
+               {% for category in grouped %}
+              <div class="panel panel-default">
+                  <div class="panel-heading" role="tab" id="H-{{category.grouper}}">
+                      <h4 class="panel-title">
+                          <a role="button" data-toggle="collapse" data-parent="#accordion" href="#{{category.grouper}}" aria-controls="collapseOne">
+                              {{category.grouper}}
                           </a>
-                      </toolbar>
-                      <toolbar class="md-accent">
-                          <a data-type="info"  data-animation="am-flip-x" data-trigger="focus"   type="button" class="btn btn-danger test-tooltip" target="popup" onclick="openpopup('{% url 'services:folder_delete' f.id_fil %}')">
-                              <i class="fa fa-trash" aria-hidden="true"></i>
-                              <tooltip md-direction="left"></tooltip>
-                          </a>
-                      </toolbar>
-                  </td>
-              </tr>
+                      </h4>
+                  </div>
+                  <div id="{{category.grouper}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="H-{{category.grouper}}">
+                      <div class="panel-body">
+                          <table class="table table-striped data-table">
+                              <thead>
+                              <th>Name</th>
+                              <th>Creative user </th>
+                              <th>Up load Date</th>
+                              <th>Category</th>
+                              <th>Action</th>
+                              </thead>
+                              <tbody>
+                              {% for f in category.list %}
+                              <tr>
+                                  <td><i class="fa fa-file-pdf-o" aria-hidden="true"></i> <a href="/static/media/{{ f.url }}" target="_blank">{{f.name}}</br></a></td>
+                                  <td>{% if f.users.first_name %} {{ f.users.first_name }} {% else %} {{ f.users }} {% endif %}</td>
+                                  <td>{{ f.date_save }}</td>
+                                  <td>{{ f.category }}</td>
+                                  <td>
+                                      <toolbar class="md-accent">
+                                          <a data-type="info"  data-trigger="focus"  data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'services:folder_edit' f.id_fil %}">
+                                              <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                              <tooltip md-direction="left"></tooltip>
+                                          </a>
+                                      </toolbar>
+                                      <toolbar class="md-accent">
+                                          <a data-type="info"  data-animation="am-flip-x" data-trigger="focus"   type="button" class="btn btn-danger test-tooltip" target="popup" onclick="openpopup('{% url 'services:folder_delete' f.id_fil %}')">
+                                              <i class="fa fa-trash" aria-hidden="true"></i>
+                                              <tooltip md-direction="left"></tooltip>
+                                          </a>
+                                      </toolbar>
+                                  </td>
+                              </tr>
+                              {% endfor %}
+                              </tbody>
+                          </table>
+
+                      </div>
+                  </div>
+              </div>
               {% endfor %}
-              </tbody>
-          </table>
+          </div>
       </div>
       <div class="form-group col-md-12">
           <p class="bg-primary text-center">NOTES</p>
           <div class="col-md-offset-11">
               <a type="button" class="btn btn-success" href="{% url 'accounting:note_create' customer.id_cut %}"><span><i class="fa fa-plus"></i></span></a>
           </div>
-          <table id="tb-note" class="table table-striped">
+          <br/>
+          <table id="tb-note" class="table table-striped data-table">
               <thead>
               <th>User</th>
               <th>Note</th>
