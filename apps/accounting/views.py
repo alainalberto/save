@@ -382,13 +382,6 @@ class EmployeesCreate(CreateView):
          user = request.user
          form = self.form_class(request.POST)
          if form.is_valid():
-             send_mail(
-                 'FirstCall Alert',
-                 'Usted tiene una alerta:',
-                 'ranselr@gmail.com',
-                 ['ranselineval@gmail.com'],
-                  fail_silently=False,
-             )
              employee_exist = Employee.objects.filter(email=form.data['email'], social_no=form.data['social_no'])
              if employee_exist:
                  messages.error(request, 'The employee already exists')
@@ -839,6 +832,7 @@ class PaymentView(ListView):
     def get_context_data(self, **kwargs):
         context = super(PaymentView, self).get_context_data(**kwargs)
         payment = []
+        person = []
         pay = Payment.objects.all()
         for p in pay:
             payEmp = EmployeeHasPayment.objects.filter(payments_id=p.id_sal)
@@ -846,14 +840,17 @@ class PaymentView(ListView):
             payDisp = DispatchHasPayment.objects.filter(payments_id=p.id_sal)
             if payEmp:
                 for e in payEmp:
-                    payment.append(p, e)
+                    employee = Employee.objects.get(id_emp=e.employee_id)
+                    person.append({'name':employee.name+" "+employee.lastname, 'id_pay':p.id_sal})
+                    payment.append(p)
             if payDri:
                 for dr in payDri:
-                    payment.append(p, dr)
+                    payment.append(p, {'name':dr.name})
             if payDisp:
                 for ds in payEmp:
-                    payment.append(p, ds)
+                    payment.append(p, {'name':ds.name})
         context['payment'] = payment
+        context['person'] = person
         return  context
 
 
@@ -865,112 +862,119 @@ class PaymentCreate(CreateView):
 
      def get(self, request, *args, **kwargs):
          form = self.form_class(initial=self.initial)
-         return render(request, self.template_name, {'form': form, 'title': 'Create new Payment'})
+         employees = Employee.objects.all().order_by('name')
+         account = []
+         exp = Account.objects.get(primary=True, name='Expenses')
+         exp_acconts = Account.objects.filter(accounts_id_id=exp.id_acn)
+         for e in exp_acconts:
+            account.append(e)
+         for a in exp_acconts:
+            exp_accont = Account.objects.filter(accounts_id_id=a.id_acn)
+            if exp_accont != None:
+                for ac in exp_accont:
+                    account.append(ac)
+         return render(request, self.template_name, {'form': form, 'title': 'Create new Payment', 'employees':employees, 'accounts':account})
 
      def post(self, request, *args, **kwargs):
          user = request.user
          form = self.form_class(request.POST)
-         recs = Receipt.objects.filter(business_id=form.data['business']).order_by('-serial')
+         pay = Payment.objects.filter(business_id=form.data['business']).order_by('-serial')
          serial = 1
          serials = []
-         for s in recs:
+         for s in pay:
              serials.append(s.serial)
          if form.is_valid():
              if serials:
                serial = int(serials[0])+1
-             receipt = form.save(commit=False)
-             receipt.serial = serial
-             receipt.users_id = user.id
-             receipt.accounts_id = request.POST['account']
-             receipt.save()
-             accion_user(receipt, ADDITION, request.user)
-             acountDescp = AccountDescrip.objects.create(date=form.data['start_date'],
-                                                         value=form.data['total'],
-                                                         accounts_id=request.POST['account'],
-                                                         document=receipt.id_rec,
-                                                         waytopay=receipt.waytopay,
-                                                         users_id=user.id,
-                                                         type='Receipts'
-                                                         )
-             messages.success(request, "Receipt save with an extension")
-             return HttpResponseRedirect(reverse_lazy('accounting:receipts'))
+             payment = form.save(commit=False)
+             payment.serial = serial
+             payment.users_id = user.id
+             payment.accounts_id = request.POST['accounts']
+             payment.save()
+             if request.POST['employees']:
+                employee = Employee.objects.get(id_emp=request.POST['employees'])
+                payemp = EmployeeHasPayment.objects.create(payments=payment,
+                                                           employee=employee)
+             accion_user(payment, ADDITION, request.user)
+             messages.success(request, "Payment save with an extension")
+             return HttpResponseRedirect(reverse_lazy('accounting:payments'))
          else:
              for er in form.errors:
+                 form = self.form_class(initial=self.initial)
+                 employees = Employee.objects.all().order_by('name')
+                 account = []
+                 exp = Account.objects.get(primary=True, name='Expenses')
+                 exp_acconts = Account.objects.filter(accounts_id_id=exp.id_acn)
+                 for e in exp_acconts:
+                     account.append(e)
+                 for a in exp_acconts:
+                     exp_accont = Account.objects.filter(accounts_id_id=a.id_acn)
+                     if exp_accont != None:
+                         for ac in exp_accont:
+                             account.append(ac)
                  messages.error(request, "ERROR: " + er)
+             return render(request, self.template_name,
+                           {'accounts': account, 'employess':employees, 'form': form, 'title': 'Create new Payment'})
+
 
 class PaymentEdit(UpdateView):
-    model = Receipt
-    form_class = ReceiptsForm
-    template_name = 'accounting/receipts/receiptsForm.html'
+    model = Payment
+    form_class = PaymentForm
+    template_name = 'accounting/payments/paymentsForm.html'
 
     def get_context_data(self, **kwargs):
         context = super(PaymentEdit, self).get_context_data(**kwargs)
         pk = self.kwargs.get('pk',0)
-        receipt = self.model.objects.get(id_rec=pk)
-        account = Account.objects.filter(id_acn=receipt.accounts_id)
-        accounts = []
-        exp = Account.objects.get(primary=True, name='Expenses')
-        exp_acconts = Account.objects.filter(accounts_id_id=exp.id_acn)
-        for e in exp_acconts:
-            accounts.append(e)
-        for a in exp_acconts:
-            exp_accont = Account.objects.filter(accounts_id_id=a.id_acn)
-            if exp_accont != None:
-                for ac in exp_accont:
-                    accounts.append(ac)
+        payment = self.model.objects.get(id_sal=pk)
+        account = Account.objects.filter(id_acn=payment.accounts_id)
+        payemp = EmployeeHasPayment.objects.filter(payments_id=payment.accounts_id)
+        if payemp:
+           employee = Employee.objects.filter(id_emp=EmployeeHasPayment.objects.get(payments_id=payment.accounts_id).employee_id)
+        else:
+            employee = Employee.objects.filter(business = payment.business)
         if 'form' not in context:
             context['form'] = self.form_class()
+        context['employees'] = employee
         context['id'] = pk
         context['accounts'] = account
         return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object
-        id_rec = kwargs['pk']
-        receipt = self.model.objects.get(id_rec=id_rec)
-        receipt.accounts_id = request.POST['account']
-        acountDescp = AccountDescrip.objects.get(accounts_id=request.POST['account'], document=int(receipt.id_rec))
-        form = self.form_class(request.POST, instance=receipt)
+        id_sal = kwargs['pk']
+        payment = self.model.objects.get(id_sal=id_sal)
+        payment.accounts_id = request.POST['account']
+        form = self.form_class(request.POST, instance=payment)
         if form.is_valid():
             form.save()
-            accion_user(receipt, CHANGE, request.user)
-            AccountDescrip.objects.filter(id_acd=acountDescp.id_acd).update(
-                date=form.data['start_date'],
-                value=form.data['total'],
-            )
-            messages.success(request, "Receipt update with an extension")
-            return HttpResponseRedirect(reverse_lazy('accounting:receipts'))
+            accion_user(payment, CHANGE, request.user)
+            messages.success(request, "Payment update with an extension")
+            return HttpResponseRedirect(reverse_lazy('accounting:payments'))
         else:
             for er in form.errors:
-                accounts = []
-                exp = Account.objects.get(primary=True, name='Expenses')
-                exp_acconts = Account.objects.filter(accounts_id_id=exp.id_acn)
-                for e in exp_acconts:
-                    accounts.append(e)
-                for a in exp_acconts:
-                    exp_accont = Account.objects.filter(accounts_id_id=a.id_acn)
-                    if exp_accont != None:
-                        for ac in exp_accont:
-                            accounts.append(ac)
+                payment = self.model.objects.get(id_sal=id_sa)
+                account = Account.objects.filter(id_acn=payment.accounts_id)
+                payemp = EmployeeHasPayment.objects.filter(payments_id=payment.accounts_id)
+                employee = Employee.objects.filter(id_emp=payemp.employee_id)
                 messages.error(request, "ERROR: " + er)
-            return render(request, self.template_name, {'accounts': accounts, 'form': form, 'title': 'Create new Receipt'})
+            return render(request, self.template_name, {'accounts': account, 'form': form, 'title': 'Create new Payment'})
 
 
 
 class PaymentDelete(DeleteView):
-    model = Receipt
+    model = Payment
     template_name = 'confirm_delete.html'
-    success_url = reverse_lazy('accounting:payment')
+    success_url = reverse_lazy('accounting:payments')
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object
-        id_rec = kwargs['pk']
-        receipt = self.model.objects.get(id_rec=id_rec)
-        acountDescp = AccountDescrip.objects.get(accounts_id=receipt.accounts_id, document=int(receipt.id_rec))
-        acountDescp.delete()
-        accion_user(receipt, DELETION, request.user)
-        receipt.delete()
-        messages.success(request, "Receipt delete with an extension")
+        id_sal = kwargs['pk']
+        payment = self.model.objects.get(id_sal=id_sal)
+        payemp = EmployeeHasPayment.objects.get(payments_id=payment.id_sal)
+        accion_user(payment, DELETION, request.user)
+        payemp.delete()
+        payment.delete()
+        messages.success(request, "Payment delete with an extension")
         return HttpResponseRedirect(self.success_url)
 
 class NoteCreate(CreateView):

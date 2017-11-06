@@ -229,23 +229,26 @@ class PaymentForm(forms.ModelForm):
             model = Payment
 
             fields = [
-                'accounts',
                 'business',
                 'start_date',
                 'end_date',
-                'serial',
+                'pay_date',
+                'regular_hours',
+                'overtime_hours',
                 'discount',
                 'value',
                 'waytopay',
             ]
             widgets = {
-                'accounts': forms.Select(attrs={'class': 'form-control input-md'}),
-                'business': forms.Select(attrs={'class': 'form-control input-md'}),
-                'start_date': forms.DateInput(attrs={'placeholder': 'Start Date', 'class': 'form-control input-md'}),
-                'end_date': forms.DateInput(attrs={'placeholder': 'Start Date', 'class': 'form-control input-md'}),
+                'business': forms.Select(attrs={'class': 'form-control input-md', 'readonly': ''}),
+                'start_date': forms.DateInput(attrs={'placeholder': 'Select Date', 'class': 'form-control input-md', 'readonly': ''}),
+                'end_date': forms.DateInput(attrs={'placeholder': 'Select Date', 'class': 'form-control input-md'}),
+                'pay_date': forms.DateInput(attrs={'placeholder': 'Select Date', 'class': 'form-control input-md'}),
+                'regular_hours': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control discount'}),
+                'overtime_hours': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control discount'}),
                 'discount': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control discount'}),
                 'value': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control total', 'readonly': ''}),
-                'waytopay': forms.Select(attrs={'class': 'form-control input-md'},
+                'waytopay': forms.Select(attrs={'class': 'form-control input-md', 'readonly': ''},
                                          choices=(('Cash', 'Cash'), ('Check', 'Check'), ('Credit Card', 'Credit Card'))),
             }
 

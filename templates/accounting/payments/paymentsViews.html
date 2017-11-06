@@ -14,7 +14,7 @@
         </div>
         <div class="panel-body">
             <div class="navbar-button">
-                <a id="btnAdd" class="btn-primary btn col-md-offset-11 disabled" role="button"  data-trigger="focus" title="Add User" href="{% url 'accounting:invoices_create' %}">
+                <a id="btnAdd" class="btn-primary btn col-md-offset-11 " role="button"  data-trigger="focus" title="Add User" href="{% url 'accounting:payments_create' %}">
                     <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
                     <tooltip md-direction="left">New</tooltip>
                 </a>
@@ -35,24 +35,26 @@
                     </tr>
                     </thead>
                     {% for p in payment %}
+                    {% for pr in person %}
+                    {% if pr.id_pay == p.id_sal %}
                     <tbody>
                     <tr>
                         <td>{{p.serial}}</td>
                         <td>{{p.business}}</td>
-                        <td>{{p.name}}</td>
+                        <td>{{pr.name}}</td>
                         <td>{{p.start_date}}</td>
                         <td>{{p.end_date}}</td>
                         <td>{{p.waytopay}}</td>
                         <td>{{p.value}}</td>
                         <td>
                             <toolbar class="md-accent">
-                                <a data-type="info" data-trigger="focus" title="Edit Payment" data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'accounting:payment_edit' p.id_inv %}">
+                                <a data-type="info" data-trigger="focus" title="Edit Payment" data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'accounting:payment_edit' p.id_sal %}">
                                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                     <tooltip md-direction="left"></tooltip>
                                 </a>
                             </toolbar>
                             <toolbar class="md-accent">
-                                <a data-type="info" data-animation="am-flip-x" data-trigger="focus" title="Delete Payment" type="button" class="btn btn-danger test-tooltip" href="{% url 'accounting:payment_delete' p.id_inv %}">
+                                <a data-type="info" data-animation="am-flip-x" data-trigger="focus" title="Delete Payment" type="button" class="btn btn-danger test-tooltip" href="{% url 'accounting:payment_delete' p.id_sal %}">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                     <tooltip md-direction="left"></tooltip>
                                 </a>
@@ -61,6 +63,8 @@
 
                     </tr>
                     </tbody>
+                    {% endif %}
+                    {% endfor %}
                      {% endfor %}
                 </table>
             </div>

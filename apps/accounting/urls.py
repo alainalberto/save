@@ -32,6 +32,10 @@ urlpatterns = [
 
     #Payments
     url(r'^payments/$', login_required(permission_required('accounting.add_payment')(PaymentView.as_view())), name='payments'),
+    url(r'^payments/create$', login_required(permission_required('accounting.add_payment')(PaymentCreate.as_view())), name='payments_create'),
+    url(r'^payments/edit/(?P<pk>\d+)/$',login_required(permission_required('accounting.change_payment')(PaymentEdit.as_view())), name='payment_edit'),
+    url(r'^payments/(?P<pk>\d+)/$',login_required(permission_required('accounting.delete_payment')(PaymentDelete.as_view())),  name='payment_delete'),
+
 
     #Employees
     url(r'^employees/$', login_required(permission_required('accounting.add_employee')(EmployeesView.as_view())), name='employees'),

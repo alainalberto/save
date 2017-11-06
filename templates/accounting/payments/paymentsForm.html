@@ -1,4 +1,52 @@
 {% extends 'base.html' %}
+{% block extrastyle %}
+<script type="text/javascript">
+ function openpopup(url){
+   newwindow = window.open(url,'popup',' location=1, directories=0, resizable=0, width=500,height=700,Top=20,Left=490');
+   if (window.focus) {newwindow.focus()}
+   return false;
+ }
+ function closepopup(){
+   window.opener.location.href=window.opener.location.href;
+   window.close();
+   return false;
+ }
+ $(document).ready( function () {
+    $(".btn_add_emp").click(function() {
+      var column1 = $(this).closest('tr').children()[0].textContent;
+      var column2 = $(this).closest('tr').children()[5].textContent;
+      $('#id_employees').val(column1)
+      $('#rate').val(column2)
+      $('#employeesList').modal('hide');
+    });
+
+    function cal (){
+       var regular = $('#id_regular_hours').val();
+       var overtime = $('#id_overtime_hours').val();
+       var rate = $('#rate').val();
+       var rateovertimer = rate*1.5
+       var discounts = $('#id_discount').val();
+       var gross = (regular*rate)+(overtime*rateovertimer)
+       var net = gross-discounts
+       $('#gross').val(gross);
+       $('#id_value').val(net);
+    };
+   $("#id_regular_hours").on("change", function() {
+       cal();
+    });
+    $('#id_discount').on("change", function() {
+       cal();
+    });
+    $('#rate').on("change", function() {
+       cal();
+    });
+    $("#id_overtime_hours").on("change", function() {
+       cal();
+    });
+
+});
+</script>
+{% endblock %}
 {% block content %}
 <section>
     <form name="form_invoices" method="post" class="form" role="form" id="form_invoices" validate>{% csrf_token %}
@@ -14,230 +62,173 @@
                 </div>
             </div>
             <div class="panel-body">
-                <p class="bg-info"><strong>Invoice Header</strong></p>
-                <fieldset>
-                    <!-- Form Name -->
-                    <!-- Text input-->
-                    <div class="form-group col-md-5 col-md-offset-1">
-                        <label class="label-control">{{ form.start_date.label }}</label>
-                        <div class="input-group date form_date col-md-5" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                            {{ form.start_date }}
-                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
-                        </div>
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <ul class="nav nav-tabs " role="tablist">
+                            <li id="tabEmployye" role="presentation">
+                                <a href="#employee" aria-controls="employee" role="tab" data-toggle="tab">
+                                    <span class="input-group-addon">
+                                        Employees
+                                    </span>
+                                </a>
+                            </li>
+                            <li id="tabDriver" role="presentation"><a href="#driver" aria-controls="driver" role="tab" data-toggle="tab">
+                                <span class="input-group-addon">
+                                    Drivers
+                                </span>
+                            </a>
+                            </li>
+                            <li id="tabDispatch" role="presentation"><a href="#dispatch" aria-controls="dispatch" role="tab" data-toggle="tab">
+                                <span class="input-group-addon">
+                                    Dispatch
+                                </span>
+                            </a>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="form-group col-md-2 col-md-offset-1">
-                        <label class="label-control">{{ form.prefix.label }}</label>
-                        {{ form.prefix }}
-                    </div>
-                    <div class="form-group col-md-5 col-md-offset-1">
-                        <label class="label-control">{{ form.end_date.label }}</label>
-                        <div class="input-group date form_date col-md-5" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                            {{form.end_date}}
-                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
-                        </div>
-                    </div>
-                    <div class="form-group col-md-3 col-md-offset-1">
-                        <label class="label-control">{{ form.business.label }} </label>
-                        {{ form.business }}
-                    </div>
-                    <!-- Select Basic -->
-                    <div class="form-group col-md-4 col-md-offset-1">
-                        <label class="label-control">{{ form.customers.label }} </label>
-                        {{ form.customers }}
-                    </div>
-                    <div class="form-group col-md-3 col-md-offset-1">
-                        <label class="label-control">{{ form.waytopay.label }} </label>
-                        {{ form.waytopay }}
-                    </div>
-                    <div class="form-group col-md-3 col-md-offset-1">
-                        <div class="list-group">
-                            <legend class="list-group-item active">Type of description:</legend>
-                            <div class="radio active">
-                                <label>
-                                    <input type="radio" name="btnService" id="btnService" value="service" checked>
-                                    Service
-                                </label>
-                            </div>
-                            <div class="radio">
-                                <label>
-                                    <input type="radio" name="btnService" id="btnLoad" value="load">
-                                    Load
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </fieldset>
-                <br/>
-                <p class="bg-info"><strong>Drescription to Invoice</strong></p>
-                <div id="panelService" style="...">
-                    <div class="form-group">
-                        <div class="col-md-1" >
-                            <input id="txtQuant" class="col-md-1 form-control" >
-                        </div>
-                        <div class="col-md-6" >
-                            <select id="selecItem" class="form-control">
-                                <option>Select one</option>
-                                {% for item in items %}
-                                <option>{{item.name}}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <a data-type="info" data-trigger="focus" title="Add new Item" data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="">
-                            <i class="fa fa-plus" aria-hidden="true"></i>
-                            <tooltip md-direction="left"></tooltip>
-                        </a>
-                    </div>
-                    <div class="form-group">
-                        <table id="tbItem" class="table table-striped table-bordered ">
-                            <thead>
-                            <tr>
-                                <th>Quantity</th>
-                                <th>Description</th>
-                                <th>Unit Price</th>
-                                <th>Total</th>
-                                <th>Action</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td class="col-md-1"></td>
-                                <td class="col-md-7">
-                                </td>
-                                <td class="col-md-2">
-                                    {% for value in items %}
-                                    {% if value.mane == item.name %}
-                                    {{value.value}}
-                                    {% endif %}
-                                    {% endfor %}
-                                </td>
-                                <td class="col-md-2"></td>
-                                <td class="col-md-1">
-                                    <toolbar class="md-accent">
-                                        <a data-type="info" data-trigger="focus" title="Add new Item" data-animation="am-flip-x" type="button" class="btn btn-danger test-tooltip" href="">
-                                            <i class="fa fa-times" aria-hidden="true"></i>
-                                            <tooltip md-direction="left"></tooltip>
-                                        </a>
-                                    </toolbar>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <fieldset>
+                    <div class="panel-body">
+                        <div  class="tab-content">
 
-                            <div class="form-group col-xs-9 col-md-2 col-md-offset-1">
-                                <label class="label-control">Sustotal:</label>
-                                <div class="alert alert-warning col-lg-9 col-md-6">
-                                    <strong>$ </strong>
-                                    <span id="servSutotal">{{subtotal}}</span>
+                            <div role="tabpanel" class="tab-pane fade" id="employee">
+                                <fieldset>
+                                    <div class="form-group col-md-3 col-md-offset-1">
+                                        <label class="label-control">Period Beginning:</label>
+                                        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                                            {{ form.start_date }}
+                                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-3 col-md-offset-1">
+                                        <label class="label-control">Period Ending:</label>
+                                        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                                            {{form.end_date}}
+                                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-3 col-md-offset-1">
+                                        <label class="label-control">Pay Date:</label>
+                                        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                                            {{form.pay_date}}
+                                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-3 col-md-offset-1">
+                                        <label class="label-control">Business:</label>
+                                        {{ form.business }}
+                                    </div>
+                                    <div class="form-group col-md-3 col-md-offset-1">
+                                        <label class="label-control">Account:</label>
+                                            <select id="id_accounts" class="form-control input-md" name="accounts" required>
+                                                <option value="" selected>---------</option>
+                                                {% for a in accounts %}
+                                                <option value="{{a.id_acn}}">{{a}}</option>
+                                                {% endfor %}
+                                            </select>
+                                    </div>
+                                    <div class="form-group col-md-3 col-md-offset-1">
+                                        <label class="label-control">Payment Method: </label>
+                                        {{ form.waytopay }}
+                                    </div>
+                                    <!-- Select Basic -->
+                                    <div class="form-group col-md-5 col-md-offset-4">
+                                        <label class="label-control">Select Employee:</label>
+                                        <div class="input-group">
+                                            <span class="input-group-btn">
+                                                <button type="button" id="addemployee" class="btn btn-success test-tooltip" data-toggle="modal" data-target="#employeeList"data-type="info" data-trigger="focus" title="Employees List" data-animation="am-flip-x">
+                                                    <i class="fa fa-search-plus" aria-hidden="true"></i>
+                                                    <tooltip md-direction="left"></tooltip>
+                                                </button>
+                                            </span>
+                                            <select id="id_employees" class="form-control input-md" name="employees" required>
+                                                <option value="" selected>---------</option>
+                                                {% for e in employees %}
+                                                <option value="{{e.id_emp}}">{{e}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group col-md-3 col-md-offset-1">
+                                        <label class="label-control">Regular Hours: </label>
+                                        {{ form.regular_hours }}
+                                    </div>
+                                    <div class="form-group col-md-3 col-md-offset-1">
+                                        <label class="label-control">Overtime Hours: </label>
+                                        {{ form.overtime_hours }}
+                                    </div>
+                                    <div class="form-group col-md-3 col-md-offset-1">
+                                        <label class="label-control">Rate: </label>
+                                        <input id="rate" type="number" placeholder="0.00" class="form-control">
+                                    </div>
+                                    <div class="form-group col-md-3 col-md-offset-1">
+                                        <label class="label-control">Gross Pay: </label>
+                                        <input id="gross" type="number" placeholder="0.00" class="form-control" readonly>
+                                    </div>
+                                    <div class="form-group col-md-3 col-md-offset-1">
+                                        <label class="label-control">Discount: </label>
+                                        {{ form.discount }}
+                                    </div>
+                                    <div class="form-group col-md-3 col-md-offset-1">
+                                        <label class="label-control">Net Pay: </label>
+                                        {{ form.value }}
+                                    </div>
+
+                                    <div class="modal fade" id="employeeList" tabindex="-1" role="dialog" aria-labelledby="ModalLabel">
+                                        <div class="modal-dialog modal-lg" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title text-center"><strong>Employees List</strong></h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <table id="customer_table" class="table data-table">
+                                                        <thead>
+                                                        <tr>
+                                                            <th></th>
+                                                            <th class="col-md-2">Business</th>
+                                                            <th class="col-md-2">Name</th>
+                                                            <th class="col-md-2">Last Name</th>
+                                                            <th class="col-md-1">Action</th>
+
+                                                            <th></th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for e in employees %}
+                                                        <tr>
+                                                            <td style="display : none">{{e.id_emp}}</td>
+                                                            <td>{{c.business}}</td>
+                                                            <td>{{e.name}}</td>
+                                                            <td>{{e.lastname}}</td>
+                                                            <td>
+                                                                <a type="button" class="btn btn-info btn_add_emp" data-dismiss="#employeeList">Add</a>
+                                                            </td>
+                                                            <td style="display : none">{{e.value}}</td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <div class="form-group col-md-5 col-md-offset-4">
+                                    <input type="submit" class="btn btn-success" value="Save">
+                                    <a type="button" onclick="history.back(-1)" class="btn btn-danger">Cancel </a>
                                 </div>
                             </div>
-                            <div class="form-group col-xs-9 col-md-2 col-md-offset-1">
-                                <label class="label-control"> {{ form.discount.label }} </label>
-                                <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    {{ form.discount }}
-                                </div>
+
+                            <div role="tabpanel" class="tab-pane fade" id="driver">
+
                             </div>
-                            <div class="form-group col-xs-9 col-md-2 col-md-offset-1">
-                                <label class="label-control">Total:</label>
-                                <div class="alert alert-danger col-lg-9 col-md-6">
-                                    <strong>$ </strong>
-                                    <span id="servTotal"> <strong>{{total}}</strong></span>
-                                </div>
+
+                            <div role="tabpanel" class="tab-pane fade" id="dispatch">
+
                             </div>
-                            <div class="form-group col-md-2 col-md-offset-1" >
-                                <label class="label-control">{{form.paid.label}} </label>
-                                {{form.paid}}
-                            </div>
-                        </fieldset>
-                    </div>
-               </div>
-                <div id="panelLoad" style="display : none">
-                    <div class="form-group">
-                        <div class="col-md-6" >
-                            <select id="selecLoad" class="form-control">
-                                <option>Select one</option>
-                                {% for load in loads %}
-                                <option>{{load.number}}/{{ load.broker }}</option>
-                                {% endfor %}
-                            </select>
                         </div>
-                        <a data-type="info" data-trigger="focus" title="Add new Item" data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="">
-                            <i class="fa fa-plus" aria-hidden="true"></i>
-                            <tooltip md-direction="left"></tooltip>
-                        </a>
                     </div>
-                    <div class="form-group">
-                        <table id="tbLoad" class="table table-striped table-bordered ">
-                            <thead>
-                            <tr>
-                                <th>No.</th>
-                                <th>Broker</th>
-                                <th>Driver</th>
-                                <th>Date Loading</th>
-                                <th>Place Loading</th>
-                                <th>Dispash</th>
-                                <th>Value</th>
-                                <th>Action</th>
-
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td class="col-md-1"></td>
-                                <td class="col-md-2"></td>
-                                <td class="col-md-2"></td>
-                                <td class="col-md-2"></td>
-                                <td class="col-md-2"></td>
-                                <td class="col-md-2"></td>
-                                <td class="col-md-1"></td>
-                                <td class="col-md-1">
-                                    <toolbar class="md-accent">
-                                        <a data-type="info" data-trigger="focus" title="Add new Item" data-animation="am-flip-x" type="button" class="btn btn-danger test-tooltip" href="">
-                                            <i class="fa fa-times" aria-hidden="true"></i>
-                                            <tooltip md-direction="left"></tooltip>
-                                        </a>
-                                    </toolbar>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <fieldset>
-
-                            <div class="form-group col-xs-9 col-md-2 col-md-offset-1">
-                                <label class="label-control">Sustotal:</label>
-                                <div class="alert alert-warning col-lg-9 col-md-6">
-                                    <strong>$ </strong>
-                                    <span id="loadSutotal">{{subtotal}}</span>
-                                </div>
-                            </div>
-                            <div class="form-group col-xs-9 col-md-2 col-md-offset-1">
-                                <label class="label-control"> {{ form.discount.label }} </label>
-                                <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    {{ form.discount }}
-                                </div>
-                            </div>
-                            <div class="form-group col-xs-9 col-md-2 col-md-offset-1">
-                                <label class="label-control">Total:</label>
-                                <div class="alert alert-danger col-lg-9 col-md-6">
-                                    <strong>$ </strong>
-                                    <span id="loadTotal"> <strong>{{total}}</strong></span>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-2 col-md-offset-1" >
-                                <label class="label-control">{{form.paid.label}} </label>
-                                {{form.paid}}
-                            </div>
-                        </fieldset>
-                    </div>
-               </div>
-                <!-- Button (Double) -->
-                <div class="form-group col-md-5 col-md-offset-4">
-                    <a type="button" href="{% url 'accounting:invoices' %}" class="btn btn-primary"><i class="fa fa-print" aria-hidden="true"></i> Save and Print</a>
-                    <input type="submit" class="btn btn-success" value="Save">
-                    <a type="button" href="{% url 'accounting:invoices' %}" class="btn btn-danger">Cancel </a>
                 </div>
+            </div>
             </div>
         </div>
     </form>

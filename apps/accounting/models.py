@@ -93,7 +93,7 @@ class Employee(models.Model):
     date_deactivated = models.DateField(blank=True, null=True)
 
     def __str__(self):
-        return '{}'.format(self.name)
+        return '{} {}'.format(self.name, self.lastname)
 
 class Invoice(models.Model):
     id_inv = models.AutoField(primary_key=True)
@@ -148,13 +148,16 @@ class Payment(models.Model):
     business = models.ForeignKey(Busines, on_delete=models.CASCADE)
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
+    pay_date = models.DateField(default=datetime.now().strftime("%Y-%m-%d"), blank=True, null=True)
     serial = models.CharField(max_length=20, blank=True, null=True)
-    discount  = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    value  = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    regular_hours = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    overtime_hours = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    discount = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    value = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     waytopay = models.CharField(max_length=20)
 
     def __str__(self):
-        return '{}'.format(self.name)
+        return '{}'.format(self.serial)
 
 class Fee(models.Model):
     id_fee = models.AutoField(primary_key=True)
