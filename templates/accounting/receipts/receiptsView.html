@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
 <section>
-    <form name="form_invoices" method="post" class="form" role="form" id="form_invoices" validate>{% csrf_token %}
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <div class="row">
@@ -20,17 +19,11 @@
                     <!-- Text input-->
                     <div class="form-group col-md-5 col-md-offset-1">
                         <label class="label-control">Start Date:</label>
-                        <div class="input-group date form_date col-md-5" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                            {{ form.start_date }}
-                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
-                        </div>
+                        {{ form.start_date }}
                     </div>
                     <div class="form-group col-md-5 col-md-offset-1">
                         <label class="label-control">End Date:</label>
-                        <div class="input-group date form_date col-md-5" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                            {{form.end_date}}
-                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
-                        </div>
+                              {{form.end_date}}
                     </div>
                     <div class="form-group col-md-3 col-md-offset-1">
                         <label class="label-control">Business:  </label>
@@ -40,22 +33,10 @@
                         <label class="label-control">Payment Method: </label>
                         {{ form.waytopay }}
                     </div>
-                    {% if accounts %}
-                    <div class="form-group col-md-3 col-md-offset-1">
-                        <label class="label-control">Account:</label>
-                        <select id="id_accounts" class="form-control input-md" name="accounts" required>
-                            <option value="" selected>---------</option>
-                            {% for a in accounts %}
-                            <option value="{{a.id_acn}}">{{a}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    {% else %}
                     <div class="form-group col-md-3 col-md-offset-1">
                         <label class="label-control">Account: </label>
                         {{ account }}
                     </div>
-                    {% endif %}
                 </fieldset>
                 <br/>
                 <fieldset>
@@ -114,12 +95,13 @@
                     </div>
                     {% endif %}
                     <!-- Button (Double) -->
-                    <div class="form-group col-md-5 col-md-offset-4">
-                        <input type="submit" class="btn btn-success" value="Save">
-                        <a type="button" href="{% url 'accounting:receipts' %}" class="btn btn-danger">Cancel</a>
-                    </div>
                 </fieldset>
             </div>
+            <div class="panel-footer">
+            <a type="button" onclick="history.back(-1)">
+            <i class="fa fa-arrow-circle-left fa-3x"></i>
+            </a>
+        </div>
         </div>
 
         <!-- Button (Double) -->

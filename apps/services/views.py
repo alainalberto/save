@@ -248,7 +248,7 @@ class FormView(ListView):
         context = super(FormView, self).get_context_data(**kwargs)
         if Folder.objects.filter(name='Forms'):
             folder_father = Folder.objects.get(name='Forms')
-            forms = File.objects.filter(folders=folder_father)
+            forms = pagination(self.request, File.objects.filter(folders=folder_father).order_by('name'))
             context['forms'] = forms
             return context
 

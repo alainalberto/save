@@ -24,6 +24,7 @@ urlpatterns = [
 
    #Receipts
     url(r'^receipts/$', login_required(permission_required('accounting.add_receipt')(ReceiptsView.as_view())), name='receipts'),
+    url(r'^receipts/view/(?P<pk>\d+)/$', login_required(permission_required('accounting.add_receipt')(ReceiptView)), name='receipts_view'),
     url(r'^receipts/create$', login_required(permission_required('accounting.add_receipt')(ReceiptsCreate.as_view())), name='receipts_create'),
     url(r'^receipts/edit/(?P<pk>\d+)/$', login_required(permission_required('accounting.change_receipt')(ReceiptsEdit.as_view())), name='receipts_edit'),
     url(r'^receipts/(?P<pk>\d+)/$', login_required(permission_required('accounting.delete_receipt')(ReceiptsDelete.as_view())), name='receipts_delete'),

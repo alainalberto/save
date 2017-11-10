@@ -172,7 +172,7 @@ class Fee(models.Model):
 class InvoicesHasItem(models.Model):
     id_ind = models.AutoField(primary_key=True)
     invoices = models.ForeignKey(Invoice, on_delete=models.CASCADE)  # Field name made lowercase.
-    items = models.ForeignKey(Item, on_delete=models.CASCADE, blank=True, null=True)  # Field name made lowercase.
+    items = models.ForeignKey(Item, blank=True, null=True)  # Field name made lowercase.
     accounts = models.ForeignKey(Account, on_delete=models.CASCADE)
     description = models.CharField(max_length=50)
     quantity = models.IntegerField()

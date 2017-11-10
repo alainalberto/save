@@ -720,29 +720,72 @@ class ReceiptsView(ListView):
     model = Receipt
     template_name = 'accounting/receipts/receiptsViews.html'
 
+
+def ReceiptView(request, pk):
+        receipt = Receipt.objects.get(id_rec=pk)
+        context = {}
+        context['form'] = receipt
+        if receipt.files:
+           file = File.objects.filter(id_fil=receipt.files_id)
+           context['form_files'] = file
+        context['account'] = receipt.accounts
+        context['title'] = 'View Receipt'
+        return render(request, 'accounting/receipts/receiptsView.html', context)
+
 class ReceiptsCreate(CreateView):
      model = Receipt
      form_class = ReceiptsForm
+     form_class_file = FileForm
      template_name = 'accounting/receipts/receiptsForm.html'
 
-     def get(self, request, *args, **kwargs):
-         form = self.form_class(initial=self.initial)
-         return render(request, self.template_name, {'form': form, 'title': 'Create new Receipt'})
+     def get_context_data(self, **kwargs):
+         context = super(ReceiptsCreate, self).get_context_data(**kwargs)
+         if 'form' not in context:
+            context['form'] = self.form_class(self.request.GET)
+         if 'form_file' not in context:
+            context['form_file'] = self.form_class_file(self.request.GET)
+         account = []
+         exp = Account.objects.get(primary=True, name='Expenses')
+         exp_acconts = Account.objects.filter(accounts_id_id=exp.id_acn)
+         for e in exp_acconts:
+             account.append(e)
+         for a in exp_acconts:
+             exp_accont = Account.objects.filter(accounts_id_id=a.id_acn)
+             if exp_accont != None:
+                 for ac in exp_accont:
+                     account.append(ac)
+         context['accounts'] = account
+         context['title'] = 'Create new Receipt'
+         return context
 
      def post(self, request, *args, **kwargs):
+         self.object = self.get_object
          user = request.user
          form = self.form_class(request.POST)
+         form_file = self.form_class_file(request.POST)
          recs = Receipt.objects.filter(business_id=form.data['business']).order_by('-serial')
          serial = 1
          serials = []
          for s in recs:
              serials.append(s.serial)
-         if form.is_valid():
+         if form.is_valid() and form_file.is_valid():
              if serials:
                serial = int(serials[0])+1
              receipt = form.save(commit=False)
              receipt.serial = serial
              receipt.users_id = user.id
+             receipt.accounts_id = request.POST['accounts']
+             file = form_file.save(commit=False)
+             folders = Folder.objects.filter(name='RECEIPT',
+                                            description='RECEIPT'+ ' ('+str(receipt.business)+')')
+             if folders:
+                folder = Folder.objects.get(name='RECEIPT', description='RECEIPT' + ' (' + str(receipt.business) + ')')
+             else:
+               folder = Folder.objects.create(name='RECEIPT', description='RECEIPT'+ ' (' + str(receipt.business) + ')')
+             file.folders = folder
+             file.users = user
+             file.save()
+             receipt.files = file
              receipt.save()
              accion_user(receipt, ADDITION, request.user)
              acountDescp = AccountDescrip.objects.create(date=form.data['start_date'],
@@ -758,31 +801,51 @@ class ReceiptsCreate(CreateView):
          else:
              for er in form.errors:
                  messages.error(request, "ERROR: " + er)
+             return self.get_context_data()
 
 class ReceiptsEdit(UpdateView):
     model = Receipt
     form_class = ReceiptsForm
+    form_class_file = FileForm
     template_name = 'accounting/receipts/receiptsForm.html'
 
     def get_context_data(self, **kwargs):
         context = super(ReceiptsEdit, self).get_context_data(**kwargs)
         pk = self.kwargs.get('pk',0)
         receipt = self.model.objects.get(id_rec=pk)
+        if receipt.files:
+           file = File.objects.filter(id_fil=receipt.files_id)
+           if 'form_files' not in context:
+               context['form_files'] = file
+        else:
+            file = self.form_class_file()
+            if 'form_file' not in context:
+                context['form_file'] = file
         account = Account.objects.filter(id_acn=receipt.accounts_id)
         if 'form' not in context:
             context['form'] = self.form_class()
+        context['accounts'] = account
         context['id'] = pk
         context['accounts'] = account
+        context['title'] = 'Edit Receipt'
         return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object
         id_rec = kwargs['pk']
         receipt = self.model.objects.get(id_rec=id_rec)
+        if receipt.files:
+           file = self.model.objects.get(id_fil=receipt.files_id)
+           form_file = self.form_class_file(request.POST, instance=file)
+        else:
+            form_file = self.form_class_file(request.POST)
         acountDescp = AccountDescrip.objects.get(accounts_id=receipt.accounts_id, document=int(receipt.id_rec))
         form = self.form_class(request.POST, instance=receipt)
-        if form.is_valid():
-            form.save()
+        if form.is_valid() and form_file.is_valid():
+            receipt = form.save(commit=False)
+            file = form_file.save()
+            receipt.files = file
+            receipt.save()
             accion_user(receipt, CHANGE, request.user)
             AccountDescrip.objects.filter(id_acd=acountDescp.id_acd).update(
                 date=form.data['start_date'],
@@ -817,6 +880,9 @@ class ReceiptsDelete(DeleteView):
         self.object = self.get_object
         id_rec = kwargs['pk']
         receipt = self.model.objects.get(id_rec=id_rec)
+        if receipt.files:
+           file = self.model.objects.get(id_fil=receipt.files_id)
+           file.delete()
         acountDescp = AccountDescrip.objects.get(accounts_id=receipt.accounts_id, document=int(receipt.id_rec))
         acountDescp.delete()
         accion_user(receipt, DELETION, request.user)
@@ -952,7 +1018,7 @@ class PaymentEdit(UpdateView):
             return HttpResponseRedirect(reverse_lazy('accounting:payments'))
         else:
             for er in form.errors:
-                payment = self.model.objects.get(id_sal=id_sa)
+                payment = self.model.objects.get(id_sal=id_sal)
                 account = Account.objects.filter(id_acn=payment.accounts_id)
                 payemp = EmployeeHasPayment.objects.filter(payments_id=payment.accounts_id)
                 employee = Employee.objects.filter(id_emp=payemp.employee_id)

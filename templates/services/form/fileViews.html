@@ -70,6 +70,30 @@
       <div class="alert alert-info"> <strong>Atention!</strong> No documents.</div>
       {% endif %}
       </div>
+      <nav class="col-md-offset-10" aria-label="Page navigation">
+                <ul class="pager">
+                    {% if forms.has_previous %}
+                    <li>
+                        <a  href="?page={{ forms.previous_page_number }}"><span>
+                            <span aria-hidden="true">&laquo;</span>
+                        </span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    <span class="current">
+                        Page {{ forms.number }} of {{ forms.paginator.num_pages }}.
+                    </span>
+                    {% if forms.has_next %}
+                    <li>
+                        <a href="?page={{ forms.next_page_number }}">
+                            <span>
+                                <span aria-hidden="true">&raquo;</span>
+                            </span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
   </div>
 </section>
 {% endblock %}
