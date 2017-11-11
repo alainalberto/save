@@ -383,7 +383,7 @@ class FolderCreate(CreateView):
             folder = Folder.objects.get(id_fld=customer.folders_id)
             file = form.save(commit=False)
             for f in file:
-              f.users_id = user.id
+              f.users = user
               f.folders = folder
               f.save()
             messages.success(request, "Form saved with an extension")
@@ -439,10 +439,11 @@ class FolderDelete(DeleteView):
         self.object = self.get_object
         id = kwargs['pk']
         file = self.model.objects.get(id_fil=id)
+        customer = Customer.objects.get(folders=file.folders)
         accion_user(file, DELETION, request.user)
         file.delete()
         messages.success(request, "File delete with an extension")
-        return HttpResponseRedirect(self.success_url)
+        return HttpResponseRedirect('/accounting/customers/view/' + str(customer.id_cut))
 
 
 def EquipmentView(request, pk, popup):
@@ -768,7 +769,7 @@ class InsuranceCreate(CreateView):
                         dateShow = dateExp - timedelta(days=7)
                         alert = Alert.objects.create(
                             category = "Urgents",
-                            description = "The next "+dateExp+" is the monthly insurance payment day of the customer" + str(customer),
+                            description = "The next "+str(dateExp)+" is the monthly insurance payment day of the customer" + str(customer),
                             create_date = datetime.now().strftime("%Y-%m-%d"),
                             show_date = dateShow.strftime("%Y-%m-%d"),
                             end_date = dateExp.strftime("%Y-%m-%d"),
@@ -845,7 +846,7 @@ class InsuranceEdit(UpdateView):
                 if request.POST.get('monthly_alert', False) and len(request.POST['monthlypay']) != 0:
                    dateExp = insurance.monthlypay
                    dateShow = dateExp - timedelta(days=7)
-                   alert = Alert.objects.filter(description = "The next "+dateExp+" is the monthly insurance payment day of the customer" + str(customer), category="Urgents")
+                   alert = Alert.objects.filter(description = "The next "+str(dateExp)+" is the monthly insurance payment day of the customer" + str(customer), category="Urgents")
                    if alert:
                       alert.update(show_date = dateShow.strftime("%Y-%m-%d"), end_date = dateExp.strftime("%Y-%m-%d"))
                    else:
@@ -854,7 +855,7 @@ class InsuranceEdit(UpdateView):
                        group_offic = Group.objects.get(name='Office Specialist')
                        alert = Alert.objects.create(
                            category="Urgents",
-                           description="The next "+dateExp+" is the monthly insurance payment day of the customer" + str(customer),
+                           description="The next "+str(dateExp)+" is the monthly insurance payment day of the customer" + str(customer),
                            create_date=datetime.now().strftime("%Y-%m-%d"),
                            show_date=dateShow.strftime("%Y-%m-%d"),
                            end_date=dateExp.strftime("%Y-%m-%d"),
@@ -862,7 +863,7 @@ class InsuranceEdit(UpdateView):
                        alert.group.add(group_admin, group_manag, group_offic)
                 else:
                     alert = Alert.objects.filter(
-                        description="The next "+dateExp+" is the monthly insurance payment day of the customer" + str(customer),
+                        description="The next "+str(dateExp)+" is the monthly insurance payment day of the customer" + str(customer),
                         category="Urgents")
                     if alert:
                         alert.delete()
@@ -883,10 +884,11 @@ class InsuranceDelete(DeleteView):
         self.object = self.get_object
         id = kwargs['pk']
         insurance = self.model.objects.get(id_ins=id)
+        dateExp = insurance.monthlypay
         alert_policy = Alert.objects.filter(description = "Expires the Insurance Policy  of the customer " + str(insurance.customers),
                                      end_date=insurance.policy_date_exp)
         alert_monthly = Alert.objects.filter(
-            description="The next "+dateExp+" is the monthly insurance payment day of the customer" + str(customer),
+            description="The next "+str(dateExp)+" is the monthly insurance payment day of the customer" + str(insurance.customers),
             end_date=insurance.monthlypay)
         accion_user(insurance, DELETION, request.user)
         if alert_policy:

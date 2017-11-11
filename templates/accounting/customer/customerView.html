@@ -217,7 +217,7 @@
                                           </a>
                                       </toolbar>
                                       <toolbar class="md-accent">
-                                          <a data-type="info"  data-animation="am-flip-x" data-trigger="focus"   type="button" class="btn btn-danger test-tooltip" target="popup" onclick="openpopup('{% url 'services:folder_delete' f.id_fil %}')">
+                                          <a data-type="info"  data-animation="am-flip-x" data-trigger="focus"   type="button" class="btn btn-danger test-tooltip" href="{% url 'services:folder_delete' f.id_fil %}">
                                               <i class="fa fa-trash" aria-hidden="true"></i>
                                               <tooltip md-direction="left"></tooltip>
                                           </a>

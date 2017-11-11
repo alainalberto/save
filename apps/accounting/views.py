@@ -743,7 +743,7 @@ class ReceiptsCreate(CreateView):
          if 'form' not in context:
             context['form'] = self.form_class(self.request.GET)
          if 'form_file' not in context:
-            context['form_file'] = self.form_class_file(self.request.GET)
+            context['form_file'] = self.form_class_file(initial=self.initial)
          account = []
          exp = Account.objects.get(primary=True, name='Expenses')
          exp_acconts = Account.objects.filter(accounts_id_id=exp.id_acn)
@@ -762,30 +762,31 @@ class ReceiptsCreate(CreateView):
          self.object = self.get_object
          user = request.user
          form = self.form_class(request.POST)
-         form_file = self.form_class_file(request.POST)
+         form_file = self.form_class_file(request.POST, request.FILES)
          recs = Receipt.objects.filter(business_id=form.data['business']).order_by('-serial')
          serial = 1
          serials = []
          for s in recs:
              serials.append(s.serial)
-         if form.is_valid() and form_file.is_valid():
+         if form.is_valid():
              if serials:
                serial = int(serials[0])+1
              receipt = form.save(commit=False)
              receipt.serial = serial
              receipt.users_id = user.id
              receipt.accounts_id = request.POST['accounts']
-             file = form_file.save(commit=False)
-             folders = Folder.objects.filter(name='RECEIPT',
+             if form_file.is_valid() and len(request.POST['name']) != 0 and len(request.POST['url']) != 0:
+                file = form_file.save(commit=False)
+                folders = Folder.objects.filter(name='RECEIPT',
                                             description='RECEIPT'+ ' ('+str(receipt.business)+')')
-             if folders:
-                folder = Folder.objects.get(name='RECEIPT', description='RECEIPT' + ' (' + str(receipt.business) + ')')
-             else:
-               folder = Folder.objects.create(name='RECEIPT', description='RECEIPT'+ ' (' + str(receipt.business) + ')')
-             file.folders = folder
-             file.users = user
-             file.save()
-             receipt.files = file
+                if folders:
+                   folder = Folder.objects.get(name='RECEIPT', description='RECEIPT' + ' (' + str(receipt.business) + ')')
+                else:
+                  folder = Folder.objects.create(name='RECEIPT', description='RECEIPT'+ ' (' + str(receipt.business) + ')')
+                file.folders = folder
+                file.users = user
+                file.save()
+                receipt.files = file
              receipt.save()
              accion_user(receipt, ADDITION, request.user)
              acountDescp = AccountDescrip.objects.create(date=form.data['start_date'],
@@ -818,7 +819,7 @@ class ReceiptsEdit(UpdateView):
            if 'form_files' not in context:
                context['form_files'] = file
         else:
-            file = self.form_class_file()
+            file = self.form_class_file(self.request.GET)
             if 'form_file' not in context:
                 context['form_file'] = file
         account = Account.objects.filter(id_acn=receipt.accounts_id)
@@ -836,14 +837,27 @@ class ReceiptsEdit(UpdateView):
         receipt = self.model.objects.get(id_rec=id_rec)
         if receipt.files:
            file = self.model.objects.get(id_fil=receipt.files_id)
-           form_file = self.form_class_file(request.POST, instance=file)
+           form_file = self.form_class_file(request.POST, request.FILES, instance=file)
         else:
-            form_file = self.form_class_file(request.POST)
+            form_file = self.form_class_file(request.POST, request.FILES)
         acountDescp = AccountDescrip.objects.get(accounts_id=receipt.accounts_id, document=int(receipt.id_rec))
         form = self.form_class(request.POST, instance=receipt)
-        if form.is_valid() and form_file.is_valid():
+        if form.is_valid():
             receipt = form.save(commit=False)
-            file = form_file.save()
+            if form_file.is_valid() and len(request.POST['name']) != 0 and len(request.POST['url']) != 0:
+                file = form_file.save(commit=False)
+                folders = Folder.objects.filter(name='RECEIPT',
+                                                description='RECEIPT' + ' (' + str(receipt.business) + ')')
+                if folders:
+                    folder = Folder.objects.get(name='RECEIPT',
+                                                description='RECEIPT' + ' (' + str(receipt.business) + ')')
+                else:
+                    folder = Folder.objects.create(name='RECEIPT',
+                                                   description='RECEIPT' + ' (' + str(receipt.business) + ')')
+                file.folders = folder
+                file.users = request.user
+                file.save()
+                receipt.files = file
             receipt.files = file
             receipt.save()
             accion_user(receipt, CHANGE, request.user)
@@ -889,6 +903,7 @@ class ReceiptsDelete(DeleteView):
         receipt.delete()
         messages.success(request, "Receipt delete with an extension")
         return HttpResponseRedirect(self.success_url)
+
 
 #Payment
 class PaymentView(ListView):

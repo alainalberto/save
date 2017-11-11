@@ -78,42 +78,59 @@
                         </div>
                     </div>
                 </fieldset>
-                <fieldset>
-                    <p class="bg-info"><strong>Attachments to Receipt</strong></p>
+               <fieldset>
+                <!--     <p class="bg-info"><strong>Attachments to Receipt</strong></p>
                     {% if form_files %}
-                    <table class="table table-striped">
-                        <thead>
-                        <th>File Name</th>
-                        <th>Category</th>
-                        <th>Select Files</th>
-                        </thead>
-                        <tbody>
-                        {% for f in form_files %}
-                        <tr>
-                            <td>{{ f.name }}</td>
-                            <td>{{ f.category }}</td>
-                            <td>{{ f.url }}</td>
-                        </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                   <table class="table table-striped data-table">
+                              <thead>
+                              <th>Name</th>
+                              <th>Creative user </th>
+                              <th>Up load Date</th>
+                              <th>Category</th>
+                              <th>Action</th>
+                              </thead>
+                              <tbody>
+                              {% for f in form_files %}
+                              <tr>
+                                  <td><i class="fa fa-file-pdf-o" aria-hidden="true"></i> <a href="/static/media/{{ f.url }}" target="_blank">{{f.name}}</br></a></td>
+                                  <td>{% if f.users.first_name %} {{ f.users.first_name }} {% else %} {{ f.users }} {% endif %}</td>
+                                  <td>{{ f.date_save }}</td>
+                                  <td>{{ f.category }}</td>
+                                  <td>
+                                      <toolbar class="md-accent">
+                                          <a data-type="info"  data-trigger="focus"  data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="#">
+                                              <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                              <tooltip md-direction="left"></tooltip>
+                                          </a>
+                                      </toolbar>
+                                      <toolbar class="md-accent">
+                                          <a data-type="info"  data-animation="am-flip-x" data-trigger="focus"   type="button" class="btn btn-danger test-tooltip" target="popup" href="#">
+                                              <i class="fa fa-trash" aria-hidden="true"></i>
+                                              <tooltip md-direction="left"></tooltip>
+                                          </a>
+                                      </toolbar>
+                                  </td>
+                              </tr>
+                              {% endfor %}
+                              </tbody>
+                          </table>
                     {% else %}
                     <div class="form-group col-md-3 col-md-offset-1" >
                         <label class="label-control">Name: </label>
                         {{form_file.name}}
                     </div>
-                    <!-- Text input-->
+
                     <div class="form-group col-md-3 col-md-offset-1">
                         <label class="label-control">Category: </label>
                         {{ form_file.category }}
                     </div>
-                    <!-- Select Basic -->
+
                     <div class="form-group col-md-3 col-md-offset-1">
                         <label class="label-control">Upload File: </label>
                         {{ form_file.url }}
                     </div>
-                    {% endif %}
-                    <!-- Button (Double) -->
+                    {% endif %}-->
+
                     <div class="form-group col-md-5 col-md-offset-4">
                         <input type="submit" class="btn btn-success" value="Save">
                         <a type="button" href="{% url 'accounting:receipts' %}" class="btn btn-danger">Cancel</a>
