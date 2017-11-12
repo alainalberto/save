@@ -190,12 +190,11 @@ LOGOUT_REDIRECT_URL = reverse_lazy('login')
 #('Ransel Ramos ', 'ranselr@gmail.com'),
 #)
 
-
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'ranselr@gmail.com'
+EMAIL_HOST_PASSWORD = 'Rachely2015'
+EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.live.com'
-EMAIL_PORT = 465
-EMAIL_HOST_USER = 'alainalberto03@hotmail.com'
-EMAIL_HOST_PASSWORD = 'Niala8502'
 #EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackrend'
 #EMAIL_SUBJECT_PREFIX = 'ERROR-FIRSTCALL'
 

@@ -20,6 +20,7 @@ from django.contrib import messages
 from datetime import datetime, date, time, timedelta
 from django.core.mail import send_mail
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
+from django.conf import settings
 
 # Create your views here.
 
@@ -185,8 +186,8 @@ def panel_view(request):
                 'iftas': ifta,
                 #'drives': driver,
                 'audits': audit,
-                'alert':alert,
-                'date_now':date_now}
+                'alert': alert,
+                'date_now': date_now}
     return render(request, 'home/complement/panel.html', contexto)
 
 class PostCalendar(CreateView):
@@ -348,13 +349,12 @@ class AlertsCreate(CreateView):
              alert.save()
              accion_user(alert, ADDITION, request.user)
              messages.success(request, "Alert save with an extension")
-             send_mail(
-                 'FirstCall Alert',
-                 'Usted tiene una alerta:',
-                 'ranselr@gmail.com',
-                 ['ranselr@gmail.com'],
-                 fail_silently=False,
-             )
+
+             #send_mail('FirstCall Alert',
+             #   'Usted tiene una alerta:',
+             #   'administrator@fcintermodal.com',
+             #    ['ranselr@gmail.com'],
+             #    fail_silently=False)
              # Your Account SID from twilio.com/console
              # account_sid = "ACc2b4aa7154629a3f9b2767e7ddf9981d"
              # Your Auth Token from twilio.com/console
