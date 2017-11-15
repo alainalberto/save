@@ -482,17 +482,9 @@ def InvoicesCreate(request):
                                   'subtotal'],
                           extra=10
     )
-    LoadFormSet = inlineformset_factory(
-                          Invoice,
-                          InvoicesHasLoad,
-                          form=ItemHasInvoiceForm,
-                          fields=['id_inl',
-                                  'loads'],
-                          extra=10
-    )
+
     form = InvoicesForm()
     formset = ItemFormSet()
-    formset_load = LoadFormSet()
     items = Item.objects.all()
     loads = Load.objects.all().order_by('number')
     customer = Customer.objects.filter(deactivated=False)
@@ -521,26 +513,23 @@ def InvoicesCreate(request):
             invoice = form.save(commit=False)
             invoice.serial = serial
             invoice.users_id = user.id
-            if request.POST['btnService']:
-                invoice.type = request.POST['btnService']
-                invoice.save()
-                accion_user(invoice, ADDITION, request.user)
-                itemhasInv = formset.save(commit=False)
-                if not itemhasInv:
-                    messages.error(request, "ERROR: Insert one Items ")
-                    return render(request, 'accounting/invoices/invoicesForm.html', {
+            invoice.type = 'service'
+            accion_user(invoice, ADDITION, request.user)
+            itemhasInv = formset.save(commit=False)
+            if not itemhasInv:
+                messages.error(request, "ERROR: Insert one Items ")
+                return render(request, 'accounting/invoices/invoicesForm.html', {
                         'form': form,
                         'formset': formset,
-                        'formset_load': formset_load,
                         'items': items,
-                        'loads': loads,
                         'accounts': accounts,
                         'customers': customer,
                         'title': 'Create new Invoice'
                     })
-                else:
-                   for itinv in itemhasInv:
-                      if Item.objects.filter(name__contains=itinv.description):
+            else:
+                invoice.save()
+                for itinv in itemhasInv:
+                    if Item.objects.filter(name__contains=itinv.description):
                          item = Item.objects.get(name=itinv.description)
                          itinv.items_id = item.id_ite
                          itinv.invoices = invoice
@@ -552,36 +541,17 @@ def InvoicesCreate(request):
                                                                   waytopay=invoice.waytopay,
                                                                   users_id=user.id,
                                                                   type='Invoices')
-                      else:
-                          itinv.invoices = invoice
-                          itinv.save()
-                          acountDescp = AccountDescrip.objects.create(date=invoice.start_date,
+                    else:
+                      itinv.invoices = invoice
+                      itinv.save()
+                      acountDescp = AccountDescrip.objects.create(date=invoice.start_date,
                                                                    value=itinv.subtotal,
                                                                    accounts=itinv.accounts,
                                                                    document=invoice.id_inv,
                                                                    waytopay=invoice.waytopay,
                                                                    users_id=user.id,
                                                                    type='Invoices')
-                   messages.success(request, "Invoice saved with an extension")
-            else:
-                invoice.type = request.POST['btnService']
-                invoice.save()
-                accion_user(invoice, ADDITION, request.user)
-                loadhasInv = formset_load.save(commit=False)
-                for lodinv in loadhasInv:
-                    if Load.objects.filter(id_lod=lodinv.loads_id):
-                        load = Load.objects.get(id_lod=lodinv.loads_id)
-                        lodinv.invoices = invoice
-                        lodinv.save()
-                        acountDescp = AccountDescrip.objects.create(date=invoice.start_date,
-                                                                    value=invoice.total,
-                                                                    accounts=load.accounts,
-                                                                    document=invoice.id_inv,
-                                                                    users_id=user.id,
-                                                                    waytopay=invoice.waytopay,
-                                                                    type='Invoices')
-
-                messages.success(request, "Invoice saved with an extension")
+            messages.success(request, "Invoice saved with an extension")
 
             return HttpResponseRedirect(reverse_lazy('accounting:invoices'))
         else:
@@ -593,9 +563,7 @@ def InvoicesCreate(request):
     return render(request, 'accounting/invoices/invoicesForm.html', {
         'form': form,
         'formset': formset,
-        'formset_load': formset_load,
         'items': items,
-        'loads': loads,
         'accounts': accounts,
         'customers': customer,
         'title': 'Create new Invoice'
@@ -666,7 +634,6 @@ class InvoicesEdit(UpdateView):
         formset = self.form_class_item(request.POST, instance=invoice)
         form = self.form_class(request.POST, instance=invoice)
         if form.is_valid():
-            if request.POST['btnService']:
                 form.save()
                 accion_user(invoice, CHANGE, request.user)
                 itemhasInv = formset.save(commit=False)
@@ -687,8 +654,8 @@ class InvoicesEdit(UpdateView):
                                                                     users=request.user,
                                                                     waytopay = invoice.waytopay,
                                                                     type='Invoices')
-            messages.success(request, "Invoice update with an extension")
-            return HttpResponseRedirect(reverse_lazy('accounting:invoices'))
+                messages.success(request, "Invoice update with an extension")
+                return HttpResponseRedirect(reverse_lazy('accounting:invoices'))
         else:
             for er in form.errors:
                 messages.error(request, "ERROR: "+er)
@@ -704,9 +671,10 @@ class InvoicesDelete(DeleteView):
         self.object = self.get_object
         id_inv = kwargs['pk']
         invoice = self.model.objects.get(id_inv=id_inv)
-        acountDescp = AccountDescrip.objects.get(type='Invoices', document=int(invoice.id_inv))
+        acountDescp = AccountDescrip.objects.filter(type='Invoices', document=int(invoice.id_inv))
         invitem = InvoicesHasItem.objects.filter(invoices_id=invoice.id_inv)
-        acountDescp.delete()
+        for des in acountDescp:
+            des.delete()
         accion_user(invoice, DELETION, request.user)
         invoice.delete()
         for it in invitem:
@@ -714,6 +682,230 @@ class InvoicesDelete(DeleteView):
             item.delete()
         messages.success(request, "Invoice delete with an extension")
         return HttpResponseRedirect(self.success_url)
+
+def InvoiceLogView(request, pk):
+            invoice = Invoice.objects.get(id_inv=pk)
+            invitem = InvoicesHasItem.objects.filter(invoices_id=invoice.id_inv)
+            items = Item.objects.all()
+            loads = Load.objects.all().order_by('number')
+            context = {'invoice': invoice,
+                       'invitems': invitem,
+                       'id': pk,
+                       'items': items,
+                       'loads': loads,
+                       'title': 'Invoice',
+                       }
+            return render(request, 'accounting/invoices/invoicesView.html', context)
+
+class InvoicesLogCreate(CreateView):
+        model = Invoice
+        form_class = InvoicesForm()
+        form_class_log = inlineformset_factory(
+            Invoice,
+            InvoicesHasLoad,
+            form=InvoiceLoadForm,
+            fields=['id_inl',
+                    'loads'],
+            extra=10
+        )
+
+
+        def get(self, request, *args, **kwargs):
+            form = self.form_class(initial=self.initial)
+            formset = self.form_class_log(initial=self.initial)
+            loads = Load.objects.all().order_by('number')
+            customer = Customer.objects.filter(deactivated=False)
+            accounts = []
+            inc = Account.objects.get(primary=True, name='Income')
+            inc_acconts = Account.objects.filter(accounts_id_id=inc.id_acn)
+            for i in inc_acconts:
+                accounts.append(i)
+            for a in inc_acconts:
+                exp_accont = Account.objects.filter(accounts_id_id=a.id_acn)
+                if exp_accont != None:
+                   for ac in exp_accont:
+                      accounts.append(ac)
+
+            return render(request, 'accounting/invoices/invoiceslogForm.html', {
+                 'form': form,
+                'formset': formset,
+                'loads': loads,
+                'accounts': accounts,
+                'customers': customer,
+                'title': 'Create new Invoice'
+            })
+        def post(self, request, *args, **kwargs):
+
+            form = self.form_class(request.POST)
+            formset = self.form_class_log(request.POST)
+            user = request.user
+            invs = Invoice.objects.filter(business_id=form.data['business']).order_by('-serial')
+            serial = 1
+            serials = []
+            for s in invs:
+                serials.append(s.serial)
+            if form.is_valid() and formset.is_valid():
+                if serials:
+                    serial = int(serials[0]) + 1
+                invoice = form.save(commit=False)
+                invoice.serial = serial
+                invoice.users_id = user.id
+                invoice.save()
+                accion_user(invoice, ADDITION, request.user)
+                loadhasInv = formset.save(commit=False)
+                for lodinv in loadhasInv:
+                        if Load.objects.filter(id_lod=lodinv.loads_id):
+                            load = Load.objects.get(id_lod=lodinv.loads_id)
+                            lodinv.invoices = invoice
+                            lodinv.save()
+                            acountDescp = AccountDescrip.objects.create(date=invoice.start_date,
+                                                                        value=invoice.total,
+                                                                        accounts=load.accounts,
+                                                                        document=invoice.id_inv,
+                                                                        users_id=user.id,
+                                                                        waytopay=invoice.waytopay,
+                                                                        type='Invoices')
+
+                messages.success(request, "Invoice saved with an extension")
+
+                return HttpResponseRedirect(reverse_lazy('accounting:invoices'))
+            else:
+                for er in form.errors:
+                    messages.error(request, er)
+                for er in formset.errors:
+                    messages.error(request, er)
+                loads = Load.objects.all().order_by('number')
+                customer = Customer.objects.filter(deactivated=False)
+                accounts = []
+                inc = Account.objects.get(primary=True, name='Income')
+                inc_acconts = Account.objects.filter(accounts_id_id=inc.id_acn)
+                for i in inc_acconts:
+                    accounts.append(i)
+                for a in inc_acconts:
+                    exp_accont = Account.objects.filter(accounts_id_id=a.id_acn)
+                    if exp_accont != None:
+                        for ac in exp_accont:
+                            accounts.append(ac)
+                return render(request, 'accounting/invoices/invoicesForm.html', {
+                       'form': form,
+                       'formset': formset,
+                       'loads': loads,
+                       'accounts': accounts,
+                       'customers': customer,
+                       'title': 'Create new Invoice'
+        })
+
+
+class InvoicesLogEdit(UpdateView):
+        model = Invoice
+        sec_model = InvoicesHasItem
+        template_name = 'accounting/invoices/invoicesForm.html'
+        form_class = InvoicesForm
+        form_class_item = inlineformset_factory(
+            Invoice,
+            InvoicesHasItem,
+            form=ItemHasInvoiceForm,
+            fields=['id_ind',
+                    'quantity',
+                    'description',
+                    'accounts',
+                    'value',
+                    'tax',
+                    'subtotal'],
+            extra=3
+        )
+
+        def get_context_data(self, **kwargs):
+            context = super(InvoicesEdit, self).get_context_data(**kwargs)
+            pk = self.kwargs.get('pk', 0)
+            invoice = self.model.objects.get(id_inv=pk)
+            items = Item.objects.all()
+            loads = Load.objects.all().order_by('number')
+            customer = Customer.objects.all()
+            accounts = []
+            inv = Account.objects.get(primary=True, name='Income')
+            inv_acconts = Account.objects.filter(accounts_id_id=inv.id_acn)
+            for e in inv_acconts:
+                accounts.append(e)
+                for a in inv_acconts:
+                    exp_accont = Account.objects.filter(accounts_id_id=a.id_acn)
+                    if exp_accont != None:
+                        for ac in exp_accont:
+                            accounts.append(ac)
+            if 'form' not in context:
+                context['form'] = self.form_class()
+            if 'formset' not in context:
+                context['formset'] = self.form_class_item(instance=invoice)
+            context['id'] = pk
+            context['items'] = items
+            context['loads'] = loads
+            context['accounts'] = accounts
+            context['customers'] = customer
+            context['title'] = 'Edit new Invoice'
+            return context
+
+        def post(self, request, *args, **kwargs):
+            self.object = self.get_object
+            id_inv = kwargs['pk']
+            invoice = self.model.objects.get(id_inv=id_inv)
+            formset = self.form_class_item(request.POST, instance=invoice)
+            form = self.form_class(request.POST, instance=invoice)
+            if form.is_valid():
+                if request.POST['btnService']:
+                    form.save()
+                    accion_user(invoice, CHANGE, request.user)
+                    itemhasInv = formset.save(commit=False)
+                    for itinv in itemhasInv:
+                        if Item.objects.filter(name__contains=itinv.description):
+                            item = Item.objects.get(name=itinv.description)
+                            itinv.items_id = item.id_ite
+                            itinv.invoices = invoice
+                            itinv.save()
+                            acountDescp = AccountDescrip.objects.filter(date=invoice.start_date,
+                                                                        accounts_id=itinv.accounts_id,
+                                                                        document=invoice.id_inv,
+                                                                        type='Invoices').update(value=itinv.subtotal,
+                                                                                                waytopay=invoice.waytopay,
+                                                                                                date=invoice.start_date)
+                        else:
+                            itinv.invoices = invoice
+                            itinv.save()
+                            acountDescp = AccountDescrip.objects.create(date=invoice.start_date,
+                                                                        value=itinv.subtotal,
+                                                                        accounts=itinv.accounts,
+                                                                        document=invoice.id_inv,
+                                                                        users=request.user,
+                                                                        waytopay=invoice.waytopay,
+                                                                        type='Invoices')
+                messages.success(request, "Invoice update with an extension")
+                return HttpResponseRedirect(reverse_lazy('accounting:invoices'))
+            else:
+                for er in form.errors:
+                    messages.error(request, "ERROR: " + er)
+                for er in formset.errors:
+                    messages.error(request, "ERROR: " + er)
+
+class InvoicesLogDelete(DeleteView):
+        model = Invoice
+        template_name = 'confirm_delete.html'
+        success_url = reverse_lazy('accounting:invoices')
+
+        def delete(self, request, *args, **kwargs):
+            self.object = self.get_object
+            id_inv = kwargs['pk']
+            invoice = self.model.objects.get(id_inv=id_inv)
+            acountDescp = AccountDescrip.objects.filter(type='Invoices', document=int(invoice.id_inv))
+            invitem = InvoicesHasItem.objects.filter(invoices_id=invoice.id_inv)
+            for des in acountDescp:
+                des.delete()
+            accion_user(invoice, DELETION, request.user)
+            invoice.delete()
+            for it in invitem:
+                item = InvoicesHasItem.objects.get(id_ind=it.id_ind)
+                item.delete()
+            messages.success(request, "Invoice delete with an extension")
+            return HttpResponseRedirect(self.success_url)
+
 
 #Receipts
 class ReceiptsView(ListView):

@@ -197,9 +197,6 @@
                             <a class="item" href="{% url 'services:forms' %}"> Forms</a>
                         </li>
                         {% endif %}
-                        <li>
-                            <a class="item" href="{% url 'panel:document' %}"> My Documents</a>
-                        </li>
                     </ul>
                 </li>
                 {% if perms.accounting %}
@@ -218,9 +215,14 @@
                         {% endif %}
                         {% if perms.accounting.add_invoice %}
                         <li>
-                            <a class="item" href="{% url 'accounting:invoices' %}"> Invoices</a>
+                            <a class="item" href="{% url 'accounting:invoices' %}"> Invoices Services</a>
                         </li>
                         {% endif %}
+                        <!--{% if perms.accounting.add_invoice %}
+                        <li>
+                            <a class="item" href="{% url 'accounting:invoices_log' %}"> Invoices Load</a>
+                        </li>
+                        {% endif %}-->
                         {% if perms.accounting.add_receipt %}
                         <li>
                             <a class="item" href="{% url 'accounting:receipts' %}"> Receipts</a>

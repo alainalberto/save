@@ -494,7 +494,7 @@ class EquipmentCreate(CreateView):
                 else:
                     equipment.deactivate_date = None
                 equipment.save()
-                if request.POST.get('plate_alert', False)  and len(request.POST['plate_date_exp']) != 0:
+                if request.POST.get('plate_alert', False) and len(request.POST['plate_date_exp']) != 0:
                     group_admin = Group.objects.get(name='System Administrator')
                     group_manag = Group.objects.get(name='System Manager')
                     group_offic = Group.objects.get(name='Office Specialist')
@@ -597,8 +597,7 @@ class EquipmentEdit(UpdateView):
                     group_offic = Group.objects.get(name='Office Specialist')
                     alert = Alert.objects.create(
                         category="Urgents",
-                        description="Expires of the Plate Equipment Number " + str(
-                            equipment.serial) + " of the customer " + str(equipment.customers),
+                        description="Expires of the Plate Equipment Number " + str(equipment.serial) + " of the customer " + str(equipment.customers),
                         create_date=datetime.now().strftime("%Y-%m-%d"),
                         show_date=dateShow.strftime("%Y-%m-%d"),
                         end_date=dateExp.strftime("%Y-%m-%d"),
@@ -607,8 +606,7 @@ class EquipmentEdit(UpdateView):
             else:
                 alert = Alert.objects.filter(
                     category="Urgents",
-                    description="Expires of the Plate Equipment Number " + str(
-                        equipment.plate_account_number) + " of the customer " + str(equipment.customers))
+                    description="Expires of the Plate Equipment Number " + str(equipment.serial) + " of the customer " + str(equipment.customers))
                 if alert:
                     alert.delete()
             if request.POST.get('reg_alert', False) and len(request.POST['title_date_exp_reg']) != 0:
