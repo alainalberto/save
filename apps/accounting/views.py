@@ -215,7 +215,7 @@ def CustomerView(request, pk):
        contract = Contract.objects.filter(customers=customer)
        audit = Audit.objects.filter(customers=customer)
        driver = Driver.objects.filter(customers=customer)
-       files = pagination(request,File.objects.filter(folders=customer.folders).order_by('category'))
+       files = File.objects.filter(folders=customer.folders).order_by('category')
        note = Note.objects.filter(customers=customer)
        context = {
            'customer': customer,
