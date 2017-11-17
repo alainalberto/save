@@ -217,7 +217,7 @@ class FileForm(forms.ModelForm):
         ]
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'name', 'class': 'form-control input-md upper'}),
-            'category': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('', '---------'),('Company', 'Company'), ('Insurance', 'Insurance'),('COI', 'COI'),('Quote', 'Quote'),('Accidents', 'Accidents'),('Endorsments', 'Endorsments'), ('Misselenious', 'Misselenious'))),
+            'category': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('', '---------'),('Company', 'Company'),('Accidents', 'Accidents'), ('COI', 'COI'),('Insurance', 'Insurance'), ('Endorsments', 'Endorsments'), ('Misselenious', 'Misselenious'), ('Permit', 'Permit'), ('Quote', 'Quote'))),
             'url': forms.FileInput(),
         }
 

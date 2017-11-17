@@ -45,13 +45,13 @@ urlpatterns = [
     url(r'^employees/(?P<pk>\d+)/$', login_required(permission_required('accounting.delete_employee')(EmployeesDelete.as_view())), name='employees_delete'),
 
     #Invoices
-    url(r'^invoices/$', login_required(permission_required('accounting.add_invoice')(ArchiveIndexView.as_view(model=Invoice, date_field="start_date", template_name = 'accounting/invoices/invoicesViews.html'))), name='invoices'),
+    url(r'^invoices/$', login_required(permission_required('accounting.add_invoice')(InvoicesView.as_view())), name='invoices'),
     url(r'^invoices/create$', login_required(permission_required('accounting.add_invoice')(InvoicesCreate)), name='invoices_create'),
     url(r'^invoices/edit/(?P<pk>\d+)/$', login_required(permission_required('accounting.change_invoice')(InvoicesEdit.as_view())), name='invoices_edit'),
     url(r'^invoices/(?P<pk>\d+)/$', login_required(permission_required('accounting.delete_invoice')(InvoicesDelete.as_view())), name='invoices_delete'),
     url(r'^invoices/print/(?P<pk>\d+)/$', login_required(permission_required('accounting.add_invoice')(Invoices_pdf)), name='invoices_pdf'),
-    url(r'^invoices/view/(?P<pk>\d+)/$', login_required(permission_required('accounting.add_invoice')(InvoiceLogView)), name='invoices_view'),
-    url(r'^invoices/load$', login_required(permission_required('accounting.add_invoice')(ArchiveIndexView.as_view(model=Invoice, date_field="start_date", template_name = 'accounting/invoices/invoiceslogViews.html'))), name='invoices_log'),
+    url(r'^invoices/view/(?P<pk>\d+)/$', login_required(permission_required('accounting.add_invoice')(InvoiceView)), name='invoices_view'),
+    url(r'^invoices/load$', login_required(permission_required('accounting.add_invoice')(InvoicesLogView.as_view())), name='invoices_log'),
     url(r'^invoices/load/create$', login_required(permission_required('accounting.add_invoice')(InvoicesLogCreate.as_view())), name='invoiceslog_create'),
     url(r'^invoices/load/edit/(?P<pk>\d+)/$', login_required(permission_required('accounting.change_invoice')(InvoicesLogEdit.as_view())), name='invoiceslog_edit'),
     url(r'^invoices/load/(?P<pk>\d+)/$', login_required(permission_required('accounting.delete_invoice')(InvoicesLogDelete.as_view())), name='invoiceslog_delete'),

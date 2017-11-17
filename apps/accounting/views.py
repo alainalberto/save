@@ -449,10 +449,12 @@ class InvoicesView(ListView):
     model = Invoice
     template_name = 'accounting/invoices/invoicesViews.html'
 
-    """def get(self, request, *args, **kwargs):
-        invoice = self.model.objects.all().order_by('start_date')
-        context ={'title': 'List Invoices', 'object_list': invoice}
-        return render(request, self.template_name, context)"""
+    def get_context_data(self, **kwargs):
+        context = super(InvoicesView, self).get_context_data(**kwargs)
+        invoice = self.model.objects.filter(type='service').order_by('-start_date')
+        context['title'] = 'List Invoices'
+        context['object_list'] = invoice
+        return context
 
 
 def InvoiceView(request, pk):
@@ -683,6 +685,19 @@ class InvoicesDelete(DeleteView):
         messages.success(request, "Invoice delete with an extension")
         return HttpResponseRedirect(self.success_url)
 
+class InvoicesLogView(ListView):
+    model = Invoice
+    template_name = 'accounting/invoices/invoiceslogViews.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(InvoicesLogView, self).get_context_data(**kwargs)
+        invoice = self.model.objects.filter(type='load').order_by('-start_date')
+        context['title'] = 'List Invoices'
+        context['object_list'] = invoice
+        return context
+
+
+
 def InvoiceLogView(request, pk):
             invoice = Invoice.objects.get(id_inv=pk)
             invitem = InvoicesHasItem.objects.filter(invoices_id=invoice.id_inv)
@@ -695,7 +710,7 @@ def InvoiceLogView(request, pk):
                        'loads': loads,
                        'title': 'Invoice',
                        }
-            return render(request, 'accounting/invoices/invoicesView.html', context)
+            return render(request, 'accounting/invoices/invoiceslogView.html', context)
 
 class InvoicesLogCreate(CreateView):
         model = Invoice

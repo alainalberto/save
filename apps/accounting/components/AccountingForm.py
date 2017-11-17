@@ -187,6 +187,55 @@ class ItemHasInvoiceForm(forms.ModelForm):
             'subtotal': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control subtotal', 'readonly':''}),
         }
 
+class InvoicesLogForm(forms.ModelForm):
+        class Meta:
+            model = Invoice
+
+            fields = [
+                'business',
+                'start_date',
+                'waytopay',
+                'discount',
+                'paid',
+                'prefix',
+                'end_date',
+                'subtotal',
+                'total',
+                'customers',
+                'comission_fee',
+                'wire_fee',
+                'ach_fee',
+            ]
+            labels = {
+                'business': 'Business:',
+                'start_date': 'Start Date:',
+                'waytopay': 'Payment Method:',
+                'discount': 'Discount:',
+                'paid': 'Paid:',
+                'prefix': 'Prefix:',
+                'end_date': 'End Date:',
+                'subtotal': 'Subtotal:',
+                'total': 'Total:',
+            }
+            widgets = {
+                'business': forms.Select(attrs={'class': 'form-control input-md'}),
+                'start_date': forms.DateInput(attrs={'placeholder': 'Start Date', 'class': 'form-control input-md'}),
+                'waytopay': forms.Select(attrs={'class': 'form-control input-md'}, choices=(
+                ('Cash', 'Cash'), ('Check', 'Check'), ('Credit Card', 'Credit Card'))),
+                'paid': forms.CheckboxInput(
+                    attrs={'data-off-color': "danger", 'class': "switch", 'data-size': "mini", 'data-on-text': "YES",
+                           'data-off-text': "NO"}),
+                'prefix': forms.TextInput(attrs={'placeholder': 'Prefix', 'class': 'form-control input-md upper'}),
+                'end_date': forms.DateInput(attrs={'placeholder': 'End Date', 'class': 'form-control input-md'}),
+                'discount': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control discount'}),
+                'subtotal': forms.NumberInput(
+                    attrs={'placeholder': '0.00', 'class': 'form-control servSutotal', 'readonly': ''}),
+                'total': forms.NumberInput(
+                    attrs={'placeholder': '0.00', 'class': 'form-control serviTotal', 'readonly': ''}),
+                'customers': forms.Select(attrs={'class': 'form-control input-md'}),
+            }
+
+
 class ReceiptsForm(forms.ModelForm):
 
     class Meta:
