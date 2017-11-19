@@ -185,7 +185,8 @@ class PermitEdit(UpdateView):
                         description="Expires the TXDMV Permit of the customer " + str(customer),
                         category="Urgents")
                     if alert:
-                        alert.delete()
+                        for a in alert:
+                            a.delete()
                 if request.POST.get('ucr_alert', False) and len(request.POST['ucr_date_exp']) != 0:
                    dateExp = permit.ucr_date_exp
                    dateShow = dateExp - timedelta(days=30)
@@ -207,7 +208,8 @@ class PermitEdit(UpdateView):
                 else:
                     alert = Alert.objects.filter(description="Expires the UCR Permit of the customer " + str(customer), category="Urgents")
                     if alert:
-                        alert.delete()
+                        for a in alert:
+                            a.delete()
                 accion_user(permit, CHANGE, request.user)
                 messages.success(request, 'The Permit was saved successfully')
                 return HttpResponseRedirect('/accounting/customers/view/' + str(permit.customers_id))
@@ -232,9 +234,11 @@ class PermitDelete(DeleteView):
                                            end_date=permit.ucr_date_exp)
         accion_user(permit, DELETION, request.user)
         if alert_txdmv:
-          alert_txdmv.delete()
+            for a in alert_txdmv:
+                a.delete()
         if alert_ucr:
-          alert_ucr.delete()
+            for a in alert_ucr:
+                a.delete()
         customer = permit.customers
         permit.delete()
         messages.success(request, "Permit delete with an extension")
@@ -608,7 +612,8 @@ class EquipmentEdit(UpdateView):
                     category="Urgents",
                     description="Expires of the Plate Equipment Number " + str(equipment.serial) + " of the customer " + str(equipment.customers))
                 if alert:
-                    alert.delete()
+                    for a in alert:
+                        a.delete()
             if request.POST.get('reg_alert', False) and len(request.POST['title_date_exp_reg']) != 0:
                 dateExp = equipment.title_date_exp_reg
                 dateShow = dateExp - timedelta(days=30)
@@ -636,7 +641,8 @@ class EquipmentEdit(UpdateView):
                     description="Expires of the Title Register Equipment Number " + str(
                         equipment.serial) + " of the customer " + str(equipment.customers))
                 if alert:
-                    alert.delete()
+                    for a in alert:
+                        a.delete()
             if request.POST.get('insp_alert', False) and len(request.POST['title_date_exp_insp']) != 0:
                 dateExp = equipment.title_date_exp_insp
                 dateShow = dateExp - timedelta(days=30)
@@ -664,7 +670,8 @@ class EquipmentEdit(UpdateView):
                     description="Expires of the Inspection Equipment Number " + str(
                         equipment.serial) + " of the customer " + str(equipment.customers))
                 if alert:
-                    alert.delete()
+                    for a in alert:
+                        a.delete()
             accion_user(equipment, CHANGE, request.user)
             messages.success(request, 'The Equipment was saved successfully')
             return HttpResponseRedirect('/accounting/customers/view/' + str(equipment.customers_id))
@@ -699,11 +706,14 @@ class EquipmentDelete(DeleteView):
                 equipment.serial) + " of the customer " + str(equipment.customer))
         accion_user(equipment, DELETION, request.user)
         if alert_plate:
-          alert_plate.delete()
+            for a in alert_plate:
+                a.delete()
         if alert_reg:
-          alert_reg.delete()
+            for a in alert_reg:
+                a.delete()
         if alert_insp:
-          alert_insp.delete()
+            for a in alert_insp:
+                a.delete()
         equipment.delete()
         messages.success(request, "Permit delete with an extension")
         return HttpResponseRedirect(self.success_url)
@@ -745,7 +755,7 @@ class InsuranceCreate(CreateView):
                   insurance.users = request.user
                   insurance.update = datetime.now().strftime("%Y-%m-%d")
                   insurance.save()
-                  if request.POST.get('policy_alert', False) and len(request.POST['policy_date_exp']) != 0:
+                  if request.POST.get('liability_alert', False) and len(request.POST['policy_date_exp']) != 0:
                         group_admin = Group.objects.get(name='System Administrator')
                         group_manag = Group.objects.get(name= 'System Manager')
                         group_offic = Group.objects.get(name= 'Office Specialist')
@@ -753,7 +763,49 @@ class InsuranceCreate(CreateView):
                         dateShow = dateExp - timedelta(days=30)
                         alert = Alert.objects.create(
                             category = "Urgents",
-                            description = "Expires the Insurance Policy  of the customer " + str(customer),
+                            description = "Expires the Insurance Liability Policy  of the customer " + str(customer),
+                            create_date = datetime.now().strftime("%Y-%m-%d"),
+                            show_date = dateShow.strftime("%Y-%m-%d"),
+                            end_date = dateExp.strftime("%Y-%m-%d"),
+                            users = request.user)
+                        alert.group.add(group_admin, group_manag, group_offic)
+                  if request.POST.get('cargo_alert', False) and len(request.POST['policy_cargo_exp']) != 0:
+                        group_admin = Group.objects.get(name='System Administrator')
+                        group_manag = Group.objects.get(name= 'System Manager')
+                        group_offic = Group.objects.get(name= 'Office Specialist')
+                        dateExp = insurance.policy_cargo_exp
+                        dateShow = dateExp - timedelta(days=30)
+                        alert = Alert.objects.create(
+                            category = "Urgents",
+                            description = "Expires the Insurance Cargo Policy  of the customer " + str(customer),
+                            create_date = datetime.now().strftime("%Y-%m-%d"),
+                            show_date = dateShow.strftime("%Y-%m-%d"),
+                            end_date = dateExp.strftime("%Y-%m-%d"),
+                            users = request.user)
+                        alert.group.add(group_admin, group_manag, group_offic)
+                  if request.POST.get('physical_alert', False) and len(request.POST['policy_physical_exp']) != 0:
+                        group_admin = Group.objects.get(name='System Administrator')
+                        group_manag = Group.objects.get(name= 'System Manager')
+                        group_offic = Group.objects.get(name= 'Office Specialist')
+                        dateExp = insurance.policy_physical_exp
+                        dateShow = dateExp - timedelta(days=30)
+                        alert = Alert.objects.create(
+                            category = "Urgents",
+                            description = "Expires the Insurance Physical Damage Policy  of the customer " + str(customer),
+                            create_date = datetime.now().strftime("%Y-%m-%d"),
+                            show_date = dateShow.strftime("%Y-%m-%d"),
+                            end_date = dateExp.strftime("%Y-%m-%d"),
+                            users = request.user)
+                        alert.group.add(group_admin, group_manag, group_offic)
+                  if request.POST.get('other_alert', False) and len(request.POST['policy_other_exp']) != 0:
+                        group_admin = Group.objects.get(name='System Administrator')
+                        group_manag = Group.objects.get(name= 'System Manager')
+                        group_offic = Group.objects.get(name= 'Office Specialist')
+                        dateExp = insurance.policy_other_exp
+                        dateShow = dateExp - timedelta(days=30)
+                        alert = Alert.objects.create(
+                            category = "Urgents",
+                            description = "Expires the Insurance "+insurance.other_description+" Policy  of the customer " + str(customer),
                             create_date = datetime.now().strftime("%Y-%m-%d"),
                             show_date = dateShow.strftime("%Y-%m-%d"),
                             end_date = dateExp.strftime("%Y-%m-%d"),
@@ -817,10 +869,10 @@ class InsuranceEdit(UpdateView):
                 insurance.users = request.user
                 insurance.save()
                 customer = Customer.objects.get(id_cut=insurance.customers_id)
-                if request.POST.get('policy_alert', False) and len(request.POST['policy_date_exp']) != 0:
+                if request.POST.get('liability_alert', False) and len(request.POST['policy_date_exp']) != 0:
                    dateExp = insurance.policy_date_exp
                    dateShow = dateExp - timedelta(days=30)
-                   alert = Alert.objects.filter(description = "Expires the Insurance Policy  of the customer " + str(customer), category="Urgents")
+                   alert = Alert.objects.filter(description = "Expires the Insurance Liability Policy  of the customer " + str(customer), category="Urgents")
                    if alert:
                       alert.update(show_date = dateShow.strftime("%Y-%m-%d"), end_date = dateExp.strftime("%Y-%m-%d"))
                    else:
@@ -829,7 +881,7 @@ class InsuranceEdit(UpdateView):
                        group_offic = Group.objects.get(name='Office Specialist')
                        alert = Alert.objects.create(
                            category="Urgents",
-                           description="Expires the Insurance Policy  of the customer " + str(customer),
+                           description="Expires the Insurance Liability Policy  of the customer " + str(customer),
                            create_date=datetime.now().strftime("%Y-%m-%d"),
                            show_date=dateShow.strftime("%Y-%m-%d"),
                            end_date=dateExp.strftime("%Y-%m-%d"),
@@ -837,10 +889,90 @@ class InsuranceEdit(UpdateView):
                        alert.group.add(group_admin, group_manag, group_offic)
                 else:
                     alert = Alert.objects.filter(
-                        description="Expires the Insurance Policy  of the customer " + str(customer),
+                        description="Expires the Insurance Liability Policy  of the customer " + str(customer),
                         category="Urgents")
                     if alert:
-                        alert.delete()
+                        for a in alert:
+                            a.delete()
+                if request.POST.get('cargo_alert', False) and len(request.POST['policy_cargo_exp']) != 0:
+                   dateExp = insurance.policy_cargo_exp
+                   dateShow = dateExp - timedelta(days=30)
+                   alert = Alert.objects.filter(description = "Expires the Insurance Cargo Policy  of the customer " + str(customer), category="Urgents")
+                   if alert:
+                      alert.update(show_date = dateShow.strftime("%Y-%m-%d"), end_date = dateExp.strftime("%Y-%m-%d"))
+                   else:
+                       group_admin = Group.objects.get(name='System Administrator')
+                       group_manag = Group.objects.get(name='System Manager')
+                       group_offic = Group.objects.get(name='Office Specialist')
+                       alert = Alert.objects.create(
+                           category="Urgents",
+                           description="Expires the Insurance Cargo Policy  of the customer " + str(customer),
+                           create_date=datetime.now().strftime("%Y-%m-%d"),
+                           show_date=dateShow.strftime("%Y-%m-%d"),
+                           end_date=dateExp.strftime("%Y-%m-%d"),
+                           users=request.user)
+                       alert.group.add(group_admin, group_manag, group_offic)
+                else:
+                    alert = Alert.objects.filter(
+                        description="Expires the Insurance Cargo Policy  of the customer " + str(customer),
+                        category="Urgents")
+                    if alert:
+                        for a in alert:
+                            a.delete()
+                if request.POST.get('physical_alert', False) and len(request.POST['policy_physical_exp']) != 0:
+                    dateExp = insurance.policy_physical_exp
+                    dateShow = dateExp - timedelta(days=30)
+                    alert = Alert.objects.filter(
+                        description="Expires the Insurance Physical Damage Policy  of the customer " + str(customer),
+                        category="Urgents")
+                    if alert:
+                        alert.update(show_date=dateShow.strftime("%Y-%m-%d"), end_date=dateExp.strftime("%Y-%m-%d"))
+                    else:
+                        group_admin = Group.objects.get(name='System Administrator')
+                        group_manag = Group.objects.get(name='System Manager')
+                        group_offic = Group.objects.get(name='Office Specialist')
+                        alert = Alert.objects.create(
+                            category="Urgents",
+                            description="Expires the Insurance Physical Damage Policy  of the customer " + str(customer),
+                            create_date=datetime.now().strftime("%Y-%m-%d"),
+                            show_date=dateShow.strftime("%Y-%m-%d"),
+                            end_date=dateExp.strftime("%Y-%m-%d"),
+                            users=request.user)
+                        alert.group.add(group_admin, group_manag, group_offic)
+                else:
+                    alert = Alert.objects.filter(
+                        description="Expires the Insurance Physical Damage Policy  of the customer " + str(customer),
+                        category="Urgents")
+                    if alert:
+                        for a in alert:
+                            a.delete()
+                if request.POST.get('other_alert', False) and len(request.POST['policy_other_exp']) != 0:
+                    dateExp = insurance.policy_other_exp
+                    dateShow = dateExp - timedelta(days=30)
+                    alert = Alert.objects.filter(
+                        description="Expires the Insurance "+insurance.other_description+" Policy  of the customer " + str(customer),
+                        category="Urgents")
+                    if alert:
+                        alert.update(show_date=dateShow.strftime("%Y-%m-%d"), end_date=dateExp.strftime("%Y-%m-%d"))
+                    else:
+                        group_admin = Group.objects.get(name='System Administrator')
+                        group_manag = Group.objects.get(name='System Manager')
+                        group_offic = Group.objects.get(name='Office Specialist')
+                        alert = Alert.objects.create(
+                            category="Urgents",
+                            description="Expires the Insurance "+insurance.other_description+" Policy  of the customer " + str(customer),
+                            create_date=datetime.now().strftime("%Y-%m-%d"),
+                            show_date=dateShow.strftime("%Y-%m-%d"),
+                            end_date=dateExp.strftime("%Y-%m-%d"),
+                            users=request.user)
+                        alert.group.add(group_admin, group_manag, group_offic)
+                else:
+                    alert = Alert.objects.filter(
+                        description="Expires the Insurance "+insurance.other_description+" Policy  of the customer " + str(customer),
+                        category="Urgents")
+                    if alert:
+                        for a in alert:
+                            a.delete()
                 if request.POST.get('monthly_alert', False) and len(request.POST['monthlypay']) != 0:
                    dateExp = insurance.monthlypay
                    dateShow = dateExp - timedelta(days=7)
@@ -864,7 +996,8 @@ class InsuranceEdit(UpdateView):
                         description="The next "+str(dateExp)+" is the monthly insurance payment day of the customer" + str(customer),
                         category="Urgents")
                     if alert:
-                        alert.delete()
+                        for a in alert:
+                            a.delete()
                 accion_user(insurance, CHANGE, request.user)
                 messages.success(request, 'The Insurance was saved successfully')
                 return HttpResponseRedirect('/accounting/customers/view/' + str(insurance.customers_id))
@@ -883,16 +1016,36 @@ class InsuranceDelete(DeleteView):
         id = kwargs['pk']
         insurance = self.model.objects.get(id_ins=id)
         dateExp = insurance.monthlypay
-        alert_policy = Alert.objects.filter(description = "Expires the Insurance Policy  of the customer " + str(insurance.customers),
+        alert_liability = Alert.objects.filter(description = "Expires the Insurance Liability Policy  of the customer " + str(insurance.customers),
                                      end_date=insurance.policy_date_exp)
+        alert_cargo = Alert.objects.filter(
+            description="Expires the Insurance Cargo Policy  of the customer " + str(insurance.customers),
+            end_date=insurance.policy_cargo_exp)
+        alert_physical = Alert.objects.filter(
+            description="Expires the Insurance Physical Damage Policy  of the customer " + str(insurance.customers),
+            end_date=insurance.policy_physical_exp)
+        alert_other = Alert.objects.filter(
+            description="Expires the Insurance "+insurance.other_description+" Policy  of the customer " + str(insurance.customers),
+            end_date=insurance.policy_other_exp)
         alert_monthly = Alert.objects.filter(
             description="The next "+str(dateExp)+" is the monthly insurance payment day of the customer" + str(insurance.customers),
             end_date=insurance.monthlypay)
         accion_user(insurance, DELETION, request.user)
-        if alert_policy:
-          alert_policy.delete()
+        if alert_liability:
+          for a in alert_liability:
+             a.delete()
+        if alert_cargo:
+          for a in alert_cargo:
+             a.delete()
+        if alert_physical:
+          for a in alert_physical:
+             a.delete()
+        if alert_other:
+          for a in alert_other:
+             a.delete()
         if alert_monthly:
-          alert_monthly.delete()
+            for a in alert_monthly:
+                a.delete()
         customer = insurance.customers
         insurance.delete()
         messages.success(request, "Insurance delete with an extension")
@@ -1068,7 +1221,8 @@ class DriverEdit(UpdateView):
                         description="Expires the License Driver of the customer " + str(customer),
                         category="Urgents")
                     if alert:
-                        alert.delete()
+                        for a in alert:
+                            a.delete()
                 if request.POST.get('medicard_alert', False) and len(request.POST['medicard_date_exp']) != 0:
                    dateExp = driver.medicard_date_exp
                    dateShow = dateExp - timedelta(days=30)
@@ -1090,7 +1244,8 @@ class DriverEdit(UpdateView):
                 else:
                     alert = Alert.objects.filter(description="Expires the Medicard Driver of the customer " + str(customer), category="Urgents")
                     if alert:
-                        alert.delete()
+                        for a in alert:
+                            a.delete()
                 if request.POST.get('drugtest_alert', False) and len(request.POST['drugtest_date_exp']) != 0:
                    dateExp = driver.drugtest_date_exp
                    dateShow = dateExp - timedelta(days=30)
@@ -1112,7 +1267,8 @@ class DriverEdit(UpdateView):
                 else:
                     alert = Alert.objects.filter(description="Expires the Drugtest Driver of the customer " + str(customer), category="Urgents")
                     if alert:
-                        alert.delete()
+                        for a in alert:
+                            a.delete()
                 if request.POST.get('mbr_alert', False) and len(request.POST['mbr_date_exp']) != 0:
                    dateExp = driver.mbr_date_exp
                    dateShow = dateExp - timedelta(days=30)
@@ -1134,7 +1290,8 @@ class DriverEdit(UpdateView):
                 else:
                     alert = Alert.objects.filter(description="Expires the Mbr Driver of the customer " + str(customer), category="Urgents")
                     if alert:
-                        alert.delete()
+                        for a in alert:
+                            a.delete()
                 accion_user(driver, CHANGE, request.user)
                 messages.success(request, 'The Driver was saved successfully')
                 return HttpResponseRedirect('/accounting/customers/view/' + str(driver.customers_id))
@@ -1163,13 +1320,18 @@ class DriverDelete(DeleteView):
                                            end_date=driver.mbr_date_exp)
         accion_user(driver, DELETION, request.user)
         if alert_lic:
+            for a in alert_lic:
+                a.delete()
             alert_lic.delete()
         if alert_medicard:
-            alert_medicard.delete()
+            for a in alert_medicard:
+                a.delete()
         if alert_drugtest:
-            alert_drugtest.delete()
+            for a in alert_drugtest:
+                a.delete()
         if alert_mbr:
-            alert_mbr.delete()
+            for a in alert_mbr:
+                a.delete()
         customer = driver.customers
         driver.delete()
         messages.success(request, "Driver delete with an extension")
@@ -1309,7 +1471,8 @@ class IftaEdit(UpdateView):
                         description="Next period of the customer " + str(customer),
                         category="Urgents")
                     if alert:
-                        alert.delete()
+                        for a in alert:
+                            a.delete()
                 if request.POST.get('payment', False) and len(request.POST['payment_due']) != 0:
                     dateExp = ifta.payment_due
                     dateShow = dateExp - timedelta(days=30)
@@ -1334,7 +1497,8 @@ class IftaEdit(UpdateView):
                         description="IFTA Payment Due of the customer " + str(customer),
                         category="Urgents")
                     if alert:
-                        alert.delete()
+                        for a in alert:
+                            a.delete()
                 accion_user(ifta, CHANGE, request.user)
                 messages.success(request, 'The Ifta was saved successfully')
                 return HttpResponseRedirect('/accounting/customers/view/' + str(ifta.customers_id))
@@ -1361,9 +1525,11 @@ class IftaDelete(DeleteView):
                 end_date=ifta.payment_due)
             accion_user(ifta, DELETION, request.user)
             if nex_period_alert:
-                nex_period_alert.delete()
+                for a in nex_period_alert:
+                    a.delete()
             if payment_alert:
-                payment_alert.delete()
+                for a in payment_alert:
+                    a.delete()
             customer = ifta.customers
             ifta.delete()
             messages.success(request, "Ifta delete with an extension")

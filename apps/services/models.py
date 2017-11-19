@@ -173,6 +173,8 @@ class Insurance(models.Model):
     down_payment = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     policy_efective_date = models.DateField(blank=True, null=True)
     policy_date_exp = models.DateField(blank=True, null=True)
+    policy_cargo_exp = models.DateField(blank=True, null=True)
+    policy_physical_exp = models.DateField(blank=True, null=True)
     liability = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     policy_liability = models.CharField(max_length=100, blank=True, null=True)
     cargo = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
@@ -190,6 +192,10 @@ class Insurance(models.Model):
     update = models.DateField(blank=True, null=True)
     monthlypay = models.DateField(blank=True, null=True)
     note = models.CharField(max_length=250, blank=True, null=True)
+    other_description = models.CharField(max_length=45, blank=True, null=True)
+    other = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    other_policy = models.CharField(max_length=100, blank=True, null=True)
+    policy_other_exp = models.DateField(blank=True, null=True)
     objects = CountState()
 
     def __str__(self):
