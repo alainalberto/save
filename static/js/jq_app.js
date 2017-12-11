@@ -4,6 +4,10 @@ $(document).ready( function () {
       $(this).val($(this).val().toUpperCase());
    });
 
+   $('.lower').keyup(function() {
+      $(this).val($(this).val().toLowerCase());
+   });
+
 // Switch
 $(".switch").bootstrapSwitch();
 $(".switch-min").bootstrapSwitch();

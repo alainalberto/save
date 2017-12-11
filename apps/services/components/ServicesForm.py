@@ -326,3 +326,15 @@ class AuditForm(forms.ModelForm):
             'results': forms.TextInput(attrs={'placeholder': 'Results', 'class': 'form-control input-md upper'}),
         }
 
+class EmailForm(forms.Form):
+      topic = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control input-md upper topic', 'name':'topic'}), max_length=100)
+      email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control input-md lower email', 'name':'email'}))
+      message = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control input-md upper sms', 'name':'sms'}))
+      file = forms.FileField(widget=forms.FileInput(attrs={'class': 'file', 'name':'file'}),required=False)
+
+      def clean_mensaje(self):
+        sms = self.cleaned_data['message']
+        num_word = len(sms.split())
+        if num_word < 4:
+            raise forms.ValidationError("Minimum 4 words are required!")
+        return sms

@@ -64,7 +64,7 @@ class CustomerForm(forms.ModelForm):
             'no_social': forms.NumberInput(attrs={'placeholder': 'SSN', 'class': 'form-control input-md upper'}),
             'address': forms.TextInput(attrs={'placeholder': 'Address', 'class': 'form-control input-md upper'}),
             'phone': forms.NumberInput(attrs={'placeholder': 'Telepone Number', 'class': 'form-control input-md'}),
-            'email': forms.EmailInput(attrs={'placeholder': 'Email', 'class': 'form-control input-md '}),
+            'email': forms.EmailInput(attrs={'placeholder': 'Email', 'class': 'form-control input-md lower'}),
             'business': forms.Select(attrs={'class': 'form-control input-md'}),
             'deactivated': forms.CheckboxInput(attrs={'data-off-color':"danger", 'class':"switch", 'data-size':"mini", 'data-on-text':"YES", 'data-off-text': "NO"}),
             'usdot': forms.NumberInput(attrs={'placeholder': 'USDOT Number', 'class': 'form-control input-md'}),
@@ -113,7 +113,7 @@ class EmployeesForm(forms.ModelForm):
             'social_no': forms.NumberInput(attrs={'placeholder': 'Social Security', 'class': 'form-control input-md', 'required': 'true'}),
             'date_admis': forms.DateInput(attrs={'placeholder': 'Admission Date', 'class': 'form-control input-md upper'}),
             'phone': forms.NumberInput(attrs={'placeholder': 'Phone', 'class': 'form-control input-md'}),
-            'email': forms.EmailInput(attrs={'placeholder': 'Email', 'class': 'form-control input-md', 'required': 'true'}),
+            'email': forms.EmailInput(attrs={'placeholder': 'Email', 'class': 'form-control input-md lower', 'required': 'true'}),
             'type_salary': forms.Select(attrs={'class': 'form-control input-md'},choices=(('pervent','Commission'),('salary','Salary'))),
             'value': forms.NumberInput(attrs={'placeholder': 'Value', 'class': 'form-control input-md'}),
             'position': forms.TextInput(attrs={'placeholder': 'Position', 'class': 'form-control input-md upper'}),
@@ -353,3 +353,6 @@ class NoteForm(forms.ModelForm):
         widgets = {
             'note': forms.Textarea(attrs={'class': 'form-control fee-value upper'}),
         }
+
+
+

@@ -1,4 +1,4 @@
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMessage
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.forms import inlineformset_factory
 from django.shortcuts import render, HttpResponseRedirect
@@ -1641,3 +1641,32 @@ class AuditDelete(DeleteView):
         audit.delete()
         messages.success(request, "Audit delete with an extension")
         return HttpResponseRedirect('/accounting/customers/view/' + str(customer.id_cut))
+
+def EmailSend(request, pk, fl):
+
+    if fl:
+       file = File.objects.get(id_fil=fl)
+
+    customer = Customer.objects.get(id_cut=pk)
+    if request.method == 'POST':
+        form = EmailForm(request.POST, request.FILES)
+        if form.is_valid():
+             if file:
+                att = 'static/media/'+str(file.url)
+             else:
+                att = form.cleaned_data['file']
+             mail = EmailMessage(form.cleaned_data['topic'],form.cleaned_data['message'],to=[form.cleaned_data['email']])
+             mail.attach_file(att)
+             mail.send()
+             accion_user(customer, CHANGE, request.user)
+             messages.success(request, "Mail sent with success")
+             return HttpResponseRedirect('/accounting/customers/view/' + str(customer.id_cut))
+        else:
+            for er in form.errors:
+                messages.error(request, "ERROR: " + er)
+            return render(request, 'home/Email/sendEmail.html', {'form': form, 'customer': customer, 'file': file})
+    else:
+        sms = 'HELLO DEAR '+customer.fullname+', THIS EMAIL HAS BEEN GENERATED FROM THE AUTOMATED FIRST CALL INTERMODAL SYSTEM WITH INFORMATION THAT MAY BE OF INTEREST TO YOU, PLEASE DO NOT FORWARD THIS EMAIL, THANKS FIRST CALL INTERMODAL TEAM'
+        form = EmailForm(initial={'topic': 'First Call Intermodal Information!', 'email': customer.email, 'message': sms, 'file':file})
+    return render(request, 'home/Email/sendEmail.html', {'form': form, 'customer': customer, 'file': file})
+
