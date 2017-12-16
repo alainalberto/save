@@ -47,24 +47,20 @@
                         </div>
                     </div>
                     <div class="form-group col-md-4 col-md-offset-1">
-                        <label class="label-control">{{ form.lic_date_exp.label }}</label>
+                        <label class="label-control">License Date Expiration:</label>
                         <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                            {{ form.lic_date_exp }}
+                            {{form.lic_date_exp}}
                             <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
                         </div>
-                        <label>
-                            <input type="checkbox" id="lic_alert" name="lic_alert" checked> Alert
-                        </label>
+                            <input type="checkbox"  aria-pressed="false" data-off-color="danger" class="switch" data-size="mini" data-on-text="Alert ON" data-off-text="Alert OFF" id="lic_alert" name="lic_alert" checked>
                     </div>
-                    <div class="form-group col-md-4 col-md-offset-1">
-                        <label class="label-control">{{ form.medicard_date_exp.label }}</label>
+                     <div class="form-group col-md-4 col-md-offset-1">
+                        <label class="label-control">Medicard Date Expiration:</label>
                         <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                            {{ form.medicard_date_exp }}
+                            {{form.medicard_date_exp}}
                             <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
                         </div>
-                        <label>
-                            <input type="checkbox" id="medicard_alert" name="medicard_alert" checked> Alert
-                        </label>
+                            <input type="checkbox"  aria-pressed="false" data-off-color="danger" class="switch" data-size="mini" data-on-text="Alert ON" data-off-text="Alert OFF" id="medicard_alert" name="medicard_alert" checked>
                     </div>
                     <div class="form-group col-md-4 col-md-offset-1">
                         <label class="label-control">{{ form.drugtest_date.label }}</label>
@@ -74,14 +70,12 @@
                         </div>
                     </div>
                     <div class="form-group col-md-4 col-md-offset-1">
-                        <label class="label-control">{{ form.drugtest_date_exp.label }}</label>
+                        <label class="label-control">Drugtest Date Expiration:</label>
                         <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                            {{ form.drugtest_date_exp }}
+                            {{form.drugtest_date_exp}}
                             <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
                         </div>
-                        <label>
-                            <input type="checkbox" id="drugtest_alert" name="drugtest_alert" checked> Alert
-                        </label>
+                            <input type="checkbox"  aria-pressed="false" data-off-color="danger" class="switch" data-size="mini" data-on-text="Alert ON" data-off-text="Alert OFF" id="drugtest_alert" name="drugtest_alert" checked>
                     </div>
                      <div class="form-group col-md-4 col-md-offset-1">
                         <label class="label-control">{{ form.mbr_date.label }}</label>
@@ -91,14 +85,12 @@
                         </div>
                     </div>
                     <div class="form-group col-md-4 col-md-offset-1">
-                        <label class="label-control">{{ form.mbr_date_exp.label }}</label>
+                        <label class="label-control">Mbr Date Expiration:</label>
                         <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                            {{ form.mbr_date_exp }}
+                            {{form.mbr_date_exp}}
                             <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
                         </div>
-                        <label>
-                            <input type="checkbox" id="mbr_alert" name="mbr_alert" checked> Alert
-                        </label>
+                            <input type="checkbox"  aria-pressed="false" data-off-color="danger" class="switch" data-size="mini" data-on-text="Alert ON" data-off-text="Alert OFF" id="mbr_alert" name="mbr_alert" checked>
                     </div>
                     <div class="form-group col-md-4 col-md-offset-1">
                         <label class="label-control">{{ form.begining_date.label }}</label>
@@ -113,39 +105,9 @@
                     </div>
                     <!-- Button (Double) -->
                     <div class="form-group col-md-5 col-md-offset-4">
-                        <a type="button" class="btn btn-success" data-toggle="modal" data-target="#alert">Save</a>
-                        <a type="button" href="{% url 'logistic:drivers' %}" class="btn btn-danger">Cancel </a>
+                        <input type="submit" class="btn btn-success" value="Save" {% if is_popup %} onclick="closepopup()" {% endif %}>
+                        <a type="button"  class="btn btn-danger" {% if is_popup %} onclick="closepopup()" {% else %} onclick="history.back(-1)" {% endif %}>Cancel </a>
                     </div>
-                     <div class="modal fade" id="alert" tabindex="-1" role="dialog" aria-labelledby="Police Expire">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title" id="myModalLabel">Add Alert URGENT</h4>
-                            </div>
-                            <div class="modal-body">
-                                <fieldset>
-                                    <div class="form-group col-md-6">
-                                        <label class="label-control">Days to be for show alert:</label>
-                                        <select name="alert_day">
-                                            <option value="5">5 day</option>
-                                            <option value="15">15 day</option>
-                                            <option value="30">30 day</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-8">
-                                        <label class="label-control">{{ form_alert.group.label }}</label>
-                                        {{ form_alert.group }}
-                                    </div>
-                                </fieldset>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                <input type="submit" class="btn btn-success" value="Save">
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 </fieldset>
             </form>
         </div>

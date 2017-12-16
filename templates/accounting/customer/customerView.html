@@ -184,9 +184,11 @@
 
             <div class="form-group col-md-12">
                 <p class="bg-primary text-center">CUSTOMER FILES</p>
+                {% if perms.tools.add_file %}
                 <div class="col-md-offset-11">
                     <a type="button" class="btn btn-success" href="{% url 'services:folder_create_popup' customer.id_cut %}"><span><i class="fa fa-plus"></i></span></a>
                 </div>
+                {% endif %}
                 <br/>
                 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                     {% regroup files by category as grouped %}
@@ -217,24 +219,30 @@
                                         <td>{{ f.date_save }}</td>
                                         <td>{{ f.category }}</td>
                                         <td>
+                                            {% if perms.tools.change_file %}
                                             <toolbar class="md-accent">
                                                 <a data-type="info"  data-trigger="focus"  data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'services:folder_edit' f.id_fil %}">
                                                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                                     <tooltip md-direction="left"></tooltip>
                                                 </a>
                                             </toolbar>
+                                            {% endif %}
+                                            {% if perms.tools.delete_file %}
                                             <toolbar class="md-accent">
                                                 <a data-type="info"  data-animation="am-flip-x" data-trigger="focus"   type="button" class="btn btn-danger test-tooltip" href="{% url 'services:folder_delete' f.id_fil %}">
                                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                                     <tooltip md-direction="left"></tooltip>
                                                 </a>
                                             </toolbar>
+                                            {% endif %}
+                                            {% if perms.services %}
                                             <toolbar class="md-accent">
                                                 <a data-type="info"  data-animation="am-flip-x" data-trigger="focus"   type="button" class="btn btn-info test-tooltip" href="{% url 'services:email_send' customer.id_cut f.id_fil %}">
                                                     <i class="glyphicon glyphicon-envelope" aria-hidden="true"></i>
                                                     <tooltip md-direction="left"></tooltip>
                                                 </a>
                                             </toolbar>
+                                            {% endif %}
                                         </td>
                                     </tr>
                                     {% endfor %}
