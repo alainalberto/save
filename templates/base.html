@@ -213,17 +213,17 @@
                             <a class="item" href="{% url 'accounting:customers' %}"> Customers</a>
                         </li>
                         {% endif %}
-                        {% if perms.accounting.add_invoice %}
+                        {% if perms.services and perms.accounting.add_invoice %}
                         <li>
                             <a class="item" href="{% url 'accounting:invoices' %}"> Invoices Services</a>
                         </li>
                         {% endif %}
-                        <!--
-                        {% if perms.accounting.add_invoice %}
+
+                        {% if perms.logistic and perms.accounting.add_invoice %}
                         <li>
                             <a class="item" href="{% url 'accounting:invoices_log' %}"> Invoices Load</a>
                         </li>
-                        {% endif %}-->
+                        {% endif %}
                         {% if perms.accounting.add_receipt %}
                         <li>
                             <a class="item" href="{% url 'accounting:receipts' %}"> Receipts</a>

@@ -56,6 +56,7 @@ class DriversForm(forms.ModelForm):
             'license_numb',
             'address',
             'email',
+            'ssn',
             'dob',
             'lic_date_exp',
             'medicard_date_exp',
@@ -72,6 +73,7 @@ class DriversForm(forms.ModelForm):
             'license_numb': 'License Number:',
             'address': 'Address:',
             'email': 'Email:',
+            'ssn': 'SSN:',
             'dob': 'DOB:',
             'lic_date_exp': 'License Date Expirate:',
             'medicard_date_exp': 'Medicard Date Expirate:',
@@ -88,6 +90,7 @@ class DriversForm(forms.ModelForm):
             'license_numb': forms.NumberInput(attrs={'placeholder': 'License Number', 'class': 'form-control input-md', 'required': 'true'}),
             'address': forms.TextInput(attrs={'placeholder': 'Address', 'class': 'form-control input-md upper'}),
             'email': forms.EmailInput(attrs={'placeholder': 'email', 'class': 'form-control input-md'}),
+            'ssn': forms.PasswordInput(attrs={'class': 'form-control input-md'}),
             'dob': forms.DateTimeInput(attrs={'class': 'form-control input-md'}),
             'lic_date_exp': forms.DateTimeInput(attrs={'class': 'form-control input-md'}),
             'medicard_date_exp': forms.DateTimeInput(attrs={'class': 'form-control input-md'}),
@@ -107,18 +110,21 @@ class DispatchForm(forms.ModelForm):
         fields = [
             'name',
             'address',
+            'comission',
             'deactivate',
             'date_deactivated',
         ]
         labels = {
             'name': 'Name:',
             'address': 'Address:',
+            'comission': 'Comission:',
             'deactivate': 'Deactivate:',
             'date_deactivated': 'Deactivate Date:',
         }
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Name', 'class': 'form-control input-md upper', 'required': 'true'}),
             'address': forms.TextInput(attrs={'placeholder': 'Address', 'class': 'form-control input-md upper'}),
+            'comission': forms.NumberInput(attrs={'placeholder': 'Porcent', 'class': 'form-control input-md', 'required': 'true'}),
             'deactivate': forms.CheckboxInput(attrs={'data-off-color':"danger", 'class':"switch", 'data-size':"mini", 'data-on-text':"YES", 'data-off-text': "NO"}),
             'date_deactivated': forms.DateTimeInput(attrs={'class': 'form-control input-md'}),
 

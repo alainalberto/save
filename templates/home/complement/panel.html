@@ -73,6 +73,30 @@
                         {% endfor %}
 
                     </div>
+                    <nav class="col-md-offset-9" aria-label="Page navigation">
+                <ul class="pager">
+                    {% if alert.has_previous %}
+                    <li>
+                        <a  href="?page={{ alert.previous_page_number }}"><span>
+                            <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
+                        </span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    <span class="current">
+                        Page {{ alert.number }} of {{ alert.paginator.num_pages }}.
+                    </span>
+                    {% if alert.has_next %}
+                    <li>
+                        <a href="?page={{ alert.next_page_number }}">
+                            <span>
+                                <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
+                            </span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
                 </div>
 
             </div>

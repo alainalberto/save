@@ -137,6 +137,9 @@ class InvoicesForm(forms.ModelForm):
                 'subtotal',
                 'total',
                 'customers',
+                'comission_fee',
+                'wire_fee',
+                'ach_fee',
             ]
             labels = {
                 'business': 'Business:',
@@ -160,6 +163,9 @@ class InvoicesForm(forms.ModelForm):
                 'subtotal': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control servSutotal', 'readonly':''}),
                 'total': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control serviTotal', 'readonly':''}),
                 'customers': forms.Select(attrs={'class': 'form-control input-md'}),
+                'comission_fee': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control comission'}),
+                'wire_fee': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control wire'}),
+                'ach_fee': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control ach'}),
             }
 
 class ItemHasInvoiceForm(forms.ModelForm):

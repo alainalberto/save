@@ -13,6 +13,7 @@
             </div>
         </div>
         <div class="panel-body">
+            {% if perms.accounting.add_invoice %}
             <div class="navbar-button">
                 <a id="btnAdd" class="btn-primary btn col-md-offset-11" role="button" data-trigger="focus" title="Add User" href="{% url 'accounting:invoices_create' %}" {% if not perms.accounting.add_invoice %} disabled {% endif %}>
                     <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
@@ -20,6 +21,7 @@
                 </a>
             </div>
             <br/>
+            {% endif %}
             <div class="table-responsive">
                 <table id="listInvoices" class="table data-table table-striped table-bordered table-hover" cellspacing="0" width="100%">
                     <thead>
@@ -45,24 +47,30 @@
                         <td>{{i.waytopay}}</td>
                         <td class="text-center">{% if i.paid %}<i class="fa fa-check text-success" aria-hidden="true"></i>{% endif %}</td>
                         <td>
+                            {% if perms.accounting.change_invoice %}
                             <toolbar class="md-accent">
                                 <a data-type="info" data-trigger="focus" title="Edit Invoices" data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'accounting:invoices_edit' i.id_inv %}" {% if not perms.accounting.change_invoice %} disabled {% endif %}>
                                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                     <tooltip md-direction="left"></tooltip>
                                 </a>
                             </toolbar>
+                            {% endif %}
+                            {% if perms.accounting.delete_invoice %}
                             <toolbar class="md-accent">
                                 <a data-type="info" data-animation="am-flip-x" data-trigger="focus" title="Delete Invoices" type="button" class="btn btn-danger test-tooltip" href="{% url 'accounting:invoices_delete' i.id_inv %}" {% if not perms.accounting.delete_invoice %} disabled {% endif %}>
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                     <tooltip md-direction="left"></tooltip>
                                 </a>
                             </toolbar>
+                            {% endif %}
+                            {% if perms.accounting.add_invoice %}
                              <toolbar class="md-accent">
                                 <a data-type="info" data-animation="am-flip-x" target="_blank" data-trigger="focus" title="Print Invoice" type="button" class="btn btn-primary test-tooltip" href="{% url 'accounting:invoices_pdf' i.id_inv %}">
                                     <i class="fa fa-print" aria-hidden="true"></i>
                                     <tooltip md-direction="left"></tooltip>
                                 </a>
                             </toolbar>
+                            {% endif %}
                         </td>
 
                     </tr>

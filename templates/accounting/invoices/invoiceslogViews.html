@@ -14,7 +14,7 @@
         </div>
         <div class="panel-body">
             <div class="navbar-button">
-                <a id="btnAdd" class="btn-primary btn col-md-offset-11" role="button" data-trigger="focus" title="Add User" href="{% url 'accounting:invoices_create' %}" {% if not perms.accounting.add_invoice %} disabled {% endif %}>
+                <a id="btnAdd" class="btn-primary btn col-md-offset-11" role="button" data-trigger="focus" title="Add User" href="{% url 'accounting:invoiceslog_create' %}" {% if not perms.accounting.add_invoice %} disabled {% endif %}>
                     <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
                     <tooltip md-direction="left">New</tooltip>
                 </a>

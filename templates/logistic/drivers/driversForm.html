@@ -1,6 +1,29 @@
 {% extends 'base.html' %}
+{% block extrastyle %}
+<script type="text/javascript">
+ $(document).ready( function () {
+    var show = false;
+    $("#view").click(function() {
+     if (!show){
+      show = true
+      $('#id_ssn').removeAttr("type", "password");
+      $("#id_ssn").prop("type", "text");
+      $("#view").removeClass("glyphicon glyphicon-eye-open");
+      $("#view").addClass("glyphicon glyphicon-eye-close");
+     }
+     else{
+      show = false
+      $('#id_ssn').removeAttr("type", "text");
+      $("#id_ssn").prop("type", "password");
+      $("#view").removeClass("glyphicon glyphicon-eye-close");
+      $("#view").addClass("glyphicon glyphicon-eye-open");
+     }
+    });
+  });
+ </script>
+{% endblock %}
 {% block content %}
-<section>
+<section xmlns="http://www.w3.org/1999/html">
     <div class="panel panel-primary">
         <div class="panel-heading">
             <div class="row">
@@ -39,6 +62,19 @@
                         <label class="label-control">{{ form.email.label }} </label>
                         {{ form.email }}
                     </div>
+                </fieldset>
+                <fieldset>
+                    <div class="form-group col-xs-9 col-md-4 col-md-offset-1">
+                        <label class="label-control">SSN:</label>
+                        <div class="input-group">
+                            {{form.ssn}}
+                            {% if perms.auth.add_user %}
+                            <span class="input-group-btn"><a id="view" name="view" class="view btn btn-success glyphicon glyphicon-eye-open" data-trigger="hola"></a></span>
+                            {% endif %}
+                        </div>
+                    </div>
+                 </fieldset>
+                <fieldset>
                     <div class="form-group col-md-4 col-md-offset-1">
                         <label class="label-control">{{ form.dob.label }}</label>
                         <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">

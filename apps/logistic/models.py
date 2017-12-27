@@ -27,6 +27,7 @@ class DriversLogt(models.Model):
     id_dr = models.AutoField(primary_key=True)
     users = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=45, blank=True, null=True)
+    ssn = models.CharField(max_length=10, blank=True, null=True)
     comercial_name = models.CharField(max_length=45, blank=True, null=True)
     license_numb = models.CharField(max_length=45)
     address = models.CharField(max_length=255, blank=True, null=True)
@@ -50,6 +51,7 @@ class DispatchLogt(models.Model):
     users = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=45, blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
+    comission = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
     deactivate = models.BooleanField(default=False)
     date_deactivated = models.DateTimeField(blank=True, null=True)
 

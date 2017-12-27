@@ -20,9 +20,23 @@ from django.contrib import messages
 from datetime import datetime, date, time, timedelta
 from django.core.mail import send_mail
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.conf import settings
 
 # Create your views here.
+def pagination(request, objects):
+    paginator = Paginator(objects, 5)  # Show 25 contacts per page
+
+    page = request.GET.get('page')
+    try:
+        objs = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        objs = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        objs = paginator.page(paginator.num_pages)
+    return objs
 
 def Chats(request):
     return render(request, "home/complement/chat.html")
@@ -156,7 +170,7 @@ def panel_view(request):
         expenses_total['total'] = (cash_e_total['total']) + (credit_e_total['total']) + (check_e__total['total'])
     date_now = datetime.now().date()
     user_group = request.user.groups.all()
-    alertUrg = Alert.objects.filter(category='Urgents')
+    alertUrg = Alert.objects.filter(category='Urgents').order_by('end_date')
     for u in alertUrg:
         for g in user_group:
             if u.group.filter(name=g.name).exists():
@@ -186,7 +200,7 @@ def panel_view(request):
                 'iftas': ifta,
                 #'drives': driver,
                 'audits': audit,
-                'alert': alert,
+                'alert': pagination(request, alert),
                 'date_now': date_now}
     return render(request, 'home/complement/panel.html', contexto)
 

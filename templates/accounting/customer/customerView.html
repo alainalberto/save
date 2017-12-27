@@ -27,9 +27,11 @@
             <div><h3>{{ title }}</h3></div>
         </div>
         <div class="col-md-offset-10">
+            {% if perms.accounting.change_customer %}
             <toolbar class="md-accent">
                 <a type="button" class="btn btn-info" href="{% url 'accounting:customer_edit' customer.id_cut %}"><span><i class="fa fa-pencil-square-o"></i> Edit </span></a>
             </toolbar>
+            {% endif %}
             <toolbar class="md-accent">
                 <a data-type="info"  data-animation="am-flip-x" data-trigger="focus"   type="button" class="btn btn-info test-tooltip" href="{% url 'services:email_send' customer.id_cut None %}">
                     <samp><i class="glyphicon glyphicon-envelope" aria-hidden="true"></i> Email</samp>
@@ -275,18 +277,22 @@
                         <td>{{ n.note }}</td>
                         <td>{{ n.date }}</td>
                         <td>
+                            {% if perms.accounting.change_note %}
                             <toolbar class="md-accent">
                                 <a data-type="info" data-trigger="focus"  data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'accounting:note_edit' n.id %}">
                                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                     <tooltip md-direction="left"></tooltip>
                                 </a>
                             </toolbar>
+                            {% endif %}
+                            {% if perms.accounting.delete_note %}
                             <toolbar class="md-accent">
                                 <a data-type="info"  data-animation="am-flip-x" data-trigger="focus"   type="button" class="btn btn-danger test-tooltip" href="{% url 'accounting:note_delete' n.id %}">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                     <tooltip md-direction="left"></tooltip>
                                 </a>
                             </toolbar>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}

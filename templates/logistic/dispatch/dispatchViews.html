@@ -13,6 +13,7 @@
             </div>
         </div>
         <div class="panel-body">
+            {% if perms.logistic.add_dispatchlogt %}
             <div class="navbar-button">
                 <a id="btnAdd" class="btn-primary btn col-md-offset-11" role="button" data-trigger="focus" title="Add Dispatch" href="{% url 'logistic:dispatch_create' %}">
                     <i class="fa fa-plus" aria-hidden="true"></i>
@@ -20,6 +21,7 @@
                 </a>
             </div>
             <br/>
+            {% endif %}
             <div class="table-responsive">
             <table id="listDispatch" class="data-table table table-striped table-bordered table-hover" cellspacing="0" width="100%">
                 <thead>
@@ -38,19 +40,22 @@
                     <td>{{l.address}}</td>
                      <td>{{l.deactivate}}</td>
                     <td>
+                        {% if perms.logistic.change_dispatchlogt %}
                         <toolbar class="md-accent">
                             <a data-type="info" data-trigger="focus" title="Edit Drivers" data-animation="am-flip-x" type="button" class="btn btn-primary test-tooltip" href="{% url 'logistic:dispatch_edit' l.id_dsp %}">
                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                 <tooltip md-direction="left"></tooltip>
                             </a>
                         </toolbar>
+                        {% endif %}
+                        {% if perms.logistic.delete_dispatchlogt %}
                         <toolbar class="md-accent">
                             <a data-type="info" data-animation="am-flip-x" data-trigger="focus" title="Delete Dispatch" type="button" class="btn btn-danger test-tooltip" href="{% url 'logistic:dispatch_delete' l.id_dsp %}">
                                 <i class="fa fa-trash" aria-hidden="true"></i>
                                 <tooltip md-direction="left"></tooltip>
                             </a>
                         </toolbar>
-
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}
