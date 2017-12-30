@@ -110,17 +110,28 @@ MESSAGE_TAGS = {
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'first_call_db',
-        'USER': 'administrator',
-        'PASSWORD': 'admin*2017',
-        'HOST': 'localhost',
-        'PORT': '5432',
+if socket.gethostname() == 'MageRanse-PC' or socket.gethostname() == 'alain-HP-Notebook':
+   DATABASES = {
+      'default': {
+         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+         'NAME': 'first_call',
+         'USER': 'administrator',
+         'PASSWORD': 'admin*2017',
+         'HOST': 'localhost',
+         'PORT': '5432',
+          }
+      }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'first_call_db',
+            'USER': 'administrator',
+            'PASSWORD': 'admin*2017',
+            'HOST': 'localhost',
+            'PORT': '5432',
         }
-}
+    }
 
 
 # Password validation

@@ -156,16 +156,16 @@ class InvoicesForm(forms.ModelForm):
                 'business': forms.Select(attrs={'class': 'form-control input-md'}),
                 'start_date': forms.DateInput(attrs={'placeholder': 'Start Date', 'class': 'form-control input-md'}),
                 'waytopay': forms.Select(attrs={'class': 'form-control input-md'},choices=(('Cash','Cash'),('Check','Check'),('Credit Card','Credit Card'))),
-                'paid': forms.CheckboxInput(attrs={'data-off-color':"danger", 'class':"switch", 'data-size':"mini", 'data-on-text':"YES", 'data-off-text': "NO"}),
+                'paid': forms.CheckboxInput(attrs={'data-off-color':"danger", 'class':"switch",  'data-size':"mini", 'data-on-text':"YES", 'data-off-text': "NO"}),
                 'prefix': forms.TextInput(attrs={'placeholder': 'Prefix', 'class': 'form-control input-md upper'}),
                 'end_date': forms.DateInput(attrs={'placeholder': 'End Date', 'class': 'form-control input-md'}),
-                'discount': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control discount'}),
+                'discount': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control discount fee'}),
                 'subtotal': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control servSutotal', 'readonly':''}),
                 'total': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control serviTotal', 'readonly':''}),
                 'customers': forms.Select(attrs={'class': 'form-control input-md'}),
-                'comission_fee': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control comission'}),
-                'wire_fee': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control wire'}),
-                'ach_fee': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control ach'}),
+                'comission_fee': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control comission fee'}),
+                'wire_fee': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control wire fee'}),
+                'ach_fee': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control ach fee'}),
             }
 
 class ItemHasInvoiceForm(forms.ModelForm):
@@ -235,10 +235,13 @@ class InvoicesLogForm(forms.ModelForm):
                 'end_date': forms.DateInput(attrs={'placeholder': 'End Date', 'class': 'form-control input-md'}),
                 'discount': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control discount'}),
                 'subtotal': forms.NumberInput(
-                    attrs={'placeholder': '0.00', 'class': 'form-control servSutotal', 'readonly': ''}),
+                    attrs={'placeholder': '0.00', 'class': 'form-control logSutotal', 'readonly': ''}),
                 'total': forms.NumberInput(
-                    attrs={'placeholder': '0.00', 'class': 'form-control serviTotal', 'readonly': ''}),
+                    attrs={'placeholder': '0.00', 'class': 'form-control logTotal', 'readonly': ''}),
                 'customers': forms.Select(attrs={'class': 'form-control input-md'}),
+                'comission_fee': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control comission'}),
+                'wire_fee': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control wire'}),
+                'ach_fee': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control ach'}),
             }
 
 

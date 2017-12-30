@@ -2,7 +2,7 @@ from django.db import models
 
 from django.contrib.auth.models import User
 
-from apps.accounting.models import Account, Invoice, Fee, Payment
+from apps.accounting.models import Account, Invoice, InvoiceLoad, Fee, Payment
 
 # Create your models here.
 
@@ -70,7 +70,7 @@ class Load(models.Model):
     deliver = models.CharField(max_length=45, blank=True, null=True)
     value = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
     number = models.CharField(max_length=20,blank=True, null=True)
-    paid = models.BooleanField(default=True)
+    paid = models.BooleanField(default=False)
     note = models.CharField(max_length=225, blank=True, null=True)
 
     def __str__(self):
@@ -145,6 +145,12 @@ class LoadsHasFee(models.Model):
 class InvoicesHasLoad(models.Model):
     id_inl = models.AutoField(primary_key=True)
     invoices = models.ForeignKey(Invoice, on_delete=models.CASCADE)  # Field name made lowercase.
+    loads = models.ForeignKey(Load, on_delete=models.CASCADE)  # Field name made lowercase.
+
+
+class InvoicesLoadHasLoad(models.Model):
+    id_inl = models.AutoField(primary_key=True)
+    invoices = models.ForeignKey(InvoiceLoad, on_delete=models.CASCADE)  # Field name made lowercase.
     loads = models.ForeignKey(Load, on_delete=models.CASCADE)  # Field name made lowercase.
 
 class DriversHasPayment(models.Model):

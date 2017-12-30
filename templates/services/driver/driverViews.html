@@ -21,7 +21,7 @@
                             <toolbar class="md-accent">
                                 <a type="button" class="btn btn-info" href="{% url 'services:driver_edit' i.id_drv %}"><span><i class="fa fa-pencil-square-o"></i></span></a>
                             </toolbar>
-                            {% ednif %}
+                            {% endif %}
                             {% if perms.services.add_driver %}
                             <toolbar class="md-accent">
                                 <a type="button" class="btn btn-danger" href="{% url 'services:driver_delete' i.id_drv %}"><span><i class="fa fa-trash"></i></span></a>

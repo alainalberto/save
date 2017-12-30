@@ -55,6 +55,8 @@ $(".btn_add_cut").click(function() {
 		forceParse: 0
     });
 
+
+
  });
 
 function search() {

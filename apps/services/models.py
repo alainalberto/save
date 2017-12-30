@@ -80,30 +80,7 @@ class Equipment(models.Model):
     def __str__(self):
         return '{}'.format(self.number)
 
-class Companie(models.Model):
-    id_com = models.AutoField(primary_key=True)
-    folders = models.ForeignKey(Folder, on_delete=models.CASCADE)  # Field name made lowercase.
-    users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
-    customers = models.ForeignKey(Customer, on_delete=models.CASCADE)  # Field name made lowercase.
-    name = models.CharField(max_length=45, blank=True, null=True)
-    attorney = models.CharField(max_length=45, blank=True, null=True)
-    otheattorney = models.CharField(max_length=45, blank=True, null=True)
-    address = models.CharField(max_length=255, blank=True, null=True)
-    phone = models.CharField(max_length=10, blank=True, null=True)
-    othephone = models.CharField(max_length=10, blank=True, null=True)
-    fax = models.CharField(max_length=10, blank=True, null=True)
-    ein = models.CharField(max_length=20,blank=True, null=True)
-    logo = models.ImageField(upload_to='img/', blank=True, null=True)
-    created_date = models.DateField(blank=True, null=True)
-    unity = models.IntegerField(blank=True, null=True)
-    state =models.CharField(max_length=20,blank=True, null=True)
-    update = models.DateField(blank=True, null=True)
-    deactivate = models.BooleanField(default=False)
-    deactivate_date = models.DateField(blank=True, null=True)
 
-
-    def __str__(self):
-        return '{}'.format(self.name)
 
 class Contract(models.Model):
     id_con = models.AutoField(primary_key=True)
@@ -201,59 +178,6 @@ class Insurance(models.Model):
     def __str__(self):
         return '{}'.format(self.customers)
 
-class Maintenance(models.Model):
-    id_mnt = models.AutoField(primary_key=True)
-    contracts = models.ForeignKey(Contract,  on_delete=models.CASCADE)  # Field name made lowercase.
-    customers = models.ForeignKey(Customer,  on_delete=models.CASCADE)  # Field name made lowercase.
-    users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
-    nota = models.CharField(max_length=255, blank=True, null=True)
-    state = models.CharField(max_length=20, blank=True, null=True)
-    update = models.DateField(blank=True, null=True)
-
-    def __str__(self):
-        return '{}'.format(self.customers)
-
-
-class Permission(models.Model):
-    id_per = models.AutoField(primary_key=True)
-    users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
-    customers = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    date = models.DateField(blank=True, null=True)
-    usdot = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
-    usdot_pin = models.CharField(max_length=20, blank=True, null=True)
-    txdmv = models.CharField(max_length=20, blank=True, null=True)
-    txdmv_user = models.CharField(max_length=20, blank=True, null=True)
-    txdmv_passd = models.CharField(max_length=45, blank=True, null=True)
-    txdmv_date = models.DateField(blank=True, null=True)
-    txdmv_date_exp = models.DateField(blank=True, null=True)
-    mc = models.CharField(max_length=20, blank=True, null=True)
-    mc_pin = models.CharField(max_length=20, blank=True, null=True)
-    boc3 = models.IntegerField(blank=True, null=True)
-    boc3_date = models.DateField(blank=True, null=True)
-    ucr = models.IntegerField(blank=True, null=True)
-    update = models.DateField(blank=True, null=True)
-    state = models.CharField(max_length=20, blank=True, null=True)
-    update = models.DateField(blank=True, null=True)
-
-    def __str__(self):
-        return '{}'.format(self.companies)
-
-class Trucks(models.Model):
-    id_tru = models.AutoField(primary_key=True)
-    companies = models.ForeignKey(Companie, on_delete=models.CASCADE)  # Field name made lowercase.
-    type = models.CharField(max_length=45, blank=True, null=True)
-    year = models.IntegerField(blank=True, null=True)
-    model = models.CharField(max_length=45, blank=True, null=True)
-    serial = models.CharField(max_length=20, blank=True, null=True)
-    number = models.IntegerField(blank=True, null=True)
-    insp_date_exp = models.DateField(blank=True, null=True)
-    regit_date_exp = models.DateField(blank=True, null=True)
-    deactivate = models.BooleanField(default=False)
-    deactivate_date = models.DateField(blank=True, null=True)
-    update = models.DateField(blank=True, null=True)
-
-    def __str__(self):
-        return '{}'.format(self.number)
 
 class Ifta(models.Model):
     id_ift = models.AutoField(primary_key=True)
@@ -272,36 +196,6 @@ class Ifta(models.Model):
     def __str__(self):
         return '{}'.format(self.type)
 
-class Plate(models.Model):
-    id_plt = models.AutoField(primary_key=True)
-    trucks = models.ForeignKey(Trucks, on_delete=models.CASCADE)  # Field name made lowercase.
-    users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
-    customers = models.ForeignKey(Customer, on_delete=models.CASCADE)  # Field name made lowercase.
-    date = models.DateField(blank=True, null=True)
-    date_exp = models.DateField(blank=True, null=True)
-    account_number = models.CharField(max_length=45, blank=True, null=True)
-    account_user = models.CharField(max_length=45, blank=True, null=True)
-    account_password = models.CharField(max_length=45, blank=True, null=True)
-    state = models.CharField(max_length=20, blank=True, null=True)
-    update = models.DateField(blank=True, null=True)
-
-    def __str__(self):
-        return '{}'.format(self.trucks.number)
-
-class Title(models.Model):
-    id_tle = models.AutoField(primary_key=True)
-    trucks = models.ForeignKey(Trucks, on_delete=models.CASCADE)  # Field name made lowercase.
-    users = models.ForeignKey(User, on_delete=models.CASCADE)  # Field name made lowercase.
-    customers = models.ForeignKey(Customer, on_delete=models.CASCADE)  # Field name made lowercase.
-    date_reg = models.DateField(blank=True, null=True)
-    date_exp_reg = models.DateField(blank=True, null=True)
-    date_insp = models.DateField(blank=True, null=True)
-    date_exp_insp = models.DateField(blank=True, null=True)
-    state = models.CharField(max_length=20, blank=True, null=True)
-    update = models.DateField(blank=True, null=True)
-
-    def __str__(self):
-        return '{}'.format(self.trucks.number)
 
 class Application(models.Model):
     id_apl = models.AutoField(primary_key=True)

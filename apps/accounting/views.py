@@ -707,7 +707,7 @@ class InvoicesLogCreate(CreateView):
         form_class_log = inlineformset_factory(
             Invoice,
             InvoicesHasLoad,
-            form=InvoiceLoadForm,
+            form=InvoicesForm,
             fields=['id_inl',
                     'loads'],
             extra=10
@@ -718,7 +718,7 @@ class InvoicesLogCreate(CreateView):
             context = super(InvoicesLogCreate, self).get_context_data(**kwargs)
             if 'form' not in context:
                 context['form'] = self.form_class(self.request.GET)
-            loads = Load.objects.all().order_by('-pickup_date')
+            loads = Load.objects.filter(paid='False').order_by('-pickup_date')
             customer = Customer.objects.filter(deactivated=False)
             accounts = []
             inc = Account.objects.get(primary=True, name='Income')

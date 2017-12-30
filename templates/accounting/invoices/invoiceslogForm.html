@@ -20,82 +20,67 @@
     });
 
     $(".btn_add_load").click(function() {
-      var column1 = $(this).closest('tr').children()[0].textContent;
-      var column2 = $(this).closest('tr').children()[1].textContent;
-      var column3 = $(this).closest('tr').children()[2].textContent;
-      var column4 = $(this).closest('tr').children()[3].textContent;
-      var column5 = $(this).closest('tr').children()[4].textContent;
-      var column7 = $(this).closest('tr').children()[6].textContent;
-      $('#tbLoad tr').each(function(){
-          if($(this).closest('tr').children()[0].textContent == "" ){
-            $(this).find(".No").textContent = column1;
-            $(this).closest('tr').children()[2].textContent = column2;
-            $(this).closest('tr').children()[3].textContent = column3;
-            $(this).closest('tr').children()[4].textContent = column4;
-            $(this).closest('tr').children()[5].textContent = column5;
-            $(this).find(".Id").textContent = column7;
-             return false;
-          }
+         var number = $(this).closest('tr').children()[0].textContent;
+         var broker = $(this).closest('tr').children()[1].textContent;
+         var driver = $(this).closest('tr').children()[2].textContent;
+         var date = $(this).closest('tr').children()[3].textContent;
+         var value = $(this).closest('tr').children()[4].textContent;
+         var id = $(this).closest('tr').children()[6].textContent;
+         var colum1 = '<td class="col-md-0 Id" style="display : none">'+id+'</td>';
+         var colum2 = '<td class="col-md-1">'+number+'</td>';
+         var colum3 = '<td class="col-md-2">'+broker+'</td>';
+         var colum4 = '<td class="col-md-2">'+driver+'</td>';
+         var colum5 = '<td class="col-md-2">'+date+'</td>';
+         var colum6 = '<td class="col-md-1 value">'+value+'</td>';
+         var colum7 = '<td class="col-md-1"><input type="checkbox"  aria-pressed="false" class="switch col-md-offset-4" id="paid" name="paid"></td>';
+         var colum8 = '<td class="col-md-1"><toolbar class="md-accent"><button data-type="info" data-trigger="focus" title="Delete Load" data-animation="am-flip-x" type="button" class="btn remove btn-danger test-tooltip"><i class="fa fa-times" aria-hidden="true"></i><tooltip md-direction="left"></tooltip></button></toolbar></td>';
 
-       });
-
+         $('#tbLoad > tbody:last').append('<tr id="'+id+'">'+colum1+colum2+colum3+colum4+colum5+colum6+colum7+colum8+'</tr>');
+         $(this).closest('tr').addClass('success');
+         sumar_columnas();
     });
 
+    $("#tbLoad").on('click', '.remove', function () {
+		var no = $("#tbLoad tr").length;
+		if(no>1){
+			$(this).closest('tr').remove();
+			sumar_columnas();
+		}
 
-   $(".listitem").on("change", function() {
-      $('#valueunt').val();
+	});
+
+
+     function sumar_columnas(){
+       var sum = 0;
+       var disc = parseFloat($('.discount').val() || 0);
+       var comis = parseFloat($('.comission').val() || 0);
+       var wire = parseFloat($('.wire').val() || 0);
+       var ach = parseFloat($('.ach').val() || 0);
+       var subtotal = 0;
+       var total = 0;
+      var fee = disc + comis + wire + ach;
+      $('.value').each(function() {
+         sum += parseFloat($(this).html())
       });
 
-
-    $("#tbLoad").on("input", "input", function() {
-       var input = $(this).parents("tr").find('.entrada').val();
-       var price = $(this).parents("tr").find('.precie').val();
-       var porc = $(this).parents("tr").find('.tax').val();
-       var total = input * price
-       var tax = (total*porc)/100
-       var calculated = total+tax;
-       $(this).parents("tr").find('.subtotal').val(calculated.toFixed(2));
-       sumar_columnas();
-    });
-    $(".btn_remove").click(function() {
-        $(this).parents("tr").find('.entrada').val("");
-        $(this).parents("tr").find('.precie').val("");
-        $(this).parents("tr").find('.tax').val("");
-        $(this).parents("tr").find('.descript').val("");
-        $(this).parents("tr").find('.account').val('');
-        $(this).parents("tr").find('.subtotal').val("")
-        sumar_columnas();
-    });
-
-    function sumar_columnas(){
-     var sum=0;
-     var disc=0;
-     if($('.discount').val() != 0){
-       var disc = parseFloat($('.discount').val());
-       }
-
-    $('.subtotal').each(function() {
-          v = 0;
-          v = $(this).val();
-         if (v != 0){
-           sum += parseFloat(v);
-           }
-    });
-
-    $('.servSutotal').val(sum.toFixed(2));
-    var subtotal = sum.toFixed(2);
-    var total = subtotal - disc
-    $('.serviTotal').val(total.toFixed(2));
+      $('.servSutotal').val(sum.toFixed(2));
+      subtotal = sum;
+      total = subtotal - fee;
+      $('.serviTotal').val(total.toFixed(2));
     }
 
-    $('.discount').keyup(function(){
-     if($('.discount').val() != 0){
-       var disc = parseFloat($('.discount').val());
-       var subtotal = parseFloat($('.servSutotal').val());
-       var total = subtotal - disc
-       $('.serviTotal').val(total.toFixed(2));
-       }
+    $('.discount,.comission,.wire,.ach').keyup(function(){
+       var disc = parseFloat($('.discount').val() || 0);
+       var comis = parseFloat($('.comission').val() || 0);
+       var wire = parseFloat($('.wire').val() || 0);
+       var ach = parseFloat($('.ach').val() || 0);
+       var fee = disc + comis + wire + ach;
+       var subtotal = parseFloat($('.servSutotal').val() || 0);
+       total = subtotal - fee;
+      $('.serviTotal').val(total.toFixed(2));
+
     });
+
 
   });
 </script>
@@ -227,27 +212,26 @@
                                     <th>Driver</th>
                                     <th>Pick Up Date</th>
                                     <th>Value</th>
+                                    <th>Paid</th>
                                     <th>Action</th>
 
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td class="col-md-0 Id" style="display : none"></td>
-                                    <td class="col-md-1 No"></td>
-                                    <td class="col-md-2 Broker"></td>
-                                    <td class="col-md-2 Driver"></td>
-                                    <td class="col-md-2 Date"></td>
-                                    <td class="col-md-1 Value"></td>
-                                    <td class="col-md-1">
-                                        <toolbar class="md-accent">
-                                            <button data-type="info" data-trigger="focus" title="Delete Load" data-animation="am-flip-x" type="button" class="btn btn-danger test-tooltip" href="">
-                                                <i class="fa fa-times" aria-hidden="true"></i>
-                                                <tooltip md-direction="left"></tooltip>
-                                            </button>
-                                        </toolbar>
-                                    </td>
-                                </tr>
+                                {% if description %}
+                                {% for d in description %}
+                                   <tr>
+                                       <td class="col-md-0" style="display : none">{{d.id_lod}}</td>
+                                       <td class="col-md-1">{{d.number}}</td>
+                                       <td class="col-md-2">{{d.broker}}</td>
+                                       <td class="col-md-2">{{d.driver}}</td>
+                                       <td class="col-md-2">{{d.pickup_date}}</td>
+                                       <td class="col-md-2">{{d.value}}</td>
+                                       <td class="col-md-1"><input type="checkbox"  aria-pressed="false" class="switch col-md-offset-4" id="paid" name="paid" {% if d.paid %} checked {% endif %}></td>
+                                       <td class="col-md-1"><toolbar class="md-accent"><button data-type="info" data-trigger="focus" title="Delete Load" data-animation="am-flip-x" type="button" class="btn remove btn-danger test-tooltip"><i class="fa fa-times" aria-hidden="true"></i><tooltip md-direction="left"></tooltip></button></toolbar></td>
+                                   </tr>
+                                {% endfor %}
+                                {% endif %}
                                 </tbody>
                             </table>
                             <fieldset>
