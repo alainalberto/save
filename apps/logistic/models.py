@@ -28,7 +28,7 @@ class DriversLogt(models.Model):
     users = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=45, blank=True, null=True)
     ssn = models.CharField(max_length=10, blank=True, null=True)
-    comercial_name = models.CharField(max_length=45, blank=True, null=True)
+    owner_name = models.CharField(max_length=45, blank=True, null=True)
     license_numb = models.CharField(max_length=45)
     address = models.CharField(max_length=255, blank=True, null=True)
     email = models.EmailField(max_length=100)
@@ -42,6 +42,9 @@ class DriversLogt(models.Model):
     begining_date = models.DateField(blank=True, null=True)
     deactivate = models.BooleanField(default=False)
     date_deactivated = models.DateTimeField(blank=True, null=True)
+    type = models.CharField(max_length=45)
+    dow_payment = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
+    escrow = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.name)
@@ -68,6 +71,7 @@ class Load(models.Model):
     pickup_from = models.CharField(max_length=45, blank=True, null=True)
     pickup_date = models.DateField(blank=True, null=True)
     deliver = models.CharField(max_length=45, blank=True, null=True)
+    deliver_date = models.DateField(blank=True, null=True)
     value = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
     number = models.CharField(max_length=20,blank=True, null=True)
     paid = models.BooleanField(default=False)

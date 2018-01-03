@@ -54,7 +54,23 @@ $(".btn_add_cut").click(function() {
 		maxView: 1,
 		forceParse: 0
     });
-
+   var show = false;
+    $("#view").click(function() {
+     if (!show){
+      show = true
+      $('#id_no_social').removeAttr("type", "password");
+      $("#id_no_social").prop("type", "text");
+      $("#view").removeClass("glyphicon glyphicon-eye-open");
+      $("#view").addClass("glyphicon glyphicon-eye-close");
+     }
+     else{
+      show = false
+      $('#id_no_social').removeAttr("type", "text");
+      $("#id_no_social").prop("type", "password");
+      $("#view").removeClass("glyphicon glyphicon-eye-close");
+      $("#view").addClass("glyphicon glyphicon-eye-open");
+     }
+    });
 
 
  });

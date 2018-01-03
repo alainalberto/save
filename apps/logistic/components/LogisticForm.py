@@ -14,6 +14,7 @@ class LoadsForm(forms.ModelForm):
             'deliver',
             'dispatch',
             'driver',
+            'deliver_date',
             'value',
             'number',
             'paid',
@@ -24,6 +25,7 @@ class LoadsForm(forms.ModelForm):
             'pickup_from': 'Pick up From:',
             'pickup_date': 'Pick up Date:',
             'deliver': 'Deliver to:',
+            'deliver_date': 'Deliver Date:',
             'dispatch': 'Dispatch:',
             'driver': 'Driver:',
             'value': 'Agreed Amount:',
@@ -36,6 +38,7 @@ class LoadsForm(forms.ModelForm):
             'pickup_from': forms.TextInput(attrs={'placeholder': 'Pick up From', 'class': 'form-control input-md upper'}),
             'pickup_date': forms.DateInput(attrs={'class': 'form-control input-md'}),
             'deliver': forms.TextInput(attrs={'placeholder': 'Deliver to', 'class': 'form-control input-md upper'}),
+            'deliver_date': forms.DateInput(attrs={'class': 'form-control input-md'}),
             'dispatch': forms.Select(attrs={'class': 'form-control input-md'}),
             'driver': forms.Select(attrs={'class': 'form-control input-md'}),
             'value': forms.NumberInput(attrs={'placeholder': 'Value', 'class': 'form-control input-md'}),
@@ -52,7 +55,7 @@ class DriversForm(forms.ModelForm):
 
         fields = [
             'name',
-            'comercial_name',
+            'owner_name',
             'license_numb',
             'address',
             'email',
@@ -66,10 +69,13 @@ class DriversForm(forms.ModelForm):
             'mbr_date_exp',
             'begining_date',
             'deactivate',
+            'type',
+            'dow_payment',
+            'escrow',
         ]
         labels = {
             'name': 'Name:',
-            'comercial_name': 'Commercial Name:',
+            'owner_name': 'Owner Full Name:',
             'license_numb': 'License Number:',
             'address': 'Address:',
             'email': 'Email:',
@@ -83,10 +89,13 @@ class DriversForm(forms.ModelForm):
             'mbr_date_exp': 'MBR Date Expirate:',
             'begining_date': 'Beginning Date:',
             'deactivate': 'Deactivate:',
+            'type': 'Type:',
+            'dow_payment': 'Dow Payment:',
+            'escrow': 'Escrow:',
         }
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Name', 'class': 'form-control input-md upper', 'required': 'true'}),
-            'comercial_name': forms.TextInput(attrs={'placeholder': 'Commercial Name', 'class': 'form-control input-md upper'}),
+            'owner_name': forms.TextInput(attrs={'placeholder': 'Owner Name', 'class': 'form-control input-md upper'}),
             'license_numb': forms.NumberInput(attrs={'placeholder': 'License Number', 'class': 'form-control input-md', 'required': 'true'}),
             'address': forms.TextInput(attrs={'placeholder': 'Address', 'class': 'form-control input-md upper'}),
             'email': forms.EmailInput(attrs={'placeholder': 'email', 'class': 'form-control input-md'}),
@@ -100,6 +109,9 @@ class DriversForm(forms.ModelForm):
             'mbr_date_exp': forms.DateInput(attrs={'class': 'form-control input-md'}),
             'begining_date': forms.DateInput(attrs={'class': 'form-control input-md'}),
             'deactivate': forms.CheckboxInput(attrs={'data-off-color':"danger", 'class':"switch", 'data-size':"mini", 'data-on-text':"YES", 'data-off-text': "NO"}),
+            'type': forms.Select(attrs={'class': 'form-control input-md'}, choices=(('Driver','Driver'), ('Owner Operation','Owner Operation'))),
+            'dow_payment': forms.NumberInput(attrs={'placeholder': 'Dow Payment', 'class': 'form-control input-md'}),
+            'escrow': forms.NumberInput(attrs={'placeholder': 'Escrow', 'class': 'form-control input-md'}),
         }
 
 

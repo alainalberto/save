@@ -61,7 +61,7 @@ class CustomerForm(forms.ModelForm):
         widgets = {
             'fullname': forms.TextInput(attrs={'placeholder': 'Full Name', 'class': 'form-control input-md capital upper'}),
             'company_name': forms.TextInput(attrs={'placeholder': 'Company Name', 'class': 'form-control input-md capital upper'}),
-            'no_social': forms.NumberInput(attrs={'placeholder': 'SSN', 'class': 'form-control input-md upper'}),
+            'no_social': forms.PasswordInput(attrs={'placeholder': 'SSN', 'class': 'form-control input-md upper'}),
             'address': forms.TextInput(attrs={'placeholder': 'Address', 'class': 'form-control input-md upper'}),
             'phone': forms.NumberInput(attrs={'placeholder': 'Telepone Number', 'class': 'form-control input-md'}),
             'email': forms.EmailInput(attrs={'placeholder': 'Email', 'class': 'form-control input-md lower'}),
