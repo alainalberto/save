@@ -28,7 +28,7 @@ class DriversLogt(models.Model):
     users = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=45, blank=True, null=True)
     ssn = models.CharField(max_length=10, blank=True, null=True)
-    owner_name = models.CharField(max_length=45, blank=True, null=True)
+    owner_name = models.CharField(max_length=75, blank=True, null=True)
     license_numb = models.CharField(max_length=45)
     address = models.CharField(max_length=255, blank=True, null=True)
     email = models.EmailField(max_length=100)
