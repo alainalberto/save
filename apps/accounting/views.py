@@ -717,7 +717,7 @@ class InvoicesLogCreate(CreateView):
         def get_context_data(self, **kwargs):
             context = super(InvoicesLogCreate, self).get_context_data(**kwargs)
             if 'form' not in context:
-                context['form'] = self.form_class(self.request.GET)
+                context['form'] = self.form_class(initial={})
             loads = Load.objects.filter(paid='False').order_by('-pickup_date')
             customer = Customer.objects.filter(deactivated=False)
             accounts = []

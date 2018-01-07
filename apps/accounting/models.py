@@ -113,6 +113,7 @@ class Invoice(models.Model):
     paid = models.BooleanField(default=False)
     prefix = models.CharField(max_length=4, default='inv')
     end_date = models.DateField(blank=True, null=True)
+    note = models.CharField(max_length=200, blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.serial)

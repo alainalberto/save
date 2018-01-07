@@ -13,6 +13,9 @@
  }
 
  $(document).ready( function () {
+     $(function() {
+        $("#id_customers").chained("#id_business");
+    });
     $(".btn_add_cut").click(function() {
       var column = $(this).closest('tr').children()[5].textContent;
       $('#id_customers').val(column)
