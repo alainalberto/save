@@ -80,6 +80,18 @@ class Load(models.Model):
     def __str__(self):
         return '{}'.format(self.number)
 
+class Diesel(models.Model):
+    id_dse = models.AutoField(primary_key=True)
+    users = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.
+    driver = models.ForeignKey(DriversLogt, blank=True, null=True, on_delete=models.CASCADE)
+    date_start = models.DateField(blank=True, null=True)
+    date_end = models.DateField(blank=True, null=True)
+    total = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    moves = models.CharField(max_length=10,blank=True, null=True)
+
+    def __str__(self):
+        return '{}'.format(self.driver.name)
+
 class PermissionsLogt(models.Model):
     id_prm = models.AutoField(primary_key=True)
     users = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)  # Field name made lowercase.

@@ -220,7 +220,7 @@ def CustomerView(request, pk):
        context = {
            'customer': customer,
            'files': files,
-           'categories': ['Company','Insurance', 'COI', 'Quote', 'Accidents', 'Endorsments', 'Misselenious'],
+           'categories': ['Company', 'Insurance', 'COI', 'Quote', 'Accidents', 'Endorsments', 'Misselenious'],
            'permits': permit,
            'insurances': insurance,
            'equipments': equipment,
