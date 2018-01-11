@@ -56,7 +56,7 @@ urlpatterns = [
     url(r'^invoices/load/edit/(?P<pk>\d+)/$', login_required(permission_required('accounting.change_invoice')(InvoicesLogEdit.as_view())), name='invoiceslog_edit'),
     url(r'^invoices/load/(?P<pk>\d+)/$', login_required(permission_required('accounting.delete_invoice')(InvoicesLogDelete.as_view())), name='invoiceslog_delete'),
     url(r'^invoices/load/print/(?P<pk>\d+)/$', login_required(permission_required('accounting.add_invoice')(Invoices_pdf)), name='invoiceslog_pdf'),
-    url(r'^invoices/load/view/(?P<pk>\d+)/$', login_required(permission_required('accounting.add_invoice')(InvoiceLogView)), name='invoiceslog_view'),
+
 
 
 

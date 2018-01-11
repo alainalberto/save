@@ -13,8 +13,12 @@
  }
 
  $(document).ready( function () {
-     $(function() {
+    $('#id_load_TOTAL_FORMS').val($('#tbLoad tr').length - 1);
+    $('#id_customers').val({{invoice.customers_id}});
+    $('#id_accounts').val({{account}});
+    $(function() {
         $("#id_customers").chained("#id_business");
+        $("#id_accounts").chained("#id_business");
     });
     $(".btn_add_cut").click(function() {
       var column = $(this).closest('tr').children()[5].textContent;
@@ -29,16 +33,17 @@
          var date = $(this).closest('tr').children()[3].textContent;
          var value = $(this).closest('tr').children()[4].textContent;
          var id = $(this).closest('tr').children()[6].textContent;
-         var colum1 = '<td class="col-md-0 Id" style="display : none">'+id+'</td>';
-         var colum2 = '<td class="col-md-1">'+number+'</td>';
-         var colum3 = '<td class="col-md-2">'+broker+'</td>';
-         var colum4 = '<td class="col-md-2">'+driver+'</td>';
-         var colum5 = '<td class="col-md-2">'+date+'</td>';
-         var colum6 = '<td class="col-md-1 value">'+value+'</td>';
-         var colum7 = '<td class="col-md-1"><input type="checkbox"  aria-pressed="false" class="switch col-md-offset-4" id="paid" name="paid"></td>';
+         var colum1 = '<td class="col-md-0 Id" style="display : none"><input name="id_'+id+'" value="'+id+'" placeholder="0" class="form-control " id="id_'+id+'" type="number"></td>';
+         var colum2 = '<td class="col-md-1"><input name="number_'+id+'" value="'+number+'" placeholder="0" class="form-control " id="number_'+id+'" type="text" readonly=""></td>';
+         var colum3 = '<td class="col-md-2"><input name="number_'+number+'" value="'+broker+'" placeholder="0" class="form-control" id="broker_'+id+'" type="text" readonly=""></td>';
+         var colum4 = '<td class="col-md-2"><input name="driver_'+id+'" value="'+driver+'" placeholder="0" class="form-control" id="driver_'+id+'" type="text" readonly=""></td>';
+         var colum5 = '<td class="col-md-2"><input name="date_'+id+'" value="'+date+'" placeholder="0" class="form-control" id="date_'+id+'" type="text" readonly=""></td>';
+         var colum6 = '<td class="col-md-1"><input name="value_'+id+'" value="'+value+'" placeholder="0" class="form-control value" id="value_'+id+'" type="text" readonly=""></td>';
+         var colum7 = '<td class="col-md-1"><input type="checkbox"  aria-pressed="false" class="switch col-md-offset-4" id="paid_'+id+'" name="paid_'+id+'"></td>';
          var colum8 = '<td class="col-md-1"><toolbar class="md-accent"><button data-type="info" data-trigger="focus" title="Delete Load" data-animation="am-flip-x" type="button" class="btn remove btn-danger test-tooltip"><i class="fa fa-times" aria-hidden="true"></i><tooltip md-direction="left"></tooltip></button></toolbar></td>';
 
          $('#tbLoad > tbody:last').append('<tr id="'+id+'">'+colum1+colum2+colum3+colum4+colum5+colum6+colum7+colum8+'</tr>');
+         $('#id_load_TOTAL_FORMS').val($('#tbLoad tr').length - 1);
          $(this).closest('tr').addClass('success');
          sumar_columnas();
     });
@@ -47,6 +52,7 @@
 		var no = $("#tbLoad tr").length;
 		if(no>1){
 			$(this).closest('tr').remove();
+         $('#id_load_TOTAL_FORMS').val($('#tbLoad tr').length -1);
 			sumar_columnas();
 		}
 
@@ -63,7 +69,7 @@
        var total = 0;
       var fee = disc + comis + wire + ach;
       $('.value').each(function() {
-         sum += parseFloat($(this).html())
+         sum += parseFloat($(this).val())
       });
 
       $('.servSutotal').val(sum.toFixed(2));
@@ -145,7 +151,12 @@
                                     <tooltip md-direction="left"></tooltip>
                                 </button>
                             </span>
-                            {{ form.customers }}
+                             <select id="id_customers" class="form-control input-md" name="customers" required="">
+                                <option value="" selected>---------</option>
+                                {% for c in customers %}
+                                <option value="{{c.id_cut}}" class="{{c.business.id_bus}}">{{c}}</option>
+                                {% endfor %}
+                            </select>
                             <span class="input-group-btn">
                                 <a type="button" id="newcustomer" class="btn btn-success test-tooltip" href="{% url 'accounting:customer_popup' 1 %}" target="popup" onclick="window.open('','popup',' location=1, directories=0, resizable=0, width=500,height=700,Top=20,Left=490')" data-trigger="focus" title="Add new Customer" data-animation="am-flip-x">
                                     <i class="fa fa-plus"></i>
@@ -155,6 +166,16 @@
                         </div>
 
                     </div>
+                        <div class="form-group col-md-3 col-md-offset-1">
+                            <label class="label-control">Select Account:</label>
+
+                            <select id="id_accounts" class="form-control input-md" name="id_accounts" required="">
+                                <option value="" selected>---------</option>
+                                {% for a in accounts %}
+                                <option value="{{a.id_acn}}" class="{{a.business.id_bus}}">{{a}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
                 </fieldset>
                     <div class="modal fade" id="loadList" tabindex="-1" role="dialog" aria-labelledby="ModalLabel">
@@ -221,16 +242,17 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+                                <input name="load_TOTAL_FORMS" value="0" id="id_load_TOTAL_FORMS" type="hidden">
                                 {% if description %}
                                 {% for d in description %}
                                    <tr>
-                                       <td class="col-md-0" style="display : none">{{d.id_lod}}</td>
-                                       <td class="col-md-1">{{d.number}}</td>
-                                       <td class="col-md-2">{{d.broker}}</td>
-                                       <td class="col-md-2">{{d.driver}}</td>
-                                       <td class="col-md-2">{{d.pickup_date}}</td>
-                                       <td class="col-md-2">{{d.value}}</td>
-                                       <td class="col-md-1"><input type="checkbox"  aria-pressed="false" class="switch col-md-offset-4" id="paid" name="paid" {% if d.paid %} checked {% endif %}></td>
+                                       <td class="col-md-0 Id" style="display : none"><input name="id_{{d.id_lod}}" value="{{d.id_lod}}" class="form-control " id="id_{{d.id_lod}}" type="number"></td>
+                                       <td class="col-md-1"><input name="number_{{d.id_lod}}" value="{{d.number}}" class="form-control " id="number_{{d.id_lod}}" type="text" readonly=""></td>
+                                       <td class="col-md-1"><input name="broker_{{d.id_lod}}" value="{{d.broker}}"  class="form-control " id="broker_{{d.id_lod}}" type="text" readonly=""></td>
+                                       <td class="col-md-1"><input name="driver_{{d.id_lod}}" value="{{d.driver}}"  class="form-control " id="driver_{{d.id_lod}}" type="text" readonly=""></td>
+                                       <td class="col-md-1"><input name="date_{{d.id_lod}}" value="{{d.pickup_date}}"  class="form-control " id="date_{{d.id_lod}}" type="text" readonly=""></td>
+                                       <td class="col-md-2"><input name="value_{{d.id_lod}}" value="{{d.value}}"  class="form-control value" id="value_{{d.id_lod}}" type="text" readonly=""></td>
+                                       <td class="col-md-1"><input type="checkbox"  aria-pressed="false" class="switch col-md-offset-4" id="paid_{{d.id_lod}}" name="paid_{{d.id_lod}}" {% if d.paid %} checked {% endif %}></td>
                                        <td class="col-md-1"><toolbar class="md-accent"><button data-type="info" data-trigger="focus" title="Delete Load" data-animation="am-flip-x" type="button" class="btn remove btn-danger test-tooltip"><i class="fa fa-times" aria-hidden="true"></i><tooltip md-direction="left"></tooltip></button></toolbar></td>
                                    </tr>
                                 {% endfor %}
