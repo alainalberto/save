@@ -141,3 +141,21 @@ class DispatchForm(forms.ModelForm):
             'date_deactivated': forms.DateTimeInput(attrs={'class': 'form-control input-md'}),
 
         }
+
+class DieselForm(forms.ModelForm):
+    class Meta:
+        model = Diesel
+
+        fields = [
+            'driver',
+            'date_start',
+            'date_end',
+            'total',
+        ]
+
+        widgets = {
+            'driver': forms.Select(attrs={'class': 'form-control input-md'}),
+            'date_start': forms.DateInput(attrs={'class': 'form-control input-md'}),
+            'date_end': forms.DateInput(attrs={'class': 'form-control input-md'}),
+            'total': forms.NumberInput(attrs={'placeholder': 'Total', 'class': 'form-control input-md', 'required': 'true'}),
+        }

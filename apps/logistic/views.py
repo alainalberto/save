@@ -87,12 +87,12 @@ class LoadsDelete(DeleteView):
 
 class DriversView(ListView):
     model = DriversLogt
-    template_name = 'logistic/drivers/driversViews.html'
+    template_name = 'logistic/drivers/dieselViews.html'
 
 class DriversCreate(CreateView):
      model = DriversLogt
      form_class = DriversForm
-     template_name = 'logistic/drivers/driversForm.html'
+     template_name = 'logistic/drivers/dieselForm.html'
 
      def get_context_data(self, **kwargs):
          context = super(DriversCreate, self).get_context_data(**kwargs)
@@ -185,7 +185,7 @@ class DriversCreate(CreateView):
 class DriversEdit(UpdateView):
     model = DriversLogt
     form_class = DriversForm
-    template_name = 'logistic/drivers/driversForm.html'
+    template_name = 'logistic/drivers/dieselForm.html'
     success_url = reverse_lazy('logistic:drivers')
 
     def post(self, request, *args, **kwargs):
@@ -414,4 +414,67 @@ class DispatchDelete(DeleteView):
         accion_user(disp, DELETION, request.user)
         disp.delete()
         messages.success(request, "Dispatch delete with an extension")
+        return HttpResponseRedirect(self.success_url)
+
+#Diesel
+
+class DieselView(ListView):
+    model = Diesel
+    template_name = 'logistic/diesel/dieselViews.html'
+
+class DieselCreate(CreateView):
+     model = Diesel
+     form_class = DieselForm
+     template_name = 'logistic/diesel/dieselForm.html'
+
+     def get(self, request, *args, **kwargs):
+         form = self.form_class(initial=self.initial)
+         return render(request, self.template_name, {'form': form, 'title': 'Create new Diesel Report'})
+
+     def post(self, request, *args, **kwargs):
+         form = self.form_class(request.POST)
+         if form.is_valid():
+            diesel = form.save(commit=False)
+            diesel.users_id = request.user.id
+            diesel.save()
+            accion_user(diesel, ADDITION, request.user)
+            messages.success(request, 'Diesel Report save with an extension')
+            return HttpResponseRedirect(reverse_lazy('logistic:diesel'))
+         else:
+             for er in form.errors:
+                 messages.error(request, "ERROR: " + er)
+
+class DieselEdit(UpdateView):
+    model = Diesel
+    form_class = DieselForm
+    template_name = 'logistic/diesel/dieselForm.html'
+    success_url = reverse_lazy('logistic:diesel')
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object
+        id = kwargs['pk']
+        diesel = self.model.objects.get(id_dse=id)
+        form = self.form_class(request.POST, instance=diesel)
+        if form.is_valid():
+            diesel =form.save()
+            accion_user(diesel, CHANGE, request.user)
+            messages.success(request, "Diesel Report update with an extension")
+            return HttpResponseRedirect(self.success_url)
+        else:
+            for er in form.errors:
+                messages.error(request, "ERROR: "+er)
+            return render(request, self.template_name, {'form': form, 'title': 'Edit Diesel Report'})
+
+class DieselDelete(DeleteView):
+    model = Diesel
+    template_name = 'confirm_delete.html'
+    success_url = reverse_lazy('logistic:diesel')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object
+        id = kwargs['pk']
+        diesel = self.model.objects.get(id_dse=id)
+        accion_user(diesel, DELETION, request.user)
+        diesel.delete()
+        messages.success(request, "Diesel Report delete with an extension")
         return HttpResponseRedirect(self.success_url)

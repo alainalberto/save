@@ -12,17 +12,23 @@ urlpatterns = [
     url(r'^loads/(?P<pk>\d+)/$', login_required(permission_required('logistic.delete_load')(LoadsDelete.as_view())), name='load_delete'),
     url(r'^loads/print/(?P<pk>\d+)/$', login_required(permission_required('logistic.add_load')(LoadPDF)), name='load_pdf'),
 
-
+    # Driver
     url(r'^drivers/$', login_required(permission_required('logistic.add_driverslogt')(DriversView.as_view())), name='drivers'),
     url(r'^drivers/create$', login_required(permission_required('logistic.add_driverslogt')(DriversCreate.as_view())), name='drivers_create'),
     url(r'^drivers/edit/(?P<pk>\d+)/$', login_required(permission_required('logistic.change_driverslogt')(DriversEdit.as_view())), name='drivers_edit'),
     url(r'^drivers/(?P<pk>\d+)/$', login_required(permission_required('logistic.delete_driverslogt')(DriversDelete.as_view())), name='drivers_delete'),
 
+    #Dispatch
     url(r'^dispatch/$', login_required(permission_required('logistic.add_dispatchlogt')(DispatchView.as_view())), name='dispatch'),
     url(r'^dispatch/create$', login_required(permission_required('logistic.add_dispatchlogt')(DispatchCreate.as_view())), name='dispatch_create'),
     url(r'^dispatch/edit/(?P<pk>\d+)/$', login_required(permission_required('logistic.change_dispatchlogt')(DispatchEdit.as_view())), name='dispatch_edit'),
     url(r'^dispatch/(?P<pk>\d+)/$', login_required(permission_required('logistic.delete_dispatchlogt')(DispatchDelete.as_view())), name='dispatch_delete'),
 
+    #Diesel
+    url(r'^diesel/$', login_required(permission_required('logistic')(DieselView.as_view())), name='diesel'),
+    url(r'^diesel/create$', login_required(permission_required('logistic')(DieselCreate.as_view())), name='diesel_create'),
+    url(r'^diesel/edit/(?P<pk>\d+)/$', login_required(permission_required('logistic')(DieselEdit.as_view())), name='diesel_edit'),
+    url(r'^diesel/(?P<pk>\d+)/$', login_required(permission_required('logistic')(DieselDelete.as_view())), name='diesel_delete'),
 
     url(r'^trucks/$', login_required(), name='trucks'),
     url(r'^travel/$', login_required(), name='travel'),

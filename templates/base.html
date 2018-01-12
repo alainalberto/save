@@ -309,6 +309,11 @@
                             <a class="item" href="{% url 'logistic:dispatch' %}"> Dispatch</a>
                         </li>
                         {% endif %}
+                        {% if perms.logistic %}
+                        <li>
+                            <a class="item" href="{% url 'logistic:diesel' %}"> Diesel Report</a>
+                        </li>
+                        {% endif %}
                         <!-- {% if perms.logistic.add_truckslogt %}
                         <li>
                             <a class="item" href="{% url 'logistic:trucks' %}"> Trucks</a>
