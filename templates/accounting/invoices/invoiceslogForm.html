@@ -260,48 +260,46 @@
                                 </tbody>
                             </table>
                             <fieldset>
-
-                                <div class="form-group col-xs-9 col-md-2 col-md-offset-9">
+                                <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label class="label-control">Notes:</label>
+                                        {{form.note}}
+                                </div>
+                                    <div class="form-group col-md-3">
+                                    </div>
+                                <div class="form-group col-md-2">
                                     <label class="label-control">{{form.subtotal.label}}</label>
                                     <div class="input-group">
                                         <span class="input-group-addon">$</span>
                                         {{form.subtotal}}
                                     </div>
-                                </div>
-                                <div class="form-group col-xs-9 col-md-2 col-md-offset-9">
+
                                     <label class="label-control"> {{form.discount.label}} </label>
                                     <div class="input-group">
                                         <span class="input-group-addon">$</span>
                                         {{form.discount}}
                                     </div>
-                                </div>
-                                <div class="form-group col-xs-9 col-md-2 col-md-offset-9">
                                     <label class="label-control">Comission Fee: </label>
                                     <div class="input-group">
                                         <span class="input-group-addon">$</span>
                                         {{form.comission_fee}}
                                     </div>
-                                </div>
-                                <div class="form-group col-xs-9 col-md-2 col-md-offset-9">
                                     <label class="label-control">Wire Fee:</label>
                                     <div class="input-group">
                                         <span class="input-group-addon">$</span>
                                         {{form.wire_fee}}
                                     </div>
-                                </div>
-                                <div class="form-group col-xs-9 col-md-2 col-md-offset-9">
                                     <label class="label-control">ACH Fee:</label>
                                     <div class="input-group">
                                         <span class="input-group-addon">$</span>
                                         {{form.ach_fee}}
                                     </div>
-                                </div>
-                                <div class="form-group col-md-2 col-md-offset-9">
                                     <label class="label-control col-lg-9">{{form.total.label}}</label>
                                     <div class="input-group">
                                         <span class="input-group-addon">$</span>
                                         {{form.total}}
                                     </div>
+                                </div>
                                 </div>
                                 <div class="form-group col-md-2 col-md-offset-9" >
                                     <label class="label-control">{{form.paid.label}} </label>

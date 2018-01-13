@@ -164,6 +164,7 @@ class InvoicesForm(forms.ModelForm):
                 'comission_fee',
                 'wire_fee',
                 'ach_fee',
+                'note',
             ]
             labels = {
                 'business': 'Business:',
@@ -190,6 +191,7 @@ class InvoicesForm(forms.ModelForm):
                 'comission_fee': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control comission fee'}),
                 'wire_fee': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control wire fee'}),
                 'ach_fee': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control ach fee'}),
+                'note': forms.Textarea(attrs={'class': 'form-control input-md upper'}),
             }
 
 class ItemHasInvoiceForm(forms.ModelForm):
