@@ -37,16 +37,19 @@ class AccountForm(forms.ModelForm):
             'name',
             'description',
             'accounts_id',
+            'business'
         ]
         labels = {
             'name': 'Name:',
             'description': 'Description:',
             'accounts_id': 'Main Account:',
+            'business': 'Bussines:'
         }
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Name', 'class': 'form-control input-md upper'}),
             'description': forms.TextInput(attrs={'placeholder': 'Description', 'class': 'form-control input-md upper'}),
             'accounts_id': forms.Select(attrs={'class': 'form-control input-md'}),
+            'business': forms.Select(attrs={'class': 'form-control input-md'}),
         }
 
 

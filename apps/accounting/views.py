@@ -168,7 +168,7 @@ class AccountCreate(CreateView):
         form = self.form_class(request.POST)
         if form.is_valid():
            account = form.save(commit=False)
-           account.users_id = user.id
+           account.users = user
            account.save()
            messages.success(request,"Account saved with an extension")
            accion_user(account, ADDITION, request.user)
