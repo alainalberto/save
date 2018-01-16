@@ -228,7 +228,7 @@ def InvoicesLod_pdf(request, pk):
 
     p.setFillColor('#34495E')
     p.setFont('Helvetica-Bold', 12)
-    p.drawString(430, 720, 'No: '+invoice.prefix+"-"+str(invoice.serial))
+    p.drawString(410, 720, 'No: '+invoice.prefix+"-"+str(invoice.serial))
 
     p.setFont('Helvetica', 10)
     p.drawImage('static/img/icon/address-o.png', 50, 700, width=10, height=10)
@@ -242,12 +242,12 @@ def InvoicesLod_pdf(request, pk):
 
     p.setFont('Helvetica',11)
     p.setFillColorRGB(0,0,0)
-    p.drawString(430, 700, 'Week Star Date: '+str(invoice.start_date))
-    p.drawString(430, 680, 'Week End Date: ' + str(invoice.end_date))
+    p.drawString(410, 700, 'Week Star Date: '+str(invoice.start_date))
+    p.drawString(410, 680, 'Week End Date: ' + str(invoice.end_date))
 
 
     #Customer
-    if customer.company_name:
+    '''if customer.company_name:
         p.setFillColor('#34495E')
         p.setFont('Helvetica-Bold', 14)
         p.drawString(75, 620, customer.company_name)
@@ -264,7 +264,7 @@ def InvoicesLod_pdf(request, pk):
 
 
     #Footer
-    '''p.setFillColor('#2471A3')
+    p.setFillColor('#2471A3')
     p.roundRect(0, 0, 694, 50, 0, fill=1)
     p.setFont('Helvetica', 9)
     p.setFillColorRGB(0, 0, 0)
@@ -313,7 +313,7 @@ def InvoicesLod_pdf(request, pk):
     stylesBD = styles["BodyText"]
     stylesBD.alignment = TA_CENTER
     stylesBD.fontSize = 7
-    high = 490
+    high = 600
     for l in descrip:
         driver = DriversLogt.objects.get(id_dr=l.driver_id)
         colum1 = Paragraph(l.broker, stylesBD)
