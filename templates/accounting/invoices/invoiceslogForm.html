@@ -34,6 +34,8 @@
 		 sumar_columnas();
 	});
 
+
+
     function sumar_columnas(){
        var sum = 0;
        var disc = parseFloat($('.discount').val() || 0);
@@ -77,6 +79,22 @@
 
 
      {% else %}
+
+     $('#addLoad').click(function(){
+       var start = new Date($('#id_start_date').val());
+       var end = new Date($('#id_end_date').val());
+       $('#second_table tr td').each(function() {
+           var date = new Date($(this).closest('tr').children()[3].textContent);
+          if (date <= start && date >= end) {
+             $('#second_table tr').hide();
+          }
+          else{
+            $('#second_table tr').show();
+          }
+       });
+
+
+     });
 
     $(".btn_add_load").click(function() {
          var number = $(this).closest('tr').children()[0].textContent;
@@ -271,7 +289,7 @@
                                             <td>{{load.number}}</td>
                                             <td>{{load.broker}}</td>
                                             <td>{{load.driver}}</td>
-                                            <td>{{load.pickup_date}}</td>
+                                            <td>{{load.pickup_date|date:"Y-m-d"}}</td>
                                             <td>{{load.value}}</td>
                                             <td>
                                                 <a type="button" class="btn btn-info btn_add_load">Add</a>
@@ -288,7 +306,7 @@
                     <fieldset>
                         <p class="bg-info"><strong>Drescription to Invoice</strong></p>
                         <div id="panelLoad">
-                            {% if adjust == '0'%}
+                            {% if not adjust == '1'%}
                             <div class="form-group col-md-offset-11">
                                 <a type="button" id="addLoad" class="btn btn-success test-tooltip" data-toggle="modal" data-target="#loadList"data-type="info" data-trigger="focus" title="Item List" data-animation="am-flip-x">
                                     <i class="fa fa-list" aria-hidden="true"></i>
