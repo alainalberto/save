@@ -765,6 +765,8 @@ class InvoicesLogCreate(CreateView):
                     )
                     if request.POST.get('paid_'+str(lodinv.id_lod), False):
                         Load.objects.filter(id_lod=lodinv.id_lod).update(paid='True')
+                    else:
+                        Load.objects.filter(id_lod=lodinv.id_lod).update(paid='False')
                 AccountDescrip.objects.create(date=invoice.start_date,
                                                                         value=invoice.total,
                                                                         accounts=account,
@@ -808,6 +810,8 @@ class InvoicesLogEdit(UpdateView):
         def get_context_data(self, **kwargs):
             context = super(InvoicesLogEdit, self).get_context_data(**kwargs)
             pk = self.kwargs.get('pk', 0)
+            adjust = self.kwargs.get('bill')
+
             invoice = self.model.objects.get(id_inv=pk)
             loads = Load.objects.filter(paid='False').order_by('-pickup_date')
             customer = Customer.objects.filter(deactivated=False)
@@ -835,6 +839,7 @@ class InvoicesLogEdit(UpdateView):
             context['customers'] = customer
             context['account'] = acountDescp.accounts_id
             context['description'] = description
+            context['adjust'] = adjust
             return context
 
         def post(self, request, *args, **kwargs):

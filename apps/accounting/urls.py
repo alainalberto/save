@@ -53,7 +53,7 @@ urlpatterns = [
     url(r'^invoices/view/(?P<pk>\d+)/$', login_required(permission_required('accounting.add_invoice')(InvoiceView)), name='invoices_view'),
     url(r'^invoices/load$', login_required(permission_required('accounting.add_invoice')(InvoicesLogView.as_view())), name='invoices_log'),
     url(r'^invoices/load/create$', login_required(permission_required('accounting.add_invoice')(InvoicesLogCreate.as_view())), name='invoiceslog_create'),
-    url(r'^invoices/load/edit/(?P<pk>\d+)/$', login_required(permission_required('accounting.change_invoice')(InvoicesLogEdit.as_view())), name='invoiceslog_edit'),
+    url(r'^invoices/load/edit/(?P<pk>\d+)&(?P<bill>[^/]+)/$', login_required(permission_required('accounting.change_invoice')(InvoicesLogEdit.as_view())), name='invoiceslog_edit'),
     url(r'^invoices/load/(?P<pk>\d+)/$', login_required(permission_required('accounting.delete_invoice')(InvoicesLogDelete.as_view())), name='invoiceslog_delete'),
     url(r'^invoices/load/print/(?P<pk>\d+)/$', login_required(permission_required('accounting.add_invoice')(InvoicesLod_pdf)), name='invoiceslog_pdf'),
 

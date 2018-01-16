@@ -26,6 +26,58 @@
       $('#customerList').modal('hide');
     });
 
+    {% if adjust == '1' %}
+
+
+    sumar_columnas();
+    $('.paid').click(function () {
+		 sumar_columnas();
+	});
+
+    function sumar_columnas(){
+       var sum = 0;
+       var disc = parseFloat($('.discount').val() || 0);
+       var comis = parseFloat($('.comission').val() || 0);
+       var wire = parseFloat($('.wire').val() || 0);
+       var ach = parseFloat($('.ach').val() || 0);
+       var subtotal = 0;
+       var total = 0;
+      var fee = disc + comis + wire + ach;
+      var all_select = 0;
+      $('.value').each(function(index, element) {
+         if ($(this).parents("tr").find('.paid').prop('checked')) {
+            sum += parseFloat($(this).val());
+            all_select += 1;
+          }
+      });
+      $('.servSutotal').val(sum.toFixed(2));
+      subtotal = sum;
+      total = subtotal - fee;
+      $('.serviTotal').val(total.toFixed(2));
+      var no = $("#tbLoad tr").length-1;
+      if(all_select == no){
+         $('#id_paid').bootstrapSwitch('state', true, true);
+      }
+      else{
+         $('#id_paid').bootstrapSwitch('state', false, false);
+      }
+    }
+
+    $('.discount,.comission,.wire,.ach').keyup(function(){
+       var disc = parseFloat($('.discount').val() || 0);
+       var comis = parseFloat($('.comission').val() || 0);
+       var wire = parseFloat($('.wire').val() || 0);
+       var ach = parseFloat($('.ach').val() || 0);
+       var fee = disc + comis + wire + ach;
+       var subtotal = parseFloat($('.servSutotal').val() || 0);
+       total = subtotal - fee;
+      $('.serviTotal').val(total.toFixed(2));
+
+    });
+
+
+     {% else %}
+
     $(".btn_add_load").click(function() {
          var number = $(this).closest('tr').children()[0].textContent;
          var broker = $(this).closest('tr').children()[1].textContent;
@@ -39,7 +91,7 @@
          var colum4 = '<td class="col-md-2"><input name="driver_'+id+'" value="'+driver+'" placeholder="0" class="form-control" id="driver_'+id+'" type="text" readonly=""></td>';
          var colum5 = '<td class="col-md-2"><input name="date_'+id+'" value="'+date+'" placeholder="0" class="form-control" id="date_'+id+'" type="text" readonly=""></td>';
          var colum6 = '<td class="col-md-1"><input name="value_'+id+'" value="'+value+'" placeholder="0" class="form-control value" id="value_'+id+'" type="text" readonly=""></td>';
-         var colum7 = '<td class="col-md-1"><input type="checkbox"  aria-pressed="false" class="switch col-md-offset-4" id="paid_'+id+'" name="paid_'+id+'"></td>';
+         var colum7 = '<td class="col-md-1"><input type="checkbox"  aria-pressed="false" class=" col-md-offset-4" id="paid_'+id+'" name="paid_'+id+'"></td>';
          var colum8 = '<td class="col-md-1"><toolbar class="md-accent"><button data-type="info" data-trigger="focus" title="Delete Load" data-animation="am-flip-x" type="button" class="btn remove btn-danger test-tooltip"><i class="fa fa-times" aria-hidden="true"></i><tooltip md-direction="left"></tooltip></button></toolbar></td>';
 
          $('#tbLoad > tbody:last').append('<tr id="'+id+'">'+colum1+colum2+colum3+colum4+colum5+colum6+colum7+colum8+'</tr>');
@@ -53,11 +105,27 @@
 		if(no>1){
 			$(this).closest('tr').remove();
          $('#id_load_TOTAL_FORMS').val($('#tbLoad tr').length -1);
-			sumar_columnas();
+		 sumar_columnas();
 		}
 
 	});
 
+	$("#tbLoad").on('click', '.paid', function () {
+		var all_select = 0;
+		$('.paid').each(function(index, element) {
+         if ($(this).prop('checked')) {
+            all_select += 1;
+          }
+        });
+		var no = $("#tbLoad tr").length-1;
+        if(all_select == no){
+         $('#id_paid').bootstrapSwitch('state', true, true);
+        }
+        else{
+         $('#id_paid').bootstrapSwitch('state', false, false);
+        }
+
+	});
 
      function sumar_columnas(){
        var sum = 0;
@@ -89,7 +157,7 @@
       $('.serviTotal').val(total.toFixed(2));
 
     });
-
+    {% endif %}
 
   });
 </script>
@@ -220,12 +288,14 @@
                     <fieldset>
                         <p class="bg-info"><strong>Drescription to Invoice</strong></p>
                         <div id="panelLoad">
+                            {% if adjust == '0'%}
                             <div class="form-group col-md-offset-11">
                                 <a type="button" id="addLoad" class="btn btn-success test-tooltip" data-toggle="modal" data-target="#loadList"data-type="info" data-trigger="focus" title="Item List" data-animation="am-flip-x">
                                     <i class="fa fa-list" aria-hidden="true"></i>
                                     <tooltip md-direction="left"></tooltip>
                                 </a>
                             </div>
+                            {% endif %}
                             <br/>
                             <table id="tbLoad" class="table table-striped table-bordered ">
                                 <thead>
@@ -252,7 +322,7 @@
                                        <td class="col-md-1"><input name="driver_{{d.id_lod}}" value="{{d.driver}}"  class="form-control " id="driver_{{d.id_lod}}" type="text" readonly=""></td>
                                        <td class="col-md-1"><input name="date_{{d.id_lod}}" value="{{d.pickup_date}}"  class="form-control " id="date_{{d.id_lod}}" type="text" readonly=""></td>
                                        <td class="col-md-2"><input name="value_{{d.id_lod}}" value="{{d.value}}"  class="form-control value" id="value_{{d.id_lod}}" type="text" readonly=""></td>
-                                       <td class="col-md-1"><input type="checkbox"  aria-pressed="false" class="switch col-md-offset-4" id="paid_{{d.id_lod}}" name="paid_{{d.id_lod}}" {% if d.paid %} checked {% endif %}></td>
+                                       <td class="col-md-1"><input type="checkbox"  aria-pressed="false" class="col-md-offset-4 paid" id="paid_{{d.id_lod}}" name="paid_{{d.id_lod}}" {% if d.paid %} checked {% endif %}></td>
                                        <td class="col-md-1"><toolbar class="md-accent"><button data-type="info" data-trigger="focus" title="Delete Load" data-animation="am-flip-x" type="button" class="btn remove btn-danger test-tooltip"><i class="fa fa-times" aria-hidden="true"></i><tooltip md-direction="left"></tooltip></button></toolbar></td>
                                    </tr>
                                 {% endfor %}
