@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% block extrastyle %}
+<script type="text/javascript">
+ function openpopup(url){
+   newwindow = window.open(url,'popup',' location=1, directories=0, resizable=0, width=500,height=700,Top=20,Left=490');
+   if (window.focus) {newwindow.focus()}
+   return false;
+ }
+ function closepopup(){
+   window.opener.location.href=window.opener.location.href;
+   window.close();
+   return false;
+ }
+ $(document).ready( function () {
+
+
+    $(".btn_add_emp").click(function() {
+      var column1 = $(this).closest('tr').children()[0].textContent;
+      var column2 = $(this).closest('tr').children()[5].textContent;
+      $('#id_employees').val(column1)
+      $('#rate').val(column2)
+      $('#employeesList').modal('hide');
+    });
+
+    function cal (){
+       var regular = $('#id_regular_hours').val();
+       var overtime = $('#id_overtime_hours').val();
+       var rate = $('#rate').val();
+       var rateovertimer = rate*1.5
+       var discounts = $('#id_discount').val();
+       var gross = (regular*rate)+(overtime*rateovertimer)
+       var net = gross-discounts
+       $('#gross').val(gross);
+       $('#id_value').val(net);
+    };
+   $("#id_regular_hours").on("change", function() {
+       cal();
+    });
+    $('#id_discount').on("change", function() {
+       cal();
+    });
+    $('#rate').on("change", function() {
+       cal();
+    });
+    $("#id_overtime_hours").on("change", function() {
+       cal();
+    });
+
+});
+</script>
+{% endblock %}
+{% block content %}
+<section>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-xs-3">
+                    <i class="fa fa-indent fa-4x"></i>
+                </div>
+                <div class="col-xs-9 text-left">
+                    <div><h3>{{ title }}</h3></div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <form name="form_invoices" method="post" class="form" role="form" id="form_invoices" validate>{% csrf_token %}
+                <fieldset>
+                    <div class="form-group col-md-3 col-md-offset-1">
+                        <label class="label-control">Period Beginning:</label>
+                        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            {{ form.start_date }}
+                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3 col-md-offset-1">
+                        <label class="label-control">Period Ending:</label>
+                        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            {{form.end_date}}
+                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3 col-md-offset-1">
+                        <label class="label-control">Pay Date:</label>
+                        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            {{form.pay_date}}
+                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3 col-md-offset-1">
+                        <label class="label-control">Business: </label>
+                        {{ form.business }}
+                    </div>
+                    <div class="form-group col-md-3 col-md-offset-1">
+                        <label class="label-control">Account:</label>
+                        {% if account %}
+                        <input type="text" name="account" placeholder="0.00" value="{{account}}" class="form-control">
+                        {% else %}
+                        <select id="id_accounts" class="form-control input-md" name="accounts" required>
+                            <option value="" selected>---------</option>
+                            {% for a in accounts %}
+                            <option value="{{a.id_acn}}">{{a}}</option>
+                            {% endfor %}
+                        </select>
+                        {% endif %}
+                    </div>
+                    <div class="form-group col-md-3 col-md-offset-1">
+                        <label class="label-control">Payment Method: </label>
+                        {{ form.waytopay }}
+                    </div>
+                    <!-- Select Basic -->
+                    <div class="form-group col-md-3 col-md-offset-1">
+                        <label class="label-control">Regular Hours: </label>
+                        {{ form.regular_hours }}
+                    </div>
+                    <div class="form-group col-md-3 col-md-offset-1">
+                        <label class="label-control">Overtime Hours: </label>
+                        {{ form.overtime_hours }}
+                    </div>
+                    <div class="form-group col-md-3 col-md-offset-1">
+                        <label class="label-control">Rate: </label>
+                        <input id="rate" type="number" name="rate" placeholder="0.00" value="{{employee.value}}" class="form-control">
+                    </div>
+                    <div class="form-group col-md-3 col-md-offset-1">
+                        <label class="label-control">Gross Pay: </label>
+                        <input id="gross" type="number" placeholder="0.00" class="form-control" readonly>
+                    </div>
+                    <div class="form-group col-md-3 col-md-offset-1">
+                        <label class="label-control">Discount: </label>
+                        {{ form.discount }}
+                    </div>
+                    <div class="form-group col-md-3 col-md-offset-1">
+                        <label class="label-control">Net Pay: </label>
+                        {{ form.value }}
+                    </div>
+
+                    <div class="modal fade" id="employeeList" tabindex="-1" role="dialog" aria-labelledby="ModalLabel">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title text-center"><strong>Employees List</strong></h4>
+                                </div>
+                                <div class="modal-body">
+                                    <table id="customer_table" class="table data-table">
+                                        <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th class="col-md-2">Business</th>
+                                            <th class="col-md-2">Name</th>
+                                            <th class="col-md-2">Last Name</th>
+                                            <th class="col-md-1">Action</th>
+
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for e in employees %}
+                                        <tr>
+                                            <td style="display : none">{{e.id_emp}}</td>
+                                            <td>{{c.business}}</td>
+                                            <td>{{e.name}}</td>
+                                            <td>{{e.lastname}}</td>
+                                            <td>
+                                                <a type="button" class="btn btn-info btn_add_emp" data-dismiss="#employeeList">Add</a>
+                                            </td>
+                                            <td style="display : none">{{e.value}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="form-group col-md-5 col-md-offset-4">
+                    <input type="submit" class="btn btn-success" value="Save">
+                    <a type="button" onclick="history.back(-1)" class="btn btn-danger">Cancel </a>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+</section>
+{% endblock %}
+

@@ -1,0 +1,16 @@
+{% if driver %}
+
+{% include 'accounting/payments/driverpayForm.html'%}
+
+{% endif %}
+
+{% if dispatch %}
+
+{% include 'accounting/payments/dispatchpayForm.html'%}
+
+{% endif %}
+{% if not driver and not dispatch %}
+
+{% include 'accounting/payments/employeeForm.html'%}
+
+{% endif %}

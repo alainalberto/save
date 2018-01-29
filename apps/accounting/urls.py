@@ -32,10 +32,19 @@ urlpatterns = [
 
 
     #Payments
-    url(r'^payments/$', login_required(permission_required('accounting.add_payment')(PaymentView.as_view())), name='payments'),
-    url(r'^payments/create$', login_required(permission_required('accounting.add_payment')(PaymentCreate.as_view())), name='payments_create'),
-    url(r'^payments/edit/(?P<pk>\d+)/$',login_required(permission_required('accounting.change_payment')(PaymentEdit.as_view())), name='payment_edit'),
-    url(r'^payments/(?P<pk>\d+)/$',login_required(permission_required('accounting.delete_payment')(PaymentDelete.as_view())),  name='payment_delete'),
+    url(r'^payments/$', login_required(permission_required('accounting.add_payment')(PaymentViews)), name='payments'),
+    url(r'^payments/view/(?P<pk>\d+)/$', login_required(permission_required('accounting.add_payment')(PaymentView)), name='payments_view'),
+    url(r'^payments/create$', login_required(permission_required('accounting.add_payment')(PaymentSelect)), name='create_payments'),
+    url(r'^payments/employee/(?P<pk>\d+)&(?P<start>[^/]+)&(?P<end>[^/]+)/$', login_required(permission_required('accounting.add_payment')(PaymentEmployeeCreate.as_view())), name='payments_employee'),
+    url(r'^payments/employee/edit/(?P<pk>\d+)/$',login_required(permission_required('accounting.change_payment')(PaymentEmployeeEdit.as_view())), name='payment_employee_edit'),
+    url(r'^payments/employee/(?P<pk>\d+)/$',login_required(permission_required('accounting.delete_payment')(PaymentEmployeeDelete.as_view())),  name='payment_employee_delete'),
+    url(r'^payments/driver/(?P<pk>\d+)&(?P<start>[^/]+)&(?P<end>[^/]+)/$', login_required(permission_required('accounting.add_payment')(PaymentDriverCreate.as_view())), name='payments_driver'),
+    url(r'^payments/driver/edit/(?P<pk>\d+)/$',login_required(permission_required('accounting.change_payment')(PaymentDriverEdit.as_view())), name='payment_driver_edit'),
+    url(r'^payments/driver/(?P<pk>\d+)/$',login_required(permission_required('accounting.delete_payment')(PaymentDriverDelete.as_view())),  name='payment_driver_delete'),
+    url(r'^payments/dispatch/(?P<pk>\d+)&(?P<start>[^/]+)&(?P<end>[^/]+)/$', login_required(permission_required('accounting.add_payment')(PaymentDispatchCreate.as_view())), name='payments_dispatch'),
+    url(r'^payments/dispatch/edit/(?P<pk>\d+)/$',login_required(permission_required('accounting.change_payment')(PaymentDispatchEdit.as_view())), name='payment_dispatch_edit'),
+    url(r'^payments/dispatch/(?P<pk>\d+)/$',login_required(permission_required('accounting.delete_payment')(PaymentDispatchDelete.as_view())),  name='payment_dispatch_delete'),
+
 
 
     #Employees

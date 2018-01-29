@@ -7,7 +7,7 @@ from django.contrib import messages
 from FirstCall.util import accion_user
 from apps.accounting.components.AccountingForm import *
 from apps.accounting.models import *
-from apps.logistic.models import Load, DispatchHasPayment, DriversHasPayment, LoadsHasFee, InvoicesHasLoad
+from apps.logistic.models import Load, DispatchHasPayment, DriversHasPayment, LoadsHasFee, InvoicesHasLoad, DriversLogt, DispatchLogt, Diesel, PaymentHasLoad
 from apps.services.components.ServicesForm import *
 from apps.tools.components.AlertForm import AlertForm
 from apps.services.models import *
@@ -364,6 +364,9 @@ class CustomersDelete(DeleteView):
 
 
 #Employees
+
+
+
 class EmployeesView(ListView):
     model = Employee
     template_name = 'accounting/employees/employeesViews.html'
@@ -815,9 +818,7 @@ class InvoicesLogEdit(UpdateView):
             invoice = self.model.objects.get(id_inv=pk)
             loads = Load.objects.filter(paid='False').order_by('-pickup_date')
             customer = Customer.objects.filter(deactivated=False)
-            acountDescp = AccountDescrip.objects.get(date=invoice.start_date,
-                                                        document=invoice.id_inv,
-                                                        type='Invoices')
+            acountDescp = AccountDescrip.objects.get(type='Invoices', document=int(invoice.id_inv))
             accounts = []
             inv = Account.objects.get(primary=True, name='Income')
             inv_acconts = Account.objects.filter(accounts_id_id=inv.id_acn)
@@ -1116,47 +1117,97 @@ class ReceiptsDelete(DeleteView):
 
 
 #Payment
-class PaymentView(ListView):
-    model = Payment
-    template_name = 'accounting/payments/paymentsViews.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(PaymentView, self).get_context_data(**kwargs)
-        payment = []
-        person = []
-        pay = Payment.objects.all()
-        for p in pay:
-            payEmp = EmployeeHasPayment.objects.filter(payments_id=p.id_sal)
-            payDri = DriversHasPayment.objects.filter(payments_id=p.id_sal)
-            payDisp = DispatchHasPayment.objects.filter(payments_id=p.id_sal)
-            if payEmp:
-                for e in payEmp:
-                    employee = Employee.objects.get(id_emp=e.employee_id)
-                    person.append({'name':employee.name+" "+employee.lastname, 'id_pay':p.id_sal})
-                    payment.append(p)
-            if payDri:
-                for dr in payDri:
-                    payment.append(p, {'name':dr.name})
-            if payDisp:
-                for ds in payEmp:
-                    payment.append(p, {'name':ds.name})
-        context['payment'] = payment
-        context['person'] = person
-        return  context
+def PaymentViews(request):
+
+    payment_driver = DriversHasPayment.objects.all()
+    payment_dispatch = DispatchHasPayment.objects.all()
+    payment_employee = EmployeeHasPayment.objects.all()
+    context = {
+            'payment_driver': payment_driver,
+            'payment_dispatch': payment_dispatch,
+            'payment_employee': payment_employee,
+        }
+    return render(request, 'accounting/payments/paymentsViews.html', context)
+def PaymentView(request, pk):
+    context= []
+    payment = Payment.objects.get(id_sal=pk)
+    if DriversHasPayment.objects.filter(payments=payment):
+        payDriver = DriversHasPayment.objects.get(payments=payment)
+        payLoad = PaymentHasLoad.objects.filter(payments=payment)
+        loads = []
+        for l in payLoad:
+            load = Load.objects.get(id_lod=l.loads_id)
+            loads.append(load)
+        driver = DriversLogt.objects.get(id_dr=payDriver.driver_id)
+        context['form2'] = payDriver
+        context['driver']= driver
+        context['loads'] = loads
+    if DispatchHasPayment.objects.filter(payments=payment):
+        payDispatch = DispatchHasPayment.objects.get(payments=payment)
+        dispatch = DispatchLogt.objects.get(id_dsp=payDispatch.dispatch_id)
+        payLoad = PaymentHasLoad.objects.filter(payments=payment)
+        loads = []
+        for l in payLoad:
+            load = Load.objects.get(id_lod=l.loads_id)
+            loads.append(load)
+        context['loads'] = loads
+        context['dispatch'] = dispatch
+    if EmployeeHasPayment.objects.filter(payments=payment):
+        payEmployee = EmployeeHasPayment.objects.get(payments=payment)
+    context = {
+            'form': payment,
+            'title': 'View Payment',
+            'account': payment.accounts
+        }
+    return render(request, 'accounting/payments/paymentsView.html', context)
+
+def PaymentSelect(request):
+
+    employee = Employee.objects.filter(deactivated=False)
+    driver = DriversLogt.objects.filter(deactivate=False)
+    dispatch = DispatchLogt.objects.filter(deactivate=False)
+
+    context = {
+        'employees': employee,
+        'drivers': driver,
+        'dispatchs': dispatch,
+    }
+    if request.method == 'POST':
+       if request.POST['type'] == 'employee':
+          id = request.POST.get('lstemployee', None)
+          start = request.POST.get('start', None)
+          end = request.POST.get('end', None)
+          return HttpResponseRedirect('/accounting/payments/employee/'+id+'&'+start+'&'+end)
+
+       if request.POST['type'] == 'driver':
+          id = request.POST.get('lstdriver', None)
+          start = request.POST.get('start', None)
+          end = request.POST.get('end', None)
+          return HttpResponseRedirect('/accounting/payments/driver/'+id+'&'+start+'&'+end)
+
+       if request.POST['type'] == 'dispatch':
+          id = request.POST.get('lstdispatch', None)
+          start = request.POST.get('start', None)
+          end = request.POST.get('end', None)
+          return HttpResponseRedirect('/accounting/payments/dispatch/'+id+'&'+start+'&'+end)
+
+    return render(request, 'accounting/payments/paymentsForm.html', context)
 
 
 
-class PaymentCreate(CreateView):
+class PaymentEmployeeCreate(CreateView):
      model = Payment
      form_class = PaymentForm
-     template_name = 'accounting/payments/paymentsForm.html'
+     template_name = 'accounting/payments/employeeForm.html'
 
      def get(self, request, *args, **kwargs):
-         form = self.form_class(initial=self.initial)
-         employees = Employee.objects.all().order_by('name')
+         id = self.kwargs.get('pk',0)
+         employee = Employee.objects.get(id_emp=id)
+         form = self.form_class(initial={'start_date': kwargs.get('start'), 'end_date': kwargs.get('end'), 'business':employee.business})
          account = []
          exp = Account.objects.get(primary=True, name='Expenses')
-         exp_acconts = Account.objects.filter(accounts_id_id=exp.id_acn)
+         exp_acconts = Account.objects.filter(accounts_id_id=exp.id_acn, business= employee.business)
          for e in exp_acconts:
             account.append(e)
          for a in exp_acconts:
@@ -1164,12 +1215,13 @@ class PaymentCreate(CreateView):
             if exp_accont != None:
                 for ac in exp_accont:
                     account.append(ac)
-         return render(request, self.template_name, {'form': form, 'title': 'Create new Payment', 'employees':employees, 'accounts':account})
+         return render(request, self.template_name, {'id':id, 'form': form, 'title': 'Create new Employee Payment', 'employee':employee, 'accounts':account})
 
      def post(self, request, *args, **kwargs):
          user = request.user
          form = self.form_class(request.POST)
-         pay = Payment.objects.filter(business_id=form.data['business']).order_by('-serial')
+         employee = Employee.objects.get(id_emp=kwargs['pk'])
+         pay = self.model.objects.filter(business_id=form.data['business']).order_by('-serial')
          serial = 1
          serials = []
          for s in pay:
@@ -1182,20 +1234,26 @@ class PaymentCreate(CreateView):
              payment.users_id = user.id
              payment.accounts_id = request.POST['accounts']
              payment.save()
-             if request.POST['employees']:
-                employee = Employee.objects.get(id_emp=request.POST['employees'])
-                payemp = EmployeeHasPayment.objects.create(payments=payment,
-                                                           employee=employee)
+             EmployeeHasPayment.objects.create(payments=payment, employee=employee)
+             AccountDescrip.objects.create(date=payment.pay_date,
+                                           value=payment.value,
+                                           accounts=payment.accounts,
+                                           document=payment.id_sal,
+                                           users_id=user.id,
+                                           waytopay=payment.waytopay,
+                                           type='Payments'
+                                           )
              accion_user(payment, ADDITION, request.user)
              messages.success(request, "Payment save with an extension")
              return HttpResponseRedirect(reverse_lazy('accounting:payments'))
          else:
              for er in form.errors:
-                 form = self.form_class(initial=self.initial)
-                 employees = Employee.objects.all().order_by('name')
+                 form = self.form_class(initial={'start_date': kwargs.get('start'), 'end_date': kwargs.get('end')})
+                 id = kwargs.get('pk', 0)
+                 employee = Employee.objects.get(id_emp=id)
                  account = []
                  exp = Account.objects.get(primary=True, name='Expenses')
-                 exp_acconts = Account.objects.filter(accounts_id_id=exp.id_acn)
+                 exp_acconts = Account.objects.filter(accounts_id_id=exp.id_acn, business= employee.business)
                  for e in exp_acconts:
                      account.append(e)
                  for a in exp_acconts:
@@ -1205,39 +1263,40 @@ class PaymentCreate(CreateView):
                              account.append(ac)
                  messages.error(request, "ERROR: " + er)
              return render(request, self.template_name,
-                           {'accounts': account, 'employess':employees, 'form': form, 'title': 'Create new Payment'})
+                           {'accounts': account, 'employee':employee, 'form': form, 'title': 'Create new Employee Payment'})
 
 
-class PaymentEdit(UpdateView):
+class PaymentEmployeeEdit(UpdateView):
     model = Payment
     form_class = PaymentForm
-    template_name = 'accounting/payments/paymentsForm.html'
+    template_name = 'accounting/payments/employeeForm.html'
 
     def get_context_data(self, **kwargs):
-        context = super(PaymentEdit, self).get_context_data(**kwargs)
+        context = super(PaymentEmployeeEdit, self).get_context_data(**kwargs)
         pk = self.kwargs.get('pk',0)
         payment = self.model.objects.get(id_sal=pk)
-        account = Account.objects.filter(id_acn=payment.accounts_id)
-        payemp = EmployeeHasPayment.objects.filter(payments_id=payment.accounts_id)
-        if payemp:
-           employee = Employee.objects.filter(id_emp=EmployeeHasPayment.objects.get(payments_id=payment.accounts_id).employee_id)
-        else:
-            employee = Employee.objects.filter(business = payment.business)
+        account = Account.objects.get(id_acn=payment.accounts_id)
+        payemp = EmployeeHasPayment.objects.get(payments=payment)
+
         if 'form' not in context:
             context['form'] = self.form_class()
-        context['employees'] = employee
+        context['employee'] = payemp.employee
         context['id'] = pk
-        context['accounts'] = account
+        context['account'] = account
         return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object
         id_sal = kwargs['pk']
         payment = self.model.objects.get(id_sal=id_sal)
-        payment.accounts_id = request.POST['account']
         form = self.form_class(request.POST, instance=payment)
+        acountDescp = AccountDescrip.objects.get(accounts=payment.accounts, document=int(payment.id_sal))
         if form.is_valid():
             form.save()
+            AccountDescrip.objects.filter(id_acd=acountDescp.id_acd).update(
+                value=payment.value,
+                waytopay=payment.waytopay,
+            )
             accion_user(payment, CHANGE, request.user)
             messages.success(request, "Payment update with an extension")
             return HttpResponseRedirect(reverse_lazy('accounting:payments'))
@@ -1252,7 +1311,7 @@ class PaymentEdit(UpdateView):
 
 
 
-class PaymentDelete(DeleteView):
+class PaymentEmployeeDelete(DeleteView):
     model = Payment
     template_name = 'confirm_delete.html'
     success_url = reverse_lazy('accounting:payments')
@@ -1261,12 +1320,549 @@ class PaymentDelete(DeleteView):
         self.object = self.get_object
         id_sal = kwargs['pk']
         payment = self.model.objects.get(id_sal=id_sal)
-        payemp = EmployeeHasPayment.objects.get(payments_id=payment.id_sal)
+        EmployeeHasPayment.objects.get(payments_id=payment.id_sal).delete()
+        AccountDescrip.objects.get(accounts=payment.accounts, document=int(payment.id_sal)).delete()
         accion_user(payment, DELETION, request.user)
-        payemp.delete()
         payment.delete()
         messages.success(request, "Payment delete with an extension")
         return HttpResponseRedirect(self.success_url)
+
+
+class PaymentDriverCreate(View):
+    model = Payment
+    form_class = PaymentForm
+    form_driver_class = PaymentDriverForm
+    template_name = 'accounting/payments/driverpayForm.html'
+
+    def get(self, request, *args, **kwargs):
+            id = self.kwargs.get('pk', 0)
+            driver = DriversLogt.objects.get(id_dr=id)
+            diesels = Diesel.objects.filter(driver=driver)
+            loads = Load.objects.filter(driver=driver, paid=True)
+            load_driver = []
+            diesel_total = 0
+            start = datetime.strptime(str(kwargs.get('start')),'%Y-%m-%d')
+            end = datetime.strptime(str(kwargs.get('end')),'%Y-%m-%d')
+            for d in diesels:
+                date_start = datetime.strptime(str(d.date_start),'%Y-%m-%d')
+                date_end = datetime.strptime(str(d.date_end),'%Y-%m-%d')
+                if date_start >= start and date_end <= end:
+                    diesel_total += d.total
+            for l in loads:
+                pickup_date = datetime.strptime(str(l.pickup_date), '%Y-%m-%d')
+                deliver_date = datetime.strptime(str(l.deliver_date), '%Y-%m-%d')
+                if pickup_date > start and deliver_date < end:
+                    load_driver.append(l)
+            form = self.form_class(initial={'start_date': kwargs.get('start'), 'end_date': kwargs.get('end')})
+            form_driver = self.form_driver_class()
+            account = []
+            income_account = []
+            exp = Account.objects.get(primary=True, name='Expenses')
+            exp_acconts = Account.objects.filter(accounts_id_id=exp.id_acn)
+            for e in exp_acconts:
+                account.append(e)
+            for a in exp_acconts:
+                exp_accont = Account.objects.filter(accounts_id_id=a.id_acn)
+                if exp_accont != None:
+                    for ac in exp_accont:
+                        account.append(ac)
+            inv = Account.objects.get(primary=True, name='Income')
+            inv_acconts = Account.objects.filter(accounts_id_id=inv.id_acn)
+            for e in inv_acconts:
+                income_account.append(e)
+                for a in inv_acconts:
+                    exp_accont = Account.objects.filter(accounts_id_id=a.id_acn)
+                    if exp_accont != None:
+                        for ac in exp_accont:
+                            income_account.append(ac)
+            context = {'form': form,
+                       'form2': form_driver,
+                       'title': 'Create new Driver Payment',
+                       'loads': load_driver,
+                       'driver': driver,
+                       'diesel': diesel_total,
+                       'accounts': account,
+                       'income_accounts': income_account
+                       }
+            return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+            user = request.user
+            form = self.form_class(request.POST)
+            form2 = self.form_driver_class(request.POST)
+            pay = Payment.objects.filter(business_id=form.data['business']).order_by('-serial')
+            loads = Load.objects.all()
+            driver = DriversLogt.objects.get(id_dr=kwargs['pk'])
+            serial = 1
+            serials = []
+            loadPay = []
+            total_pay = 0
+            total_income = 0
+            for s in pay:
+                serials.append(s.serial)
+            for l in loads:
+                load = request.POST.get('id_'+str(l.id_lod), None)
+                if load:
+                    loadPay.append(l)
+            if form.is_valid() and loadPay and form2.is_valid():
+                if serials:
+                    serial = int(serials[0]) + 1
+                payment = form.save(commit=False)
+                payment.serial = serial
+                payment.users_id = user.id
+                payment.accounts_id = request.POST['accounts']
+                payment.save()
+                driverpay = form2.save(commit=False)
+                driverpay.driver = driver
+                driverpay.payments = payment
+                driverpay.save()
+                for load in loadPay:
+                    PaymentHasLoad.objects.create(loads=load, payments=payment)
+                if driver.type == 'Driver':
+                    total_pay = driverpay.total_driver
+                    total_income = driverpay.total_owner
+                    AccountDescrip.objects.create(date=payment.pay_date,
+                                                  value=total_income,
+                                                  accounts_id=int(request.POST['accounts_income']),
+                                                  document=payment.id_sal,
+                                                  users_id=user.id,
+                                                  waytopay=payment.waytopay,
+                                                  type='Payments'
+                                                  )
+                else:
+                    total_pay = payment.value
+                AccountDescrip.objects.create(date=payment.pay_date,
+                                              value=total_pay,
+                                              accounts=payment.accounts,
+                                              document=payment.id_sal,
+                                              users_id=user.id,
+                                              waytopay=payment.waytopay,
+                                              type='Payments'
+                                              )
+
+                income = Account.objects.get(primary=True, name='Income')
+                if driverpay.company_fee:
+                    if Account.objects.filter(name='COMPANY FEE', accounts_id_id=income.id_acn):
+                          AccountDescrip.objects.create(date=payment.pay_date,
+                                                        value=driverpay.company_fee,
+                                                        accounts=Account.objects.get(name='COMPANY FEE', accounts_id_id=income.id_acn),
+                                                        document=payment.id_sal,
+                                                        users_id=user.id,
+                                                        waytopay=payment.waytopay,
+                                                        type='Payments'
+                                                        )
+                if driverpay.pre_pass:
+                    if Account.objects.filter(name='PRE PASS', accounts_id_id=income.id_acn ):
+                          AccountDescrip.objects.create(date=payment.pay_date,
+                                                        value=driverpay.pre_pass,
+                                                        accounts=Account.objects.get(name='PRE PASS', accounts_id_id=income.id_acn),
+                                                        document=payment.id_sal,
+                                                        users_id=user.id,
+                                                        waytopay=payment.waytopay,
+                                                        type='Payments'
+                                                        )
+                if driverpay.down_payment:
+                    if Account.objects.filter(name='DOWN PAYMENT', accounts_id_id=income.id_acn):
+                          AccountDescrip.objects.create(date=payment.pay_date,
+                                                        value=driverpay.down_payment,
+                                                        accounts=Account.objects.get(name='DOWN PAYMENT', accounts_id_id=income.id_acn),
+                                                        document=payment.id_sal,
+                                                        users_id=user.id,
+                                                        waytopay=payment.waytopay,
+                                                        type='Payments'
+                                                        )
+                          donw_payment = 0
+                          if driver.dow_payment:
+                              donw_payment = driver.dow_payment
+                          total_esc = donw_payment + driverpay.down_payment
+                          driver.dow_payment=total_esc
+                          driver.save()
+                if driverpay.escrow:
+                    if Account.objects.filter(name='ESCROW', accounts_id_id=income.id_acn):
+                          AccountDescrip.objects.create(date=payment.pay_date,
+                                                        value=driverpay.escrow,
+                                                        accounts=Account.objects.get(name='ESCROW', accounts_id_id=income.id_acn),
+                                                        document=payment.id_sal,
+                                                        users_id=user.id,
+                                                        waytopay=payment.waytopay,
+                                                        type='Payments'
+                                                        )
+                          escrow = 0
+                          if driver.escrow:
+                              escrow = driver.escrow
+                          total_esc = escrow + driverpay.escrow
+                          driver.escrow = total_esc
+                          driver.save()
+                if driverpay.insurance:
+                    if Account.objects.filter(name='INSURANCE', accounts_id_id=income.id_acn ):
+                          AccountDescrip.objects.create(date=payment.pay_date,
+                                                        value=driverpay.insurance,
+                                                        accounts=Account.objects.get(name='INSURANCE', accounts_id_id=income.id_acn),
+                                                        document=payment.id_sal,
+                                                        users_id=user.id,
+                                                        waytopay=payment.waytopay,
+                                                        type='Payments'
+                                                        )
+
+                if driverpay.diesel:
+                    if Account.objects.filter(name='DIESEL', accounts_id_id=income.id_acn ):
+                          AccountDescrip.objects.create(date=payment.pay_date,
+                                                        value=driverpay.diesel,
+                                                        accounts=Account.objects.get(name='DIESEL', accounts_id_id=income.id_acn),
+                                                        document=payment.id_sal,
+                                                        users_id=user.id,
+                                                        waytopay=payment.waytopay,
+                                                        type='Payments'
+                                                        )
+                if driverpay.other:
+                    if Account.objects.filter(name='MISCELLANEOUS', accounts_id_id=income.id_acn ):
+                          AccountDescrip.objects.create(date=payment.pay_date,
+                                                        value=driverpay.other,
+                                                        accounts=Account.objects.get(name='MISCELLANEOUS', accounts_id_id=income.id_acn),
+                                                        document=payment.id_sal,
+                                                        users_id=user.id,
+                                                        waytopay=payment.waytopay,
+                                                        type='Payments'
+                                                        )
+                accion_user(payment, ADDITION, request.user)
+                messages.success(request, "Payment save with an extension")
+                return HttpResponseRedirect(reverse_lazy('accounting:payments'))
+            else:
+                for er in form.errors:
+                    messages.error(request, "ERROR: " + er)
+                for e in form2.errors:
+                    messages.error(request, "ERROR: " + e)
+                return self.get(request)
+
+
+
+class PaymentDriverEdit(UpdateView):
+    model = Payment
+    form_class = PaymentForm
+    form_driver_class = PaymentDriverForm
+    template_name = 'accounting/payments/driverpayForm.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PaymentDriverEdit, self).get_context_data(**kwargs)
+        pk = self.kwargs.get('pk',0)
+        payment = self.model.objects.get(id_sal=pk)
+        payDriver = DriversHasPayment.objects.get(payments=payment)
+        payLoad = PaymentHasLoad.objects.filter(payments=payment)
+        loads = []
+        for l in payLoad:
+            load = Load.objects.get(id_lod=l.loads_id)
+            loads.append(load)
+        driver = DriversLogt.objects.get(id_dr=payDriver.driver_id)
+        accounts = []
+        income_account = []
+        exp = Account.objects.get(primary=True, name='Expenses')
+        exp_acconts = Account.objects.filter(accounts_id_id=exp.id_acn)
+        for e in exp_acconts:
+            accounts.append(e)
+        for a in exp_acconts:
+            exp_accont = Account.objects.filter(accounts_id_id=a.id_acn)
+            if exp_accont != None:
+                for ac in exp_accont:
+                    accounts.append(ac)
+        inv = Account.objects.get(primary=True, name='Income')
+        inv_acconts = Account.objects.filter(accounts_id_id=inv.id_acn)
+        for e in inv_acconts:
+            income_account.append(e)
+            for a in inv_acconts:
+                exp_accont = Account.objects.filter(accounts_id_id=a.id_acn)
+                if exp_accont != None:
+                    for ac in exp_accont:
+                        income_account.append(ac)
+
+        if 'form' not in context:
+            context['form'] = self.form_class()
+        if 'form2' not in context:
+            context['form2'] = self.form_driver_class(initial={
+                'porc_company':payDriver.porc_company,
+                'company_fee':payDriver.company_fee,
+                'pre_pass':payDriver.pre_pass,
+                'escrow':payDriver.escrow,
+                'down_payment':payDriver.down_payment,
+                'insurance':payDriver.insurance,
+                'diesel':payDriver.diesel,
+                'other':payDriver.other,
+                'total_owner':payDriver.total_owner,
+                'total_driver':payDriver.total_driver
+            })
+        context['title'] = 'Edit Driver Payment'
+        context['loads'] = loads
+        context['driver']= driver
+        context['accounts']= accounts
+        context['account'] = payment.accounts
+        context['income_accounts']= income_account
+        context['id'] = pk
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object
+        id_sal = kwargs['pk']
+        payment = self.model.objects.get(id_sal=id_sal)
+        payDriver = DriversHasPayment.objects.get(payments=payment)
+        driver = DriversLogt.objects.get(id_dr=payDriver.driver_id)
+        last_down = payDriver.down_payment
+        last_escrow = payDriver.escrow
+        form = self.form_class(request.POST, instance=payment)
+        form2 = self.form_driver_class(request.POST, instance=payDriver)
+        acountDescp = AccountDescrip.objects.get(accounts=payment.accounts, document=int(payment.id_sal))
+        if form.is_valid() and form2.is_valid():
+            payment = form.save()
+            payDriver= form2.save()
+            income = Account.objects.get(primary=True, name='Income')
+            AccountDescrip.objects.filter(id_acd=acountDescp.id_acd).update(
+                value=payment.value,
+                waytopay=payment.waytopay,
+            )
+            AccountDescrip.objects.filter(document=payment.id_sal, accounts=Account.objects.get(name='COMPANY FEE', accounts_id_id=income.id_acn)).update(
+                value=payDriver.company_fee,
+                waytopay=payment.waytopay,
+            )
+            AccountDescrip.objects.filter(document=payment.id_sal, accounts=Account.objects.get(name='PRE PASS',
+                                                                                                accounts_id_id=income.id_acn)).update(
+                value=payDriver.pre_pass,
+                waytopay=payment.waytopay,
+            )
+            if last_down != payDriver.down_payment:
+               AccountDescrip.objects.filter(document=payment.id_sal, accounts=Account.objects.get(name='DOWN PAYMENT',
+                                                                                                accounts_id_id=income.id_acn)).update(
+                  value=payDriver.pre_pass,
+                  waytopay=payment.waytopay,
+               )
+               donw_payment = 0
+               if driver.dow_payment:
+                   donw_payment = driver.dow_payment
+               total_esc = (donw_payment - last_down) + payDriver.down_payment
+               driver.dow_payment = total_esc
+               driver.save()
+            if last_escrow != payDriver.escrow:
+               AccountDescrip.objects.filter(document=payment.id_sal, accounts=Account.objects.get(name='ESCROW',
+                                                                                                accounts_id_id=income.id_acn)).update(
+                  value=payDriver.escrow,
+                  waytopay=payment.waytopay,
+               )
+               escrow = 0
+               if driver.escrow:
+                   escrow = driver.escrow
+               total_esc = (escrow - last_escrow) + payDriver.escrow
+               driver.escrow = total_esc
+               driver.save()
+            AccountDescrip.objects.filter(document=payment.id_sal, accounts=Account.objects.get(name='INSURANCE',
+                                                                                                accounts_id_id=income.id_acn)).update(
+                value=payDriver.insurance,
+                waytopay=payment.waytopay,
+            )
+            AccountDescrip.objects.filter(document=payment.id_sal, accounts=Account.objects.get(name='DIESEL',
+                                                                                                accounts_id_id=income.id_acn)).update(
+                value=payDriver.diesel,
+                waytopay=payment.waytopay,
+            )
+            AccountDescrip.objects.filter(document=payment.id_sal, accounts=Account.objects.get(name='MISCELLANEOUS',
+                                                                                                accounts_id_id=income.id_acn)).update(
+                value=payDriver.other,
+                waytopay=payment.waytopay,
+            )
+            accion_user(payment, CHANGE, request.user)
+            messages.success(request, "Payment update with an extension")
+            return HttpResponseRedirect(reverse_lazy('accounting:payments'))
+        else:
+            for er in form.errors:
+                messages.error(request, "ERROR: " + er)
+            for e in form2.errors:
+                messages.error(request, "ERROR: " + e)
+            return self.get_context_data()
+
+
+class PaymentDriverDelete(DeleteView):
+    model = Payment
+    template_name = 'confirm_delete.html'
+    success_url = reverse_lazy('accounting:payments')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object
+        pk = self.kwargs.get('pk', 0)
+        payment = self.model.objects.get(id_sal=pk)
+        payDriver = DriversHasPayment.objects.get(payments=payment)
+        driver = DriversLogt.objects.get(id_dr=payDriver.driver_id)
+        donw_payment = 0
+        if driver.dow_payment:
+            donw_payment = driver.dow_payment
+        total_dow = payDriver.down_payment - donw_payment
+        driver.dow_payment = total_dow
+        escrow = 0
+        if driver.escrow:
+            escrow = driver.escrow
+        total_esc = payDriver.escrow - escrow
+        driver.escrow = total_esc
+        driver.save()
+        payDriver.delete()
+        PaymentHasLoad.objects.filter(payments=payment).delete()
+        AccountDescrip.objects.filter(document=int(payment.id_sal)).delete()
+        accion_user(payment, DELETION, request.user)
+        payment.delete()
+        messages.success(request, "Payment delete with an extension")
+        return HttpResponseRedirect(self.success_url)
+
+
+
+class PaymentDispatchCreate(CreateView):
+    model = Payment
+    form_class = PaymentForm
+    template_name = 'accounting/payments/dispatchpayForm.html'
+
+    def get(self, request, *args, **kwargs):
+        id = self.kwargs.get('pk', 0)
+        dispatch = DispatchLogt.objects.get(id_dsp=id)
+        loads = Load.objects.filter(dispatch=dispatch, paid=True)
+        load_dispatch = []
+        start = datetime.strptime(str(kwargs.get('start')), '%Y-%m-%d')
+        end = datetime.strptime(str(kwargs.get('end')), '%Y-%m-%d')
+        for l in loads:
+            pickup_date = datetime.strptime(str(l.pickup_date), '%Y-%m-%d')
+            deliver_date = datetime.strptime(str(l.deliver_date), '%Y-%m-%d')
+            if pickup_date > start and deliver_date < end:
+                load_dispatch.append(l)
+        form = self.form_class(initial={'start_date': kwargs.get('start'), 'end_date': kwargs.get('end')})
+        account = []
+        exp = Account.objects.get(primary=True, name='Expenses')
+        exp_acconts = Account.objects.filter(accounts_id_id=exp.id_acn)
+        for e in exp_acconts:
+            account.append(e)
+        for a in exp_acconts:
+            exp_accont = Account.objects.filter(accounts_id_id=a.id_acn)
+            if exp_accont != None:
+                for ac in exp_accont:
+                    account.append(ac)
+        context = {'form': form,
+                   'title': 'Create new Dispatch Payment',
+                   'loads': load_dispatch,
+                   'dispatch': dispatch,
+                   'accounts': account,
+                   }
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        form = self.form_class(request.POST)
+        pay = Payment.objects.filter(business_id=form.data['business']).order_by('-serial')
+        loads = Load.objects.all()
+        dispatch = DispatchLogt.objects.get(id_dsp=kwargs['pk'])
+        loadPay = []
+        serial = 1
+        serials = []
+        for s in pay:
+            serials.append(s.serial)
+        if form.is_valid():
+            if serials:
+                serial = int(serials[0]) + 1
+            payment = form.save(commit=False)
+            payment.serial = serial
+            payment.users_id = user.id
+            payment.accounts_id = request.POST['accounts']
+            payment.save()
+            for l in loads:
+                load = request.POST.get('id_'+str(l.id_lod), None)
+                if load:
+                    loadPay.append(l)
+            for load in loadPay:
+                PaymentHasLoad.objects.create(loads=load, payments=payment)
+            DispatchHasPayment.objects.create(payments=payment, dispatch=dispatch)
+            AccountDescrip.objects.create(date=payment.pay_date,
+                                          value=payment.value,
+                                          accounts=payment.accounts,
+                                          document=payment.id_sal,
+                                          users_id=user.id,
+                                          waytopay=payment.waytopay,
+                                          type='Payments'
+                                          )
+            accion_user(payment, ADDITION, request.user)
+            messages.success(request, "Payment save with an extension")
+            return HttpResponseRedirect(reverse_lazy('accounting:payments'))
+        else:
+            for er in form.errors:
+                messages.error(request, "ERROR: " + er)
+            return self.get(request)
+
+class PaymentDispatchEdit(UpdateView):
+    model = Payment
+    form_class = PaymentForm
+    template_name = 'accounting/payments/dispatchpayForm.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PaymentDispatchEdit, self).get_context_data(**kwargs)
+        pk = self.kwargs.get('pk',0)
+        payment = self.model.objects.get(id_sal=pk)
+        account = Account.objects.get(id_acn=payment.accounts_id)
+        payDispatch = DispatchHasPayment.objects.get(payments=payment)
+        payLoad = PaymentHasLoad.objects.filter(payments=payment)
+        loads = []
+        for l in payLoad:
+            load = Load.objects.get(id_lod=l.loads_id)
+            loads.append(load)
+        dispatch = DispatchLogt.objects.get(id_dsp=payDispatch.dispatch_id)
+        accounts = []
+        exp = Account.objects.get(primary=True, name='Expenses')
+        exp_acconts = Account.objects.filter(accounts_id_id=exp.id_acn)
+        for e in exp_acconts:
+            accounts.append(e)
+        for a in exp_acconts:
+            exp_accont = Account.objects.filter(accounts_id_id=a.id_acn)
+            if exp_accont != None:
+                for ac in exp_accont:
+                    accounts.append(ac)
+        if 'form' not in context:
+            context['form'] = self.form_class()
+        context['title'] = 'Edit Dispatch Payment'
+        context['loads'] = loads
+        context['dispatch'] = dispatch
+        context['accounts'] = accounts
+        context['account'] = payment.accounts
+        context['id'] = pk
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object
+        id_sal = kwargs['pk']
+        payment = self.model.objects.get(id_sal=id_sal)
+        payDispatch = DispatchHasPayment.objects.get(payments=payment)
+        dispatch = DispatchLogt.objects.get(id_dsp=payDispatch.dispatch_id)
+        form = self.form_class(request.POST, instance=payment)
+        acountDescp = AccountDescrip.objects.get(accounts=payment.accounts, document=int(payment.id_sal))
+        if form.is_valid():
+            payment = form.save()
+            AccountDescrip.objects.filter(id_acd=acountDescp.id_acd).update(
+                value=payment.value,
+                waytopay=payment.waytopay,
+            )
+            accion_user(payment, CHANGE, request.user)
+            messages.success(request, "Payment update with an extension")
+            return HttpResponseRedirect(reverse_lazy('accounting:payments'))
+        else:
+            for e in form.errors:
+                messages.error(request, "ERROR: " + e)
+            return self.get_context_data()
+
+class PaymentDispatchDelete(DeleteView):
+    model = Payment
+    template_name = 'confirm_delete.html'
+    success_url = reverse_lazy('accounting:payments')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object
+        pk = self.kwargs.get('pk', 0)
+        payment = self.model.objects.get(id_sal=pk)
+        DispatchHasPayment.objects.filter(payments=payment).delete()
+        PaymentHasLoad.objects.filter(payments=payment).delete()
+        AccountDescrip.objects.filter(document=int(payment.id_sal)).delete()
+        accion_user(payment, DELETION, request.user)
+        payment.delete()
+        messages.success(request, "Payment delete with an extension")
+        return HttpResponseRedirect(self.success_url)
+
+
 
 class NoteCreate(CreateView):
     model = Note

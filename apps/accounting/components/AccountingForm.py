@@ -5,7 +5,7 @@ from django.utils.html import format_html
 from apps.accounting.models import *
 from django.urls import reverse
 from django.utils.safestring import mark_safe
-from apps.logistic.models import InvoicesHasLoad, LoadsHasFee
+from apps.logistic.models import InvoicesHasLoad, LoadsHasFee, DriversHasPayment, DispatchHasPayment
 from django.core.exceptions import ValidationError
 
 class CustomerChainedSelectWidget(forms.Select):
@@ -128,7 +128,7 @@ class EmployeesForm(forms.ModelForm):
             'phone': 'Phone:',
             'email': 'Email:',
             'type_salary': 'Salary Type:',
-            'value': 'Value:',
+            'value': 'Percent / Value per hour:',
             'position': 'Position:',
             'deactivated': 'Deactivated:',
         }
@@ -222,57 +222,6 @@ class ItemHasInvoiceForm(forms.ModelForm):
             'subtotal': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control subtotal', 'readonly':''}),
         }
 
-class InvoicesLogForm(forms.ModelForm):
-        class Meta:
-            model = Invoice
-
-            fields = [
-                'business',
-                'start_date',
-                'waytopay',
-                'discount',
-                'paid',
-                'prefix',
-                'end_date',
-                'subtotal',
-                'total',
-                'customers',
-                'comission_fee',
-                'wire_fee',
-                'ach_fee',
-            ]
-            labels = {
-                'business': 'Business:',
-                'start_date': 'Start Date:',
-                'waytopay': 'Payment Method:',
-                'discount': 'Discount:',
-                'paid': 'Paid:',
-                'prefix': 'Prefix:',
-                'end_date': 'End Date:',
-                'subtotal': 'Subtotal:',
-                'total': 'Total:',
-            }
-            widgets = {
-                'business': forms.Select(attrs={'class': 'form-control input-md'}),
-                'start_date': forms.DateInput(attrs={'placeholder': 'Start Date', 'class': 'form-control input-md'}),
-                'waytopay': forms.Select(attrs={'class': 'form-control input-md'}, choices=(
-                ('Cash', 'Cash'), ('Check', 'Check'), ('Credit Card', 'Credit Card'))),
-                'paid': forms.CheckboxInput(
-                    attrs={'data-off-color': "danger", 'class': "switch", 'data-size': "mini", 'data-on-text': "YES",
-                           'data-off-text': "NO"}),
-                'prefix': forms.TextInput(attrs={'placeholder': 'Prefix', 'class': 'form-control input-md upper'}),
-                'end_date': forms.DateInput(attrs={'placeholder': 'End Date', 'class': 'form-control input-md'}),
-                'discount': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control discount'}),
-                'subtotal': forms.NumberInput(
-                    attrs={'placeholder': '0.00', 'class': 'form-control logSutotal', 'readonly': ''}),
-                'total': forms.NumberInput(
-                    attrs={'placeholder': '0.00', 'class': 'form-control logTotal', 'readonly': ''}),
-                'customers': forms.Select(attrs={'class': 'form-control input-md'}),
-                'comission_fee': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control comission'}),
-                'wire_fee': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control wire'}),
-                'ach_fee': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control ach'}),
-            }
-
 
 class ReceiptsForm(forms.ModelForm):
 
@@ -322,19 +271,51 @@ class PaymentForm(forms.ModelForm):
                 'discount',
                 'value',
                 'waytopay',
+                'note',
             ]
             widgets = {
-                'business': forms.Select(attrs={'class': 'form-control input-md', 'readonly': ''}),
+                'business': forms.Select(attrs={'class': 'form-control input-md'}),
                 'start_date': forms.DateInput(attrs={'placeholder': 'Select Date', 'class': 'form-control input-md', 'readonly': ''}),
-                'end_date': forms.DateInput(attrs={'placeholder': 'Select Date', 'class': 'form-control input-md'}),
+                'end_date': forms.DateInput(attrs={'placeholder': 'Select Date', 'class': 'form-control input-md', 'readonly': ''}),
                 'pay_date': forms.DateInput(attrs={'placeholder': 'Select Date', 'class': 'form-control input-md'}),
                 'regular_hours': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control discount'}),
                 'overtime_hours': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control discount'}),
                 'discount': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control discount'}),
                 'value': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control total', 'readonly': ''}),
-                'waytopay': forms.Select(attrs={'class': 'form-control input-md', 'readonly': ''},
+                'waytopay': forms.Select(attrs={'class': 'form-control input-md'},
                                          choices=(('Cash', 'Cash'), ('Check', 'Check'), ('Credit Card', 'Credit Card'))),
+                'note': forms.Textarea(attrs={'class': 'form-control input-md upper'}),
             }
+
+
+class PaymentDriverForm(forms.ModelForm):
+    class Meta:
+        model = DriversHasPayment
+
+        fields = [
+            'company_fee',
+            'porc_company',
+            'pre_pass',
+            'escrow',
+            'down_payment',
+            'insurance',
+            'diesel',
+            'other',
+            'total_driver',
+            'total_owner',
+        ]
+        widgets = {
+            'company_fee': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control col-md-4', 'readonly':''}),
+            'porc_company': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control col-md-1'}),
+            'pre_pass': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control'}),
+            'escrow': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control'}),
+            'down_payment': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control'}),
+            'insurance': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control'}),
+            'diesel': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control'}),
+            'other': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control'}),
+            'total_driver': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control', 'readonly':''}),
+            'total_owner': forms.NumberInput(attrs={'placeholder': '0.00', 'class': 'form-control', 'readonly':''}),
+        }
 
 
 class InvoiceLoadForm(forms.ModelForm):

@@ -29,9 +29,10 @@
                         <th class="col-md-1">Prefix</th>
                         <th class="col-md-1">Serial</th>
                         <th class="col-md-2">Customers</th>
-                        <th class="col-md-2">Business</th>
+                        <th class="col-md-2">Company Name</th>
+                        <th class="col-md-1">Business</th>
                         <th class="col-md-1">Start Date</th>
-                        <th class="col-md-2">Payment Method</th>
+                        <th class="col-md-1">Payment Method</th>
                         <th class="col-md-1">Paid</th>
                         <th class="col-md-2">Action</th>
                     </tr>
@@ -42,6 +43,7 @@
                         <td>{{i.prefix}}</td>
                         <td><a href="{% url 'accounting:invoices_view' i.id_inv %}">{{i.serial}}</a></td>
                         <td>{{i.customers}}</td>
+                        <td>{{i.customers.company_name}}</td>
                         <td>{{i.business}}</td>
                         <td>{{i.start_date}}</td>
                         <td>{{i.waytopay}}</td>

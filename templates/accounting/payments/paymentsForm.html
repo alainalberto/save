@@ -1,47 +1,51 @@
 {% extends 'base.html' %}
 {% block extrastyle %}
 <script type="text/javascript">
- function openpopup(url){
-   newwindow = window.open(url,'popup',' location=1, directories=0, resizable=0, width=500,height=700,Top=20,Left=490');
-   if (window.focus) {newwindow.focus()}
-   return false;
- }
- function closepopup(){
-   window.opener.location.href=window.opener.location.href;
-   window.close();
-   return false;
- }
  $(document).ready( function () {
-    $(".btn_add_emp").click(function() {
-      var column1 = $(this).closest('tr').children()[0].textContent;
-      var column2 = $(this).closest('tr').children()[5].textContent;
-      $('#id_employees').val(column1)
-      $('#rate').val(column2)
-      $('#employeesList').modal('hide');
+   $("#employee").click(function() {
+
+            $('#employees').attr("style", "display : initial;");
+            $('#employees').attr("required", "");
+            $(this).addClass("btn-primary");
+            $('#id_type').val("employee");
+
+            $('#dispatchs').attr("style", "display : none;");
+            $('#dispatchs').removeAttr("required");
+            $('#dispatch').removeClass("btn-primary");
+
+            $('#drivers').attr("style", "display : none;");
+            $('#drivers').removeAttr("required");
+            $('#driver').removeClass("btn-primary");
     });
 
-    function cal (){
-       var regular = $('#id_regular_hours').val();
-       var overtime = $('#id_overtime_hours').val();
-       var rate = $('#rate').val();
-       var rateovertimer = rate*1.5
-       var discounts = $('#id_discount').val();
-       var gross = (regular*rate)+(overtime*rateovertimer)
-       var net = gross-discounts
-       $('#gross').val(gross);
-       $('#id_value').val(net);
-    };
-   $("#id_regular_hours").on("change", function() {
-       cal();
+    $("#driver").click(function() {
+            $('#drivers').attr("style", "display : initial;");
+            $('#drivers').attr("required", "");
+            $(this).addClass("btn-primary");
+            $('#id_type').val("driver");
+
+            $('#dispatchs').attr("style", "display : none;");
+            $('#dispatchs').removeAttr("required");
+            $('#dispatch').removeClass("btn-primary");
+
+            $('#employees').attr("style", "display : none;");
+            $('#employees').removeAttr("required");
+            $('#employee').removeClass("btn-primary");
     });
-    $('#id_discount').on("change", function() {
-       cal();
-    });
-    $('#rate').on("change", function() {
-       cal();
-    });
-    $("#id_overtime_hours").on("change", function() {
-       cal();
+
+    $("#dispatch").click(function() {
+            $('#dispatchs').attr("style", "display : initial;");
+            $('#dispatchs').attr("required", "");
+            $(this).addClass("btn-primary");
+            $('#id_type').val("dispatch");
+
+            $('#drivers').attr("style", "display : none;");
+            $('#drivers').removeAttr("required");
+            $('#driver').removeClass("btn-primary");
+
+            $('#employees').attr("style", "display : none;");
+            $('#employees').removeAttr("required");
+            $('#employee').removeClass("btn-primary");
     });
 
 });
@@ -49,189 +53,86 @@
 {% endblock %}
 {% block content %}
 <section>
-    <form name="form_invoices" method="post" class="form" role="form" id="form_invoices" validate>{% csrf_token %}
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-3">
-                        <i class="fa fa-indent fa-4x"></i>
-                    </div>
-                    <div class="col-xs-9 text-left">
-                        <div><h3>{{ title }}</h3></div>
-                    </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-xs-3">
+                    <i class="fa fa-indent fa-4x"></i>
                 </div>
-            </div>
-            <div class="panel-body">
-                <div class="panel panel-success">
-                    <div class="panel-heading">
-                        <ul class="nav nav-tabs " role="tablist">
-                            <li id="tabEmployye" role="presentation">
-                                <a href="#employee" aria-controls="employee" role="tab" data-toggle="tab">
-                                    <span class="input-group-addon">
-                                        Employees
-                                    </span>
-                                </a>
-                            </li>
-                            <li id="tabDriver" role="presentation"><a href="#driver" aria-controls="driver" role="tab" data-toggle="tab">
-                                <span class="input-group-addon">
-                                    Drivers
-                                </span>
-                            </a>
-                            </li>
-                            <li id="tabDispatch" role="presentation"><a href="#dispatch" aria-controls="dispatch" role="tab" data-toggle="tab">
-                                <span class="input-group-addon">
-                                    Dispatch
-                                </span>
-                            </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="panel-body">
-                        <div  class="tab-content">
-
-                            <div role="tabpanel" class="tab-pane fade" id="employee">
-                                <fieldset>
-                                    <div class="form-group col-md-3 col-md-offset-1">
-                                        <label class="label-control">Period Beginning:</label>
-                                        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                                            {{ form.start_date }}
-                                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-md-3 col-md-offset-1">
-                                        <label class="label-control">Period Ending:</label>
-                                        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                                            {{form.end_date}}
-                                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-md-3 col-md-offset-1">
-                                        <label class="label-control">Pay Date:</label>
-                                        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                                            {{form.pay_date}}
-                                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-md-3 col-md-offset-1">
-                                        <label class="label-control">Business:</label>
-                                        {{ form.business }}
-                                    </div>
-                                    <div class="form-group col-md-3 col-md-offset-1">
-                                        <label class="label-control">Account:</label>
-                                            <select id="id_accounts" class="form-control input-md" name="accounts" required>
-                                                <option value="" selected>---------</option>
-                                                {% for a in accounts %}
-                                                <option value="{{a.id_acn}}">{{a}}</option>
-                                                {% endfor %}
-                                            </select>
-                                    </div>
-                                    <div class="form-group col-md-3 col-md-offset-1">
-                                        <label class="label-control">Payment Method: </label>
-                                        {{ form.waytopay }}
-                                    </div>
-                                    <!-- Select Basic -->
-                                    <div class="form-group col-md-5 col-md-offset-4">
-                                        <label class="label-control">Select Employee:</label>
-                                        <div class="input-group">
-                                            <span class="input-group-btn">
-                                                <button type="button" id="addemployee" class="btn btn-success test-tooltip" data-toggle="modal" data-target="#employeeList"data-type="info" data-trigger="focus" title="Employees List" data-animation="am-flip-x">
-                                                    <i class="fa fa-search-plus" aria-hidden="true"></i>
-                                                    <tooltip md-direction="left"></tooltip>
-                                                </button>
-                                            </span>
-                                            <select id="id_employees" class="form-control input-md" name="employees" required>
-                                                <option value="" selected>---------</option>
-                                                {% for e in employees %}
-                                                <option value="{{e.id_emp}}">{{e}}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-
-                                    </div>
-                                    <div class="form-group col-md-3 col-md-offset-1">
-                                        <label class="label-control">Regular Hours: </label>
-                                        {{ form.regular_hours }}
-                                    </div>
-                                    <div class="form-group col-md-3 col-md-offset-1">
-                                        <label class="label-control">Overtime Hours: </label>
-                                        {{ form.overtime_hours }}
-                                    </div>
-                                    <div class="form-group col-md-3 col-md-offset-1">
-                                        <label class="label-control">Rate: </label>
-                                        <input id="rate" type="number" placeholder="0.00" class="form-control">
-                                    </div>
-                                    <div class="form-group col-md-3 col-md-offset-1">
-                                        <label class="label-control">Gross Pay: </label>
-                                        <input id="gross" type="number" placeholder="0.00" class="form-control" readonly>
-                                    </div>
-                                    <div class="form-group col-md-3 col-md-offset-1">
-                                        <label class="label-control">Discount: </label>
-                                        {{ form.discount }}
-                                    </div>
-                                    <div class="form-group col-md-3 col-md-offset-1">
-                                        <label class="label-control">Net Pay: </label>
-                                        {{ form.value }}
-                                    </div>
-
-                                    <div class="modal fade" id="employeeList" tabindex="-1" role="dialog" aria-labelledby="ModalLabel">
-                                        <div class="modal-dialog modal-lg" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title text-center"><strong>Employees List</strong></h4>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <table id="customer_table" class="table data-table">
-                                                        <thead>
-                                                        <tr>
-                                                            <th></th>
-                                                            <th class="col-md-2">Business</th>
-                                                            <th class="col-md-2">Name</th>
-                                                            <th class="col-md-2">Last Name</th>
-                                                            <th class="col-md-1">Action</th>
-
-                                                            <th></th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        {% for e in employees %}
-                                                        <tr>
-                                                            <td style="display : none">{{e.id_emp}}</td>
-                                                            <td>{{c.business}}</td>
-                                                            <td>{{e.name}}</td>
-                                                            <td>{{e.lastname}}</td>
-                                                            <td>
-                                                                <a type="button" class="btn btn-info btn_add_emp" data-dismiss="#employeeList">Add</a>
-                                                            </td>
-                                                            <td style="display : none">{{e.value}}</td>
-                                                        </tr>
-                                                        {% endfor %}
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </fieldset>
-                                <div class="form-group col-md-5 col-md-offset-4">
-                                    <input type="submit" class="btn btn-success" value="Save">
-                                    <a type="button" onclick="history.back(-1)" class="btn btn-danger">Cancel </a>
-                                </div>
-                            </div>
-
-                            <div role="tabpanel" class="tab-pane fade" id="driver">
-
-                            </div>
-
-                            <div role="tabpanel" class="tab-pane fade" id="dispatch">
-
-                            </div>
-                        </div>
-                    </div>
+                <div class="col-xs-9 text-left">
+                    <div><h3>{{ title }}</h3></div>
                 </div>
-            </div>
             </div>
         </div>
-    </form>
+        <div class="panel-body">
+            <form name="form_payment" method="post" class="form" role="form" id="form_payment" validate>{% csrf_token %}
+                <fieldset>
+                    <div class="form-group col-md-5 col-md-offset-4">
+                        <label class="label-control">Select One:</label>
+                    <div class="btn-group" data-toggle="buttons" >
+
+                        <button name="employee" class="btn" id="employee" > Employee</button>
+
+                        <button  name="dispatch"  class="btn" id="dispatch" > Dispatch</button>
+
+                        <button name="driver" id="driver"  class="btn" > Driver</button>
+                        <input id="id_type" name="type" value="" style="display:none">
+
+                    </div>
+                    </div>
+                    <div class="form-group col-md-4 col-md-offset-4" id="employees" style="display:none">
+                            <label class="label-control">Select Employee:</label>
+
+                            <select id="id_employee" class="form-control input-md" name="lstemployee">
+                                <option value="" selected>---------</option>
+                                {% for a in employees %}
+                                <option value="{{a.id_emp}}" class="{{a.business.id_bus}}">{{a}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    <div class="form-group col-md-4 col-md-offset-4" id="drivers" style="display:none">
+                            <label class="label-control">Select Driver:</label>
+
+                            <select id="id_driver" class="form-control input-md" name="lstdriver">
+                                <option value="" selected>---------</option>
+                                {% for a in drivers %}
+                                <option value="{{a.id_dr}}" class="{{a.business.id_bus}}">{{a}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    <div class="form-group col-md-4 col-md-offset-4" id="dispatchs" style="display:none">
+                            <label class="label-control">Select Dispatch:</label>
+
+                            <select id="id_dispatch" class="form-control input-md" name="lstdispatch">
+                                <option value="" selected>---------</option>
+                                {% for a in dispatchs %}
+                                <option value="{{a.id_dsp}}" class="{{a.business.id_bus}}">{{a}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    <div class="form-group col-md-3 col-md-offset-2">
+                        <label class="label-control">Period Beginning:</label>
+                        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input type="text" id="id_start" name="start"  class="form-control input-md" required>
+                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3 col-md-offset-2">
+                        <label class="label-control">Period Ending:</label>
+                        <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input type="text" id="id_end" name="end" class="form-control input-md" required>
+                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="form-group col-md-5 col-md-offset-4">
+                    <input type="submit" id="btnsubmit" class="btn btn-success" value="Nex" hidden>
+                    <a type="button" onclick="history.back(-1)" class="btn btn-danger">Cancel </a>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
 </section>
 {% endblock %}
 

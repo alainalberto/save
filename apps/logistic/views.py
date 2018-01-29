@@ -25,7 +25,7 @@ class LoadsCreate(CreateView):
      template_name = 'logistic/load/loadForm.html'
 
      def get(self, request, *args, **kwargs):
-         form = self.form_class(initial=self.initial)
+         form = self.form_class()
          return render(request, self.template_name, {'form': form, 'title': 'Create new Load'})
 
      def post(self, request, *args, **kwargs):
@@ -34,11 +34,11 @@ class LoadsCreate(CreateView):
              load_exist = Load.objects.filter(broker=form.data['broker'], number=form.data['number'])
              if load_exist:
                  messages.error(request, 'The load already exists')
-                 form = self.form_class(initial=self.initial)
+                 form = self.form_class()
                  return render(request, self.template_name, {'form': form, 'title': 'Create new Drivers'})
              else:
                 load = form.save(commit=False)
-                load.users_id = request.user.id
+                load.users = request.user
                 load.save()
                 accion_user(load, ADDITION, request.user)
                 messages.success(request, 'Load save with an extension')
@@ -87,12 +87,12 @@ class LoadsDelete(DeleteView):
 
 class DriversView(ListView):
     model = DriversLogt
-    template_name = 'logistic/drivers/dieselViews.html'
+    template_name = 'logistic/drivers/driversViews.html'
 
 class DriversCreate(CreateView):
      model = DriversLogt
      form_class = DriversForm
-     template_name = 'logistic/drivers/dieselForm.html'
+     template_name = 'logistic/drivers/driversForm.html'
 
      def get_context_data(self, **kwargs):
          context = super(DriversCreate, self).get_context_data(**kwargs)
@@ -185,7 +185,7 @@ class DriversCreate(CreateView):
 class DriversEdit(UpdateView):
     model = DriversLogt
     form_class = DriversForm
-    template_name = 'logistic/drivers/dieselForm.html'
+    template_name = 'logistic/drivers/driversForm.html'
     success_url = reverse_lazy('logistic:drivers')
 
     def post(self, request, *args, **kwargs):
@@ -357,7 +357,7 @@ class DispatchCreate(CreateView):
      template_name = 'logistic/dispatch/dispatchForm.html'
 
      def get(self, request, *args, **kwargs):
-         form = self.form_class(initial=self.initial)
+         form = self.form_class()
          return render(request, self.template_name, {'form': form, 'title': 'Create new Dispatch'})
 
      def post(self, request, *args, **kwargs):
@@ -367,11 +367,11 @@ class DispatchCreate(CreateView):
              disp_exist = DispatchLogt.objects.filter(name=form.data['name'])
              if disp_exist:
                  messages.error(request, 'The dispatch already exists')
-                 form = self.form_class(initial=self.initial)
+                 form = self.form_class()
                  return render(request, self.template_name, {'form': form, 'title': 'Create new Dispatch'})
              else:
                  disp = form.save(commit=False)
-                 disp.users_id = user.id
+                 disp.users = user
                  disp.save()
                  accion_user(disp, ADDITION, request.user)
                  messages.success(request, "Dispatch save with an extension")
@@ -428,14 +428,14 @@ class DieselCreate(CreateView):
      template_name = 'logistic/diesel/dieselForm.html'
 
      def get(self, request, *args, **kwargs):
-         form = self.form_class(initial=self.initial)
+         form = self.form_class()
          return render(request, self.template_name, {'form': form, 'title': 'Create new Diesel Report'})
 
      def post(self, request, *args, **kwargs):
          form = self.form_class(request.POST)
          if form.is_valid():
             diesel = form.save(commit=False)
-            diesel.users_id = request.user.id
+            diesel.users = request.user
             diesel.save()
             accion_user(diesel, ADDITION, request.user)
             messages.success(request, 'Diesel Report save with an extension')
@@ -443,6 +443,7 @@ class DieselCreate(CreateView):
          else:
              for er in form.errors:
                  messages.error(request, "ERROR: " + er)
+
 
 class DieselEdit(UpdateView):
     model = Diesel
