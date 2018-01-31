@@ -1130,7 +1130,11 @@ def PaymentViews(request):
         }
     return render(request, 'accounting/payments/paymentsViews.html', context)
 def PaymentView(request, pk):
-    context= []
+    payDriver = None
+    dispatch = None
+    driver = None
+    loads = None
+    employee= None
     payment = Payment.objects.get(id_sal=pk)
     if DriversHasPayment.objects.filter(payments=payment):
         payDriver = DriversHasPayment.objects.get(payments=payment)
@@ -1140,9 +1144,7 @@ def PaymentView(request, pk):
             load = Load.objects.get(id_lod=l.loads_id)
             loads.append(load)
         driver = DriversLogt.objects.get(id_dr=payDriver.driver_id)
-        context['form2'] = payDriver
-        context['driver']= driver
-        context['loads'] = loads
+
     if DispatchHasPayment.objects.filter(payments=payment):
         payDispatch = DispatchHasPayment.objects.get(payments=payment)
         dispatch = DispatchLogt.objects.get(id_dsp=payDispatch.dispatch_id)
@@ -1151,14 +1153,19 @@ def PaymentView(request, pk):
         for l in payLoad:
             load = Load.objects.get(id_lod=l.loads_id)
             loads.append(load)
-        context['loads'] = loads
-        context['dispatch'] = dispatch
+
     if EmployeeHasPayment.objects.filter(payments=payment):
         payEmployee = EmployeeHasPayment.objects.get(payments=payment)
+        employee = Employee.objects.get(id_emp=payEmployee.employee_id)
+
     context = {
             'form': payment,
             'title': 'View Payment',
-            'account': payment.accounts
+            'form2':payDriver,
+            'driver': driver,
+            'loads': loads,
+            'dispatch': dispatch,
+            'employee': employee,
         }
     return render(request, 'accounting/payments/paymentsView.html', context)
 
@@ -1351,7 +1358,7 @@ class PaymentDriverCreate(View):
             for l in loads:
                 pickup_date = datetime.strptime(str(l.pickup_date), '%Y-%m-%d')
                 deliver_date = datetime.strptime(str(l.deliver_date), '%Y-%m-%d')
-                if pickup_date > start and deliver_date < end:
+                if pickup_date >= start and deliver_date <= end:
                     load_driver.append(l)
             form = self.form_class(initial={'start_date': kwargs.get('start'), 'end_date': kwargs.get('end')})
             form_driver = self.form_driver_class()
