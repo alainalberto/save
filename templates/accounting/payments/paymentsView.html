@@ -14,53 +14,23 @@
  $(document).ready( function () {
 
     $(function() {
-        {% if dispatch.comission %}
-          $('#id_comission').val(parseFloat());
-        {% endif %}
-        {% if driver.type == 'Driver' %}
-           $("#id_accounts_income").chained("#id_business");
-        {% endif %}
         cal();
     });
 
 {% if driver %}
     function cal (){
        var sum = 0;
-       var porct = parseFloat($('#id_porc_company').val() || 0);
-       var prepass = parseFloat($('#id_pre_pass').val() || 0);
-       var escrow = parseFloat($('#id_escrow').val() || 0);
-       var downpay = parseFloat($('#id_down_payment').val() || 0);
-       var insurance = parseFloat($('#id_insurance').val() || 0);
-       var diesel = parseFloat($('#id_diesel').val() || 0);
-       var other = parseFloat($('#id_other').val() || 0);
        $('.value').each(function(index, element) {
-         if ($(this).parents("tr").find('.paid').prop('checked')) {
             sum += parseFloat($(this).val());
-            all_select += 1;
-          }
        });
        $('#id_subtotal').val(sum.toFixed(2));
        var subtotal = sum;
        var total = 0;
 
-       var comis = (subtotal*porct)/100;
-       $('#id_company_fee').val(comis.toFixed(2));
+       var comis = {{form2.company_fee}};
        var gross = subtotal - comis;
        $('#id_gross').val(gross.toFixed(2));
        var fee = comis + prepass + escrow + downpay + insurance + diesel + other;
-       var all_select = 0;
-       total = gross - fee;
-       $('#id_value').val(total.toFixed(2));
-       breakdown = total/2
-       $('#id_total_owner').val(breakdown.toFixed(2));
-       $('#id_total_driver').val(breakdown.toFixed(2));
-       var no = $("#tbLoad1 tr").length-1;
-       if(all_select == no){
-         $('#id_paid').bootstrapSwitch('state', true, true);
-       }
-       else{
-         $('#id_paid').bootstrapSwitch('state', false, false);
-       }
     }
    {% endif %}
    {% if dispatch %}
@@ -69,10 +39,8 @@
        var porct = parseFloat($('#id_comission').val() || 0);
        var other = parseFloat($('#id_discount').val() || 0);
        $('.value').each(function(index, element) {
-         if ($(this).parents("tr").find('.paid').prop('checked')) {
             sum += parseFloat($(this).val());
             all_select += 1;
-          }
        });
        $('#id_subtotal').val(sum.toFixed(2));
        var subtotal = sum;
@@ -264,6 +232,8 @@
 
                     <!-- Button (Double) -->
                     <div class="form-group col-md-5 col-md-offset-4">
+                        <a type="button" class="btn btn-primary" href="{% url 'accounting:payment_driver_edit' form.id_sal %}">Edit</a>
+                        <a type="button" class="btn btn-success" href="{% url 'accounting:payments_print' form.id_sal %}" target="_blank">Print</a>
                         <a type="button" onclick="history.back(-1)" class="btn btn-danger">Cancel </a>
                     </div>
                 </div>
@@ -369,6 +339,8 @@
 
                     <!-- Button (Double) -->
                     <div class="form-group col-md-5 col-md-offset-4">
+                        <a type="button" class="btn btn-primary" href="{% url 'accounting:payment_dispatch_edit' form.id_sal %}">Edit</a>
+                        <a type="button" class="btn btn-success" href="{% url 'accounting:payments_print' form.id_sal %}" target="_blank">Print</a>
                         <a type="button" onclick="history.back(-1)" class="btn btn-danger">Cancel </a>
                     </div>
                 </div>
@@ -430,6 +402,8 @@
                         {{ form.value }}
                     </div>
                 <div class="form-group col-md-5 col-md-offset-4">
+                    <a type="button" class="btn btn-primary" href="{% url 'accounting:payment_employee_edit' form.id_sal %}">Edit</a>
+                    <a type="button" class="btn btn-success" href="{% url 'accounting:payments_print' form.id_sal %}" target="_blank">Print</a>
                     <a type="button" onclick="history.back(-1)" class="btn btn-danger">Cancel </a>
                 </div>
     </div>

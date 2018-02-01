@@ -268,6 +268,7 @@ class PaymentForm(forms.ModelForm):
                 'pay_date',
                 'regular_hours',
                 'overtime_hours',
+                'gross',
                 'discount',
                 'value',
                 'waytopay',

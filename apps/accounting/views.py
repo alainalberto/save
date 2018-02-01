@@ -7,6 +7,7 @@ from django.contrib import messages
 from FirstCall.util import accion_user
 from apps.accounting.components.AccountingForm import *
 from apps.accounting.models import *
+from apps.accounting.components.AccountingPDF import PayDriverPDF, PayDispatchPDF, PayEmployeePDF
 from apps.logistic.models import Load, DispatchHasPayment, DriversHasPayment, LoadsHasFee, InvoicesHasLoad, DriversLogt, DispatchLogt, Diesel, PaymentHasLoad
 from apps.services.components.ServicesForm import *
 from apps.tools.components.AlertForm import AlertForm
@@ -1147,12 +1148,12 @@ def PaymentView(request, pk):
 
     if DispatchHasPayment.objects.filter(payments=payment):
         payDispatch = DispatchHasPayment.objects.get(payments=payment)
-        dispatch = DispatchLogt.objects.get(id_dsp=payDispatch.dispatch_id)
         payLoad = PaymentHasLoad.objects.filter(payments=payment)
         loads = []
         for l in payLoad:
             load = Load.objects.get(id_lod=l.loads_id)
             loads.append(load)
+        dispatch = DispatchLogt.objects.get(id_dsp=payDispatch.dispatch_id)
 
     if EmployeeHasPayment.objects.filter(payments=payment):
         payEmployee = EmployeeHasPayment.objects.get(payments=payment)
@@ -1168,6 +1169,19 @@ def PaymentView(request, pk):
             'employee': employee,
         }
     return render(request, 'accounting/payments/paymentsView.html', context)
+
+def PaymentPrint(request, pk):
+    pdf = None
+    payment = Payment.objects.get(id_sal=pk)
+    if DriversHasPayment.objects.filter(payments=payment):
+        pdf = PayDriverPDF(request,pk)
+
+    if DispatchHasPayment.objects.filter(payments=payment):
+        pdf = PayDispatchPDF(request, pk)
+
+    if EmployeeHasPayment.objects.filter(payments=payment):
+        pdf = PayEmployeePDF(request, pk)
+    return pdf
 
 def PaymentSelect(request):
 
@@ -1240,6 +1254,7 @@ class PaymentEmployeeCreate(CreateView):
              payment.serial = serial
              payment.users_id = user.id
              payment.accounts_id = request.POST['accounts']
+             payment.gross = request.POST['subtotal']
              payment.save()
              EmployeeHasPayment.objects.create(payments=payment, employee=employee)
              AccountDescrip.objects.create(date=payment.pay_date,
@@ -1299,7 +1314,9 @@ class PaymentEmployeeEdit(UpdateView):
         form = self.form_class(request.POST, instance=payment)
         acountDescp = AccountDescrip.objects.get(accounts=payment.accounts, document=int(payment.id_sal))
         if form.is_valid():
-            form.save()
+            payment = form.save(commit=False)
+            payment.gross = request.POST['subtotal']
+            payment.save()
             AccountDescrip.objects.filter(id_acd=acountDescp.id_acd).update(
                 value=payment.value,
                 waytopay=payment.waytopay,
@@ -1418,6 +1435,7 @@ class PaymentDriverCreate(View):
                 payment.serial = serial
                 payment.users_id = user.id
                 payment.accounts_id = request.POST['accounts']
+                payment.gross = request.POST['subtotal']
                 payment.save()
                 driverpay = form2.save(commit=False)
                 driverpay.driver = driver
@@ -1617,7 +1635,9 @@ class PaymentDriverEdit(UpdateView):
         form2 = self.form_driver_class(request.POST, instance=payDriver)
         acountDescp = AccountDescrip.objects.get(accounts=payment.accounts, document=int(payment.id_sal))
         if form.is_valid() and form2.is_valid():
-            payment = form.save()
+            payment = form.save(commit=False)
+            payment.gross = request.POST['subtotal']
+            payment.save()
             payDriver= form2.save()
             income = Account.objects.get(primary=True, name='Income')
             AccountDescrip.objects.filter(id_acd=acountDescp.id_acd).update(
@@ -1769,6 +1789,7 @@ class PaymentDispatchCreate(CreateView):
             payment.serial = serial
             payment.users_id = user.id
             payment.accounts_id = request.POST['accounts']
+            payment.gross = request.POST['subtotal']
             payment.save()
             for l in loads:
                 load = request.POST.get('id_'+str(l.id_lod), None)
@@ -1839,7 +1860,9 @@ class PaymentDispatchEdit(UpdateView):
         form = self.form_class(request.POST, instance=payment)
         acountDescp = AccountDescrip.objects.get(accounts=payment.accounts, document=int(payment.id_sal))
         if form.is_valid():
-            payment = form.save()
+            payment = form.save(commit=False)
+            payment.gross = request.POST['subtotal']
+            payment.save()
             AccountDescrip.objects.filter(id_acd=acountDescp.id_acd).update(
                 value=payment.value,
                 waytopay=payment.waytopay,

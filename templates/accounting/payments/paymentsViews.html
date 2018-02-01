@@ -40,7 +40,7 @@
                     <tr>
                         <td>{{p.payments.serial}}</td>
                         <td>{{p.payments.business}}</td>
-                        <td>{{p.employee}}</td>
+                        <td><a href="{% url 'accounting:payments_view' p.payments_id %}">{{p.employee}}</a></td>
                         <td>{{p.payments.start_date}}</td>
                         <td>{{p.payments.end_date}}</td>
                         <td>{{p.payments.waytopay}}</td>
@@ -86,7 +86,7 @@
                     <tr>
                         <td>{{p.payments.serial}}</td>
                         <td>{{p.payments.business}}</td>
-                        <td>{{p.driver}}</td>
+                        <td><a href="{% url 'accounting:payments_view' p.payments_id %}">{{p.driver}}</a></td>
                         <td>{{p.payments.start_date}}</td>
                         <td>{{p.payments.end_date}}</td>
                         <td>{{p.payments.waytopay}}</td>
@@ -132,7 +132,7 @@
                     <tr>
                         <td>{{p.payments.serial}}</td>
                         <td>{{p.payments.business}}</td>
-                        <td>{{p.dispatch}}</td>
+                        <td><a href="{% url 'accounting:payments_view' p.payments_id %}">{{p.dispatch}}</a></td>
                         <td>{{p.payments.start_date}}</td>
                         <td>{{p.payments.end_date}}</td>
                         <td>{{p.payments.waytopay}}</td>
